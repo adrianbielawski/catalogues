@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;800");
+@import "./variables_and_mixins";
+
+html, body, div, span, h1, h2, p, a, ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-family: "nunito", sans-serif;
+}
+
+body {
+    overflow-y: scroll;
+    background: #faf7f2;
+}
+
+li {
+    list-style: none;
+}
+
+p {
+    color: $darkGrey;
+    @include resetTapHighlight;
+}
+
+.app {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+    background: #fffcf7;
+}
