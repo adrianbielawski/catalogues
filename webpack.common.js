@@ -1,5 +1,7 @@
 const path = require('path');
 
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+
 module.exports = {
     entry: {
         app: './src/index.tsx',
@@ -60,4 +62,7 @@ module.exports = {
             }
         ]
     },
+    plugins: [
+        new FaviconsWebpackPlugin("./assets/img/icon.svg"),
+    ],
 };
