@@ -4,6 +4,9 @@ import { RootState } from 'store/reducers/index'
 import { User, DeserializedUser } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
+export const AUTH_INITIALIZED = 'AUTH/INITIALIZED'
+export const AUTH_GET_USER_SUCCESS = 'AUTH/GET_USER/SUCCESS'
+export const AUTH_GET_USER_FAILURE = 'AUTH/GET_USER/FAILURE'
 export const AUTH_LOG_IN_START = 'AUTH/LOG_IN/START'
 export const AUTH_LOG_IN_SUCCESS = 'AUTH/LOG_IN/SUCCESS'
 export const AUTH_LOG_IN_FAILURE = 'AUTH/LOG_IN/FAILURE'
@@ -24,6 +27,7 @@ export interface AppState {
 }
 
 export interface AuthState {
+    isInitialized: boolean,
     isLoggingIn: boolean,
     isSigningUp: boolean,
 }
@@ -35,6 +39,19 @@ export interface ErrorData {
 interface changeScreenHeight {
     type: typeof SCREEN_HEIGHT_CHANGED,
     screenHeight: number,
+}
+
+interface authInitialized {
+    type: typeof AUTH_INITIALIZED,
+}
+
+interface getUserSuccess {
+    type: typeof AUTH_GET_USER_SUCCESS,
+    user: User,
+}
+
+interface getUserFailure {
+    type: typeof AUTH_GET_USER_FAILURE,
 }
 
 interface logInStart {
@@ -63,4 +80,5 @@ interface signUpFailure {
     type: typeof AUTH_SIGN_UP_FAILURE,
 }
 
+export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure

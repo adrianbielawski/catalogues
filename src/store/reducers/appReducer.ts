@@ -17,6 +17,7 @@ const appReducer = (
             newState.screenHeight = action.screenHeight
             return newState
 
+        case 'AUTH/GET_USER/SUCCESS':
         case 'AUTH/SIGN_UP/SUCCESS':
         case 'AUTH/LOG_IN/SUCCESS':
             newState.user = userDeserializer(action.user);

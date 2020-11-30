@@ -5,6 +5,7 @@ import styles from 'global-styles/app.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 import { changeScreenHeight } from 'store/actions/appActions'
+import { getUser, authInitialized } from 'store/actions/authActions'
 //Custom components
 import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
@@ -23,6 +24,15 @@ const App = () => {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+
+  useEffect(() => {
+      if (localStorage.getItem('token')) {
+          dispatch(getUser())
+      } else {
+          dispatch(authInitialized())
+      }
+  }, [])
+
   return (
     <div className={styles.app} style={{ minHeight: screenHeight }}>
       <Suspense fallback={<Loader />}>

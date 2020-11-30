@@ -3,9 +3,35 @@ import { ThunkAction } from 'store/storeTypes'
 import { History, Location } from 'history';
 import { LocationState, User } from 'src/globalTypes'
 import {
-    AUTH_SIGN_UP_START, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE, AppActionTypes, ErrorData
+    AUTH_INITIALIZED, AUTH_GET_USER_SUCCESS, AUTH_GET_USER_FAILURE,
+    AUTH_LOG_IN_START, AUTH_LOG_IN_SUCCESS, AUTH_LOG_IN_FAILURE,
+    AUTH_SIGN_UP_START, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE,
+    AppActionTypes, ErrorData
 } from '../storeTypes'
 
+export const authInitialized = (): AppActionTypes => ({
+    type: AUTH_INITIALIZED,
+})
+
+const getUserSuccess = (user: User): AppActionTypes => ({
+    type: AUTH_GET_USER_SUCCESS,
+    user,
+})
+
+const getUserFailure = (): AppActionTypes => ({
+    type: AUTH_GET_USER_FAILURE,
+})
+
+export const getUser = (): ThunkAction => dispatch => {
+    axiosInstance.get('/user/')
+    .then(response => {
+        dispatch(getUserSuccess(response.data))
+    })
+    .catch(() => {
+        localStorage.removeItem('token')
+        dispatch(getUserFailure())
+    })
+}
 
 const signUpStart = (): AppActionTypes => ({
     type: AUTH_SIGN_UP_START,
