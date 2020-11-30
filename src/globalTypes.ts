@@ -15,3 +15,7 @@ export interface DeserializedUser {
     imageThumbnail: string,
     isAnonymous: boolean,
 }
+
+export interface LocationState {
+    referrer: string;
+}
