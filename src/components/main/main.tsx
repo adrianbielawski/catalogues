@@ -3,7 +3,7 @@ import styles from './main.scss'
 //Redux
 //Custom components
 import Header from 'components/global-components/header/header'
-import Nav from '../nav/nav'
+import Nav from 'components/nav/nav'
 
 const Main = () => {
     return (

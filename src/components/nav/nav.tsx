@@ -1,15 +1,21 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styles from './nav.scss'
 //Redux
+import { logOut } from 'store/actions/authActions'
 //Custom components
-import Logout from 'components/auth/logout/logout'
+import NavLink from './navLink/navLink'
 
 const Nav = () => {
+    const handleLogout = () => {
+        dispatch(logOut())
+    }
+
     return (
         <nav className={styles.nav}>
             <div className={styles.navContent}>
             </div>
-            <Logout className={styles.logout} />
+            <NavLink title={'Logout'} onClick={handleLogout} />
         </nav>
     )
 }
