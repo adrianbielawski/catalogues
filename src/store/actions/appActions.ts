@@ -1,8 +1,14 @@
-import { SCREEN_HEIGHT_CHANGED, AppActionTypes } from '../storeTypes'
+import { SCREEN_HEIGHT_CHANGED, APP_CLEAR_APP_STATE, AppActionTypes } from '../storeTypes'
 
 export const changeScreenHeight = (screenHeight: number): AppActionTypes => {
     return {
         type: SCREEN_HEIGHT_CHANGED,
         screenHeight,
+    }
+}
+
+export const clearAppState = () => {
+    return {
+        type: APP_CLEAR_APP_STATE,
     }
 }

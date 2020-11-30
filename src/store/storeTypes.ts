@@ -13,6 +13,7 @@ export const AUTH_LOG_IN_FAILURE = 'AUTH/LOG_IN/FAILURE'
 export const AUTH_SIGN_UP_START = 'AUTH/SIGN_UP/START'
 export const AUTH_SIGN_UP_SUCCESS = 'AUTH/SIGN_UP/SUCCESS'
 export const AUTH_SIGN_UP_FAILURE = 'AUTH/SIGN_UP/FAILURE'
+export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
   ReturnType,
@@ -80,5 +81,11 @@ interface signUpFailure {
     type: typeof AUTH_SIGN_UP_FAILURE,
 }
 
+interface clearAppState {
+    type: typeof APP_CLEAR_APP_STATE,
+    screenHeight: number,
+}
+
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
+    | clearAppState

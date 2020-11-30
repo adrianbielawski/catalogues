@@ -23,6 +23,10 @@ const appReducer = (
             newState.user = userDeserializer(action.user);
             return newState;
 
+        case 'APP/CLEAR_APP_STATE':
+            newState = cloneDeep(initialState)
+            return newState
+
         default:
             return newState
     }

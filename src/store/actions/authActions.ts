@@ -2,6 +2,7 @@ import axiosInstance from 'src/axiosInstance'
 import { ThunkAction } from 'store/storeTypes'
 import { History, Location } from 'history';
 import { LocationState, User } from 'src/globalTypes'
+import { clearAppState } from './appActions';
 import {
     AUTH_INITIALIZED, AUTH_GET_USER_SUCCESS, AUTH_GET_USER_FAILURE,
     AUTH_LOG_IN_START, AUTH_LOG_IN_SUCCESS, AUTH_LOG_IN_FAILURE,
@@ -116,4 +117,19 @@ export const logIn = (
             console.log('Something went wrong')
         }
     })
+}
+
+export const logOut = (): ThunkAction => dispatch => {
+    axiosInstance.post('/logout/')
+    .then(() => {
+        dispatch(clearAppState());
+        localStorage.removeItem('token');
+    })
+    .catch(error => {
+        if (error.response) {
+            console.log(Object.values(error.response.data as ErrorData)[0][0])
+        } else {
+            console.log('Something went wrong')
+        }
+    });
 }
