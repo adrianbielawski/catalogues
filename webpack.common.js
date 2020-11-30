@@ -16,6 +16,7 @@ module.exports = {
             store: path.join(__dirname, 'src', 'store'),
             global_styles: path.join(__dirname, 'src', 'global_styles'),
             assets: path.join(__dirname, 'assets'),
+            src: path.join(__dirname, 'src'),
         },
         modules: [
             path.join(__dirname, 'src'),
