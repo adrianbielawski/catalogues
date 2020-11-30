@@ -7,7 +7,9 @@ import { useTypedSelector } from 'store/reducers/index'
 import { changeScreenHeight } from 'store/actions/appActions'
 import { getUser, authInitialized } from 'store/actions/authActions'
 //Custom components
+import PrivateRoute from 'hoc/PrivateRoute'
 import Auth from 'components/auth/auth'
+import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 
 const App = () => {
@@ -38,6 +40,7 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Switch>
           <Route exact path={["/", "/signup"]} component={Auth} />
+          <PrivateRoute path="/:userId" component={Main} />
         </Switch>
       </Suspense>
     </div>
