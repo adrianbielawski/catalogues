@@ -27,7 +27,8 @@
       "store/*": ["src/store/*"],
       "global_styles/*": ["src/global_styles/*"],
       "assets/*": ["assets/*"],
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "hoc/*": ["src/hoc/*"]
     }
   },
   "include": [
