@@ -5,6 +5,7 @@ import styles from './main.scss'
 //Custom components
 import Header from 'components/global-components/header/header'
 import Login from './login/login'
+import Signup from './signup/signup'
 
 const Main = () => {
     const location = useLocation()
@@ -13,7 +14,7 @@ const Main = () => {
             <Header />
             <div className={styles.content}>
                 {location.pathname === '/signup' ?
-                    <p>Signup</p> :
+                    <Signup /> :
                     <Login />
                 }
             </div>

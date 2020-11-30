@@ -3,6 +3,7 @@ import { AuthState, AppActionTypes } from 'store/storeTypes'
 
 const initialState: AuthState = {
     isLoggingIn: false,
+    isSigningUp: false,
 }
 
 const authReducer = (
@@ -19,6 +20,15 @@ const authReducer = (
         case 'AUTH/LOG_IN/FAILURE':
             newState.isLoggingIn = false
             return newState
+
+        case 'AUTH/SIGN_UP/START':
+            newState.isSigningUp = true;
+            return newState;
+
+        case 'AUTH/SIGN_UP/SUCCESS':
+        case 'AUTH/SIGN_UP/FAILURE':
+            newState.isSigningUp = false;
+            return newState;
 
         default:
             return state
