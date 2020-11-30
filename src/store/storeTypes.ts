@@ -14,6 +14,10 @@ export interface AppState {
     screenHeight: number,
 }
 
+export interface AuthState {
+    isLoggingIn: boolean,
+}
+
 interface changeScreenHeight {
     type: typeof SCREEN_HEIGHT_CHANGED,
     screenHeight: number,
