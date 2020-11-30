@@ -7,7 +7,7 @@ import { useTypedSelector } from 'store/reducers/index'
 import { changeScreenHeight } from 'store/actions/appActions'
 import { getUser, authInitialized } from 'store/actions/authActions'
 //Custom components
-import Main from 'components/main/main'
+import Auth from 'components/auth/auth'
 import Loader from 'components/global-components/loader/loader'
 
 const App = () => {
@@ -37,7 +37,7 @@ const App = () => {
     <div className={styles.app} style={{ minHeight: screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
-          <Route exact path={["/", "/signup"]} component={Main} />
+          <Route exact path={["/", "/signup"]} component={Auth} />
         </Switch>
       </Suspense>
     </div>
