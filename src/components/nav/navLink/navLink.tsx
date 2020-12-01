@@ -5,19 +5,26 @@ import styles from './navLink.scss'
 interface Props {
   className?: string,
   title: string,
+  active?: boolean,
   onClick: () => void,
 }
 const cx = classNames.bind(styles)
 
 const NavLink = (props: Props) => {
+  const { active, className, ...rest } = props
 
   const navLinkClass = cx(
       'navLink',
-      props.className,
+      className,
+      {
+        active,
+      }
   )
 
   return (
-    <p className={navLinkClass} onClick={props.onClick}>{props.title}</p>
+    <p className={navLinkClass} {...rest}>
+      {props.title}
+    </p>
   )
 }
 
