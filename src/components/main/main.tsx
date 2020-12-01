@@ -9,8 +9,8 @@ const Main = () => {
     return (
         <div className={styles.main}>
             <Header />
+            <Nav />
             <div className={styles.content}>
-                <Nav />
             </div>
         </div>
     )
