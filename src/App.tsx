@@ -1,11 +1,13 @@
 import React, { useEffect, Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from 'global-styles/app.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 import { changeScreenHeight } from 'store/actions/appActions'
 import { getUser, authInitialized } from 'store/actions/authActions'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Custom components
 import PrivateRoute from 'hoc/PrivateRoute'
 import Auth from 'components/auth/auth'
@@ -14,6 +16,8 @@ import Loader from 'components/global-components/loader/loader'
 
 const App = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
+  const location = useLocation<LocationState>()
   const screenHeight = useTypedSelector(state => state.app.screenHeight)
 
   const handleResize = () => {
@@ -29,9 +33,9 @@ const App = () => {
 
   useEffect(() => {
       if (localStorage.getItem('token')) {
-          dispatch(getUser())
+        dispatch(getUser(history, location))
       } else {
-          dispatch(authInitialized())
+        dispatch(authInitialized())
       }
   }, [])
 

@@ -23,10 +23,17 @@ const getUserFailure = (): AppActionTypes => ({
     type: AUTH_GET_USER_FAILURE,
 })
 
-export const getUser = (): ThunkAction => dispatch => {
+export const getUser = (
+    history: History,
+    location: Location<LocationState>
+): ThunkAction => dispatch => {
     axiosInstance.get('/user/')
     .then(response => {
         dispatch(getUserSuccess(response.data))
+
+        if(location.pathname === '/') { 
+            history.push(`/${response.data.id}/catalogues/nails`)
+        }
     })
     .catch(() => {
         localStorage.removeItem('token')
@@ -65,7 +72,7 @@ export const signUp = (
     .then(response => {
         localStorage.setItem('token', response.data.key)
         dispatch(signUpSuccess(response.data.user))
-        history.push(`/${response.data.user.id}`)
+        history.push(`/${response.data.user.id}/catalogues`)
     })
     .catch(error => {
         dispatch(signUpFailure())
@@ -106,7 +113,7 @@ export const logIn = (
         localStorage.setItem('token', response.data.key)
         dispatch(logInSuccess(response.data.user))
 
-        const { referrer } = location.state || { referrer: `/${response.data.user.id}` }
+        const { referrer } = location.state || { referrer: `/${response.data.user.id}/catalogues/nails` }
         history.push(referrer)
     })
     .catch(error => {
@@ -119,11 +126,14 @@ export const logIn = (
     })
 }
 
-export const logOut = (): ThunkAction => dispatch => {
+export const logOut = (
+    history: History,
+): ThunkAction => dispatch => {
     axiosInstance.post('/logout/')
     .then(() => {
-        dispatch(clearAppState());
-        localStorage.removeItem('token');
+        dispatch(clearAppState())
+        localStorage.removeItem('token')
+        history.push('/')
     })
     .catch(error => {
         if (error.response) {
