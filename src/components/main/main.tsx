@@ -5,6 +5,7 @@ import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import Header from 'components/global-components/header/header'
 import Nav from 'components/nav/nav'
+import Logout from 'components/auth/logout/logout'
 
 const Main = () => {
     const user = useTypedSelector(state => state.app.user)
@@ -22,7 +23,7 @@ const Main = () => {
     return (
         <div className={styles.main}>
             <Header />
-            <Nav content={NAV_CONTENT} />
+            <Nav content={NAV_CONTENT} extraItems={[<Logout className={styles.logout} />]} />
         </div>
     )
 }
