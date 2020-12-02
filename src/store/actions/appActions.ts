@@ -1,7 +1,5 @@
-import { ThunkAction } from 'store/storeTypes'
-import { History } from 'history';
 import {
-    SCREEN_HEIGHT_CHANGED, APP_CLEAR_APP_STATE, APP_SHOW_SETTINGS,
+    SCREEN_HEIGHT_CHANGED, APP_CLEAR_APP_STATE,
     AppActionTypes,
 } from '../storeTypes'
 
@@ -16,11 +14,4 @@ export const clearAppState = () => {
     return {
         type: APP_CLEAR_APP_STATE,
     }
-}
-
-export const showSettings = (
-    userId: number,
-    history: History,
-): ThunkAction => dispatch => {
-    history.push(`/${userId}/settings`)
 }
