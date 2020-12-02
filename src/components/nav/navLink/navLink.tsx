@@ -1,30 +1,39 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import classNames from 'classnames/bind'
-import styles from './navLink.scss'
+import styles from '../nav.scss'
 
 interface Props {
-  className?: string,
   title: string,
-  active?: boolean,
-  onClick: () => void,
+  url: string,
+  onClick?: () => void,
+  onHover?: () => void,
 }
 const cx = classNames.bind(styles)
 
 const NavLink = (props: Props) => {
-  const { active, className, ...rest } = props
+  const history = useHistory()
+
+  const handleClick = () => {
+    if (props.url !== undefined) {
+      history.push(props.url!)
+    }
+    if (props.onClick !== undefined) {
+      props.onClick()
+    }
+  }
 
   const navLinkClass = cx(
-      'navLink',
-      className,
+      'navItem',
       {
-        active,
+        active: location.pathname === props.url,
       }
   )
 
   return (
-    <p className={navLinkClass} {...rest}>
-      {props.title}
-    </p>
+    <li className={navLinkClass} onClick={handleClick} onMouseOver={props.onHover}>
+      <p>{props.title}</p>
+    </li>
   )
 }
 
