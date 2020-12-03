@@ -1,0 +1,21 @@
+@import "global-styles/variables_and_mixins";
+
+.item {
+    padding: 10px 10px 10px 5px;
+    border-radius: 20px 0 0 0;
+    text-align: end;
+    span {
+        font-size: 20px;
+        color: $darkGrey;
+        cursor: pointer;
+        &:hover {
+            color: $lightOrange;
+        }
+    }
+    &.active {
+        background: #fffcf7;
+        span {
+            color: $orange;
+        }
+    }
+}
