@@ -24,7 +24,7 @@ const NavList = (props: Props) => {
     const [listTitle, setListTitle] = useState(props.title)
 
     useEffect(() => {
-        const activeItem = props.children.find(child => child.url === location.pathname)
+        const activeItem = props.children.find(child => location.pathname.startsWith(child.url))
         if (activeItem !== undefined) {
             setListTitle(activeItem.title)
         } else {
