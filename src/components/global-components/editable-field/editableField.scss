@@ -1,0 +1,43 @@
+@import "global-styles/variables_and_mixins";
+
+.editableField {
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    height: 30px;
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+    }
+    .editButton {
+        margin-right: 3px;
+        &.active {
+            color: $orange;
+        }
+    }
+    .content {
+        width: 250px;
+        font-size: 18px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        border: none;
+    }
+    .inputWrapper {
+        position: relative;
+        input {
+            margin-left: 3px;
+            padding: 0;
+            padding-left: 5px;
+            box-shadow: inset 0 100px #f3f0eb;
+        }
+        .confirmButton {
+            position: absolute;
+            right: 3px;
+            top: 3px;
+            z-index: 10;
+        }
+    }
+    .placeholder {
+        width: 28px;
+    }
+}
