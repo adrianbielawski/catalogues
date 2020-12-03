@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
 //Redux
@@ -28,7 +29,7 @@ const Settings = () => {
         },
         {
             title: 'Account settings',
-            url: `/${user!.id}/settings/account-settings`,
+            url: `/${user!.id}/settings/account`,
         }
     ]
 
@@ -41,7 +42,15 @@ const Settings = () => {
             />
             <Suspense fallback={<Loader />}>
                 <Switch>
-                    <Route path={"/:userId/settings/account-settings"} component={AccountSettings} />
+                    <Redirect
+                        exact
+                        from="/:userId/settings"
+                        to="/:userId/settings/account"
+                    />
+                    <Route
+                        path="/:userId/settings/account"
+                        component={AccountSettings}
+                    />
                 </Switch>
             </Suspense>
         </div>
