@@ -25,7 +25,7 @@ const Catalogues = () => {
         },
         {
             title: 'Settings',
-            url: `/${user!.id}/settings/nails`,
+            url: `/${user!.id}/settings/account-settings/manage-catalogues`,
         }
     ]
     
