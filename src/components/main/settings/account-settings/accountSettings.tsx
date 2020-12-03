@@ -7,6 +7,8 @@ import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import SideMenu from 'components/main/side-menu/sideMenu'
 import Loader from 'components/global-components/loader/loader'
+import MainContent from 'components/main/main-content/mainContent'
+import MyAccount from './my-account/myAccount'
 
 const AccountSettings = () => {
     const user = useTypedSelector(state => state.app.user)
@@ -17,12 +19,8 @@ const AccountSettings = () => {
             url: `/${user!.id}/settings/account/manage-catalogues`,
         },
         {
-            title: 'Change password',
-            url: `/${user!.id}/settings/account/change-password`
-        },
-        {
-            title: 'Change name',
-            url: `/${user!.id}/settings/account/change-name`,
+            title: 'My account',
+            url: `/${user!.id}/settings/account/my-account`
         },
     ]
 
@@ -38,7 +36,11 @@ const AccountSettings = () => {
                     />
                     <Route
                         path="/:userId/settings/account/manage-catalogues"
-                        component={ManageCatalogues}
+                        render={() => <MainContent content={<Loader />} />}
+                    />
+                    <Route
+                        path="/:userId/settings/account/my-account"
+                        render={() => <MainContent content={<MyAccount />} />}
                     />
                 </Switch>
             </Suspense>
