@@ -1,5 +1,10 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './nav.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Custom components
 import NavLink from './navLink/navLink'
 import NavList from './navList/navList'
@@ -20,6 +25,7 @@ type ItemType = ItemWithUrl | ItemWithChildren
 
 interface Props {
     content: ItemType[],
+    goBack?: {default: string, url: string},
     extraItems?: JSX.Element[]
 }
 
@@ -35,7 +41,16 @@ type HandleListHover = (index: number) => void
 type HandleLinkHover = () => void
 
 const Nav = (props: Props) => {
+    const history = useHistory<LocationState>()
+    const location = useLocation<LocationState>()
     const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
+    const [prevLocation, setPrevLocation] = useState<string>('')
+    
+    useEffect(() => {
+        if (location.state !== undefined) {
+            setPrevLocation(location.state.referrer)
+        }
+    }, [])
 
     const handleListClick: HandleListClick = (index) => {
         if (showList.show === false) {
@@ -61,8 +76,12 @@ const Nav = (props: Props) => {
         }
     }
 
-    const getItems: GetItems = () => (
-        props.content.map((item, index) => {
+    const handleGoBack = () => {
+        history.push(prevLocation! || props.goBack!.url)
+    }
+
+    const getItems: GetItems = () => {
+        let items = props.content.map((item, index) => {
             if (item.url !== undefined) {
                 return (
                     <NavLink
@@ -86,13 +105,27 @@ const Nav = (props: Props) => {
                 )
             }
         })
-    )
 
-    const getExtraItems: GetExtraItems = () => {
-        return props.extraItems!.map((item, index) =>
-            <li key={`extraItem${index}`}>{item}</li>
-        )
+        if (props.goBack !== undefined) {
+            items.unshift(
+                <li className={styles.navItem} onClick={handleGoBack} key={'goBack'}>
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className={styles.leftArrow}
+                    />
+                    <p>
+                        {prevLocation === '' ? props.goBack.default : 'Go back'}
+                    </p>
+                </li>
+            )
+        }
+
+        return items
     }
+
+    const getExtraItems: GetExtraItems = () => props.extraItems!.map((item, index) =>
+        <li key={`extraItem${index}`}>{item}</li>
+    )
 
     return (
         <nav className={styles.nav}>

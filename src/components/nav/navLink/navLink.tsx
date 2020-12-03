@@ -1,7 +1,9 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from '../nav.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 
 interface Props {
   title: string,
@@ -12,11 +14,14 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const NavLink = (props: Props) => {
-  const history = useHistory()
+  const history = useHistory<LocationState>()
+  const location = useLocation<LocationState>()
 
   const handleClick = () => {
     if (props.url !== undefined) {
-      history.push(props.url!)
+      history.push(props.url!, {
+        referrer: location.pathname
+      })
     }
     if (props.onClick !== undefined) {
       props.onClick()

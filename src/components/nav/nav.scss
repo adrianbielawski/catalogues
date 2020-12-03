@@ -23,15 +23,17 @@
         color: $darkGrey;
         margin-left: 5px;
     }
+    .leftArrow {
+        color: $darkGrey;
+        margin-right: 5px;
+    }
     &:hover, &.hover {
-        color: $lightOrange;
-        p, .arrow {
+        p, .arrow, .leftArrow {
             color: $lightOrange;
         }
     }
     &.active {
         border-bottom: 2px solid $orange;
-        color: $orange;
         p, .arrow {
             color: $orange;
         }
