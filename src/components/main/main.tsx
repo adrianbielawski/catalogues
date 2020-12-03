@@ -1,29 +1,26 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import styles from './main.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import Header from 'components/global-components/header/header'
-import Nav from 'components/nav/nav'
-import Logout from 'components/auth/logout/logout'
+import Catalogues from './catalogues/catalogues'
+import Settings from './settings/settings'
+import Loader from 'components/global-components/loader/loader'
 
 const Main = () => {
-    const user = useTypedSelector(state => state.app.user)
+    const screenHeight = useTypedSelector(state => state.app.screenHeight)
 
-    const NAV_CONTENT = [
-        {
-            title: 'Catalogues',
-            children: []
-        },
-        {
-            title: 'Settings',
-            url: `/${user!.id}/settings`,
-        }
-    ]
     return (
-        <div className={styles.main}>
+        <div className={styles.main} style={{ minHeight: screenHeight }}>
             <Header />
-            <Nav content={NAV_CONTENT} extraItems={[<Logout className={styles.logout} />]} />
+            <Suspense fallback={<Loader />}>
+                <Switch>
+                    <Route path={"/:userId/catalogues"} component={Catalogues} />
+                    <Route path={"/:userId/settings"} component={Settings} />
+                </Switch>
+            </Suspense>
         </div>
     )
 }
