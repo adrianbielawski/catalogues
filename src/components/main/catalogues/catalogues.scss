@@ -1,0 +1,33 @@
+@import "global-styles/variables_and_mixins";
+
+.catalogues {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    .wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-grow: 1;
+        .menu {
+            padding: 10px;
+            width: 250px;
+            box-sizing: border-box;
+            border-right: 1px solid $grey;
+        }
+        .content {
+            padding: 10px;
+            display: flex;
+            flex-grow: 1;
+        }
+    }
+    .logout {
+        font-weight: 700;
+        font-size: 1.2em;
+        padding: 5px 10px;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        &:hover {
+            color: $lightOrange;
+        }
+    }
+}
