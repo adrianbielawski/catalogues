@@ -1,17 +1,20 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import styles from './myAccount.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import EditableList from 'components/global-components/editable-list/editableList'
+import { changeUserName } from 'store/actions/authActions'
 
 type OnConfirm = (input: string[]) => void
 
 const MyAccount = () => {
+    const dispatch = useDispatch()
     const user = useTypedSelector(state => state.app.user)
 
     const handleNameChange: OnConfirm = (input) => {
-        console.log(input)
+        return dispatch(changeUserName(input[0]))
     }
 
     const handlePasswordChange: OnConfirm = (input) => {

@@ -7,7 +7,7 @@ import {
     AUTH_INITIALIZED, AUTH_GET_USER_SUCCESS, AUTH_GET_USER_FAILURE,
     AUTH_LOG_IN_START, AUTH_LOG_IN_SUCCESS, AUTH_LOG_IN_FAILURE,
     AUTH_SIGN_UP_START, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE,
-    AppActionTypes, ErrorData
+    AUTH_USERNAME_CHANGE_SUCCESS, AppActionTypes, ErrorData
 } from '../storeTypes'
 
 export const authInitialized = (): AppActionTypes => ({
@@ -142,4 +142,27 @@ export const logOut = (
             console.log('Something went wrong')
         }
     });
+}
+
+const changeUsernameSuccess = (user: User): AppActionTypes => ({
+    type: AUTH_USERNAME_CHANGE_SUCCESS,
+    user
+})
+
+export const changeUserName = (
+    newName: string
+): ThunkAction => dispatch => {
+    return axiosInstance.patch('/user/', { username: newName })
+    .then((response) => {
+        dispatch(changeUsernameSuccess(response.data))
+    })
+    .then(() => {
+    })
+    .catch((error) => {
+        if (error.response) {
+            console.log(Object.values(error.response.data as ErrorData)[0][0])
+        } else {
+            console.log('Something went wrong')
+        }
+    })
 }
