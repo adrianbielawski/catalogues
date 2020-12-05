@@ -30,7 +30,8 @@ const MyAccount = () => {
         {
             title: "Password",
             content: ['password', 'confirm password'],
-            hidden: true,
+            hiddenContent: true,
+            inputProps: {type: "password"},
             onConfirm: handlePasswordChange,
         },
         {

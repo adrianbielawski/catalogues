@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styles from './editableList.scss'
 //Custom components
 import EditableField from 'components/global-components/editable-list/editable-field/editableField'
 
@@ -8,8 +7,8 @@ type OnEditClick = (id: number | null) => void
 interface Field {
     title: string,
     content: string[],
-    neverEditable?: never,
-    hidden?: boolean,
+    hiddenContent?: boolean,
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     onConfirm?: OnConfirm,
 }
 
@@ -25,8 +24,12 @@ type Props = {
 const EditableList = (props: Props) => {
     const [editableFieldId, setEditableFieldId] = useState<number | null>(null)
 
-    const handleFieldEdit: OnEditClick = (id) => {
-        setEditableFieldId(id)
+    const handleEditFieldClick: OnEditClick = (id) => {
+        if (editableFieldId === id) {
+            setEditableFieldId(null)
+        } else {
+            setEditableFieldId(id)
+        }
     }
 
     const getFields = () => {
@@ -43,11 +46,12 @@ const EditableList = (props: Props) => {
                 <li key={i}>
                     <EditableField
                         id={i}
-                        editMode={editableFieldId === i}
+                        isEditing={editableFieldId === i}
                         title={field.title}
                         content={field.content}
-                        hidden={field.hidden || false}
-                        onEditClick={handleFieldEdit}
+                        inputProps={field.inputProps}
+                        hiddenContent={field.hiddenContent || false}
+                        onEditClick={handleEditFieldClick}
                         onConfirm={field.onConfirm && handleConfirm}
                     />
                 </li>

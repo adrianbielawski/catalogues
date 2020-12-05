@@ -10,8 +10,9 @@ interface Props {
     id: number,
     title: string,
     content: string[],
-    editMode: boolean,
-    hidden?: boolean,
+    hiddenContent?: boolean,
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
+    isEditing: boolean,
     onEditClick: (id: number | null) => void,
     onConfirm?: (input: string[]) => void
 }
@@ -48,13 +49,14 @@ const EditableField = (props: Props) => {
     const cx = classNames.bind(styles)
 
     const getField = () => {
-        if (props.editMode && props.onConfirm !== undefined) {
+        if (props.isEditing && props.onConfirm !== undefined) {
             return (
                 <div className={styles.inputWrapper}>
                     <input
                         className={styles.content}
                         placeholder={props.content[inputCount]}
                         ref={inputRef}
+                        {...props.inputProps}
                         autoFocus
                     />
                     {!confirmed
@@ -71,7 +73,7 @@ const EditableField = (props: Props) => {
         } else {
             return (
                 <p className={styles.content}>
-                    {props.hidden ? '****' : props.content[0]}
+                    {props.hiddenContent ? '****' : props.content[0]}
                 </p>
             )
         }
@@ -80,7 +82,7 @@ const EditableField = (props: Props) => {
     const editButtonClass = cx(
         'editButton',
         {
-            active: props.editMode,
+            active: props.isEditing,
         },
     )
 
