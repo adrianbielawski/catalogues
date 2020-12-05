@@ -5,7 +5,7 @@ import styles from './myAccount.scss'
 import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import EditableList from 'components/global-components/editable-list/editableList'
-import { changeUserName } from 'store/actions/authActions'
+import { changeUserName, changeUserPassword } from 'store/actions/authActions'
 
 type OnConfirm = (input: string[]) => void
 
@@ -18,7 +18,7 @@ const MyAccount = () => {
     }
 
     const handlePasswordChange: OnConfirm = (input) => {
-        console.log(input)
+        return dispatch(changeUserPassword(input[0], input[1]))
     }
 
     const FIELDS = [

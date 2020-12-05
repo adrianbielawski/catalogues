@@ -7,7 +7,7 @@ import {
     AUTH_INITIALIZED, AUTH_GET_USER_SUCCESS, AUTH_GET_USER_FAILURE,
     AUTH_LOG_IN_START, AUTH_LOG_IN_SUCCESS, AUTH_LOG_IN_FAILURE,
     AUTH_SIGN_UP_START, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE,
-    AUTH_USERNAME_CHANGE_SUCCESS, AppActionTypes, ErrorData
+    AUTH_USERNAME_CHANGE_SUCCESS, AUTH_PASSWORD_CHANGE_SUCCESS, AppActionTypes, ErrorData
 } from '../storeTypes'
 
 export const authInitialized = (): AppActionTypes => ({
@@ -165,4 +165,25 @@ export const changeUserName = (
             console.log('Something went wrong')
         }
     })
+}
+
+const changePasswordSuccess = () => ({
+    type: AUTH_PASSWORD_CHANGE_SUCCESS,
+})
+
+export const changeUserPassword = (
+    newPassword: string,
+    repeatPassword: string,
+): ThunkAction => dispatch => {
+    axiosInstance.post('/password/change/', { new_password1: newPassword, new_password2: repeatPassword })
+        .then(() => {
+            dispatch(changePasswordSuccess())
+        })
+        .catch((error) => {
+            if (error.response) {
+                console.log(Object.values(error.response.data as ErrorData)[0][0])
+            } else {
+                console.log('Something went wrong')
+            }
+        })
 }

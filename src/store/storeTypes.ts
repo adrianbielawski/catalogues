@@ -15,6 +15,7 @@ export const AUTH_SIGN_UP_SUCCESS = 'AUTH/SIGN_UP/SUCCESS'
 export const AUTH_SIGN_UP_FAILURE = 'AUTH/SIGN_UP/FAILURE'
 export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
 export const AUTH_USERNAME_CHANGE_SUCCESS = 'AUTH/USERNAME_CHANGE/SUCCESS'
+export const AUTH_PASSWORD_CHANGE_SUCCESS = 'AUTH/PASSWORD_CHANGE/SUCCESS'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
   ReturnType,
@@ -87,6 +88,10 @@ interface changeUsernameSuccess {
     user: User,
 }
 
+interface changeUserPassword {
+    type: typeof AUTH_PASSWORD_CHANGE_SUCCESS,
+}
+
 interface clearAppState {
     type: typeof APP_CLEAR_APP_STATE,
     screenHeight: number,
@@ -94,4 +99,4 @@ interface clearAppState {
 
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
-    | changeUsernameSuccess | clearAppState 
+    | changeUsernameSuccess | changeUserPassword | clearAppState 
