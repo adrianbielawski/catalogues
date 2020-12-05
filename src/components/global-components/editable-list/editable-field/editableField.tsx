@@ -4,6 +4,7 @@ import styles from './editableField.scss'
 //Custom components
 import EditButton from 'components/global-components/edit-button/editButton'
 import ConfirmButton from 'components/global-components/confirm-button/confirmButton'
+import Loader from 'components/global-components/loader/loader'
 
 interface Props {
     id: number,
@@ -19,6 +20,7 @@ const EditableField = (props: Props) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const [inputCount, setInputCount] = useState(0)
     const [userInput, setUserInput] = useState<string[]>([])
+    const [confirmed, setConfirmed] = useState(false)
 
     const handleEdit = () => {
         props.onEditClick(props.id)
@@ -30,9 +32,16 @@ const EditableField = (props: Props) => {
             setInputCount(inputCount + 1)
             inputRef.current!.value = ''
         } else {
-            setUserInput([])
-            setInputCount(0)
-            props.onConfirm!([...userInput, inputRef.current!.value])
+            setConfirmed(true)
+            Promise.resolve(
+                props.onConfirm!([...userInput, inputRef.current!.value])
+            )
+                .then(() => {
+                    setConfirmed(false)
+                    setUserInput([])
+                    setInputCount(0)
+                })
+                .catch(() => setConfirmed(false))
         }
     }
 
@@ -48,10 +57,15 @@ const EditableField = (props: Props) => {
                         ref={inputRef}
                         autoFocus
                     />
-                    <ConfirmButton
-                        className={styles.confirmButton}
-                        onClick={handleConfirm}
-                    />
+                    {!confirmed
+                        ? (
+                            <ConfirmButton
+                                className={styles.confirmButton}
+                                onClick={handleConfirm}
+                            />
+                        )
+                        : <Loader className={styles.loader} size={25} />
+                    }
                 </div>
             )
         } else {

@@ -32,8 +32,12 @@ const EditableList = (props: Props) => {
     const getFields = () => {
         return props.fields.map((field, i) => {
             const handleConfirm: OnConfirm = (input) => {
-                field.onConfirm!(input)
-                setEditableFieldId(null)
+                return Promise.resolve(
+                    field.onConfirm!(input)
+                )
+                    .then(() => {
+                        setEditableFieldId(null)
+                    })
             }
             return (
                 <li key={i}>
