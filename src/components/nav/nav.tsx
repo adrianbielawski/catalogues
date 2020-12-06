@@ -25,7 +25,7 @@ type ItemType = ItemWithUrl | ItemWithChildren
 
 interface Props {
     content: ItemType[],
-    goBack?: {default: string, url: string},
+    goBack?: { title: string, url: string, location: string },
     extraItems?: JSX.Element[]
 }
 
@@ -48,7 +48,11 @@ const Nav = (props: Props) => {
     
     useEffect(() => {
         if (location.state !== undefined) {
+            if (location.state!.referrer.startsWith(props.goBack!.location)) {
+                setPrevLocation(props.goBack!.url)
+            } else {
             setPrevLocation(location.state.referrer)
+            }
         }
     }, [])
 
@@ -114,7 +118,10 @@ const Nav = (props: Props) => {
                         className={styles.leftArrow}
                     />
                     <p>
-                        {prevLocation === '' ? props.goBack.default : 'Go back'}
+                        {prevLocation === '' || prevLocation === props.goBack.url
+                            ? props.goBack.title
+                            : 'Go back'
+                        }
                     </p>
                 </li>
             )

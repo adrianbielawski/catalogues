@@ -37,7 +37,11 @@ const Settings = () => {
         <div className={styles.settings}>
             <Nav
                 content={NAV_CONTENT}
-                goBack={{default: 'Catalogues', url: `/${user!.id}/catalogues/nails`}}
+                goBack={{
+                    title: 'Catalogues',
+                    url: `/${user!.id}/catalogues`,
+                    location: `/${user!.id}/settings`,
+                }}
                 extraItems={[<Logout className={styles.logout}/>]}
             />
             <Suspense fallback={<Loader />}>
