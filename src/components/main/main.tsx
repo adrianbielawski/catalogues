@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 import styles from './main.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
@@ -17,6 +17,11 @@ const Main = () => {
             <Header />
             <Suspense fallback={<Loader />}>
                 <Switch>
+                    <Redirect
+                        exact
+                        from="/:userId"
+                        to="/:userId/catalogues"
+                    />
                     <Route path={"/:userId/catalogues"} component={Catalogues} />
                     <Route path={"/:userId/settings"} component={Settings} />
                 </Switch>

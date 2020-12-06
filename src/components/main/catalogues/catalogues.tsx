@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { Suspense } from 'react'
+import { Redirect } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styles from './catalogues.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
+import Loader from 'components/global-components/loader/loader'
 
 const Catalogues = () => {
     const user = useTypedSelector(state => state.app.user)
@@ -32,14 +35,19 @@ const Catalogues = () => {
     return (
         <div className={styles.catalogues}>
             <Nav content={NAV_CONTENT} extraItems={[<Logout className={styles.logout} />]} />
-            <div className={styles.wrapper}>
-                <div className={styles.menu}>
-                    Menu
-                </div>
-                <div className={styles.content}>
-                    Catalogues
-                </div>
-            </div>
+            <Suspense fallback={<Loader />}>
+                <Switch>
+                    <Redirect
+                        exact
+                        from="/:userId/catalogues"
+                        to="/:userId/catalogues/nails"
+                    />
+                    <Route
+                        path="/:userId/catalogues/nails"
+                        component={Loader}
+                    />
+                </Switch>
+            </Suspense>
         </div>
     )
 }

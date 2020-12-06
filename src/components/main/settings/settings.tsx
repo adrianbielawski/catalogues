@@ -52,6 +52,10 @@ const Settings = () => {
                         to="/:userId/settings/account"
                     />
                     <Route
+                        path="/:userId/settings/nails"
+                        component={Loader}
+                    />
+                    <Route
                         path="/:userId/settings/account"
                         component={AccountSettings}
                     />

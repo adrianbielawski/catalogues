@@ -32,7 +32,7 @@ export const getUser = (
         dispatch(getUserSuccess(response.data))
 
         if(location.pathname === '/') { 
-            history.push(`/${response.data.id}/catalogues/nails`)
+            history.push(`/${response.data.id}/catalogues`)
         }
     })
     .catch(() => {
@@ -113,7 +113,7 @@ export const logIn = (
         localStorage.setItem('token', response.data.key)
         dispatch(logInSuccess(response.data.user))
 
-        const { referrer } = location.state || { referrer: `/${response.data.user.id}/catalogues/nails` }
+        const { referrer } = location.state || { referrer: `/${response.data.user.id}/catalogues` }
         history.push(referrer)
     })
     .catch(error => {
