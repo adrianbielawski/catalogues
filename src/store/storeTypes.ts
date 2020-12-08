@@ -1,7 +1,7 @@
 import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
-import { User, DeserializedUser } from 'src/globalTypes'
+import { User, DeserializedUser, Catalogue, DeserializedCatalogue } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
 export const AUTH_INITIALIZED = 'AUTH/INITIALIZED'
@@ -16,6 +16,7 @@ export const AUTH_SIGN_UP_FAILURE = 'AUTH/SIGN_UP/FAILURE'
 export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
 export const AUTH_USERNAME_CHANGE_SUCCESS = 'AUTH/USERNAME_CHANGE/SUCCESS'
 export const AUTH_PASSWORD_CHANGE_SUCCESS = 'AUTH/PASSWORD_CHANGE/SUCCESS'
+export const CATALOGUES_GET_CATALOGUES_SUCCESS = 'CATALOGUES/GET_CATALOGUES/SUCCESS'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
   ReturnType,
@@ -33,6 +34,11 @@ export interface AuthState {
     isInitialized: boolean,
     isLoggingIn: boolean,
     isSigningUp: boolean,
+}
+
+export interface CataloguesState {
+    catalogues: DeserializedCatalogue[],
+    fetchingCatalogues: boolean,
 }
 
 export interface ErrorData {
@@ -92,6 +98,11 @@ interface changeUserPassword {
     type: typeof AUTH_PASSWORD_CHANGE_SUCCESS,
 }
 
+interface getCataloguesSuccess {
+    type: typeof CATALOGUES_GET_CATALOGUES_SUCCESS,
+    catalogues: Catalogue[],
+}
+
 interface clearAppState {
     type: typeof APP_CLEAR_APP_STATE,
     screenHeight: number,
@@ -99,4 +110,5 @@ interface clearAppState {
 
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
-    | changeUsernameSuccess | changeUserPassword | clearAppState 
+    | changeUsernameSuccess | changeUserPassword | getCataloguesSuccess
+    | clearAppState 
