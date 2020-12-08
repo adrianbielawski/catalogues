@@ -62,6 +62,11 @@ const Catalogues = () => {
                         />
                     </Switch>
                 </Suspense>
+                {catalogues.length === 0 &&
+                    <p className={styles.noContent}>You have no catalogues yet,
+                        <span className={styles.anchor}> click here to create your first catalogue</span>
+                    </p>
+                }
             </div>
     )
 }
