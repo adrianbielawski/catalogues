@@ -45,6 +45,7 @@
 
 .navList {
     position: absolute;
+    z-index: 1000;
     visibility: hidden;
     opacity: 0;
     background: $lightGrey;
