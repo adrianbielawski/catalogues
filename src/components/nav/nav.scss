@@ -38,6 +38,9 @@
             color: $orange;
         }
     }
+    &.noChildren {
+        cursor: not-allowed;
+    }
 }
 
 .navList {

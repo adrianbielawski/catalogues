@@ -16,6 +16,7 @@ const Settings = () => {
     const NAV_CONTENT = [
         {
             title: 'Catalogues settings',
+            location: `/${user!.id}/settings`,
             children: [
                 {
                     title: 'Nails settings',

@@ -17,11 +17,12 @@ export type ItemWithUrl = {
 
 type ItemWithChildren = {
     title: string,
+    location: string
     url?: never,
     children: ItemWithUrl[],
 }
 
-type ItemType = ItemWithUrl | ItemWithChildren
+export type ItemType = ItemWithUrl | ItemWithChildren
 
 interface Props {
     content: ItemType[],
@@ -45,9 +46,9 @@ const Nav = (props: Props) => {
     const location = useLocation<LocationState>()
     const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
     const [prevLocation, setPrevLocation] = useState<string>('')
-    
+
     useEffect(() => {
-        if (location.state !== undefined) {
+        if (location.state !== undefined && props.goBack !== undefined) {
             if (location.state!.referrer.startsWith(props.goBack!.location)) {
                 setPrevLocation(props.goBack!.url)
             } else {
@@ -99,6 +100,7 @@ const Nav = (props: Props) => {
                 return (
                     <NavList
                         title={item.title}
+                        location={item.location}
                         children={item.children}
                         index={index}
                         show={showList.show === true && showList.index === index}

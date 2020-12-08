@@ -15,6 +15,7 @@ const Catalogues = () => {
     const NAV_CONTENT = [
         {
             title: 'Catalogues',
+            location: `/${user!.id}/catalogues`,
             children: [
                 {
                     title: 'Nails',
