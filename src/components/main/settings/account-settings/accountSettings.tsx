@@ -36,11 +36,19 @@ const AccountSettings = () => {
                     />
                     <Route
                         path="/:userId/settings/account/manage-catalogues"
-                        render={() => <MainContent content={<Loader />} />}
+                        render={() =>
+                            <MainContent>
+                                <Loader />
+                            </MainContent>
+                        }
                     />
                     <Route
                         path="/:userId/settings/account/my-account"
-                        render={() => <MainContent content={<MyAccount />} />}
+                        render={() =>
+                            <MainContent>
+                                <MyAccount />
+                            </MainContent>
+                        }
                     />
                 </Switch>
             </Suspense>
