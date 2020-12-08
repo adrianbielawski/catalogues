@@ -1,7 +1,7 @@
 import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
-import { User, DeserializedUser, Catalogue, DeserializedCatalogue } from 'src/globalTypes'
+import { User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
 export const AUTH_INITIALIZED = 'AUTH/INITIALIZED'
@@ -17,6 +17,9 @@ export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
 export const AUTH_USERNAME_CHANGE_SUCCESS = 'AUTH/USERNAME_CHANGE/SUCCESS'
 export const AUTH_PASSWORD_CHANGE_SUCCESS = 'AUTH/PASSWORD_CHANGE/SUCCESS'
 export const CATALOGUES_GET_CATALOGUES_SUCCESS = 'CATALOGUES/GET_CATALOGUES/SUCCESS'
+export const CATALOGUES_GET_CATALOGUE_ITEMS_START = 'CATALOGUES/GET_CATALOGUE_ITEMS/START'
+export const CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS'
+export const CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
   ReturnType,
@@ -39,6 +42,8 @@ export interface AuthState {
 export interface CataloguesState {
     catalogues: DeserializedCatalogue[],
     fetchingCatalogues: boolean,
+    itemsData: DeserializedListData,
+    fetchingItems: boolean,
 }
 
 export interface ErrorData {
@@ -103,6 +108,19 @@ interface getCataloguesSuccess {
     catalogues: Catalogue[],
 }
 
+interface getCataloguesItemsStart {
+    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_START,
+}
+
+interface getCataloguesItemsSuccess {
+    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS,
+    data: ListData,
+}
+
+interface getCataloguesItemsFailure {
+    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
+}
+
 interface clearAppState {
     type: typeof APP_CLEAR_APP_STATE,
     screenHeight: number,
@@ -110,5 +128,5 @@ interface clearAppState {
 
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
-    | changeUsernameSuccess | changeUserPassword | getCataloguesSuccess
-    | clearAppState 
+    | changeUsernameSuccess | changeUserPassword | getCataloguesSuccess | getCataloguesItemsStart
+    | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState 
