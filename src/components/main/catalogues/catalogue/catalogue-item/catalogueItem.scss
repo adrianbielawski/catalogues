@@ -1,0 +1,21 @@
+@import "global-styles/variables_and_mixins";
+
+.item {
+    box-shadow: 1px 1px 2px $midLightGrey;
+    background: #fff;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+    .imageWrapper {
+        width: 100px;
+        height: 100px;
+        border: 1px solid $midLightGrey;
+        .img {
+            width: 100%;
+        }
+    }
+}
