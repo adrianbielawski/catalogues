@@ -1,0 +1,14 @@
+@import "global-styles/variables_and_mixins";
+
+.button {
+    margin-top: 5px;
+    font-weight: 700;
+    color: $darkGrey;
+    cursor: pointer;
+    &:hover {
+        color: $lightOrange;
+    }
+    .arrow {
+        margin-left: 5px;
+    }
+}
