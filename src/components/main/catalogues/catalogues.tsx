@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -14,14 +14,35 @@ import { ItemType } from 'components/nav/nav'
 import Catalogue from './catalogue/catalogue'
 
 const Catalogues = () => {
+    const cataloguesRef = useRef<HTMLDivElement>(null)
     const dispatch = useDispatch()
+    const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const user = useTypedSelector(state => state.app.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
+    const [minHeight, setMinHeight] = useState(0)
 
     useEffect(() => {
         dispatch(getCatalogues(user!.id))
     }, [])
+
+    useEffect(() => {
+        if (cataloguesRef.current === null) {
+            return
+        }
+        window.addEventListener('resize', getMinHeight)
+        getMinHeight()
+
+        return () => {
+            window.removeEventListener('resize', getMinHeight)
+        }
+    }, [cataloguesRef.current, screenHeight])
+
+    const getMinHeight = () => {
+        const top = cataloguesRef.current?.getBoundingClientRect().top
+        const minHeight = screenHeight - top!
+        setMinHeight(minHeight)
+    }
 
     const NAV_CONTENT: ItemType[] = [
         {
@@ -42,7 +63,7 @@ const Catalogues = () => {
 
     return (
         fetchingCatalogues ? <Loader className={styles.loader} /> :
-            <div className={styles.catalogues}>
+            <div className={styles.catalogues} style={{minHeight: `${minHeight}px`}} ref={cataloguesRef}>
                 <Nav
                     content={NAV_CONTENT}
                     extraItems={[<Logout className={styles.logout} />]}

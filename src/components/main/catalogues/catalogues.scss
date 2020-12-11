@@ -1,6 +1,9 @@
 @import "global-styles/variables_and_mixins";
 
 .catalogues {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     .nav {
         position: sticky;
         top: 0;
