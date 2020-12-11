@@ -7,7 +7,6 @@ import { useTypedSelector } from 'store/reducers/index'
 //Custom components
 import SideMenu from 'components/main/side-menu/sideMenu'
 import Loader from 'components/global-components/loader/loader'
-import MainContent from 'components/main/main-content/mainContent'
 import MyAccount from './my-account/myAccount'
 
 const AccountSettings = () => {
@@ -36,19 +35,11 @@ const AccountSettings = () => {
                     />
                     <Route
                         path="/:userId/settings/account/manage-catalogues"
-                        render={() =>
-                            <MainContent>
-                                <Loader />
-                            </MainContent>
-                        }
+                        component={Loader}
                     />
                     <Route
                         path="/:userId/settings/account/my-account"
-                        render={() =>
-                            <MainContent>
-                                <MyAccount />
-                            </MainContent>
-                        }
+                        component={MyAccount}
                     />
                 </Switch>
             </Suspense>
