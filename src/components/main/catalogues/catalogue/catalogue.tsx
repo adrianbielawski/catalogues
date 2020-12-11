@@ -13,7 +13,7 @@ const Catalogue = (props: RouteComponentProps<Params>) => {
 
     return (
         <div className={styles.catalogue}>
-            <div className={styles.mainContent}>
+            <div id="catalogueMainContent" className={styles.mainContent}>
                 <CatalogueItems slug={props.match.params.slug} />
             </div>
         </div>
