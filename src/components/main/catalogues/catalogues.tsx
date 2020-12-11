@@ -46,6 +46,7 @@ const Catalogues = () => {
                 <Nav
                     content={NAV_CONTENT}
                     extraItems={[<Logout className={styles.logout} />]}
+                    className={styles.nav}
                 />
                 <Suspense fallback={<Loader />}>
                     <Switch>

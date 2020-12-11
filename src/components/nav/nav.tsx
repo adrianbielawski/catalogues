@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
+import classNames from 'classnames/bind'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './nav.scss'
@@ -27,7 +28,8 @@ export type ItemType = ItemWithUrl | ItemWithChildren
 interface Props {
     content: ItemType[],
     goBack?: { title: string, url: string, location: string },
-    extraItems?: JSX.Element[]
+    extraItems?: JSX.Element[],
+    className?: string,
 }
 
 interface ShowList {
@@ -40,6 +42,8 @@ type GetExtraItems = () => React.ReactNode[]
 type HandleListClick = (index: number) => void
 type HandleListHover = (index: number) => void
 type HandleLinkHover = () => void
+
+const cx = classNames.bind(styles)
 
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
@@ -136,8 +140,13 @@ const Nav = (props: Props) => {
         <li key={`extraItem${index}`}>{item}</li>
     )
 
+    const navClass = cx(
+        'nav',
+        props.className,
+    )
+
     return (
-        <nav className={styles.nav}>
+        <nav className={navClass}>
             <ul className={styles.navContent}>
                 {getItems()}
             </ul>
