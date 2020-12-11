@@ -1,0 +1,24 @@
+.modal {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    top: 0;
+    z-index: 100;
+    background: rgba(128, 128, 128, 0.5);
+    opacity: 0;
+    transition: all 0.3s linear;
+    &.mounted {
+        opacity: 1;
+    }
+    &.elevated {
+        z-index: 10000;
+    }
+    .wrapper {
+        min-width: 90%;
+        min-height: 90%;
+        background: #fff;
+        box-shadow: 0 0 10px #000;
+    }
+}
