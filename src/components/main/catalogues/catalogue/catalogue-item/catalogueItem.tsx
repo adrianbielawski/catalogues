@@ -5,17 +5,17 @@ import styles from './catalogueItem.scss'
 import { DeserializedItem } from 'src/globalTypes'
 //Custom components
 import ItemFields from './item-fields/itemFields'
+import MainImage from './main-image/mainImage'
 
 type Props = {
     item: DeserializedItem
 }
 
 const CatalogueItem = (props: Props) => {
+
     return (
         <li className={styles.item}>
-            <div className={styles.imageWrapper}>
-                <img className={styles.img} src="" />
-            </div>
+            <MainImage />
             <ItemFields item={props.item} />
         </li>
     )
