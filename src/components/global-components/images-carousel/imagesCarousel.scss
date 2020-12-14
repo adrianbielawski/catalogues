@@ -1,0 +1,71 @@
+@import "global-styles/variables_and_mixins";
+
+.carousel {
+    width: calc(var(--size) * var(--minScale) * 2 + var(--size) + 10px);
+    height: var(--size);
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover .prev,
+    &:hover .next {
+        opacity: .75;
+    }
+
+    .prev,
+    .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-30px);
+        padding: 0 5px;
+        font-size: 1.6em;
+        background: $lightGrey;
+        color: #000;
+        text-align: center;
+        line-height: 60px;
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        &:hover {
+            opacity: .9;
+        }
+        &:active {
+            background: $grey;
+        }
+    }
+
+    .prev {
+        left: 0;
+    }
+
+    .next {
+        right: 0;
+    }
+
+    ul {
+        list-style: none;
+        display: grid;
+        padding: 0;
+        margin: 0;
+        li {
+            grid-area: 1 / -1;
+            div {
+                width: var(--size);
+                height: var(--size);
+                transform: scale(var(--scale)) translateX(calc(var(--offset)));
+                transition: 0.2s;
+                opacity: var(--scale);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
+        }
+    }
+}
