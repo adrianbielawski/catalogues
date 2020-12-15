@@ -111,12 +111,16 @@ const EditItemModal = (props: Props) => {
     return (
         <Modal show={props.show} parent={modalParent!} onClose={handleClose}>
             <div className={styles.editItemModal} ref={editItemRef} >
+                <p className={styles.currentImage}>Main image</p>
                 <ImagesCarousel
                     width={width * .7}
                     images={img}
                     onRemove={handleImageRemove}
                     onChange={handleImageChange}
                 />
+                <EditableList
+                    className={styles.editableList}
+                    fields={FIELDS}
                 />
             </div>
         </Modal>

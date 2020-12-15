@@ -1,3 +1,20 @@
 .editItemModal {
     padding: 5%;
+    .currentImage {
+        font-size: 2em;
+        font-weight: 700;
+        text-align: center;
+        line-height: 0vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .editItemModal {
+        .currentImage {
+            font-size: 1em;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.2em;
+        }
+    }
 }
