@@ -7,6 +7,7 @@ import Modal from 'components/global-components/modal/modal'
 import EditableList from 'components/global-components/editable-list/editableList'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
+import AddImage from './add-image/addImage'
 
 type Props = {
     show: boolean,
@@ -118,6 +119,7 @@ const EditItemModal = (props: Props) => {
                     onRemove={handleImageRemove}
                     onChange={handleImageChange}
                 />
+                <AddImage />
                 <EditableList
                     className={styles.editableList}
                     fields={FIELDS}
