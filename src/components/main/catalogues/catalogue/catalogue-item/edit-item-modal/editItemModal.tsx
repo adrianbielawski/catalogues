@@ -6,6 +6,7 @@ import { DeserializedItem } from 'src/globalTypes'
 import Modal from 'components/global-components/modal/modal'
 import EditableList from 'components/global-components/editable-list/editableList'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
+import { cloneDeep } from 'lodash'
 
 type Props = {
     show: boolean,
@@ -56,7 +57,7 @@ const EditItemModal = (props: Props) => {
         },
     ]
 
-    const IMAGES = [
+    let IMAGES = [
         {
             url: 'http://placekitten.com/300/300',
             isMain: false,
@@ -91,11 +92,22 @@ const EditItemModal = (props: Props) => {
         },
     ]
 
+    const [img, setImg] = useState(IMAGES)
+
+    const handleImageRemove = (i: number) => {
+        let images = cloneDeep(img)
+        images.splice(i, 1)
+        setImg(images)
+    }
+
     return (
         <Modal show={props.show} parent={modalParent!} onClose={handleClose}>
             <div className={styles.editItemModal} ref={editItemRef} >
-                <ImagesCarousel width={width * .7} images={IMAGES} />
-                <EditableList className={styles.editableList} fields={FIELDS} />
+                <ImagesCarousel
+                    width={width * .7}
+                    images={img}
+                    onRemove={handleImageRemove}
+                />
             </div>
         </Modal>
     )

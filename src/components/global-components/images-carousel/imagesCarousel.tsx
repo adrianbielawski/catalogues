@@ -4,6 +4,7 @@ import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
 //Custom components
 import HorizontalArrowButton from '../horizontal-arrow-button/horizontalArrowButton'
+import TrashButton from '../trash-button/trashButton'
 
 type Image = {
     url: string,
@@ -14,6 +15,7 @@ type Props = {
     width: number,
     images: Image[],
     className?: string,
+    onRemove?: (i: number) => void, 
 }
 
 type TouchStart = number | null
@@ -26,15 +28,16 @@ const cx = classNames.bind(styles)
 const mod: Mod = (i, n) => ((i % n) + n) % n
 
 const ImagesCarousel = (props: Props) => {
-    const MIN_SCALE = .7
-    const MAX_SCALE = 1
-    const IMAGE_SIZE = (props.width) * .416
-
     const carouselRef = useRef<HTMLDivElement>(null)
     const [touchStart, setTouchStart] = useState<TouchStart>(null)
     const [slideX, setSlideX] = useState<SlideX>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isMain === true))
+    const screenWidth = window.innerWidth
+
     const count = props.images.length
+    const MIN_SCALE = .7
+    const MAX_SCALE = 1
+    const IMAGE_SIZE = screenWidth > 600 ? (props.width) * .416 : props.width
 
     useEffect(() => {
         if (carouselRef.current !== null) {
@@ -82,7 +85,7 @@ const ImagesCarousel = (props: Props) => {
 
     const getDynamicStyles = (i: number) => {
         let newCurrent = current - parseInt(slideX.toString())
-        const IMAGE_OFFSET = IMAGE_SIZE * 1.25
+        const IMAGE_OFFSET = IMAGE_SIZE * 1.22
 
         let styles = {
             scale: i === current ? MAX_SCALE : MIN_SCALE,
@@ -120,17 +123,28 @@ const ImagesCarousel = (props: Props) => {
     const getItems = () => {
         let items = []
         for (let i = current - 3; i <= current + 3; i++) {
-            const styles = getDynamicStyles(i)
+            const onTrashClick = () => {
+                if (props.onRemove === undefined) {
+                    return
+                }
+                props.onRemove(mod(i, count))
+            }
+            const dynamicStyles = getDynamicStyles(i)
             items.push(
                 <li key={i}>
                     <div
                         style={{
-                            '--offset': styles.offset,
-                            '--scale': styles.scale,
+                            '--offset': dynamicStyles.offset,
+                            '--scale': dynamicStyles.scale,
                             '--size': `${IMAGE_SIZE}px`,
                         } as React.CSSProperties}
                     >
                         <img src={props.images[mod(i, count)].url} />
+                        {props.onRemove &&
+                            <TrashButton
+                            className={styles.trashButton}
+                            onClick={onTrashClick} />
+                        }
                     </div>
                 </li>
             )
