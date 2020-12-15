@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from './editItemModal.scss'
 //Types
-import { DeserializedItem } from 'src/globalTypes'
+import { DeserializedItem, Image } from 'src/globalTypes'
 //Custom components
 import Modal from 'components/global-components/modal/modal'
 import EditableList from 'components/global-components/editable-list/editableList'
@@ -14,9 +14,13 @@ type Props = {
     item: DeserializedItem
     onClose: () => void
 }
-type OnConfirm = (input: string[]) => void
+
+const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const EditItemModal = (props: Props) => {
+    let IMAGES: Image[] = []
+
+    const [images, setImages] = useState(IMAGES)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
     const modalParent = document.getElementById('catalogueMainContent')
@@ -43,7 +47,7 @@ const EditItemModal = (props: Props) => {
         props.onClose()
     }
 
-    const handleNameChange: OnConfirm = (newName) => {
+    const handleNameChange = (newName: string[]) => {
     }
 
     const FIELDS = [
@@ -58,68 +62,45 @@ const EditItemModal = (props: Props) => {
         },
     ]
 
-    let IMAGES = [
-        {
-            url: 'http://placekitten.com/300/300',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/300/300',
-            isMain: true,
-        },
-        {
-            url: 'http://placekitten.com/300/300',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/300/400',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/120/90',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/200/120',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/200/240',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/200/300',
-            isMain: false,
-        },
-    ]
-
-    const [img, setImg] = useState(IMAGES)
-
     const handleImageRemove = (i: number) => {
-        let images = cloneDeep(img)
-        images.splice(i, 1)
-        setImg(images)
+        let imgs = cloneDeep(images)
+        if (imgs[i].isMain === true) {
+            let newMainIndex = mod(i + 1, imgs.length)
+            imgs[newMainIndex].isMain = true
+        }
+        imgs.splice(i, 1)
+        setImages(imgs)
     }
 
     const handleImageChange = (i: number) => {
-        let images = cloneDeep(img)
-        const prevMain = images.findIndex(img => img.isMain === true)
-        images[prevMain].isMain = false
-        images[i].isMain = true
-        setImg(images)
+        let imgs = cloneDeep(images)
+        const prevMain = imgs.findIndex(img => img.isMain === true)
+        imgs[prevMain].isMain = false
+        imgs[i].isMain = true
+        setImages(imgs)
+    }
+
+    const handleAddImage = (image: File) => {
+        let imgs = cloneDeep(images)
+        const newImage = {
+            url: URL.createObjectURL(image),
+            isMain: imgs.length === 0 ? true : false,
+        }
+        imgs.push(newImage)
+        setImages(imgs)
     }
 
     return (
         <Modal show={props.show} parent={modalParent!} onClose={handleClose}>
             <div className={styles.editItemModal} ref={editItemRef} >
-                <p className={styles.currentImage}>Main image</p>
+                {images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
                 <ImagesCarousel
                     width={width * .7}
-                    images={img}
+                    images={images}
                     onRemove={handleImageRemove}
                     onChange={handleImageChange}
                 />
-                <AddImage />
+                <AddImage onConfirm={handleAddImage} />
                 <EditableList
                     className={styles.editableList}
                     fields={FIELDS}

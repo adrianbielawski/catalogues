@@ -76,4 +76,9 @@ export interface DeserializedItem {
     catalogue: DeserializedCatalogue
 }
 
+export type Image = {
+    url: string,
+    isMain: boolean,
+}
+
 export type ItemDeserializer = (item: Item) => DeserializedItem

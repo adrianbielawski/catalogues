@@ -10,6 +10,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import ImagePreview from './image-preview/imagePreview'
 
 type Props = {
+    onConfirm: (image: File) => void,
     className?: string,
 }
 interface Event<T = EventTarget> {
@@ -40,6 +41,9 @@ const AddImage = (props: Props) => {
     }
 
     const handleConfirm = () => {
+        if (image !== undefined) {
+            props.onConfirm(image)
+        }
         setImage(undefined)
         fileInputRef.current!.value = ''
     }

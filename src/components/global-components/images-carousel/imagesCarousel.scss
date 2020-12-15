@@ -11,6 +11,10 @@
     align-items: center;
     justify-content: center;
 
+    .noContent {
+        font-size: 2vw;
+    }
+
     &:hover .prev,
     &:hover .next {
         opacity: 0.75;
@@ -112,6 +116,11 @@
     .carousel {
         width: var(--size);
         padding: 0;
+
+        .noContent {
+            font-size: 2em;
+        }
+
         .prev,
         .next {
             max-height: 30px;

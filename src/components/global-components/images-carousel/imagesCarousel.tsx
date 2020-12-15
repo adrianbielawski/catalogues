@@ -4,14 +4,11 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
+//Types
+import { Image } from 'src/globalTypes'
 //Custom components
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
-
-type Image = {
-    url: string,
-    isMain: boolean,
-}
 
 type Props = {
     width: number,
@@ -21,30 +18,25 @@ type Props = {
     onChange?: (i: number) => void,
 }
 
-type TouchStart = number | null
-type SlideX = number
-
-type Mod = (i: number, n: number) => number
-
 const cx = classNames.bind(styles)
 
-const mod: Mod = (i, n) => ((i % n) + n) % n
+const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const ImagesCarousel = (props: Props) => {
     const carouselRef = useRef<HTMLDivElement>(null)
-    const [touchStart, setTouchStart] = useState<TouchStart>(null)
-    const [slideX, setSlideX] = useState<SlideX>(0)
+    const [touchStart, setTouchStart] = useState<number | null>(null)
+    const [slideX, setSlideX] = useState<number>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isMain === true))
+    const count = props.images.length
     const screenWidth = window.innerWidth
 
-    const count = props.images.length
     const MIN_SCALE = .7
     const MAX_SCALE = 1
     const IMAGE_SIZE = screenWidth > 600 ? (props.width) * .416 : props.width
 
     useEffect(() => {
         if (props.onChange !== undefined) {
-            props.onChange(current)
+            props.onChange(mod(current, count))
         }
     }, [current])
 
@@ -92,6 +84,14 @@ const ImagesCarousel = (props: Props) => {
         setCurrent(current - Math.round(slideX))
     }
 
+    const handlePreviousImage = () => {
+        setCurrent(current - 1);
+    }
+    
+    const handleNextImage = () => {
+        setCurrent(current + 1);
+    }
+
     const getDynamicStyles = (i: number) => {
         let newCurrent = current - parseInt(slideX.toString())
         const IMAGE_OFFSET = IMAGE_SIZE * 1.22
@@ -131,6 +131,7 @@ const ImagesCarousel = (props: Props) => {
 
     const getItems = () => {
         let items = []
+
         for (let i = current - 3; i <= current + 3; i++) {
             const onTrashClick = () => {
                 if (props.onRemove === undefined) {
@@ -138,7 +139,9 @@ const ImagesCarousel = (props: Props) => {
                 }
                 props.onRemove(mod(i, count))
             }
+
             const dynamicStyles = getDynamicStyles(i)
+
             items.push(
                 <li key={i}>
                     <div
@@ -164,12 +167,6 @@ const ImagesCarousel = (props: Props) => {
         return items
     }
 
-    const handlePreviousImage = () => {
-        setCurrent(current - 1);
-    };
-    const handleNextImage = () => {
-        setCurrent(current + 1);
-    }
     const carouselClass = cx(
         'carousel',
         props.className,
@@ -184,21 +181,25 @@ const ImagesCarousel = (props: Props) => {
                 '--minScale': MIN_SCALE,
             } as React.CSSProperties}
         >
-            <ArrowButton
-                className={styles.prev}
-                leftArrow={true}
-                disabled={props.images.length <= 1}
-                onClick={handlePreviousImage}
-            />
-            <ul>
-                {getItems()}
-            </ul>
-            <ArrowButton
-                className={styles.next}
-                leftArrow={false}
-                disabled={props.images.length <= 1}
-                onClick={handleNextImage}
-            />
+            {count > 0 ? (
+                <>
+                    <ArrowButton
+                        className={styles.prev}
+                        leftArrow={true}
+                        onClick={handlePreviousImage}
+                    />
+                    <ul>
+                        {getItems()}
+                    </ul>
+                    <ArrowButton
+                        className={styles.next}
+                        leftArrow={false}
+                        onClick={handleNextImage}
+                    />
+                </>
+            )
+            : <p className={styles.noContent}>No images yet</p>
+            }
         </div>
     )
 }
