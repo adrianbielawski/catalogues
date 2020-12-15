@@ -100,6 +100,14 @@ const EditItemModal = (props: Props) => {
         setImg(images)
     }
 
+    const handleImageChange = (i: number) => {
+        let images = cloneDeep(img)
+        const prevMain = images.findIndex(img => img.isMain === true)
+        images[prevMain].isMain = false
+        images[i].isMain = true
+        setImg(images)
+    }
+
     return (
         <Modal show={props.show} parent={modalParent!} onClose={handleClose}>
             <div className={styles.editItemModal} ref={editItemRef} >
@@ -107,6 +115,8 @@ const EditItemModal = (props: Props) => {
                     width={width * .7}
                     images={img}
                     onRemove={handleImageRemove}
+                    onChange={handleImageChange}
+                />
                 />
             </div>
         </Modal>

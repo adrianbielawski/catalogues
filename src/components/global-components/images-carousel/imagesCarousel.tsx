@@ -15,7 +15,8 @@ type Props = {
     width: number,
     images: Image[],
     className?: string,
-    onRemove?: (i: number) => void, 
+    onRemove?: (i: number) => void,
+    onChange?: (i: number) => void,
 }
 
 type TouchStart = number | null
@@ -38,6 +39,12 @@ const ImagesCarousel = (props: Props) => {
     const MIN_SCALE = .7
     const MAX_SCALE = 1
     const IMAGE_SIZE = screenWidth > 600 ? (props.width) * .416 : props.width
+
+    useEffect(() => {
+        if (props.onChange !== undefined) {
+            props.onChange(current)
+        }
+    }, [current])
 
     useEffect(() => {
         if (carouselRef.current !== null) {
