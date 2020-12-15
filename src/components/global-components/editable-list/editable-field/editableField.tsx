@@ -1,10 +1,12 @@
 import React, { useRef, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './editableField.scss'
 //Custom components
-import EditButton from 'components/global-components/edit-button/editButton'
-import ConfirmButton from 'components/global-components/confirm-button/confirmButton'
 import Loader from 'components/global-components/loader/loader'
+import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 interface Props {
     id: number,
@@ -61,10 +63,12 @@ const EditableField = (props: Props) => {
                     />
                     {!confirmed
                         ? (
-                            <ConfirmButton
+                            <TransparentButton
                                 className={styles.confirmButton}
                                 onClick={handleConfirm}
-                            />
+                            >
+                                <FontAwesomeIcon icon={faCheck} />
+                            </TransparentButton>
                         )
                         : <Loader className={styles.loader} size={25} />
                     }
@@ -89,7 +93,11 @@ const EditableField = (props: Props) => {
     return (
         <div className={styles.editableField}>
             {props.onConfirm !== undefined
-                ? <EditButton className={editButtonClass} onClick={handleEdit} />
+                ? (
+                    <TransparentButton className={editButtonClass} onClick={handleEdit}>
+                        <FontAwesomeIcon icon={faEdit} />
+                    </TransparentButton>
+                )
                 : <div className={styles.placeholder}></div>
             }
             <p className={styles.title}>

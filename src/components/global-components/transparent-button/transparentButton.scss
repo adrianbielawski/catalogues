@@ -1,6 +1,8 @@
 @import "global-styles/variables_and_mixins";
 
 .transparentButton {
+    display: flex;
+    flex-direction: row;
     padding: 0;
     color: $darkGrey;
     border: none;

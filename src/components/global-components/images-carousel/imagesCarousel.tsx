@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
 //Custom components
-import HorizontalArrowButton from '../horizontal-arrow-button/horizontalArrowButton'
-import TrashButton from '../trash-button/trashButton'
+import ArrowButton from './arrow-button/arrowButton'
+import TransparentButton from '../transparent-button/transparentButton'
 
 type Image = {
     url: string,
@@ -148,9 +150,12 @@ const ImagesCarousel = (props: Props) => {
                     >
                         <img src={props.images[mod(i, count)].url} />
                         {props.onRemove &&
-                            <TrashButton
-                            className={styles.trashButton}
-                            onClick={onTrashClick} />
+                            <TransparentButton
+                                className={styles.trashButton}
+                                onClick={onTrashClick}
+                            >
+                                <FontAwesomeIcon icon={faTrashAlt} />
+                            </TransparentButton>
                         }
                     </div>
                 </li>
@@ -179,7 +184,7 @@ const ImagesCarousel = (props: Props) => {
                 '--minScale': MIN_SCALE,
             } as React.CSSProperties}
         >
-            <HorizontalArrowButton
+            <ArrowButton
                 className={styles.prev}
                 leftArrow={true}
                 disabled={props.images.length <= 1}
@@ -188,7 +193,7 @@ const ImagesCarousel = (props: Props) => {
             <ul>
                 {getItems()}
             </ul>
-            <HorizontalArrowButton
+            <ArrowButton
                 className={styles.next}
                 leftArrow={false}
                 disabled={props.images.length <= 1}

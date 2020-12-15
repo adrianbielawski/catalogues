@@ -1,18 +1,18 @@
 @import "global-styles/variables_and_mixins";
 
-.trashButton {
+.button {
+    font-weight: 700;
     padding: 0;
     color: $darkGrey;
     border: none;
     background: none;
     outline: none;
     cursor: pointer;
-    z-index: 1;
     @include resetTapHighlight;
     &:hover {
         color: $lightOrange;
     }
-    &.disabled {
+    &:disabled {
         color: $lightGrey;
         cursor: not-allowed;
     }
