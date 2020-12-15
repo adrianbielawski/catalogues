@@ -41,7 +41,6 @@ const List = (props: Props) => {
                 maxH = newH
             }
         }
-
         dispatch({
             type: 'ITEMS_INSPECTED',
             itemsInView,
@@ -52,7 +51,7 @@ const List = (props: Props) => {
 
     useEffect(() => {
         inspectItemsHeight()
-    }, [])
+    }, [props.items])
 
     const getDynamicStyles = () => {
         if (!state.showAllItems) {
