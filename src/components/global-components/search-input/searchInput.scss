@@ -1,0 +1,12 @@
+.searchInput {
+    position: relative;
+    input {
+        padding-right: 30px;
+    }
+    .searchButton {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        font-size: 1.3em;
+    }
+}
