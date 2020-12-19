@@ -1,0 +1,13 @@
+@import "global-styles/variables_and_mixins";
+
+.checkBoxWithTitle {
+    display: inline-flex;
+    align-items: center;
+    span {
+        margin-left: 5px;
+    }
+    &:hover {
+        color: $lightOrange;
+        cursor: pointer;
+    }
+}
