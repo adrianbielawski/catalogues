@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react'
+import React, { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sort.scss'
 //Contexts
-import { SortContext, reducer, initialState } from './sortStore'
+import { SortContext } from './sortStore'
 //Custom components
 import SortOption from './sort-option/sortOption'
 
@@ -13,15 +13,10 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Sort = (props: Props) => {
-    const [state, dispatch] = useReducer(reducer, initialState)
-
-    const context = {
-        ...state,
-        dispatch,
-    }
+    const { dispatch, ...state } = useContext(SortContext)
 
     const sortOptions = state.sortOptions.map(option => (
-        <SortOption option={option} key={option.id}/>
+        <SortOption option={option} key={option.id} />
     ))
 
     const sortClass = cx(
@@ -30,14 +25,12 @@ const Sort = (props: Props) => {
     )
 
     return (
-        <SortContext.Provider value={context}>
-            <div className={sortClass}>
-                <div className={styles.title}>Sort</div>
-                <ul>
-                    {sortOptions}
-                </ul>
-            </div>
-        </SortContext.Provider>
+        <div className={sortClass}>
+            <div className={styles.title}>Sort</div>
+            <ul>
+                {sortOptions}
+            </ul>
+        </div>
     )
 }
 
