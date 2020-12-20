@@ -1,10 +1,9 @@
 import React, { useContext, useRef } from 'react'
-import { upperFirst } from 'lodash'
 import styles from './sortOption.scss'
 //Contexts
 import { SortContext } from '../sortStore'
 //Types
-import { Option, CLEAR_SORT, CHANGE_SORT } from '../sortTypes'
+import { Option } from '../sortTypes'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import SortWrapper from '../sort-wrapper/sortWrapper'
@@ -15,23 +14,15 @@ type Props = {
 }
 
 const SortOption = (props: Props) => {
-    const { dispatch, ...state } = useContext(SortContext)
+    const { selected, setSortValue } = useContext(SortContext)
     const SortChoiceRef = useRef<HTMLDivElement>(null)
     const sortChoiceH = SortChoiceRef.current?.getBoundingClientRect().height
 
-    const isActive = state.selected?.[props.option.id] !== undefined
+    const isActive = selected?.[props.option.id] !== undefined
 
     const handleChange = () => {
-        if (isActive) {
-            dispatch({
-                type: CLEAR_SORT,
-            })
-        } else {
-            dispatch({
-                type: CHANGE_SORT,
-                value: { [props.option.id]: null },
-            })
-        }
+        const value = isActive ? undefined : { [props.option.id]: null }
+        setSortValue(value)
     }
 
     return (

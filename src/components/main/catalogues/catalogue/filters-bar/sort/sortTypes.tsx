@@ -1,23 +1,20 @@
-import { Dispatch } from 'react'
-
 export const CHANGE_SORT = 'CHANGE_SORT'
-export const CLEAR_SORT = 'CLEAR_SORT'
 
 interface changeSort {
     type: typeof CHANGE_SORT,
-    value: Selected,
+    value: SortValue,
 }
 
-interface clearSort {
-    type: typeof CLEAR_SORT,
+export type Action = changeSort
+
+export interface SortInitialState {
+    sortOptions: Option[],
+    selected: Selected,
 }
-
-export type Action = changeSort | clearSort
-
 export interface State {
     sortOptions: Option[],
     selected: Selected,
-    dispatch: Dispatch<Action>,
+    setSortValue: (value: SortValue) => void,
 }
 
 export interface Option {
@@ -26,7 +23,9 @@ export interface Option {
     type: string,
 }
 
-export interface Selected {
+export type SortValue = Selected | undefined
+
+interface Selected {
     [key: string]: string | null
 }
 

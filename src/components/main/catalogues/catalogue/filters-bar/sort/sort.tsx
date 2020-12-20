@@ -13,9 +13,9 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Sort = (props: Props) => {
-    const { dispatch, ...state } = useContext(SortContext)
+    const { sortOptions } = useContext(SortContext)
 
-    const sortOptions = state.sortOptions.map(option => (
+    const optionsComponents = sortOptions.map(option => (
         <SortOption option={option} key={option.id} />
     ))
 
@@ -28,7 +28,7 @@ const Sort = (props: Props) => {
         <div className={sortClass}>
             <div className={styles.title}>Sort</div>
             <ul>
-                {sortOptions}
+                {optionsComponents}
             </ul>
         </div>
     )
