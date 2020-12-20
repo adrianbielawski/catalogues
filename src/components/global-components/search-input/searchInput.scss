@@ -2,11 +2,25 @@
     position: relative;
     input {
         padding-right: 30px;
+        padding-left: 30px;
+        text-align: center;
     }
     .searchButton {
         position: absolute;
         top: 5px;
         right: 5px;
         font-size: 1.3em;
+        &.disabled {
+            opacity: .3;
+        }
+    }
+    .clearButton {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+        font-size: 1.3em;
+        &.disabled {
+            opacity: .3;
+        }
     }
 }
