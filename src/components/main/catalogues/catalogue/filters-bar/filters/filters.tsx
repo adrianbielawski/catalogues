@@ -1,8 +1,8 @@
-import React, { useReducer } from 'react'
+import React, { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './filters.scss'
 //Contexts
-import { FiltersContext, reducer, initialState } from './filtersStore'
+import { FiltersContext } from './filtersStore'
 //Custom components
 import Filter from './filter/filter'
 
@@ -13,21 +13,14 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Filters = (props: Props) => {
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const { dispatch, ...state } = useContext(FiltersContext)
 
-    const context = {
-        ...state,
-        dispatch,
-    }
-
-    const getFilters = () => {
-        return state.filters.map(filter => (
-            <Filter
-                filter={filter}
-                key={filter.id}
-            />
-        ))
-    }
+    const filters = state.filters.map(filter => (
+        <Filter
+            filter={filter}
+            key={filter.id}
+        />
+    ))
 
     const filtersClass = cx(
         'filters',
@@ -35,14 +28,12 @@ const Filters = (props: Props) => {
     )
 
     return (
-        <FiltersContext.Provider value={context}>
-            <div className={filtersClass}>
-                <div className={styles.title}>Filters</div>
-                <ul>
-                    {getFilters()}
-                </ul>
-            </div>
-        </FiltersContext.Provider>
+        <div className={filtersClass}>
+            <div className={styles.title} onClick={() => console.log(state.selectedFilters)}>Filters</div>
+            <ul>
+                {filters}
+            </ul>
+        </div>
     )
 }
 
