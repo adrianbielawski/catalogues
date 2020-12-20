@@ -5,6 +5,8 @@ import styles from './catalogue.scss'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from './filters-bar/filtersBar'
+//Context
+import FiltersBarContextProvider from './filters-bar/filtersBarContextProvider'
 
 type Params = {
     slug: string
@@ -12,12 +14,14 @@ type Params = {
 
 const Catalogue = (props: RouteComponentProps<Params>) => {
     return (
-        <div className={styles.catalogue}>
-            <FiltersBar />
-            <div id="catalogueMainContent" className={styles.mainContent}>
-                <CatalogueItems slug={props.match.params.slug} />
+        <FiltersBarContextProvider>
+            <div className={styles.catalogue}>
+                <FiltersBar />
+                <div id="catalogueMainContent" className={styles.mainContent}>
+                    <CatalogueItems slug={props.match.params.slug} />
+                </div>
             </div>
-        </div>
+        </FiltersBarContextProvider>
     )
 }
 
