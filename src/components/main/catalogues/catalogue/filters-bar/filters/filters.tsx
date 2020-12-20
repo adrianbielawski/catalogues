@@ -13,7 +13,7 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Filters = (props: Props) => {
-    const { dispatch, ...state } = useContext(FiltersContext)
+    const state = useContext(FiltersContext)
 
     const filters = state.filters.map(filter => (
         <Filter
@@ -29,7 +29,7 @@ const Filters = (props: Props) => {
 
     return (
         <div className={filtersClass}>
-            <div className={styles.title} onClick={() => console.log(state.selectedFilters)}>Filters</div>
+            <div className={styles.title}>Filters</div>
             <ul>
                 {filters}
             </ul>

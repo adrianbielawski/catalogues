@@ -1,18 +1,12 @@
-import { Dispatch } from 'react'
-
 export const CHANGE_FILTER = 'CHANGE_FILTER'
-export const CLEAR_FILTER = 'CLEAR_FILTER'
 
 interface changeFilter {
     type: typeof CHANGE_FILTER,
     filterId: string,
-    value: {} | null,
+    value: FilterValue,
 }
 
-interface clearFiltersGroup {
-    type: typeof CLEAR_FILTER,
-    filterId: string,
-}
+export type FilterValue = {} | null | undefined
 
 export interface Choice {
     id: string,
@@ -47,10 +41,15 @@ export interface FilterWithChoices {
 
 export type FilterType = FilterWithoutChoices | FilterWithChoices
 
-export type Action = changeFilter | clearFiltersGroup
+export type Action = changeFilter 
+
+export interface FiltersInitialState {
+    filters: FilterType[],
+    selectedFilters: SelectedFilter,
+}
 
 export interface State {
     filters: FilterType[],
     selectedFilters: SelectedFilter,
-    dispatch: Dispatch<Action>,
+    setFilterValue: (filterId: string, value: FilterValue) => void
 }

@@ -18,11 +18,11 @@ type Range = {
 }
 
 const FilterRange = (props: Props) => {
-    const { dispatch, ...state } = useContext(FiltersContext)
+    const { selectedFilters, setFilterValue } = useContext(FiltersContext)
     const fromRef = useRef<HTMLInputElement>(null)
     const toRef = useRef<HTMLInputElement>(null)
 
-    const value = state.selectedFilters![props.filter.id] || null
+    const value = selectedFilters![props.filter.id] || null
 
     useEffect(() => {
         if (!props.active) {
@@ -40,11 +40,7 @@ const FilterRange = (props: Props) => {
             value = null
         }
 
-        dispatch({
-            type: CHANGE_FILTER,
-            filterId: props.filter.id,
-            value,
-        })
+        setFilterValue(props.filter.id, value)
     }
 
     return (

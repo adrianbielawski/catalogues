@@ -4,7 +4,7 @@ import styles from './filter.scss'
 //Context
 import { FiltersContext } from '../filtersStore'
 //Types
-import { FilterType, CLEAR_FILTER, CHANGE_FILTER } from '../filtersTypes'
+import { FilterType } from '../filtersTypes'
 //Maps
 import { filterComponentMap } from '../filtersMaps'
 //Custom components
@@ -19,22 +19,12 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Filter = (props: Props) => {
-    const { dispatch, ...state } = useContext(FiltersContext)
-    const isActive = state.selectedFilters![props.filter.id] !== undefined
+    const { selectedFilters, setFilterValue } = useContext(FiltersContext)
+    const isActive = selectedFilters![props.filter.id] !== undefined
 
     const handleChange = () => {
-        if (isActive) {
-            dispatch({
-                type: CLEAR_FILTER,
-                filterId: props.filter.id,
-            })
-        } else {
-            dispatch({
-                type: CHANGE_FILTER,
-                filterId: props.filter.id,
-                value: null,
-            })
-        }
+        const value = isActive ? undefined : null
+        setFilterValue(props.filter.id, value)
     }
 
     const filterClass = cx(
