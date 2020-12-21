@@ -2,9 +2,9 @@ import React, { useContext } from 'react'
 import { upperFirst, includes } from 'lodash'
 import styles from './filterChoices.scss'
 //Types
-import { FilterWithChoices, SelectedFilter } from '../../../filtersTypes'
+import { FilterWithChoices, SelectedFilter } from '../../filtersTypes'
 //Context
-import { FiltersContext } from '../../../filtersStore'
+import { FiltersContext } from '../../filtersStore'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 

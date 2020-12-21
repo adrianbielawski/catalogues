@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useContext } from 'react'
 import styles from './filterRange.scss'
 //Types
-import { CHANGE_FILTER, FilterWithoutChoices } from '../../../filtersTypes'
+import { CHANGE_FILTER, FilterWithoutChoices } from '../../filtersTypes'
 //Context
-import { FiltersContext } from '../../../filtersStore'
+import { FiltersContext } from '../../filtersStore'
 //Custom components
 import Input from 'components/global-components/input/input'
 
