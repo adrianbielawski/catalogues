@@ -20,8 +20,6 @@ interface Props {
 }
 const cx = classNames.bind(styles)
 
-type GetItems = () => React.ReactNode
-
 const NavList = (props: Props) => {
     const location = useLocation()
     const [listTitle, setListTitle] = useState(props.title)
@@ -55,11 +53,11 @@ const NavList = (props: Props) => {
     const navListClass = cx(
         'navList',
         {
-            hover: props.show,
+            active: props.show,
         }
     )
 
-    const getItems: GetItems = () => {
+    const getItems = (): React.ReactNode => {
         return props.children.map(item => {
             return (
                 <NavLink

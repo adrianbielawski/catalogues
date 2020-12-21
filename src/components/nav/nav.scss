@@ -1,15 +1,21 @@
 @import "global-styles/variables_and_mixins";
 
-.nav {
-    width: 100%;
-    background: $lightGrey;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: space-between;
-    z-index: 1000;
-    .navContent {
-        display: flex;
-        flex-direction: row;
+.navWrapper {
+    .nav {
+        width: 100%;
+        background: $lightGrey;
+        box-sizing: border-box;
+        z-index: 1000;
+        position: sticky;
+        top: 0;
+        .contentWrapper {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            .navContent {
+                display: flex;
+            }
+        }
     }
 }
 .navItem {
@@ -20,6 +26,7 @@
     padding: 5px 10px;
     border-bottom: 2px solid transparent;
     cursor: pointer;
+    @include resetTapHighlight;
     .arrow {
         color: $darkGrey;
         margin-left: 5px;
@@ -28,14 +35,18 @@
         color: $darkGrey;
         margin-right: 5px;
     }
-    &:hover, &.hover {
-        p, .arrow, .leftArrow {
+    &:hover,
+    &.hover {
+        p,
+        .arrow,
+        .leftArrow {
             color: $lightOrange;
         }
     }
     &.active {
         border-bottom: 2px solid $orange;
-        p, .arrow {
+        p,
+        .arrow {
             color: $orange;
         }
     }
@@ -50,9 +61,65 @@
     visibility: hidden;
     opacity: 0;
     background: $lightGrey;
-    transition: all .2s ease-out;
-    &.hover {
+    transition: all 0.2s ease-out;
+    @include resetTapHighlight;
+    &.active {
         visibility: visible;
         opacity: 1;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .navWrapper {
+        .navButton {
+            &:focus {
+                color: $darkGrey;
+            }
+            &:active {
+                color: $lightOrange;
+            }
+        }
+        .nav {
+            position: absolute;
+            display: inline-flex;
+            top: var(--top);
+            left: -100%;
+            width: 100%;
+            height: calc(100% - var(--top));
+            background: none;
+            transition: all 0.2s ease-out;
+            &.active {
+                left: 0;
+            }
+            .background {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                background: $grey;
+                opacity: 0.2;
+            }
+            .contentWrapper {
+                width: 80%;
+                min-width: 250px;
+                max-width: 400px;
+                background: $lightGrey;
+                flex-direction: column;
+                justify-content: unset;
+                .navContent {
+                    flex-direction: column;
+                    .navList {
+                        position: unset;
+                        max-height: 0;
+                        &.active {
+                            visibility: visible;
+                            max-height: 1000px;
+                        }
+                    }
+                }
+            }
+        }
+        .navItem {
+            border: none;
+        }
     }
 }

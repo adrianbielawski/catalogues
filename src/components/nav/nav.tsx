@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './nav.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
 import NavLink from './navLink/navLink'
 import NavList from './navList/navList'
+import MobileNavBar from './mobile-nav-bar/mobileNavBar'
+import GoBackButton from './go-back-button/goBackButton'
 
 export type ItemWithUrl = {
     title: string,
@@ -25,11 +25,9 @@ type ItemWithChildren = {
 
 export type ItemType = ItemWithUrl | ItemWithChildren
 
-interface Props {
-    content: ItemType[],
-    goBack?: { title: string, url: string, location: string },
-    extraItems?: JSX.Element[],
-    className?: string,
+export type ExtraItem = {
+    component: JSX.Element,
+    inNavBarOnMobile: boolean,
 }
 
 interface ShowList {
@@ -37,31 +35,40 @@ interface ShowList {
     index: number | null,
 }
 
-type GetItems = () => React.ReactNode
-type GetExtraItems = () => React.ReactNode[]
-type HandleListClick = (index: number) => void
-type HandleListHover = (index: number) => void
-type HandleLinkHover = () => void
+interface Props {
+    content: ItemType[],
+    goBack?: { title: string, url: string, location: string },
+    extraItems?: ExtraItem[],
+    className?: string,
+}
 
 const cx = classNames.bind(styles)
 
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const navRef = useRef<HTMLDivElement>(null)
     const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
     const [prevLocation, setPrevLocation] = useState<string>('')
+    const [active, setActive] = useState(false)
+    const top = `${navRef.current?.getBoundingClientRect().bottom}px`
+    const screenWidth = window.innerWidth
 
     useEffect(() => {
         if (location.state !== undefined && props.goBack !== undefined) {
             if (location.state!.referrer.startsWith(props.goBack!.location)) {
                 setPrevLocation(props.goBack!.url)
             } else {
-            setPrevLocation(location.state.referrer)
+                setPrevLocation(location.state.referrer)
             }
         }
     }, [])
 
-    const handleListClick: HandleListClick = (index) => {
+    const toggleActive = () => {
+        setActive(!active)
+    }
+
+    const handleListClick = (index: number) => {
         if (showList.show === false) {
             setShowList({ show: true, index })
         } else {
@@ -69,7 +76,7 @@ const Nav = (props: Props) => {
         }
     }
 
-    const handleListHover: HandleListHover = (index) => {
+    const handleListHover = (index: number) => {
         if (showList.show === false) {
             return
         } else {
@@ -77,7 +84,7 @@ const Nav = (props: Props) => {
         }
     }
 
-    const handleLinkHover: HandleLinkHover = () => {
+    const handleLinkHover = () => {
         if (showList.show === false) {
             return
         } else {
@@ -89,7 +96,7 @@ const Nav = (props: Props) => {
         history.push(prevLocation! || props.goBack!.url)
     }
 
-    const getItems: GetItems = () => {
+    const getItems = (): React.ReactNode => {
         let items = props.content.map((item, index) => {
             if (item.url !== undefined) {
                 return (
@@ -116,44 +123,77 @@ const Nav = (props: Props) => {
             }
         })
 
-        if (props.goBack !== undefined) {
-            items.unshift(
-                <li className={styles.navItem} onClick={handleGoBack} key={'goBack'}>
-                    <FontAwesomeIcon
-                        icon={faArrowLeft}
-                        className={styles.leftArrow}
-                    />
-                    <p>
-                        {prevLocation === '' || prevLocation === props.goBack.url
-                            ? props.goBack.title
-                            : 'Go back'
-                        }
-                    </p>
-                </li>
-            )
+        if (props.goBack !== undefined && screenWidth > 640) {
+            items.unshift(getGoBackButton())
         }
 
         return items
     }
 
-    const getExtraItems: GetExtraItems = () => props.extraItems!.map((item, index) =>
-        <li key={`extraItem${index}`}>{item}</li>
-    )
+    const getGoBackButton = () => {
+        let title = 'Go back'
+        if (props.goBack !== undefined) {
+            if (prevLocation === '' || prevLocation === props.goBack.url) {
+                title = props.goBack?.title
+            }
+        }
+
+        return (
+            <GoBackButton
+                className={styles.navItem}
+                arrowClass={styles.leftArrow}
+                title={title}
+                onClick={handleGoBack}
+                key={'goBack'}
+            />
+        )
+    }
+
+    const extraItems = props.extraItems!.map((item, index) => {
+        if (!item.inNavBarOnMobile) {
+            return <li key={`extraItem${index}`}>{item.component}</li>
+        }
+    })
 
     const navClass = cx(
         'nav',
         props.className,
+        {
+            active,
+        }
     )
 
     return (
-        <nav className={navClass}>
-            <ul className={styles.navContent}>
-                {getItems()}
-            </ul>
-            <ul className={styles.navContent}>
-                {props.extraItems !== undefined ? getExtraItems() : null}
-            </ul>
-        </nav>
+        <div className={styles.navWrapper} ref={navRef}>
+            {screenWidth <= 640 && (
+                <MobileNavBar
+                    extraItems={props.extraItems}
+                    goBackButton={props.goBack !== undefined ? getGoBackButton() : undefined}
+                    toggleActive={toggleActive}
+                    handleGoBack={handleGoBack}
+                />
+            )}
+            <nav
+                className={navClass}
+                style={{
+                    '--top': top,
+                } as React.CSSProperties}
+            >
+                <div className={styles.contentWrapper}>
+                    <ul className={styles.navContent}>
+                        {getItems()}
+                    </ul>
+                    {props.extraItems !== undefined && (
+                        <ul className={styles.navContent}>
+                            {extraItems}
+                        </ul>
+                    )}
+                </div>
+                {screenWidth <= 640 &&
+                    <div className={styles.background} onClick={toggleActive}></div>
+                }
+            </nav>
+        </div>
     )
 }
 
