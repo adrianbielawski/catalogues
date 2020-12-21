@@ -60,11 +60,18 @@ const NavList = (props: Props) => {
 
     const getItems = (): React.ReactNode => {
         return props.children.map(item => {
-            return (
-                <NavLink
-                    title={item.title}
-                    url={item.url}
+            if (location.pathname === item.url) {
+                return
+            } else {
+                return (
+                    <NavLink
+                        title={item.title}
+                        url={item.url}
                         onClick={props.onLinkClick}
+                        key={item.title}
+                    />
+                )
+            }
         })
     }
 
