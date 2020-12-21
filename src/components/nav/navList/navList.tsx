@@ -16,6 +16,7 @@ interface Props {
     show: boolean,
     index: number,
     onClick: (index: number) => void
+    onLinkClick: () => void
     onHover: (index: number) => void
 }
 const cx = classNames.bind(styles)
@@ -63,10 +64,7 @@ const NavList = (props: Props) => {
                 <NavLink
                     title={item.title}
                     url={item.url}
-                    onClick={handleClick}
-                    key={item.title}
-                />
-            )
+                        onClick={props.onLinkClick}
         })
     }
 

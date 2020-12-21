@@ -116,6 +116,7 @@ const Nav = (props: Props) => {
                         index={index}
                         show={showList.show === true && showList.index === index}
                         onClick={handleListClick}
+                        onLinkClick={toggleActive}
                         onHover={handleListHover}
                         key={index}
                     />
