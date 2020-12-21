@@ -1,9 +1,11 @@
 @import "global-styles/variables_and_mixins";
 
 .navWrapper {
+    @include resetTapHighlight;
     .nav {
         width: 100%;
         background: $lightGrey;
+        box-shadow: 0px 2px 4px $midLightGrey;
         box-sizing: border-box;
         z-index: 1000;
         position: sticky;
@@ -15,57 +17,56 @@
             .navContent {
                 display: flex;
             }
+            .navItem {
+                display: flex;
+                align-items: center;
+                font-weight: 700;
+                font-size: 1.2em;
+                padding: 5px 10px;
+                border-bottom: 2px solid transparent;
+                cursor: pointer;
+                .arrow {
+                    color: $darkGrey;
+                    margin-left: 5px;
+                }
+                .leftArrow {
+                    color: $darkGrey;
+                    margin-right: 5px;
+                }
+                &:hover,
+                &.hover {
+                    p,
+                    .arrow,
+                    .leftArrow {
+                        color: $lightOrange;
+                    }
+                }
+                &.active {
+                    border-bottom: 2px solid $orange;
+                    p,
+                    .arrow {
+                        color: $orange;
+                    }
+                }
+                &.noChildren {
+                    cursor: not-allowed;
+                }
+            }
+            
+            .navList {
+                position: absolute;
+                z-index: 1000;
+                visibility: hidden;
+                opacity: 0;
+                background: $lightGrey;
+                box-shadow: 2px 2px 4px $grey;
+                transition: all 0.2s ease-out;
+                &.active {
+                    visibility: visible;
+                    opacity: 1;
+                }
+            }
         }
-    }
-}
-.navItem {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    font-size: 1.2em;
-    padding: 5px 10px;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    @include resetTapHighlight;
-    .arrow {
-        color: $darkGrey;
-        margin-left: 5px;
-    }
-    .leftArrow {
-        color: $darkGrey;
-        margin-right: 5px;
-    }
-    &:hover,
-    &.hover {
-        p,
-        .arrow,
-        .leftArrow {
-            color: $lightOrange;
-        }
-    }
-    &.active {
-        border-bottom: 2px solid $orange;
-        p,
-        .arrow {
-            color: $orange;
-        }
-    }
-    &.noChildren {
-        cursor: not-allowed;
-    }
-}
-
-.navList {
-    position: absolute;
-    z-index: 1000;
-    visibility: hidden;
-    opacity: 0;
-    background: $lightGrey;
-    transition: all 0.2s ease-out;
-    @include resetTapHighlight;
-    &.active {
-        visibility: visible;
-        opacity: 1;
     }
 }
 
@@ -87,6 +88,7 @@
             width: 100%;
             height: calc(100% - var(--top));
             background: none;
+            box-shadow: none;
             transition: all 0.2s ease-out;
             &.active {
                 left: 0;
@@ -107,9 +109,14 @@
                 justify-content: unset;
                 .navContent {
                     flex-direction: column;
+                    .navItem {
+                        border: none;
+                    }
                     .navList {
                         position: unset;
                         max-height: 0;
+                        padding-left: 10px;
+                        box-shadow: none;
                         &.active {
                             visibility: visible;
                             max-height: 1000px;
@@ -117,9 +124,6 @@
                     }
                 }
             }
-        }
-        .navItem {
-            border: none;
         }
     }
 }
