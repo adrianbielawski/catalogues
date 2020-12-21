@@ -1,28 +1,37 @@
-import React from 'react'
+import React, { useReducer } from 'react'
 //Contexts
-import SortContextProvider from './sort/sortContextProvider'
-import FiltersContextProvider from './filters/filtersContextProvider'
-import SearchContextProvider from './search/searchContextProvider'
-import { FiltersInitialState } from './filters/filtersTypes'
-import { SortInitialState } from './sort/sortTypes'
-import { SearchInitialState } from './search/searchTypes'
+import { FiltersBarContext, reducer } from './filtersBarStore'
+import { FiltersBarInitialState, TOGGLE_FILTERS_BAR } from './filtersBarTypes'
 
 type Props = {
     children: JSX.Element,
-    filtersValue: FiltersInitialState,
-    sortValue: SortInitialState,
-    searchValue: SearchInitialState,
+    value: FiltersBarInitialState,
+    onChange: () => void,
 }
 
 const FiltersBarContextProvider = (props: Props) => {
+    const initialState = {
+        ...props.value
+    }
+
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    const toggleFiltersBar = () => {
+        props.onChange()
+        dispatch({
+            type: TOGGLE_FILTERS_BAR,
+        })
+    }
+
+    const context = {
+        ...state,
+        toggleFiltersBar,
+    }
+
     return (
-        <SearchContextProvider value={props.searchValue} onChange={() => {}}>
-            <SortContextProvider value={props.sortValue} onChange={() => {}}>
-                <FiltersContextProvider value={props.filtersValue} onChange={() => {}}>
-                    {props.children}
-                </FiltersContextProvider>
-            </SortContextProvider>
-        </SearchContextProvider>
+        <FiltersBarContext.Provider value={context}>
+            {props.children}
+        </FiltersBarContext.Provider>
     )
 }
 
