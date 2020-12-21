@@ -35,7 +35,7 @@ const ImagesCarousel = (props: Props) => {
     const IMAGE_SIZE = screenWidth > 600 ? (props.width) * .416 : props.width
 
     useEffect(() => {
-        if (props.onChange !== undefined) {
+        if (props.onChange !== undefined && props.images.length > 0) {
             props.onChange(mod(current, count))
         }
     }, [current])
