@@ -48,7 +48,7 @@ export interface FiltersInitialState {
     selectedFilters: SelectedFilter,
 }
 
-export interface State {
+export interface FiltersContextInterface {
     filters: FilterType[],
     selectedFilters: SelectedFilter,
     setFilterValue: (filterId: string, value: FilterValue) => void

@@ -12,7 +12,8 @@ export type Action = changeSearch
 export interface SearchInitialState {
     search: string,
 }
-export interface State {
+
+export interface SearchContextInterface {
     search: string,
     setSearchValue: (value: SearchValue) => void,
 }

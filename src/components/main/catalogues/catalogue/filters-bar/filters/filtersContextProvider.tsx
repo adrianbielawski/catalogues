@@ -12,7 +12,6 @@ type Props = {
 const FiltersContextProvider = (props: Props) => {
     const initialState = {
         ...props.value,
-        setFilterValue: () => {}
     }
 
     const [state, dispatch] = useReducer(reducer, initialState)

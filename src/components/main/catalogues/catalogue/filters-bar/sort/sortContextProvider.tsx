@@ -12,7 +12,6 @@ type Props = {
 const SortContextProvider = (props: Props) => {
     const initialState = {
         ...props.value,
-        setSortValue: () => {}
     }
 
     const [state, dispatch] = useReducer(reducer, initialState)

@@ -1,16 +1,14 @@
 import { createContext } from 'react'
 import { cloneDeep } from 'lodash'
-import { State, Action, CHANGE_SORT } from './sortTypes'
+import { SortContextInterface, SortInitialState, Action, CHANGE_SORT } from './sortTypes'
 
-export const initialState = {
+export const SortContext = createContext<SortContextInterface>({
     sortOptions: [],
     selected: {},
     setSortValue: () => {},
-}
+})
 
-export const SortContext = createContext<State>(initialState)
-
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: SortInitialState, action: Action) => {
     let newState = cloneDeep(state)
     switch (action.type) {
         case CHANGE_SORT:

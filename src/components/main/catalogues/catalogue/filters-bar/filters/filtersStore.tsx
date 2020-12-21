@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 import { cloneDeep } from 'lodash'
-import { State, Action, CHANGE_FILTER } from './filtersTypes'
+import { FiltersInitialState, FiltersContextInterface, Action, CHANGE_FILTER } from './filtersTypes'
 
 export const initialState = {
     filters: [],
@@ -8,9 +8,9 @@ export const initialState = {
     setFilterValue: () => null,
 }
 
-export const FiltersContext = createContext<State>(initialState)
+export const FiltersContext = createContext<FiltersContextInterface>(initialState)
 
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: FiltersInitialState, action: Action) => {
     let newState = cloneDeep(state)
     switch (action.type) {
         case CHANGE_FILTER:

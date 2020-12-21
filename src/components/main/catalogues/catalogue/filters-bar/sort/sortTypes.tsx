@@ -11,7 +11,7 @@ export interface SortInitialState {
     sortOptions: Option[],
     selected: Selected,
 }
-export interface State {
+export interface SortContextInterface {
     sortOptions: Option[],
     selected: Selected,
     setSortValue: (value: SortValue) => void,

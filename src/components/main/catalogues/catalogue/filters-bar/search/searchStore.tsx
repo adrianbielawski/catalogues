@@ -1,16 +1,14 @@
 import { createContext } from 'react'
 import { cloneDeep } from 'lodash'
 //Types
-import { State, Action, CHANGE_SEARCH } from './searchTypes'
+import { SearchContextInterface, SearchInitialState, Action, CHANGE_SEARCH } from './searchTypes'
 
-export const initialState = {
+export const SearchContext = createContext<SearchContextInterface>({
     search: '',
     setSearchValue: () => null,
-}
+})
 
-export const SearchContext = createContext<State>(initialState)
-
-export const reducer = (state: State, action: Action) => {
+export const reducer = (state: SearchInitialState, action: Action) => {
     let newState = cloneDeep(state)
     switch (action.type) {
         case CHANGE_SEARCH:

@@ -13,7 +13,6 @@ type Props = {
 const SearchContextProvider = (props: Props) => {
     const initialState = {
         ...props.value,
-        setSearchValue: () => {},
     }
 
     const [state, dispatch] = useReducer(reducer, initialState)
