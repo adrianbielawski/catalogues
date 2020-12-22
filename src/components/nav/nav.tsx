@@ -104,6 +104,7 @@ const Nav = (props: Props) => {
                         title={item.title}
                         url={item.url}
                         onHover={handleLinkHover}
+                        onClick={toggleActive}
                         key={index}
                     />
                 )
