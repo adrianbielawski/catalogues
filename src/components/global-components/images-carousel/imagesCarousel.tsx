@@ -23,16 +23,17 @@ const cx = classNames.bind(styles)
 const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const ImagesCarousel = (props: Props) => {
+    const count = props.images.length
+    const screenWidth = window.innerWidth
+
     const carouselRef = useRef<HTMLDivElement>(null)
     const [touchStart, setTouchStart] = useState<number | null>(null)
     const [slideX, setSlideX] = useState<number>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isMain === true))
-    const count = props.images.length
-    const screenWidth = window.innerWidth
 
     const MIN_SCALE = .7
     const MAX_SCALE = 1
-    const IMAGE_SIZE = screenWidth > 600 ? (props.width) * .416 : props.width
+    const IMAGE_SIZE = screenWidth > 800 ? (props.width) * .416 : props.width
 
     useEffect(() => {
         if (props.onChange !== undefined && props.images.length > 0) {
@@ -87,7 +88,7 @@ const ImagesCarousel = (props: Props) => {
     const handlePreviousImage = () => {
         setCurrent(current - 1);
     }
-    
+
     const handleNextImage = () => {
         setCurrent(current + 1);
     }
@@ -198,7 +199,7 @@ const ImagesCarousel = (props: Props) => {
                     />
                 </>
             )
-            : <p className={styles.noContent}>No images yet</p>
+                : <p className={styles.noContent}>No images yet</p>
             }
         </div>
     )

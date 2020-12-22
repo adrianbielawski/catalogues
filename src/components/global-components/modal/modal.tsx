@@ -48,7 +48,7 @@ const Modal = (props: Props) => {
 
     const modalStyles = {
         top: props.parent ? 0 : top,
-        height: props.parent ? `${modalHeight}px` : '100%',
+        minHeight: props.parent ? `${modalHeight}px` : '100%',
         width: props.parent ? `${modalWidth}px` : '100%',
     }
 

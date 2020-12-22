@@ -12,7 +12,7 @@
     justify-content: center;
 
     .noContent {
-        font-size: 2vw;
+        font-size: 1.5em;
     }
 
     &:hover .prev,
@@ -26,7 +26,7 @@
         top: 50%;
         transform: translateY(-30px);
         padding: 0 5px;
-        font-size: 2vw;
+        font-size: 1.5em;
         background: $lightGrey;
         color: #000;
         text-align: center;
@@ -96,7 +96,7 @@
                     left: 15px;
                     width: 15%;
                     height: 15%;
-                    font-size: 2vw;
+                    font-size: 20px;
                     background: #fff;
                     border-radius: 50%;
                     opacity: 0;
@@ -112,19 +112,13 @@
     }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .carousel {
-        width: var(--size);
+        max-width: var(--size);
         padding: 0;
 
         .noContent {
-            font-size: 2em;
-        }
-
-        .prev,
-        .next {
-            max-height: 30px;
-            transform: translateY(-15px);
+            font-size: 1.5em;
         }
 
         .prev {
@@ -137,6 +131,7 @@
 
         ul li div {
             padding: 0;
+            background: $lightGrey;
             img {
                 box-shadow: none;
             }

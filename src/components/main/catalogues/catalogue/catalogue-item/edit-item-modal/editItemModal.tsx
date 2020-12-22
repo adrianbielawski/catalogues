@@ -24,13 +24,12 @@ const EditItemModal = (props: Props) => {
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
     const modalParent = document.getElementById('catalogueMainContent')
+    const screenWidth = window.innerWidth
 
     useEffect(() => {
-        window.addEventListener('resize', handleResize)
-        if (editItemRef.current !== null && props.show) {
+        if (editItemRef.current && props.show) {
+            window.addEventListener('resize', handleResize)
             handleResize()
-        } else {
-            setWidth(0)
         }
         return () => {
             window.removeEventListener('resize', handleResize)
@@ -38,8 +37,10 @@ const EditItemModal = (props: Props) => {
     }, [props.show])
 
     const handleResize = () => {
-        if (editItemRef.current !== null) {
-            setWidth(editItemRef.current!.getBoundingClientRect().width)
+        if (editItemRef.current) {
+            setTimeout(() => setWidth(
+                editItemRef.current!.getBoundingClientRect().width
+            ), 200)
         }
     }
 
@@ -95,12 +96,12 @@ const EditItemModal = (props: Props) => {
             <div className={styles.editItemModal} ref={editItemRef} >
                 {images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
                 <ImagesCarousel
-                    width={width * .7}
+                    width={screenWidth > 640 ? width * .7 : width * .9}
                     images={images}
                     onRemove={handleImageRemove}
                     onChange={handleImageChange}
                 />
-                <AddImage onConfirm={handleAddImage} />
+                <AddImage className={styles.addImageButton} onConfirm={handleAddImage} />
                 <EditableList
                     className={styles.editableList}
                     fields={FIELDS}

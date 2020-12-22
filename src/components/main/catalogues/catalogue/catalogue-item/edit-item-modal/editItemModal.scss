@@ -4,17 +4,10 @@
         font-size: 2em;
         font-weight: 700;
         text-align: center;
-        line-height: 0vw;
+        line-height: 1em;
+        padding-bottom: 5px;
     }
-}
-
-@media only screen and (max-width: 600px) {
-    .editItemModal {
-        .currentImage {
-            font-size: 1em;
-            font-weight: 700;
-            text-align: center;
-            line-height: 1.2em;
-        }
+    .addImageButton {
+        margin-top: 5px;
     }
 }
