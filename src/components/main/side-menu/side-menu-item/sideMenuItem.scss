@@ -19,3 +19,11 @@
         }
     }
 }
+
+@media only screen and (max-width: 640px) {
+    .item {
+        &.active {
+            background: none;
+        }
+    }
+}

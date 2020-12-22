@@ -8,6 +8,7 @@ import { LocationState } from 'src/globalTypes'
 type Props = {
     title: string,
     url: string,
+    onClick: () => void,
 }
 
 const cx = classNames.bind(styles)
@@ -19,6 +20,7 @@ const SideMenuItem = (props: Props) => {
         history.push(props.url!, {
           referrer: location.pathname
         })
+        props.onClick()
     }
 
     const itemClass = cx(
