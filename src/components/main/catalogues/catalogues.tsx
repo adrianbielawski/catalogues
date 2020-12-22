@@ -155,7 +155,11 @@ const Catalogues = () => {
             onChange={() => { }}
         >
             {fetchingCatalogues ? <Loader className={styles.loader} /> :
-                <div className={styles.catalogues} style={{ minHeight: `${minHeight}px` }} ref={cataloguesRef}>
+                <div
+                    className={styles.catalogues}
+                    style={{ minHeight: `${minHeight}px` }}
+                    ref={cataloguesRef}
+                >
                     <Nav
                         content={NAV_CONTENT}
                         extraItems={extraNavItems}
@@ -177,8 +181,11 @@ const Catalogues = () => {
                         </Switch>
                     </Suspense>
                     {catalogues.length === 0 &&
-                        <p className={styles.noContent}>You have no catalogues yet,
-                        <span className={styles.anchor}> click here to create your first catalogue</span>
+                        <p className={styles.noContent}>
+                            You have no catalogues yet,
+                            <span className={styles.anchor}>
+                                click here to create your first catalogue
+                            </span>
                         </p>
                     }
                 </div>

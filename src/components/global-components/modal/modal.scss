@@ -8,7 +8,9 @@
     z-index: 100;
     background: rgba(128, 128, 128, 0.5);
     opacity: 0;
-    transition: all 0.3s linear;
+    padding: 2%;
+    box-sizing: border-box;
+    transition: all 0.2s linear;
     &.mounted {
         opacity: 1;
     }

@@ -43,10 +43,14 @@ const ItemFields = (props: Props) => {
         },
     ]
 
+    const screenWidth = window.innerWidth
+
+    const maxHeight = screenWidth <= 640 ? 25 : 73
+
     return (
         <CollapsableList >
             <div className={styles.itemFields}>
-                <CollapsableList.List items={FIELDS} maxHeight={73} itemComponent={Field} />
+                <CollapsableList.List items={FIELDS} maxHeight={maxHeight} itemComponent={Field} />
                 <CollapsableList.Button />
             </div>
         </CollapsableList>

@@ -17,6 +17,7 @@ type Props = {
 
 const CatalogueItem = (props: Props) => {
     const [isEditing, setIsEditing] = useState(false)
+    const screenWidth = window.innerWidth
 
     const handleEdit = () => {
         setIsEditing(true)
@@ -28,13 +29,28 @@ const CatalogueItem = (props: Props) => {
 
     return (
         <li className={styles.item}>
-            <div className={styles.itemContent}>
-                <MainImage />
-                <ItemFields item={props.item} />
-            </div>
-            <TransparentButton className={styles.editButton} onClick={handleEdit}>
-                <FontAwesomeIcon icon={faEdit} />
-            </TransparentButton>
+            {screenWidth <= 640
+                ? (
+                    <div className={styles.itemContent}>
+                        <MainImage />
+                        <div className={styles.contentWrapper}>
+                            <ItemFields item={props.item} />
+                            <TransparentButton className={styles.editButton} onClick={handleEdit}>
+                                <FontAwesomeIcon icon={faEdit} />
+                            </TransparentButton>
+                        </div>
+                    </div>
+                ) :
+                <>
+                    <div className={styles.itemContent}>
+                        <MainImage />
+                        <ItemFields item={props.item} />
+                    </div>
+                    <TransparentButton className={styles.editButton} onClick={handleEdit}>
+                        <FontAwesomeIcon icon={faEdit} />
+                    </TransparentButton>
+                </>
+            }
             <EditItemModal
                 show={isEditing}
                 item={props.item}
