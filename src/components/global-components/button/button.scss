@@ -18,6 +18,9 @@
 		background: $grey;
 		outline: none;
 	}
+	&:hover {
+		color: $lightOrange;
+	}
 	&:disabled {
 		opacity: .3;
 		cursor: no-drop;

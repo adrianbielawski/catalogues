@@ -1,5 +1,5 @@
-.editItemModal {
-    padding: 5%;
+.editItem {
+    width: 100%;
     .currentImage {
         font-size: 2em;
         font-weight: 700;
@@ -9,5 +9,8 @@
     }
     .addImageButton {
         margin-top: 5px;
+    }
+    .closeButton {
+        margin: 0 auto;
     }
 }

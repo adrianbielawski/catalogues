@@ -8,7 +8,7 @@ import { DeserializedItem } from 'src/globalTypes'
 //Custom components
 import ItemFields from './item-fields/itemFields'
 import MainImage from './main-image/mainImage'
-import EditItemModal from './edit-item-modal/editItemModal'
+import EditItem from './edit-item/editItem'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 type Props = {
@@ -27,35 +27,43 @@ const CatalogueItem = (props: Props) => {
         setIsEditing(false)
     }
 
+    const mainImage = <MainImage />
+    const itemFields = <ItemFields item={props.item} />
+    const editButton = (
+        <TransparentButton className={styles.editButton} onClick={handleEdit}>
+            <FontAwesomeIcon icon={faEdit} />
+        </TransparentButton>
+    )
+
     return (
         <li className={styles.item}>
-            {screenWidth <= 640
-                ? (
-                    <div className={styles.itemContent}>
-                        <MainImage />
-                        <div className={styles.contentWrapper}>
-                            <ItemFields item={props.item} />
-                            <TransparentButton className={styles.editButton} onClick={handleEdit}>
-                                <FontAwesomeIcon icon={faEdit} />
-                            </TransparentButton>
+            {isEditing
+                ? (<EditItem
+                    show={isEditing}
+                    item={props.item}
+                    onClose={handleCloseModal}
+                />
+                )
+                : screenWidth <= 640
+                    ? (
+                        <div className={styles.itemContent}>
+                            {mainImage}
+                            <div className={styles.contentWrapper}>
+                                {itemFields}
+                                {editButton}
+                            </div>
                         </div>
-                    </div>
-                ) :
-                <>
-                    <div className={styles.itemContent}>
-                        <MainImage />
-                        <ItemFields item={props.item} />
-                    </div>
-                    <TransparentButton className={styles.editButton} onClick={handleEdit}>
-                        <FontAwesomeIcon icon={faEdit} />
-                    </TransparentButton>
-                </>
+                    )
+                    : (
+                        <>
+                            <div className={styles.itemContent}>
+                                {mainImage}
+                                {itemFields}
+                            </div>
+                            {editButton}
+                        </>
+                    )
             }
-            <EditItemModal
-                show={isEditing}
-                item={props.item}
-                onClose={handleCloseModal}
-            />
         </li>
     )
 }

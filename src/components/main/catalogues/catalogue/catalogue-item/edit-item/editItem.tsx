@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react'
-import styles from './editItemModal.scss'
+import styles from './editItem.scss'
 //Types
 import { DeserializedItem, Image } from 'src/globalTypes'
 //Custom components
-import Modal from 'components/global-components/modal/modal'
 import EditableList from 'components/global-components/editable-list/editableList'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
 import AddImage from './add-image/addImage'
+import Button from 'components/global-components/button/button'
 
 type Props = {
     show: boolean,
@@ -17,13 +17,33 @@ type Props = {
 
 const mod = (i: number, n: number): number => ((i % n) + n) % n
 
-const EditItemModal = (props: Props) => {
-    let IMAGES: Image[] = []
+const EditItem = (props: Props) => {
+    let IMAGES: Image[] = [
+        {
+            url: 'http://placekitten.com/400/400',
+            isMain: false,
+        },
+        {
+            url: 'http://placekitten.com/200/400',
+            isMain: true,
+        },
+        {
+            url: 'http://placekitten.com/400/200',
+            isMain: false,
+        },
+        {
+            url: 'http://placekitten.com/200/200',
+            isMain: false,
+        },
+        {
+            url: 'http://placekitten.com/800/800',
+            isMain: false,
+        },
+    ]
 
     const [images, setImages] = useState(IMAGES)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
-    const modalParent = document.getElementById('catalogueMainContent')
     const screenWidth = window.innerWidth
 
     useEffect(() => {
@@ -40,12 +60,8 @@ const EditItemModal = (props: Props) => {
         if (editItemRef.current) {
             setTimeout(() => setWidth(
                 editItemRef.current!.getBoundingClientRect().width
-            ), 200)
+            ), 300)
         }
-    }
-
-    const handleClose = () => {
-        props.onClose()
     }
 
     const handleNameChange = (newName: string[]) => {
@@ -92,23 +108,24 @@ const EditItemModal = (props: Props) => {
     }
 
     return (
-        <Modal show={props.show} parent={modalParent!} onClose={handleClose}>
-            <div className={styles.editItemModal} ref={editItemRef} >
-                {images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
-                <ImagesCarousel
-                    width={screenWidth > 640 ? width * .7 : width * .9}
-                    images={images}
-                    onRemove={handleImageRemove}
-                    onChange={handleImageChange}
-                />
-                <AddImage className={styles.addImageButton} onConfirm={handleAddImage} />
-                <EditableList
-                    className={styles.editableList}
-                    fields={FIELDS}
-                />
-            </div>
-        </Modal>
+        <div className={styles.editItem} ref={editItemRef} >
+            {images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
+            <ImagesCarousel
+                width={screenWidth > 800 ? width * .8 : width}
+                images={images}
+                onRemove={handleImageRemove}
+                onChange={handleImageChange}
+            />
+            <AddImage className={styles.addImageButton} onConfirm={handleAddImage} />
+            <EditableList
+                className={styles.editableList}
+                fields={FIELDS}
+            />
+            <Button className={styles.closeButton} onClick={props.onClose}>
+                Close
+            </Button>
+        </div>
     )
 }
 
-export default EditItemModal
+export default EditItem
