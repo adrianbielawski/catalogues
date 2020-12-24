@@ -1,0 +1,10 @@
+@import "global-styles/variables_and_mixins";
+
+.catalogueTitle {
+    display: inline-flex;
+    padding: 0 10px;
+    margin-left: 20px;
+    box-shadow: 0px -2px 3px -1px $midLightGrey;
+    border-radius: 10px 10px 0 0;
+    background: #fff;
+}

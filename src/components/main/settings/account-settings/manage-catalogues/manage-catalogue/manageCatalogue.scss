@@ -1,0 +1,18 @@
+@import "global-styles/variables_and_mixins";
+
+.manageCatalogue {
+    margin: 25px auto 0 auto;
+    width: 90%;
+    .manageItem {
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 6px -2px $grey;
+        .addButton {
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+    }
+}
