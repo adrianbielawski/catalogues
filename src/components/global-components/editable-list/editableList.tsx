@@ -2,9 +2,7 @@ import React, { useState } from 'react'
 //Custom components
 import EditableField from 'components/global-components/editable-list/editable-field/editableField'
 
-type OnEditClick = (id: number | null) => void
-
-interface Field {
+export interface Field {
     title: string,
     content: string[],
     hiddenContent?: boolean,
@@ -15,6 +13,7 @@ interface Field {
 type FIELDS_TYPE = Field[]
 
 type OnConfirm = (input: string[]) => void
+export type Id = number | string | null
 
 type Props = {
     className?: string,
@@ -22,9 +21,9 @@ type Props = {
 }
 
 const EditableList = (props: Props) => {
-    const [editableFieldId, setEditableFieldId] = useState<number | null>(null)
+    const [editableFieldId, setEditableFieldId] = useState<Id>(null)
 
-    const handleEditFieldClick: OnEditClick = (id) => {
+    const handleEditFieldClick = (id: Id) => {
         if (editableFieldId === id) {
             setEditableFieldId(null)
         } else {

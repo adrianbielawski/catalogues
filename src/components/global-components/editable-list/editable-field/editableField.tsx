@@ -4,18 +4,20 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './editableField.scss'
+//Types
+import { Id } from '../editableList'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 interface Props {
-    id: number,
+    id: Id,
     title: string,
     content: string[],
     hiddenContent?: boolean,
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     isEditing: boolean,
-    onEditClick: (id: number | null) => void,
+    onEditClick: (id: Id) => void,
     onConfirm?: (input: string[]) => void
 }
 
