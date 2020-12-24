@@ -5,7 +5,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import styles from './addImage.scss'
 //Custom components
-import AddButton from './add-button/addButton'
+import AddButton from 'components/global-components/add-button/addButton'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import ImagePreview from './image-preview/imagePreview'
 
@@ -67,7 +67,11 @@ const AddImage = (props: Props) => {
 
     return (
         <div className={addImageClass}>
-            <AddButton onClick={handleAddClick} />
+            <AddButton
+                text="Add image"
+                className={styles.addButton}
+                onClick={handleAddClick}
+            />
             <input
                 className={styles.input}
                 type="file"
