@@ -6,7 +6,7 @@ import styles from './AddButton.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
-type Props = {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text?: string,
     className?: string,
     onClick: () => void,
@@ -15,16 +15,18 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const AddButton = (props: Props) => {
+    const { text, onClick, className, ...rest } = props
+    
     const buttonClass = cx(
         'addButton',
-        props.className,
+        className,
     )
 
     return (
-        <TransparentButton className={buttonClass} onClick={props.onClick}>
+        <TransparentButton className={buttonClass} onClick={onClick} { ...rest }>
             <>
                 <FontAwesomeIcon icon={faPlus} className={styles.plus} />
-                {props.text ? <p>{props.text}</p> : null}
+                {text ? <p>{text}</p> : null}
             </>
         </TransparentButton>
     )

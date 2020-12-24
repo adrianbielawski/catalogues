@@ -13,4 +13,10 @@
     &:hover p {
         color: $lightOrange;
     }
+    &:disabled {
+        opacity: .3;
+        &:hover p {
+            color: $darkGrey;
+        }
+    }
 }
