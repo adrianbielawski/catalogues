@@ -8,6 +8,7 @@ import { useTypedSelector } from 'store/reducers/index'
 import SideMenu from 'components/main/side-menu/sideMenu'
 import Loader from 'components/global-components/loader/loader'
 import MyAccount from './my-account/myAccount'
+import ManageCatalogues from './manage-catalogues/manageCatalogues'
 
 const AccountSettings = () => {
     const user = useTypedSelector(state => state.app.user)
@@ -35,7 +36,7 @@ const AccountSettings = () => {
                     />
                     <Route
                         path="/:userId/settings/account/manage-catalogues"
-                        component={Loader}
+                        component={ManageCatalogues}
                     />
                     <Route
                         path="/:userId/settings/account/my-account"
