@@ -24,7 +24,7 @@ const CatalogueTitle = (props: Props) => {
         <div className={styles.catalogueTitle}>
             <EditableField
                 id={`Catalogue title ${props.id}`}
-                title="Catalogue name"
+                title="Name"
                 content={[`${props.name}`]}
                 isEditing={isEditing}
                 onEditClick={handleEditName}

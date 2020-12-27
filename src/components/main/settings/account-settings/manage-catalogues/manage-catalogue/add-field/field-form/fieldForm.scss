@@ -28,8 +28,16 @@
         .buttons {
             display: flex;
             button {
-                margin: 10px 20px;
+                margin: 10px 20px 10px 0;
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .fieldForm {
+        .wrapper {
+            margin-left: 10px;
         }
     }
 }
