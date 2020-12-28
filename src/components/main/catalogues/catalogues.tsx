@@ -1,5 +1,5 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './catalogues.scss'
@@ -88,6 +88,7 @@ const filtersBarValue = {
 }
 
 const Catalogues = () => {
+    const history = useHistory()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const dispatch = useDispatch()
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
@@ -116,6 +117,10 @@ const Catalogues = () => {
         const top = cataloguesRef.current?.getBoundingClientRect().top
         const minHeight = screenHeight - top!
         setMinHeight(minHeight)
+    }
+
+    const handleRedirectToSettings = () => {
+        history.push(`/${user!.id}/settings/account/manage-catalogues`)
     }
 
     const NAV_CONTENT: ItemType[] = [
@@ -183,12 +188,17 @@ const Catalogues = () => {
                         </Switch>
                     </Suspense>
                     {catalogues.length === 0 &&
-                        <p className={styles.noContent}>
-                            You have no catalogues yet,
-                            <span className={styles.anchor}>
+                        <div className={styles.noContent}>
+                            <p>
+                                You have no catalogues yet,
+                            </p>
+                            <p
+                                className={styles.anchor}
+                                onClick={handleRedirectToSettings}
+                            >
                                 click here to create your first catalogue
-                            </span>
-                        </p>
+                            </p>
+                        </div>
                     }
                 </div>
             }
