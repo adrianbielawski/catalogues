@@ -7,7 +7,7 @@ import styles from './textField.scss'
 import { TextFieldInterface } from '../itemFields'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import InputWithConfirmButton from 'components/global-components/editable-list/editable-field/input-with-confirm-button/inputWithConfirmButton'
+import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 
 type Props = {
     field: TextFieldInterface,

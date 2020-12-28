@@ -7,7 +7,7 @@ import styles from './editableField.scss'
 import { Id } from '../editableList'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import InputWithConfirmButton from './input-with-confirm-button/inputWithConfirmButton'
+import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 
 interface Props {
     id: Id,

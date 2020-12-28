@@ -6,7 +6,7 @@ import styles from './choices.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddButton from 'components/global-components/add-button/addButton'
-import InputWithConfirmButton from 'components/global-components/editable-list/editable-field/input-with-confirm-button/inputWithConfirmButton'
+import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 
 export interface Choice {
     id: string,
