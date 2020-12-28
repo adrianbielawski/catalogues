@@ -1,0 +1,28 @@
+@import "global-styles/variables_and_mixins";
+
+.inputWrapper {
+    position: relative;
+    textarea {
+        border: 1px solid $midLightGrey;
+        outline: none;
+        padding: 5px 25px 5px 5px;
+        @include scrollBar;
+        &::-webkit-scrollbar-track {
+            background: #fff;
+        }
+    }
+    .confirmButton {
+        color: $green;
+        font-size: 20px;
+        position: absolute;
+        right: 10px;
+        bottom: 8px;
+        z-index: 10;
+    }
+    .loader {
+        position: absolute;
+        right: 3px;
+        bottom: 5px;
+        z-index: 10;
+    }
+}

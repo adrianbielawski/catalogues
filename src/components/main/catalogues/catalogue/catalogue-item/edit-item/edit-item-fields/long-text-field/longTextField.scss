@@ -1,0 +1,56 @@
+@import "global-styles/variables_and_mixins";
+
+.longTextField {
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    min-height: 30px;
+    width: 100%;
+    .nameWrapper {
+        display: flex;
+        align-items: center;
+        .name {
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .editButton {
+            margin-right: 3px;
+            font-size: 16px;
+            &.active {
+                color: $orange;
+            }
+        }
+    }
+    &.active {
+        align-items: flex-start;
+        padding-top: 3px;
+    }
+    .content {
+        width: 100%;
+        font-size: 18px;
+        color: $darkGrey;
+        margin-left: 5px;
+        box-sizing: border-box;
+        border: none;
+        white-space: nowrap;
+        @include scroll;
+        textarea {
+            resize: none;
+            width: 100%;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .longTextField {
+        &.active {
+            flex-direction: column;
+            .content {
+                margin: 5px 0 0 0;
+            }
+        }
+    }
+}

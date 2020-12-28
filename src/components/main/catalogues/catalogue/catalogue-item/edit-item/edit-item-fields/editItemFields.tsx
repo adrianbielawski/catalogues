@@ -4,6 +4,7 @@ import styles from './editItemFields.scss'
 import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
 //Custom components
 import TextField, { TextFieldInterface } from './text-field/textField'
+import LongTextField from './long-text-field/longTextField'
 
 export interface ChoiceFieldInterface {
     id: string,
@@ -110,7 +111,7 @@ const EditItemFields = (props: Props) => {
                 case 'long text':
                     let longTextField = field as TextFieldInterface
                     return (
-                        <TextField
+                        <LongTextField
                             field={longTextField}
                             onEditConfirm={handleFieldEditConfirm}
                             key={longTextField.id}
