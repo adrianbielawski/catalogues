@@ -50,22 +50,6 @@ const TextField = (props: Props) => {
         },
     )
 
-    const getInput = () => {
-        if (props.field.type === 'short text') {
-            return (
-                <InputWithConfirmButton
-                    placeholder={props.field.content}
-                    loading={confirmed}
-                    autoFocus
-                    type="text"
-                    onConfirm={handleConfirm}
-                />
-            )
-        } else {
-            return <></>
-        }
-    }
-
     return (
         <div className={styles.textField}>
             <TransparentButton className={editButtonClass} onClick={handleEdit}>
@@ -76,7 +60,15 @@ const TextField = (props: Props) => {
             </p>
             <div className={styles.content}>
                 {isEditing
-                    ? getInput()
+                    ? (
+                        <InputWithConfirmButton
+                            className={styles.input}
+                            placeholder={props.field.content}
+                            loading={confirmed}
+                            autoFocus
+                            onConfirm={handleConfirm}
+                        />
+                    )
                     : props.field.content
                 }
             </div>
