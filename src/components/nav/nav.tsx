@@ -66,6 +66,9 @@ const Nav = (props: Props) => {
     }, [])
 
     const toggleActive = () => {
+        if (showList.show) {
+            setShowList({ show: false, index: null })
+        }
         setActive(!active)
     }
 
