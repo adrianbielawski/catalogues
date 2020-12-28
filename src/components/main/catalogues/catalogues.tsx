@@ -124,12 +124,14 @@ const Catalogues = () => {
             location: `/${user!.id}/catalogues`,
             children: catalogues.map(catalogue => {
                 return {
+                    id: catalogue.id.toString(),
                     title: catalogue.name,
                     url: `/${user!.id}/catalogues/${catalogue.slug}`
                 }
             }),
         },
         {
+            id: 'Settings',
             title: 'Settings',
             url: `/${user!.id}/settings`,
         }

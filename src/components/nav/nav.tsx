@@ -11,6 +11,7 @@ import MobileNavBar from './mobile-nav-bar/mobileNavBar'
 import GoBackButton from './go-back-button/goBackButton'
 
 export type ItemWithUrl = {
+    id: string,
     title: string,
     url: string,
     children?: never,

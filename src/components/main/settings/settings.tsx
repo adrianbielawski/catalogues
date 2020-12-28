@@ -29,16 +29,19 @@ const Settings = () => {
             location: `/${user!.id}/settings`,
             children: [
                 {
+                    id: 'NailsSetting',
                     title: 'Nails settings',
                     url: `/${user!.id}/settings/nails`,
                 },
                 {
+                    id: 'WatchesSettings',
                     title: 'Watches settings',
                     url: `/${user!.id}/settings/watches`,
                 }
             ]
         },
         {
+            id: 'AccountSettings',
             title: 'Account settings',
             url: `/${user!.id}/settings/account`,
         }

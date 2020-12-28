@@ -68,7 +68,7 @@ const NavList = (props: Props) => {
                         title={item.title}
                         url={item.url}
                         onClick={props.onLinkClick}
-                        key={item.title}
+                        key={item.id}
                     />
                 )
             }
