@@ -2,12 +2,13 @@ import React, { useState, useRef, useEffect } from 'react'
 import styles from './editItem.scss'
 //Types
 import { DeserializedItem, Image } from 'src/globalTypes'
+import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
 //Custom components
-import EditableList from 'components/global-components/editable-list/editableList'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
 import AddImage from './add-image/addImage'
 import Button from 'components/global-components/button/button'
+import EditItemFields from './edit-item-fields/editItemFields'
 
 type Props = {
     show: boolean,
@@ -64,21 +65,6 @@ const EditItem = (props: Props) => {
         }
     }
 
-    const handleNameChange = (newName: string[]) => {
-    }
-
-    const FIELDS = [
-        {
-            title: 'Id',
-            content: [props.item.id.toString()],
-        },
-        {
-            title: "Name",
-            content: [props.item.name],
-            onConfirm: handleNameChange,
-        },
-    ]
-
     const handleImageRemove = (i: number) => {
         let imgs = cloneDeep(images)
         if (imgs[i].isMain === true) {
@@ -117,10 +103,7 @@ const EditItem = (props: Props) => {
                 onChange={handleImageChange}
             />
             <AddImage className={styles.addImageButton} onConfirm={handleAddImage} />
-            <EditableList
-                className={styles.editableList}
-                fields={FIELDS}
-            />
+            <EditItemFields itemId={props.item.id} />
             <Button className={styles.closeButton} onClick={props.onClose}>
                 Close
             </Button>

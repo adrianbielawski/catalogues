@@ -1,0 +1,38 @@
+@import "global-styles/variables_and_mixins";
+
+.textField {
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    height: 30px;
+    width: 100%;
+    .name {
+        font-size: 18px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .editButton {
+        margin-right: 3px;
+        font-size: 16px;
+        &.active {
+            color: $orange;
+        }
+    }
+    .content {
+        font-size: 18px;
+        color: $darkGrey;
+        padding-left: 10px;
+        box-sizing: border-box;
+        border: none;
+        white-space: nowrap;
+        @include scroll
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .textField {
+        .content {
+            max-width: 230px;
+        }
+    }
+}
