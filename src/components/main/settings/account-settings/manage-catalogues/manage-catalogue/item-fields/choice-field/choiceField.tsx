@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { cloneDeep } from 'lodash'
 import classNames from 'classnames/bind'
-import styles from './ChoiceField.scss'
+import styles from './choiceField.scss'
 //Types
 import { ChoiceFieldInterface } from '../itemFields'
 import { Choice } from './choices/choices'

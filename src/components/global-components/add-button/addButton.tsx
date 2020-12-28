@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './AddButton.scss'
+import styles from './addButton.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
