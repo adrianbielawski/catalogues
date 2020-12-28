@@ -1,0 +1,28 @@
+@import "global-styles/variables_and_mixins";
+
+.choices {
+    .choicesList {
+        max-height: 200px;
+        overflow-y: scroll;
+        @include scrollBar;
+        &::-webkit-scrollbar-track {
+            background: #fff;
+        }
+        .choice {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 16px;
+            button {
+                font-size: 18px;
+            }
+            span {
+                margin-left: 8px;
+            }
+        }
+    }
+    .addChoiceButton {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+}

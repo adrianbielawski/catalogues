@@ -1,8 +1,8 @@
 import React from 'react'
-import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 //Custom components
+import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
-interface Choice {
+export interface Choice {
     id: string,
     title: string,
 }

@@ -1,0 +1,22 @@
+@import "global-styles/variables_and_mixins";
+
+.field {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    span {
+        margin-left: 5px;
+    }
+    .button {
+        margin-right: 3px;
+        font-size: 16px;
+        &.active {
+            color: $orange;
+        }
+    }
+}

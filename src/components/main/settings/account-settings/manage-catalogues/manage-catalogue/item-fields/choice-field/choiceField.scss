@@ -1,0 +1,41 @@
+@import "global-styles/variables_and_mixins";
+
+.field {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    &.active {
+        align-items: flex-start;
+        .editButton {
+            margin-top: 7px;
+        }
+    }
+    .name {
+        font-size: 18px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .nameInput {
+        border: none;
+        border-bottom: 1px solid $midLightGrey;
+        font-size: 18px;
+        margin-left: 3px;
+    }
+    .editButton {
+        margin-right: 3px;
+        font-size: 16px;
+        &.active {
+            color: $orange;
+        }
+    }
+    .choices {
+        margin: 10px 0 0 0;
+    }
+    .buttons {
+        display: flex;
+        margin: 10px 0 20px 0;
+        .button {
+            margin-right: 20px;
+        }
+    }
+}
