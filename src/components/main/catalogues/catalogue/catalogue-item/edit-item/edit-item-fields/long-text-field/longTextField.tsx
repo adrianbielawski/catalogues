@@ -49,8 +49,8 @@ const LongTextField = (props: Props) => {
     )
 
     const contentText = () => {
-        if (props.field.content.length > 20) {
-            return `${props.field.content.slice(0, 20)}...`
+        if (props.field.content.length > 40) {
+            return `${props.field.content.slice(0, 40)}...`
         } else {
             return props.field.content
         }

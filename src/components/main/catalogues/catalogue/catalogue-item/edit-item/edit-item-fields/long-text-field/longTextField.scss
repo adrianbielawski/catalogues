@@ -16,7 +16,7 @@
         margin-left: 5px;
         box-sizing: border-box;
         border: none;
-        white-space: nowrap;
+        overflow-wrap: anywhere;
         @include scroll;
         textarea {
             resize: none;
