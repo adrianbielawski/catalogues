@@ -4,7 +4,7 @@ import CheckBoxWithTitle from 'components/global-components/check-box-with-title
 
 export interface Choice {
     id: string,
-    title: string,
+    name: string,
 }
 
 type Props = {
@@ -19,7 +19,7 @@ const SingleChoiceList = (props: Props) => {
         <li key={choice.id}>
             <CheckBoxWithTitle
                 id={choice.id}
-                title={choice.title}
+                title={choice.name}
                 selected={props.selected === choice.id}
                 onChange={props.onChange}
             />

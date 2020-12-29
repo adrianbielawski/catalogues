@@ -46,19 +46,19 @@ const FieldForm = (props: Props) => {
     const TYPES = [
         {
             id: '1',
-            title: 'Short text',
+            name: 'Short text',
         },
         {
             id: '2',
-            title: 'Long text',
+            name: 'Long text',
         },
         {
             id: '3',
-            title: 'Single choice',
+            name: 'Single choice',
         },
         {
             id: '4',
-            title: 'Multiple choice',
+            name: 'Multiple choice',
         },
     ]
 
