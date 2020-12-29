@@ -7,16 +7,10 @@
     height: 30px;
     width: 100%;
     .title {
+        margin-left: 21px;
         font-size: 18px;
         font-weight: 700;
         white-space: nowrap;
-    }
-    .editButton {
-        margin-right: 3px;
-        font-size: 16px;
-        &.active {
-            color: $orange;
-        }
     }
     .content {
         font-size: 18px;
@@ -26,9 +20,6 @@
         border: none;
         white-space: nowrap;
         @include scroll
-    }
-    .placeholder {
-        width: 21px;
     }
 }
 

@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
-import classNames from 'classnames/bind'
 import styles from './editableField.scss'
 //Types
 import { Id } from '../editableList'
 //Custom components
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
+import EditableFieldTitle from './editable-field-title/editableFieldTitle'
 
 interface Props {
     id: Id,
@@ -47,8 +44,6 @@ const EditableField = (props: Props) => {
         }
     }
 
-    const cx = classNames.bind(styles)
-
     const getField = () => {
         if (props.isEditing && props.onConfirm !== undefined) {
             return (
@@ -65,30 +60,24 @@ const EditableField = (props: Props) => {
         }
     }
 
-    const editButtonClass = cx(
-        'editButton',
-        {
-            active: props.isEditing,
-        },
-    )
-
     return (
         <div className={styles.editableField}>
             {props.onConfirm !== undefined
                 ? (
-                    <TransparentButton className={editButtonClass} onClick={handleEdit}>
-                        <FontAwesomeIcon icon={faEdit} />
-                    </TransparentButton>
+                    <EditableFieldTitle
+                        title={props.title}
+                        isEditing={props.isEditing}
+                        onEdit={handleEdit}
+                    />
                 )
-                : <div className={styles.placeholder}></div>
+                : (
+                <p className={styles.title}>{props.title}:</p>
+                )
             }
-            <p className={styles.title}>
-                {props.title}:
-            </p>
-            <div className={styles.content}>
+            < div className={styles.content}>
                 {getField()}
             </div>
-        </div>
+        </div >
     )
 }
 
