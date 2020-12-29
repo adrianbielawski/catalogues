@@ -1,10 +1,7 @@
 import React, { useRef } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import styles from './textareaWithConfirmButton.scss'
 //Custom components
-import Loader from 'components/global-components/loader/loader'
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import ConfirmButton from '../confirm-button/confirmButton'
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     loading: boolean,
@@ -23,17 +20,12 @@ const TextareaWithConfirmButton = (props: Props) => {
     return (
         <div className={styles.inputWrapper}>
             <textarea ref={inputRef} {...rest} />
-            {!loading
-                ? (
-                    <TransparentButton
-                        className={styles.confirmButton}
-                        onClick={handleConfirm}
-                    >
-                        <FontAwesomeIcon icon={faCheck} />
-                    </TransparentButton>
-                )
-                : <Loader className={styles.loader} size={25} />
-            }
+            <ConfirmButton
+                className={styles.confirmButton}
+                size={25}
+                loading={loading}
+                onClick={handleConfirm}
+            />
         </div>
     )
 }

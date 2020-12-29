@@ -1,10 +1,7 @@
 import React, { useRef } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import styles from './inputWithConfirmButton.scss'
 //Custom components
-import Loader from 'components/global-components/loader/loader'
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import ConfirmButton from '../confirm-button/confirmButton'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     loading: boolean,
@@ -28,17 +25,12 @@ const InputWithConfirmButton = (props: Props) => {
                 {...rest}
                 autoFocus
             />
-            {!loading
-                ? (
-                    <TransparentButton
-                        className={styles.confirmButton}
-                        onClick={handleConfirm}
-                    >
-                        <FontAwesomeIcon icon={faCheck} />
-                    </TransparentButton>
-                )
-                : <Loader className={styles.loader} size={25} />
-            }
+            <ConfirmButton
+                className={styles.confirmButton}
+                size={25}
+                loading={loading}
+                onClick={handleConfirm}
+            />
         </div>
     )
 }
