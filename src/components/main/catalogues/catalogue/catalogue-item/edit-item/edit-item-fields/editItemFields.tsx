@@ -1,17 +1,11 @@
 import React from 'react'
 import styles from './editItemFields.scss'
 //Types
-import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
+import { ChoiceFieldInterface } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/itemFields'
 //Custom components
 import TextField, { TextFieldInterface } from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
-
-export interface ChoiceFieldInterface {
-    id: string,
-    name: string,
-    type: string,
-    choices: Choice[],
-}
+import SingleChoiceField from './single-choice-field/singleChoiceField'
 
 type Field = TextFieldInterface | ChoiceFieldInterface
 
@@ -115,6 +109,15 @@ const EditItemFields = (props: Props) => {
                             field={longTextField}
                             onEditConfirm={handleFieldEditConfirm}
                             key={longTextField.id}
+                        />
+                    )
+                case 'single choice':
+                    let singleChoiceField = field as ChoiceFieldInterface
+                    return (
+                        <SingleChoiceField
+                            field={singleChoiceField}
+                            onEditConfirm={handleFieldEditConfirm}
+                            key={singleChoiceField.id}
                         />
                     )
             }
