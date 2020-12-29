@@ -1,11 +1,13 @@
 import React from 'react'
 import styles from './editItemFields.scss'
 //Types
+import { SelectedChoice } from 'components/global-components/multiple-choice-list/multipleChoiceList'
 import { ChoiceFieldInterface } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/itemFields'
 //Custom components
 import TextField, { TextFieldInterface } from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
+import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 
 type Field = TextFieldInterface | ChoiceFieldInterface
 
@@ -91,37 +93,51 @@ const EditItemFields = (props: Props) => {
         console.log('item id', props.itemId, 'field id', fieldId, 'input', input)
     }
 
+    const handleChoiceFieldEditConfirm = (fieldId: string, choice: SelectedChoice) => {
+        console.log('item id', props.itemId, 'field id', fieldId, 'choice', choice)
+    }
+
     const fields = FIELDS.map(field => {
-            switch (field.type) {
-                case 'short text':
-                    let shortTextField = field as TextFieldInterface
-                    return (
-                        <TextField
-                            field={shortTextField}
-                            onEditConfirm={handleFieldEditConfirm}
-                            key={shortTextField.id}
-                        />
-                    )
-                case 'long text':
-                    let longTextField = field as TextFieldInterface
-                    return (
-                        <LongTextField
-                            field={longTextField}
-                            onEditConfirm={handleFieldEditConfirm}
-                            key={longTextField.id}
-                        />
-                    )
-                case 'single choice':
-                    let singleChoiceField = field as ChoiceFieldInterface
-                    return (
-                        <SingleChoiceField
-                            field={singleChoiceField}
-                            onEditConfirm={handleFieldEditConfirm}
-                            key={singleChoiceField.id}
-                        />
-                    )
-            }
-        })
+        switch (field.type) {
+            case 'short text':
+                let shortTextField = field as TextFieldInterface
+                return (
+                    <TextField
+                        field={shortTextField}
+                        onEditConfirm={handleFieldEditConfirm}
+                        key={shortTextField.id}
+                    />
+                )
+            case 'long text':
+                let longTextField = field as TextFieldInterface
+                return (
+                    <LongTextField
+                        field={longTextField}
+                        onEditConfirm={handleFieldEditConfirm}
+                        key={longTextField.id}
+                    />
+                )
+            case 'single choice':
+                let singleChoiceField = field as ChoiceFieldInterface
+                return (
+                    <SingleChoiceField
+                        field={singleChoiceField}
+                        onEditConfirm={handleFieldEditConfirm}
+                        key={singleChoiceField.id}
+                    />
+                )
+            case 'multiple choice':
+                let multipleChoiceField = field as ChoiceFieldInterface
+                return (
+                    <MultipleChoiceField
+                        field={multipleChoiceField}
+                        selected={{'222': true}}
+                        onEditConfirm={handleChoiceFieldEditConfirm}
+                        key={multipleChoiceField.id}
+                    />
+                )
+        }
+    })
 
     return (
         <div className={styles.fields}>
