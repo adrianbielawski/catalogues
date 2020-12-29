@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './longTextField.scss'
 //Custom components
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
+import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
 
 
 export interface TextFieldInterface {
@@ -27,7 +24,6 @@ const cx = classNames.bind(styles)
 const LongTextField = (props: Props) => {
     const [isEditing, setIsEditing] = useState(false)
     const [confirmed, setConfirmed] = useState(false)
-    const screenWidth = window.innerWidth
 
     const handleEdit = () => {
         setIsEditing(!isEditing)
@@ -44,13 +40,6 @@ const LongTextField = (props: Props) => {
             })
             .catch(() => setConfirmed(false))
     }
-
-    const editButtonClass = cx(
-        'editButton',
-        {
-            active: isEditing,
-        },
-    )
 
     const fieldClass = cx(
         'longTextField',
@@ -69,14 +58,11 @@ const LongTextField = (props: Props) => {
 
     return (
         <div className={fieldClass}>
-            <div className={styles.nameWrapper}>
-                <TransparentButton className={editButtonClass} onClick={handleEdit}>
-                    <FontAwesomeIcon icon={faEdit} />
-                </TransparentButton>
-                <p className={styles.name}>
-                    {props.field.name}:
-                </p>
-            </div>
+            <EditableFieldTitle
+                title={props.field.name}
+                isEditing={isEditing}
+                onEdit={handleEdit}
+            />
             <div className={styles.content}>
                 {isEditing
                     ? (

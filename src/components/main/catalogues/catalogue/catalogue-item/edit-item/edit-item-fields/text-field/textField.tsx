@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Custom components
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
+import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
 
 
 export interface TextFieldInterface {
@@ -43,21 +41,13 @@ const TextField = (props: Props) => {
             .catch(() => setConfirmed(false))
     }
 
-    const editButtonClass = cx(
-        'editButton',
-        {
-            active: isEditing,
-        },
-    )
-
     return (
         <div className={styles.textField}>
-            <TransparentButton className={editButtonClass} onClick={handleEdit}>
-                <FontAwesomeIcon icon={faEdit} />
-            </TransparentButton>
-            <p className={styles.name}>
-                {props.field.name}:
-            </p>
+            <EditableFieldTitle
+                title={props.field.name}
+                isEditing={isEditing}
+                onEdit={handleEdit}
+            />
             <div className={styles.content}>
                 {isEditing
                     ? (
