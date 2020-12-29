@@ -9,6 +9,7 @@
     .nameWrapper {
         display: flex;
         align-items: center;
+        min-height: 30px;
         .name {
             font-size: 18px;
             font-weight: 700;
@@ -24,7 +25,6 @@
     }
     &.active {
         align-items: flex-start;
-        padding-top: 3px;
     }
     .content {
         width: 100%;
