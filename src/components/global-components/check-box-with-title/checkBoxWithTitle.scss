@@ -3,8 +3,10 @@
 .checkBoxWithTitle {
     display: inline-flex;
     align-items: center;
+    max-width: 100%;
     span {
         margin-left: 5px;
+        white-space: break-spaces;
     }
     &:hover {
         color: $lightOrange;
