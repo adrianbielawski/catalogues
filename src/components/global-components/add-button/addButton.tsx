@@ -5,9 +5,11 @@ import classNames from 'classnames/bind'
 import styles from './addButton.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import Loader from '../loader/loader'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text?: string,
+    loading?: boolean,
     className?: string,
     onClick: () => void,
 }
@@ -15,7 +17,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const cx = classNames.bind(styles)
 
 const AddButton = (props: Props) => {
-    const { text, onClick, className, ...rest } = props
+    const { text, loading, onClick, className, ...rest } = props
     
     const buttonClass = cx(
         'addButton',
@@ -23,9 +25,17 @@ const AddButton = (props: Props) => {
     )
 
     return (
-        <TransparentButton className={buttonClass} onClick={onClick} { ...rest }>
+        <TransparentButton
+            className={buttonClass}
+            disabled={loading}
+            onClick={onClick}
+            { ...rest }
+        >
             <>
-                <FontAwesomeIcon icon={faPlus} className={styles.plus} />
+            {loading
+                ? <Loader size={24} />
+                : <FontAwesomeIcon icon={faPlus} className={styles.plus} />
+            }
                 {text ? <p>{text}</p> : null}
             </>
         </TransparentButton>
