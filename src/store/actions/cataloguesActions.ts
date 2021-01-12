@@ -5,6 +5,7 @@ import {
     CATALOGUES_GET_CATALOGUE_ITEMS_START, CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_CREATE_CATALOGUE, CATALOGUES_CREATE_CATALOGUE_START,
     CATALOGUES_CREATE_CATALOGUE_SUCCESS, CATALOGUES_CREATE_CATALOGUE_FAILURE,
+    CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
     AppActionTypes, ThunkAction, ErrorData
 } from '../storeTypes'
 
@@ -74,3 +75,19 @@ export const createCatalogueFailure = (): AppActionTypes => ({
     type: CATALOGUES_CREATE_CATALOGUE_FAILURE,
 })
 
+export const fetchCatalogues = (): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUES,
+})
+
+export const fetchCataloguesStart = (): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUES_START,
+})
+
+export const fetchCataloguesSuccess = (catalogues: Catalogue[]): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUES_SUCCESS,
+    catalogues,
+})
+
+export const fetchCatalogueFailure = (): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUES_FAILURE,
+})

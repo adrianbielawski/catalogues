@@ -9,11 +9,11 @@ import cataloguesReducer from './cataloguesReducer'
 //Types
 import { AppActionTypes } from 'store/storeTypes'
 //Epics
-import { createCatalogueEpic } from 'store/epics/catalogueEpics'
+import { createCatalogueEpic, fetchCataloguesEpic } from 'store/epics/catalogueEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
-const rootEpic = combineEpics(createCatalogueEpic)
+const rootEpic = combineEpics(createCatalogueEpic, fetchCataloguesEpic)
 const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, RootState>()
 
 const rootReducer = combineReducers({

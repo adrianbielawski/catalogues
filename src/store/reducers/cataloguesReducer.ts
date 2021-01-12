@@ -25,6 +25,19 @@ const cataloguesReducer = (
 ): CataloguesState => {
     let newState = cloneDeep(state)
     switch (action.type) {
+        case 'CATALOGUES/FETCH_CATALOGUES/START':
+            newState.fetchingCatalogues = true
+            return newState
+
+        case 'CATALOGUES/FETCH_CATALOGUES/SUCCESS':
+            newState.catalogues = action.catalogues.map(catalogue => catalogueDeserializer(catalogue))
+            newState.fetchingCatalogues = false
+            return newState
+
+        case 'CATALOGUES/FETCH_CATALOGUES/FAILURE':
+            newState.fetchingCatalogues = false
+            return newState
+
         case 'CATALOGUES/GET_CATALOGUES/SUCCESS':
             newState.catalogues = action.catalogues.map(catalogue => catalogueDeserializer(catalogue))
             newState.fetchingCatalogues = false
