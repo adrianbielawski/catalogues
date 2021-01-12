@@ -1,8 +1,11 @@
 import axiosInstance from 'src/axiosInstance'
 import { Catalogue, ListData } from 'src/globalTypes'
 import {
-    CATALOGUES_GET_CATALOGUES_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_START,
-    CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE, AppActionTypes, ThunkAction, ErrorData,
+    CATALOGUES_GET_CATALOGUES_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS,
+    CATALOGUES_GET_CATALOGUE_ITEMS_START, CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
+    CATALOGUES_CREATE_CATALOGUE, CATALOGUES_CREATE_CATALOGUE_START,
+    CATALOGUES_CREATE_CATALOGUE_SUCCESS, CATALOGUES_CREATE_CATALOGUE_FAILURE,
+    AppActionTypes, ThunkAction, ErrorData
 } from '../storeTypes'
 
 const getCataloguesSuccess = (catalogues: Catalogue[]): AppActionTypes => ({
@@ -54,3 +57,20 @@ export const fetchCatalogueItems = (
             }
         })
 }
+
+export const createCatalogue = (): AppActionTypes => ({
+    type: CATALOGUES_CREATE_CATALOGUE,
+})
+
+export const createCatalogueStart = (): AppActionTypes => ({
+    type: CATALOGUES_CREATE_CATALOGUE_START,
+})
+
+export const createCatalogueSuccess = (): AppActionTypes => ({
+    type: CATALOGUES_CREATE_CATALOGUE_SUCCESS,
+})
+
+export const createCatalogueFailure = (): AppActionTypes => ({
+    type: CATALOGUES_CREATE_CATALOGUE_FAILURE,
+})
+

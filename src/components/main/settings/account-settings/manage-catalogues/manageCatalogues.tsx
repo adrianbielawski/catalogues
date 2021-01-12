@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import styles from './manageCatalogues.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers'
-import { getCatalogues } from 'store/actions/cataloguesActions'
+import { createCatalogue, getCatalogues } from 'store/actions/cataloguesActions'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -17,8 +17,8 @@ const ManageCatalogues = () => {
         dispatch(getCatalogues(user!.id))
     }, [])
 
-    const handleAddcatalogueClick = () => {
-
+    const handleAddCatalogueClick = () => {
+        dispatch(createCatalogue())
     }
 
     const items = catalogues.map(catalogue => (
@@ -30,7 +30,7 @@ const ManageCatalogues = () => {
             <AddButton
                 text="Add new catalogue"
                 className={styles.addButton}
-                onClick={handleAddcatalogueClick}
+                onClick={handleAddCatalogueClick}
             />
             {items}
         </div>

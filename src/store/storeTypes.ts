@@ -20,6 +20,10 @@ export const CATALOGUES_GET_CATALOGUES_SUCCESS = 'CATALOGUES/GET_CATALOGUES/SUCC
 export const CATALOGUES_GET_CATALOGUE_ITEMS_START = 'CATALOGUES/GET_CATALOGUE_ITEMS/START'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE'
+export const CATALOGUES_CREATE_CATALOGUE = 'CATALOGUES/CREATE_CATALOGUE'
+export const CATALOGUES_CREATE_CATALOGUE_START = 'CATALOGUES/CREATE_CATALOGUE/START'
+export const CATALOGUES_CREATE_CATALOGUE_SUCCESS = 'CATALOGUES/CREATE_CATALOGUE/SUCCESS'
+export const CATALOGUES_CREATE_CATALOGUE_FAILURE = 'CATALOGUES/CREATE_CATALOGUE/FAILURE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
   ReturnType,
@@ -44,6 +48,7 @@ export interface CataloguesState {
     fetchingCatalogues: boolean,
     itemsData: DeserializedListData,
     fetchingItems: boolean,
+    creatingNewCatalogue: boolean,
 }
 
 export interface ErrorData {
@@ -126,7 +131,26 @@ interface clearAppState {
     screenHeight: number,
 }
 
+interface createCatalogue {
+    type: typeof CATALOGUES_CREATE_CATALOGUE,
+}
+
+interface createCatalogueStart {
+    type: typeof CATALOGUES_CREATE_CATALOGUE_START,
+}
+
+interface createCatalogueSuccess {
+    type: typeof CATALOGUES_CREATE_CATALOGUE_SUCCESS,
+}
+
+interface createCatalogueFailure {
+    type: typeof CATALOGUES_CREATE_CATALOGUE_FAILURE,
+}
+
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
-    | changeUsernameSuccess | changeUserPassword | getCataloguesSuccess | getCataloguesItemsStart
-    | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState 
+    | changeUsernameSuccess | changeUserPassword
+    | getCataloguesSuccess | getCataloguesItemsStart
+    | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
+
+    | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
