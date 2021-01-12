@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import styles from './manageCatalogues.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers'
-import { createCatalogue, getCatalogues } from 'store/actions/cataloguesActions'
+import { createCatalogue, fetchCatalogues } from 'store/actions/cataloguesActions'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -18,7 +18,7 @@ const ManageCatalogues = () => {
 
     useEffect(() => {
         if (catalogues.length === 0) {
-            dispatch(getCatalogues(user!.id))
+            dispatch(fetchCatalogues())
         }
     }, [])
 

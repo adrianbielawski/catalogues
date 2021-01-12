@@ -38,11 +38,6 @@ const cataloguesReducer = (
             newState.fetchingCatalogues = false
             return newState
 
-        case 'CATALOGUES/GET_CATALOGUES/SUCCESS':
-            newState.catalogues = action.catalogues.map(catalogue => catalogueDeserializer(catalogue))
-            newState.fetchingCatalogues = false
-            return newState
-
         case 'CATALOGUES/GET_CATALOGUE_ITEMS/START':
             newState.fetchingItems = true
             return newState

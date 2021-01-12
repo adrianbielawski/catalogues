@@ -7,7 +7,7 @@ import styles from './catalogues.scss'
 import FiltersBarBulkContextProvider from './catalogue/filters-bar/filtersBarBulkContextProvider'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
-import { getCatalogues } from 'store/actions/cataloguesActions'
+import { fetchCatalogues } from 'store/actions/cataloguesActions'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
@@ -98,7 +98,7 @@ const Catalogues = () => {
     const [minHeight, setMinHeight] = useState(0)
 
     useEffect(() => {
-        dispatch(getCatalogues(user!.id))
+        dispatch(fetchCatalogues())
     }, [])
 
     useEffect(() => {

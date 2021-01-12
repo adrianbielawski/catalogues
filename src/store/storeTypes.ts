@@ -20,7 +20,6 @@ export const CATALOGUES_FETCH_CATALOGUES = 'CATALOGUES/FETCH_CATALOGUES'
 export const CATALOGUES_FETCH_CATALOGUES_START = 'CATALOGUES/FETCH_CATALOGUES/START'
 export const CATALOGUES_FETCH_CATALOGUES_SUCCESS = 'CATALOGUES/FETCH_CATALOGUES/SUCCESS'
 export const CATALOGUES_FETCH_CATALOGUES_FAILURE = 'CATALOGUES/FETCH_CATALOGUES/FAILURE'
-export const CATALOGUES_GET_CATALOGUES_SUCCESS = 'CATALOGUES/GET_CATALOGUES/SUCCESS'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_START = 'CATALOGUES/GET_CATALOGUE_ITEMS/START'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE'
@@ -112,11 +111,6 @@ interface changeUserPassword {
     type: typeof AUTH_PASSWORD_CHANGE_SUCCESS,
 }
 
-interface getCataloguesSuccess {
-    type: typeof CATALOGUES_GET_CATALOGUES_SUCCESS,
-    catalogues: Catalogue[],
-}
-
 interface getCataloguesItemsStart {
     type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_START,
 }
@@ -171,7 +165,6 @@ interface fetchCataloguesFailure {
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | changeUsernameSuccess | changeUserPassword
-    | getCataloguesSuccess | getCataloguesItemsStart
-    | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
+    | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
     | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
