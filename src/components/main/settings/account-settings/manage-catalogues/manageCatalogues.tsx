@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux'
 import styles from './manageCatalogues.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers'
-import { createCatalogue, fetchCatalogues } from 'store/actions/cataloguesActions'
+import { fetchCatalogues } from 'store/actions/cataloguesActions'
+import { createCatalogue } from 'store/actions/settingsActions'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -13,7 +14,7 @@ const ManageCatalogues = () => {
     const dispatch = useDispatch()
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
-    const creatingNewCatalogue = useTypedSelector(state => state.catalogues.creatingNewCatalogue)
+    const creatingNewCatalogue = useTypedSelector(state => state.settings.manageCatalogues.creatingNewCatalogue)
 
     useEffect(() => {
         if (catalogues.length === 0) {

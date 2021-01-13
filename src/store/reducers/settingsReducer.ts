@@ -9,6 +9,7 @@ const initialState: SettingsState = {
         isSubmittingPassword: false,
     },
     manageCatalogues: {
+        creatingNewCatalogue: false,
         editingCatalogueName: null,
         submittingCatalogueName: null,
     }
@@ -48,12 +49,21 @@ const settingsReducer = (
             newState.myAccount.isEditingPassword = false
             return newState
 
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/START':
+            newState.manageCatalogues.creatingNewCatalogue = true
+            return newState
+
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/FAILURE':
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/SUCCESS':
+            newState.manageCatalogues.creatingNewCatalogue = false
+            return newState
+
         case 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT':
             let editingCatalogueName = action.catalogueId
             if (action.catalogueId === newState.manageCatalogues.editingCatalogueName) {
                 editingCatalogueName = null
             }
-            
+
             newState.manageCatalogues.editingCatalogueName = editingCatalogueName
             return newState
 

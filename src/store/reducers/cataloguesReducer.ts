@@ -16,7 +16,6 @@ const initialState: CataloguesState = {
         results: [],
     },
     fetchingItems: false,
-    creatingNewCatalogue: false,
 }
 
 const cataloguesReducer = (
@@ -49,15 +48,6 @@ const cataloguesReducer = (
 
         case 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE':
             newState.fetchingItems = false
-            return newState
-
-        case 'CATALOGUES/CREATE_CATALOGUE/START':
-            newState.creatingNewCatalogue = true
-            return newState
-
-        case 'CATALOGUES/CREATE_CATALOGUE/FAILURE':
-        case 'CATALOGUES/CREATE_CATALOGUE/SUCCESS':
-            newState.creatingNewCatalogue = false
             return newState
 
         case 'APP/CLEAR_APP_STATE':
