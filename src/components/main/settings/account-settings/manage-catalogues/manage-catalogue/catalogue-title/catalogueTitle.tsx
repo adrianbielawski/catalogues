@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './catalogueTitle.scss'
 //Custom components
-import EditableField from 'components/global-components/editable-list/editable-field/editableField'
+import EditableField from 'components/global-components/editable-field/editableField'
 
 type Props = {
     id: number | string,
@@ -27,6 +27,7 @@ const CatalogueTitle = (props: Props) => {
                 title="Name"
                 content={[`${props.name}`]}
                 isEditing={isEditing}
+                isSubmitting={false}
                 onEditClick={handleEditName}
                 onConfirm={handleNameChange}
             />

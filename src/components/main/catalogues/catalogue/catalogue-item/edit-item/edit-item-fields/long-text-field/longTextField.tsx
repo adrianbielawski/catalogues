@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './longTextField.scss'
 //Custom components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
-import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
+import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 
 
 export interface TextFieldInterface {

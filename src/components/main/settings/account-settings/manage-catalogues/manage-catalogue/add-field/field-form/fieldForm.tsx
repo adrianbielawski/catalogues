@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
 //Custom components
-import EditableField from 'components/global-components/editable-list/editable-field/editableField'
+import EditableField from 'components/global-components/editable-field/editableField'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
 
@@ -78,6 +78,7 @@ const FieldForm = (props: Props) => {
                     title="New field name"
                     content={[`${fieldName || 'Field name'}`]}
                     isEditing={isNameEditing}
+                    isSubmitting={false}
                     inputProps={{ minLength: 2 }}
                     onEditClick={handleEditName}
                     onConfirm={handleNameChange}

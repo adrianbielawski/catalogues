@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Custom components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
-import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
+import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 
 
 export interface TextFieldInterface {

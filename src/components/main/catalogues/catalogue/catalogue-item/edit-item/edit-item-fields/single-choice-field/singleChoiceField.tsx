@@ -5,7 +5,7 @@ import styles from './singleChoiceField.scss'
 import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
 //Custom components
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
-import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
+import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import ConfirmButton from 'components/global-components/confirm-button/confirmButton'
 
 export interface ChoiceFieldInterface {

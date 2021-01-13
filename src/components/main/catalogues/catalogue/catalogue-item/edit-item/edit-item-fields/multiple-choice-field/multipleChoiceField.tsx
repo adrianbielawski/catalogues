@@ -4,7 +4,7 @@ import styles from './multipleChoiceField.scss'
 //Types
 import { Choice } from 'components/global-components/multiple-choice-list/multipleChoiceList'
 //Custom components
-import EditableFieldTitle from 'components/global-components/editable-list/editable-field/editable-field-title/editableFieldTitle'
+import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import ConfirmButton from 'components/global-components/confirm-button/confirmButton'
 import MultipleChoiceList, { SelectedChoice } from 'components/global-components/multiple-choice-list/multipleChoiceList'
 
