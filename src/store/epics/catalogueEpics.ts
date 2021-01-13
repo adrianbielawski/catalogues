@@ -46,7 +46,7 @@ export const fetchCataloguesEpic = (
         from(axiosInstance.get('/catalogues/', {
             params: { created_by: id }
         })).pipe(
-            mergeMap(response => of(fetchCataloguesSuccess(response.data.results))),
+            mergeMap(response => of(fetchCataloguesSuccess(response.data))),
             catchError(err => of(fetchCatalogueFailure()))
         )
     ))
