@@ -11,7 +11,6 @@ import Loader from 'components/global-components/loader/loader'
 
 const ManageCatalogues = () => {
     const dispatch = useDispatch()
-    const user = useTypedSelector(state => state.app.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const creatingNewCatalogue = useTypedSelector(state => state.catalogues.creatingNewCatalogue)
@@ -38,7 +37,7 @@ const ManageCatalogues = () => {
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {fetchingCatalogues &&
+            {(fetchingCatalogues && catalogues.length === 0) &&
                 <Loader size={50} className={styles.loader} />
             }
             {items}
