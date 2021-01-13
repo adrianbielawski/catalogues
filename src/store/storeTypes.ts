@@ -63,10 +63,6 @@ export interface CataloguesState {
 }
 
 export interface SettingsState {
-    accountSettings: AccountSettings
-}
-
-interface AccountSettings {
     myAccount: {
         isEditingUsername: boolean,
         isSubmittingUsername: boolean,
@@ -173,7 +169,6 @@ interface fetchCataloguesSuccess {
 interface fetchCataloguesFailure {
     type: typeof CATALOGUES_FETCH_CATALOGUES_FAILURE,
 }
-
 
 interface toggleUsernameEdit {
     type: typeof MY_ACCOUNT_TOGGLE_USERNAME_EDIT,

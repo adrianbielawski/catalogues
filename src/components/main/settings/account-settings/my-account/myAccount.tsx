@@ -10,7 +10,7 @@ import { changePassword, changeUsername, togglePasswordEdit, toggleUsernameEdit 
 const MyAccount = () => {
     const dispatch = useDispatch()
     const user = useTypedSelector(state => state.app.user)
-    const myAccount = useTypedSelector(state => state.settings.accountSettings.myAccount)
+    const myAccount = useTypedSelector(state => state.settings.myAccount)
 
     const handleEditUsername = () => {
         dispatch(toggleUsernameEdit(!myAccount.isEditingUsername))
