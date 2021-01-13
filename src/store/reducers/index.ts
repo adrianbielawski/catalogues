@@ -6,20 +6,28 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import appReducer from './appReducer'
 import authReducer from './authReducer'
 import cataloguesReducer from './cataloguesReducer'
+import settingsReducer from './settingsReducer'
 //Types
 import { AppActionTypes } from 'store/storeTypes'
 //Epics
-import { createCatalogueEpic, fetchCataloguesEpic } from 'store/epics/catalogueEpics'
+import { changeCatalogueNameEpic, createCatalogueEpic, fetchCataloguesEpic } from 'store/epics/catalogueEpics'
+import { changePasswordEpic, changeUsernameEpic } from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
-const rootEpic = combineEpics(createCatalogueEpic, fetchCataloguesEpic)
+const rootEpic = combineEpics(
+  createCatalogueEpic,
+  fetchCataloguesEpic,
+  changeUsernameEpic,
+  changePasswordEpic,
+)
 const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, RootState>()
 
 const rootReducer = combineReducers({
-    app: appReducer,
-    auth: authReducer,
-    catalogues: cataloguesReducer,
+  app: appReducer,
+  auth: authReducer,
+  catalogues: cataloguesReducer,
+  settings: settingsReducer,
 })
 
 let composeEnhancers = compose

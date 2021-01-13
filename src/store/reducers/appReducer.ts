@@ -18,7 +18,7 @@ const appReducer = (
             return newState
 
         case 'AUTH/GET_USER/SUCCESS':
-        case 'AUTH/USERNAME_CHANGE/SUCCESS':
+        case 'MY_ACCOUNT/CHANGE_USERNAME/SUCCESS':
         case 'AUTH/SIGN_UP/SUCCESS':
         case 'AUTH/LOG_IN/SUCCESS':
             newState.user = userDeserializer(action.user);

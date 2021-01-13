@@ -14,8 +14,6 @@ export const AUTH_SIGN_UP_START = 'AUTH/SIGN_UP/START'
 export const AUTH_SIGN_UP_SUCCESS = 'AUTH/SIGN_UP/SUCCESS'
 export const AUTH_SIGN_UP_FAILURE = 'AUTH/SIGN_UP/FAILURE'
 export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
-export const AUTH_USERNAME_CHANGE_SUCCESS = 'AUTH/USERNAME_CHANGE/SUCCESS'
-export const AUTH_PASSWORD_CHANGE_SUCCESS = 'AUTH/PASSWORD_CHANGE/SUCCESS'
 export const CATALOGUES_FETCH_CATALOGUES = 'CATALOGUES/FETCH_CATALOGUES'
 export const CATALOGUES_FETCH_CATALOGUES_START = 'CATALOGUES/FETCH_CATALOGUES/START'
 export const CATALOGUES_FETCH_CATALOGUES_SUCCESS = 'CATALOGUES/FETCH_CATALOGUES/SUCCESS'
@@ -27,12 +25,22 @@ export const CATALOGUES_CREATE_CATALOGUE = 'CATALOGUES/CREATE_CATALOGUE'
 export const CATALOGUES_CREATE_CATALOGUE_START = 'CATALOGUES/CREATE_CATALOGUE/START'
 export const CATALOGUES_CREATE_CATALOGUE_SUCCESS = 'CATALOGUES/CREATE_CATALOGUE/SUCCESS'
 export const CATALOGUES_CREATE_CATALOGUE_FAILURE = 'CATALOGUES/CREATE_CATALOGUE/FAILURE'
+export const MY_ACCOUNT_CHANGE_USERNAME = 'MY_ACCOUNT/CHANGE_USERNAME'
+export const MY_ACCOUNT_CHANGE_USERNAME_START = 'MY_ACCOUNT/CHANGE_USERNAME/START'
+export const MY_ACCOUNT_CHANGE_USERNAME_SUCCESS = 'MY_ACCOUNT/CHANGE_USERNAME/SUCCESS'
+export const MY_ACCOUNT_CHANGE_USERNAME_FAILURE = 'MY_ACCOUNT/CHANGE_USERNAME/FAILURE'
+export const MY_ACCOUNT_TOGGLE_USERNAME_EDIT = 'MY_ACCOUNT/TOGGLE_USERNAME_EDIT'
+export const MY_ACCOUNT_TOGGLE_PASSWORD_EDIT = 'MY_ACCOUNT/TOGGLE_PASSWORD_EDIT'
+export const MY_ACCOUNT_CHANGE_PASSWORD = 'MY_ACCOUNT/CHANGE_PASSWORD'
+export const MY_ACCOUNT_CHANGE_PASSWORD_START = 'MY_ACCOUNT/CHANGE_PASSWORD/START'
+export const MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS = 'MY_ACCOUNT/CHANGE_PASSWORD/SUCCESS'
+export const MY_ACCOUNT_CHANGE_PASSWORD_FAILURE = 'MY_ACCOUNT/CHANGE_PASSWORD/FAILURE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
+    ReturnType,
+    RootState,
+    unknown,
+    Action<string>
 >
 
 export interface AppState {
@@ -52,6 +60,19 @@ export interface CataloguesState {
     itemsData: DeserializedListData,
     fetchingItems: boolean,
     creatingNewCatalogue: boolean,
+}
+
+export interface SettingsState {
+    accountSettings: AccountSettings
+}
+
+interface AccountSettings {
+    myAccount: {
+        isEditingUsername: boolean,
+        isSubmittingUsername: boolean,
+        isEditingPassword: boolean,
+        isSubmittingPassword: boolean,
+    }
 }
 
 export interface ErrorData {
@@ -100,15 +121,6 @@ interface signUpSuccess {
 
 interface signUpFailure {
     type: typeof AUTH_SIGN_UP_FAILURE,
-}
-
-interface changeUsernameSuccess {
-    type: typeof AUTH_USERNAME_CHANGE_SUCCESS,
-    user: User,
-}
-
-interface changeUserPassword {
-    type: typeof AUTH_PASSWORD_CHANGE_SUCCESS,
 }
 
 interface getCataloguesItemsStart {
@@ -162,9 +174,49 @@ interface fetchCataloguesFailure {
     type: typeof CATALOGUES_FETCH_CATALOGUES_FAILURE,
 }
 
+
+interface toggleUsernameEdit {
+    type: typeof MY_ACCOUNT_TOGGLE_USERNAME_EDIT,
+    isEditing: boolean,
+}
+
+export interface changeUsername {
+    type: typeof MY_ACCOUNT_CHANGE_USERNAME,
+    newName: string,
+}
+
+interface changeUsernameSuccess {
+    type: typeof MY_ACCOUNT_CHANGE_USERNAME_SUCCESS,
+    user: User,
+}
+
+interface changeUsernameFailure {
+    type: typeof MY_ACCOUNT_CHANGE_USERNAME_FAILURE,
+}
+
+interface togglePasswordEdit {
+    type: typeof MY_ACCOUNT_TOGGLE_PASSWORD_EDIT,
+    isEditing: boolean,
+}
+
+export interface changePassword {
+    type: typeof MY_ACCOUNT_CHANGE_PASSWORD,
+    newPassword1: string,
+    newPassword2: string,
+}
+
+interface changePasswordSuccess {
+    type: typeof MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS,
+}
+
+interface changePasswordFailure {
+    type: typeof MY_ACCOUNT_CHANGE_PASSWORD_FAILURE,
+}
+
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
-    | changeUsernameSuccess | changeUserPassword
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
     | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
+    | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure
+    | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
