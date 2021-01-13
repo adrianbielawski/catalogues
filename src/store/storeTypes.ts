@@ -35,6 +35,11 @@ export const MY_ACCOUNT_CHANGE_PASSWORD = 'MY_ACCOUNT/CHANGE_PASSWORD'
 export const MY_ACCOUNT_CHANGE_PASSWORD_START = 'MY_ACCOUNT/CHANGE_PASSWORD/START'
 export const MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS = 'MY_ACCOUNT/CHANGE_PASSWORD/SUCCESS'
 export const MY_ACCOUNT_CHANGE_PASSWORD_FAILURE = 'MY_ACCOUNT/CHANGE_PASSWORD/FAILURE'
+export const MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT = 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT'
+export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME'
+export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START'
+export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS'
+export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/FAILURE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
     ReturnType,
@@ -68,6 +73,10 @@ export interface SettingsState {
         isSubmittingUsername: boolean,
         isEditingPassword: boolean,
         isSubmittingPassword: boolean,
+    },
+    manageCatalogues: {
+        editingCatalogueName: number | null,
+        submittingCatalogueName: number | null,
     }
 }
 
@@ -208,6 +217,30 @@ interface changePasswordFailure {
     type: typeof MY_ACCOUNT_CHANGE_PASSWORD_FAILURE,
 }
 
+interface toggleEditCatalogueName {
+    type: typeof MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT,
+    catalogueId: number | null,
+}
+
+export interface changeCatalogueName {
+    type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
+    catalogueId: number,
+    newName: string,
+}
+
+interface changeCatalogueNameStart {
+    type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START,
+    catalogueId: number,
+}
+
+interface changeCatalogueNameSuccess {
+    type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
+}
+
+interface changeCatalogueNameFailure {
+    type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
+}
+
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
@@ -215,3 +248,4 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
     | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure
     | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
+    | toggleEditCatalogueName | changeCatalogueName | changeCatalogueNameStart | changeCatalogueNameSuccess | changeCatalogueNameFailure

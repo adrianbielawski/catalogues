@@ -1,5 +1,8 @@
-import { AppActionTypes, CATALOGUES_CREATE_CATALOGUE, CATALOGUES_CREATE_CATALOGUE_SUCCESS,
-    CATALOGUES_FETCH_CATALOGUES,    
+import {
+    CATALOGUES_CREATE_CATALOGUE, CATALOGUES_CREATE_CATALOGUE_SUCCESS,
+    CATALOGUES_FETCH_CATALOGUES,
+    MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
+    AppActionTypes
 } from "store/storeTypes"
 import { Observable, concat, of, from } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/operators'
@@ -30,7 +33,11 @@ export const fetchCataloguesEpic = (
     action$: ActionsObservable<AppActionTypes>,
     state$: StateObservable<RootState>
 ): Observable<any> => action$.pipe(
-    ofType(CATALOGUES_FETCH_CATALOGUES, CATALOGUES_CREATE_CATALOGUE_SUCCESS),
+    ofType(
+        CATALOGUES_FETCH_CATALOGUES,
+        CATALOGUES_CREATE_CATALOGUE_SUCCESS,
+        MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
+    ),
     withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
     switchMap(([_, id]) => concat(
         of(fetchCataloguesStart()),

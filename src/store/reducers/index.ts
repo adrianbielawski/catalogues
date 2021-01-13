@@ -10,14 +10,15 @@ import settingsReducer from './settingsReducer'
 //Types
 import { AppActionTypes } from 'store/storeTypes'
 //Epics
-import { changeCatalogueNameEpic, createCatalogueEpic, fetchCataloguesEpic } from 'store/epics/catalogueEpics'
-import { changePasswordEpic, changeUsernameEpic } from 'store/epics/settingsEpics'
+import { createCatalogueEpic, fetchCataloguesEpic } from 'store/epics/catalogueEpics'
+import { changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic } from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
 const rootEpic = combineEpics(
   createCatalogueEpic,
   fetchCataloguesEpic,
+  changeCatalogueNameEpic,
   changeUsernameEpic,
   changePasswordEpic,
 )
