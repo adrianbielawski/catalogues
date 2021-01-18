@@ -4,13 +4,13 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Types
-import { TextFieldInterface } from '../itemFields'
+import { DeserializedField } from 'src/globalTypes'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 
 type Props = {
-    field: TextFieldInterface,
+    field: DeserializedField,
     onEditConfirm: (input: string) => void,
 }
 

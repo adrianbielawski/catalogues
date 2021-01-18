@@ -1,7 +1,9 @@
 import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
-import { User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData } from 'src/globalTypes'
+import {
+    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field
+} from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
 export const AUTH_INITIALIZED = 'AUTH/INITIALIZED'
@@ -21,6 +23,10 @@ export const CATALOGUES_FETCH_CATALOGUES_FAILURE = 'CATALOGUES/FETCH_CATALOGUES/
 export const CATALOGUES_GET_CATALOGUE_ITEMS_START = 'CATALOGUES/GET_CATALOGUE_ITEMS/START'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS'
 export const CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE'
+export const CATALOGUES_FETCH_ITEMS_FIELDS = 'CATALOGUES/FETCH_ITEMS_FIELDS'
+export const CATALOGUES_FETCH_ITEMS_FIELDS_START = 'CATALOGUES/FETCH_ITEMS_FIELDS/START'
+export const CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS = 'CATALOGUES/FETCH_ITEMS_FIELDS/SUCCESS'
+export const CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE = 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE'
 export const MY_ACCOUNT_CHANGE_USERNAME = 'MY_ACCOUNT/CHANGE_USERNAME'
 export const MY_ACCOUNT_CHANGE_USERNAME_START = 'MY_ACCOUNT/CHANGE_USERNAME/START'
 export const MY_ACCOUNT_CHANGE_USERNAME_SUCCESS = 'MY_ACCOUNT/CHANGE_USERNAME/SUCCESS'
@@ -126,6 +132,27 @@ interface signUpSuccess {
 
 interface signUpFailure {
     type: typeof AUTH_SIGN_UP_FAILURE,
+}
+
+export interface fetchItemsFields {
+    type: typeof CATALOGUES_FETCH_ITEMS_FIELDS,
+    catalogueId: number,
+}
+
+interface fetchItemsFieldsStart {
+    type: typeof CATALOGUES_FETCH_ITEMS_FIELDS_START,
+    catalogueId: number,
+}
+
+interface fetchItemsFieldsSuccess {
+    type: typeof CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS,
+    data: Field[],
+    catalogueId: number,
+}
+
+interface fetchItemsFieldsFailure {
+    type: typeof CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
+    catalogueId: number,
 }
 
 interface getCataloguesItemsStart {
@@ -244,6 +271,7 @@ interface changeCatalogueNameFailure {
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
+    | fetchItemsFields | fetchItemsFieldsStart | fetchItemsFieldsSuccess | fetchItemsFieldsFailure
     | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
     | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure

@@ -1,6 +1,6 @@
 import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
-    Item, DeserializedItem
+    Item, DeserializedItem, Field, DeserializedField,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -17,6 +17,8 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     createdBy: catalogue.created_by,
     name: catalogue.name,
     slug: catalogue.slug,
+    fields: [],
+    fetchingFields: false,
 })
 
 export const listDeserializer = (
@@ -42,3 +44,16 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     slug: item.slug,
     catalogue: catalogueDeserializer(item.catalogue),
 })
+
+export const fieldDeserializer = (field: Field): DeserializedField => ({
+    id: field.id,
+    catalogueId: field.catalogue_id,
+    type: field.type,
+    name: field.name,
+    filterName: field.filter_name,
+    position: field.position,
+})
+
+export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
+    fields.map(field => fieldDeserializer(field))
+)

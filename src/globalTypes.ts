@@ -32,6 +32,8 @@ export interface DeserializedCatalogue {
     createdBy: number,
     name: string,
     slug: string,
+    fields: DeserializedField[],
+    fetchingFields: boolean,
 }
 
 export interface ListData {
@@ -74,6 +76,24 @@ export interface DeserializedItem {
     name: string,
     slug: string,
     catalogue: DeserializedCatalogue
+}
+
+export interface Field {
+    id: number,
+    catalogue_id: number,
+    type: string,
+    name: string,
+    filter_name: string,
+    position: number,
+}
+
+export interface DeserializedField {
+    id: number,
+    catalogueId: number,
+    type: string,
+    name: string,
+    filterName: string,
+    position: number,
 }
 
 export type Image = {

@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { catalogueDeserializer, itemDeserializer, listDeserializer } from 'src/serializers'
+import { catalogueDeserializer, fieldsDeserializer, itemDeserializer, listDeserializer } from 'src/serializers'
 import { CataloguesState, AppActionTypes } from 'store/storeTypes'
 
 const initialState: CataloguesState = {
@@ -17,6 +17,8 @@ const initialState: CataloguesState = {
     },
     fetchingItems: false,
 }
+
+const getCatalogueById = (state: CataloguesState, id: number) => state.catalogues.filter(c => c.id === id)[0]
 
 const cataloguesReducer = (
     state = initialState,
@@ -49,6 +51,25 @@ const cataloguesReducer = (
         case 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE':
             newState.fetchingItems = false
             return newState
+
+        case 'CATALOGUES/FETCH_ITEMS_FIELDS/START': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingFields = true
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_ITEMS_FIELDS/SUCCESS': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingFields = false
+            catalogue.fields = fieldsDeserializer(action.data)
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingFields = false
+            return newState
+        }
 
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)
