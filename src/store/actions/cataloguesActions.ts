@@ -1,10 +1,11 @@
 import axiosInstance from 'src/axiosInstance'
-import { Catalogue, Field, ListData } from 'src/globalTypes'
+import { Catalogue, Choice, Field, ListData } from 'src/globalTypes'
 import {
     CATALOGUES_FETCH_ITEMS_FIELDS, CATALOGUES_FETCH_ITEMS_FIELDS_START, CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS, CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
     CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_START, CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
-    AppActionTypes, ThunkAction, ErrorData, 
+    CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE, 
+    AppActionTypes, ThunkAction, ErrorData,
 } from '../storeTypes'
 
 const fetchCatalogueItemsStart = (): AppActionTypes => ({
@@ -57,6 +58,31 @@ export const fetchItemsFieldsSuccess = (data: Field[], catalogueId: number): App
 export const fetchItemsFieldsFailure = (catalogueId: number): AppActionTypes => ({
     type: CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
     catalogueId
+})
+
+export const fetchFieldsChoices = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_FIELDS_CHOICES,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchFieldsChoicesStart = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_FIELDS_CHOICES_START,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchFieldsChoicesSuccess = (fieldId: number, catalogueId: number, data: Choice[]): AppActionTypes => ({
+    type: CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS,
+    fieldId,
+    catalogueId,
+    data,
+})
+
+export const fetchFieldsChoicesFailure = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
+    fieldId,
+    catalogueId,
 })
 
 export const fetchCatalogues = (): AppActionTypes => ({

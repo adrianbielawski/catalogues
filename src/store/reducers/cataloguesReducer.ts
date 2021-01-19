@@ -1,5 +1,8 @@
 import { cloneDeep } from 'lodash'
-import { catalogueDeserializer, fieldsDeserializer, itemDeserializer, listDeserializer } from 'src/serializers'
+import { DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
+import {
+    catalogueDeserializer, choicesDeserializer, fieldsDeserializer, itemDeserializer, listDeserializer
+} from 'src/serializers'
 import { CataloguesState, AppActionTypes } from 'store/storeTypes'
 
 const initialState: CataloguesState = {
@@ -18,7 +21,20 @@ const initialState: CataloguesState = {
     fetchingItems: false,
 }
 
-const getCatalogueById = (state: CataloguesState, id: number) => state.catalogues.filter(c => c.id === id)[0]
+const getCatalogueById = (
+    state: CataloguesState,
+    id: number
+) => (
+    state.catalogues.filter(c => c.id === id)[0]
+)
+
+const getFieldById = (
+    state: CataloguesState,
+    catalogueId: number,
+    fieldId: number
+): DeserializedField => (
+    state.catalogues.filter(c => c.id === catalogueId)[0].fields.filter(f => f.id === fieldId)[0]
+)
 
 const cataloguesReducer = (
     state = initialState,
@@ -68,6 +84,25 @@ const cataloguesReducer = (
         case 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.fetchingFields = false
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_FIELDS_CHOICES/START': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.fetchingChoices = true
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_FIELDS_CHOICES/SUCCESS': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.choices = choicesDeserializer(action.data)
+            field.fetchingChoices = false
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_FIELDS_CHOICES/FAILURE': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.fetchingChoices = false
             return newState
         }
 

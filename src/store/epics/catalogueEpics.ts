@@ -3,7 +3,8 @@ import {
     CATALOGUES_FETCH_CATALOGUES,
     MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     CATALOGUES_FETCH_ITEMS_FIELDS,
-    AppActionTypes, fetchItemsFields,
+    CATALOGUES_FETCH_FIELDS_CHOICES,
+    AppActionTypes, fetchItemsFields, fetchFieldsChoices,
 } from "store/storeTypes"
 import { Observable, concat, of, from, throwError, defer, timer } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, map } from 'rxjs/operators'
@@ -13,6 +14,7 @@ import { ActionsObservable, ofType, StateObservable } from "redux-observable"
 import {
     fetchCataloguesStart, fetchCataloguesSuccess, fetchCatalogueFailure,
     fetchItemsFieldsStart, fetchItemsFieldsSuccess, fetchItemsFieldsFailure,
+    fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
 } from "store/actions/cataloguesActions"
 import {
     createCatalogueStart, createCatalogueSuccess, createCatalogueFailure,
@@ -78,6 +80,24 @@ export const fetchItemsFieldsEpic = (
                 ))
             ),
             catchError(() => of(fetchItemsFieldsFailure(catalogueId)))
+        )
+    ))
+)
+
+export const fetchFieldsChoicesEpic = (
+    action$: ActionsObservable<AppActionTypes>
+): Observable<AppActionTypes> => action$.pipe(
+    ofType(CATALOGUES_FETCH_FIELDS_CHOICES),
+    map((action) => action as fetchFieldsChoices),
+    mergeMap((action) => concat(
+        of(fetchFieldsChoicesStart(action.fieldId, action.catalogueId)),
+        from(axiosInstance.get('/choices/', {
+            params: { field_id: action.fieldId }
+        })).pipe(
+            mergeMap(response => 
+                of(fetchFieldsChoicesSuccess(action.fieldId, action.catalogueId, response.data))
+            ),
+            catchError(err => of(fetchFieldsChoicesFailure(action.fieldId, action.catalogueId)))
         )
     ))
 )

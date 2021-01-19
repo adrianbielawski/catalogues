@@ -87,7 +87,32 @@ export interface Field {
     position: number,
 }
 
-export interface DeserializedField {
+export interface Choice {
+    id: number,
+    field_id: number,
+    value: string,
+}
+
+export interface DeserializedChoice {
+    id: number,
+    fieldId: number,
+    value: string,
+}
+
+export interface DeserializedChoiceField {
+    id: number,
+    catalogueId: number,
+    type: string,
+    name: string,
+    filterName: string,
+    position: number,
+    choices: DeserializedChoice[],
+    fetchingChoices: boolean,
+    isEditingName: boolean,
+    isSubmittingName: boolean,
+}
+
+export interface DeserializedTextField {
     id: number,
     catalogueId: number,
     type: string,
@@ -95,6 +120,8 @@ export interface DeserializedField {
     filterName: string,
     position: number,
 }
+
+export type DeserializedField = DeserializedTextField | DeserializedChoiceField
 
 export type Image = {
     url: string,

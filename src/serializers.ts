@@ -1,6 +1,6 @@
 import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
-    Item, DeserializedItem, Field, DeserializedField,
+    Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice, DeserializedChoice,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -45,7 +45,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     catalogue: catalogueDeserializer(item.catalogue),
 })
 
-export const fieldDeserializer = (field: Field): DeserializedField => ({
+export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
     id: field.id,
     catalogueId: field.catalogue_id,
     type: field.type,
@@ -54,6 +54,42 @@ export const fieldDeserializer = (field: Field): DeserializedField => ({
     position: field.position,
 })
 
+export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField => ({
+    id: field.id,
+    catalogueId: field.catalogue_id,
+    type: field.type,
+    name: field.name,
+    filterName: field.filter_name,
+    position: field.position,
+    choices: [],
+    fetchingChoices: false,
+    isEditingName: false,
+    isSubmittingName: false,
+})
+
+export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
+    id: choice.id,
+    fieldId: choice.field_id,
+    value: choice.value,
+})
+
+export const choicesDeserializer = (choices: Choice[]): DeserializedChoice[] => (
+    choices.map(choice => choiceDeserializer(choice))
+)
+
 export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
-    fields.map(field => fieldDeserializer(field))
+    fields.map(field => {
+        switch (field.type) {
+            case 'short_text':
+            case 'long_text':
+                return textFieldDeserializer(field)
+
+            case 'single_choice':
+            case 'multiple_choice':
+                return choiceFieldDeserializer(field)
+
+            default:
+                return textFieldDeserializer(field)
+        }
+    })
 )

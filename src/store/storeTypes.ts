@@ -2,7 +2,7 @@ import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
 import {
-    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field
+    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice
 } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
@@ -27,6 +27,10 @@ export const CATALOGUES_FETCH_ITEMS_FIELDS = 'CATALOGUES/FETCH_ITEMS_FIELDS'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_START = 'CATALOGUES/FETCH_ITEMS_FIELDS/START'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS = 'CATALOGUES/FETCH_ITEMS_FIELDS/SUCCESS'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE = 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE'
+export const CATALOGUES_FETCH_FIELDS_CHOICES = 'CATALOGUES/FETCH_FIELDS_CHOICES'
+export const CATALOGUES_FETCH_FIELDS_CHOICES_START = 'CATALOGUES/FETCH_FIELDS_CHOICES/START'
+export const CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS = 'CATALOGUES/FETCH_FIELDS_CHOICES/SUCCESS'
+export const CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE = 'CATALOGUES/FETCH_FIELDS_CHOICES/FAILURE'
 export const MY_ACCOUNT_CHANGE_USERNAME = 'MY_ACCOUNT/CHANGE_USERNAME'
 export const MY_ACCOUNT_CHANGE_USERNAME_START = 'MY_ACCOUNT/CHANGE_USERNAME/START'
 export const MY_ACCOUNT_CHANGE_USERNAME_SUCCESS = 'MY_ACCOUNT/CHANGE_USERNAME/SUCCESS'
@@ -147,6 +151,31 @@ interface fetchItemsFieldsStart {
 interface fetchItemsFieldsSuccess {
     type: typeof CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS,
     data: Field[],
+    catalogueId: number,
+}
+
+export interface fetchFieldsChoices {
+    type: typeof CATALOGUES_FETCH_FIELDS_CHOICES,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface fetchFieldsChoicesStart {
+    type: typeof CATALOGUES_FETCH_FIELDS_CHOICES_START,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface fetchFieldsChoicesSuccess {
+    type: typeof CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS,
+    fieldId: number,
+    catalogueId: number,
+    data: Choice[]
+}
+
+interface fetchFieldsChoicesFailure {
+    type: typeof CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
+    fieldId: number,
     catalogueId: number,
 }
 
@@ -272,6 +301,7 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
     | fetchItemsFields | fetchItemsFieldsStart | fetchItemsFieldsSuccess | fetchItemsFieldsFailure
+    | fetchFieldsChoices | fetchFieldsChoicesStart | fetchFieldsChoicesSuccess | fetchFieldsChoicesFailure
     | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
     | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure
