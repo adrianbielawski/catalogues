@@ -33,7 +33,7 @@ const getFieldById = (
     catalogueId: number,
     fieldId: number
 ): DeserializedField => (
-    state.catalogues.filter(c => c.id === catalogueId)[0].fields.filter(f => f.id === fieldId)[0]
+    getCatalogueById(state, catalogueId).fields.filter(f => f.id === fieldId)[0]
 )
 
 const cataloguesReducer = (
@@ -103,6 +103,12 @@ const cataloguesReducer = (
         case 'CATALOGUES/FETCH_FIELDS_CHOICES/FAILURE': {
             const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
             field.fetchingChoices = false
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.isEditing = !field.isEditing
             return newState
         }
 

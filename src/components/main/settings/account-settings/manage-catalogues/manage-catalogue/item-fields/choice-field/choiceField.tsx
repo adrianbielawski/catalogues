@@ -1,12 +1,16 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { cloneDeep } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
-import { ChoiceFieldInterface } from '../itemFields'
-import { Choice } from './choices/choices'
+//Redux
+import { useTypedSelector } from 'store/reducers'
+import { fieldSelector } from 'store/selectors'
+import { fetchFieldsChoices } from 'store/actions/cataloguesActions'
+import { addFieldChoiceToState } from 'store/actions/settingsActions'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Button from 'components/global-components/button/button'
@@ -15,21 +19,22 @@ import Choices from './choices/choices'
 import Loader from 'components/global-components/loader/loader'
 
 type Props = {
-    field: ChoiceFieldInterface,
-    onEditConfirm: (input: string, choices: Choice[]) => void,
+    field: DeserializedChoiceField,
 }
 
 const cx = classNames.bind(styles)
 
 const ChoiceField = (props: Props) => {
+    const dispatch = useDispatch()
     const nameInputRef = useRef<HTMLInputElement>(null)
-    const [isEditing, setIsEditing] = useState(false)
-    const [confirmed, setConfirmed] = useState(false)
-    const [choices, setChoices] = useState(props.field.choices)
+    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
+
+    useEffect(() => {
+        dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
+    }, [])
 
     const handleEdit = () => {
-        setIsEditing(!isEditing)
-        setChoices(props.field.choices)
+        dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
     }
 
     const handleRemoveChoice = (id: string) => {
@@ -70,14 +75,14 @@ const ChoiceField = (props: Props) => {
     const fieldClass = cx(
         'field',
         {
-            active: isEditing,
+            active: field.isEditing,
         }
     )
 
     const buttonClass = cx(
         'editButton',
         {
-            active: isEditing,
+            active: field.isEditing,
         }
     )
 
@@ -86,7 +91,7 @@ const ChoiceField = (props: Props) => {
             <TransparentButton className={buttonClass} onClick={handleEdit}>
                 <FontAwesomeIcon icon={faEdit} />
             </TransparentButton>
-            {isEditing
+            {field.isEditing
                 ? (
                     <div>
                         <Input
@@ -97,7 +102,7 @@ const ChoiceField = (props: Props) => {
                         />
                         <Choices
                             className={styles.choices}
-                            choices={choices}
+                            choices={field.choices}
                             onRemove={handleRemoveChoice}
                             onAdd={handleAddChoice}
                         />

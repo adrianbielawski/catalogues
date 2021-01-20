@@ -108,8 +108,7 @@ export interface DeserializedChoiceField {
     position: number,
     choices: DeserializedChoice[],
     fetchingChoices: boolean,
-    isEditingName: boolean,
-    isSubmittingName: boolean,
+    isEditing: boolean,
 }
 
 export interface DeserializedTextField {

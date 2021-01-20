@@ -63,8 +63,7 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     position: field.position,
     choices: [],
     fetchingChoices: false,
-    isEditingName: false,
-    isSubmittingName: false,
+    isEditing: false,
 })
 
 export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
