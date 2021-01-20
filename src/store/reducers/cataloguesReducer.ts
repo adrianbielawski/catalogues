@@ -128,6 +128,17 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'MANAGE_CATALOGUES/ADD_FIELD_CHOICE_TO_STATE': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.choices.unshift({
+                id: null,
+                fieldId: action.fieldId,
+                value: action.name,
+                removed: false,
+            })
+            return newState
+        }
+
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)
             return newState

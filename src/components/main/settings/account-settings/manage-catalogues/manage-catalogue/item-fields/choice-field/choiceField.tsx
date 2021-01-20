@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
-import { cloneDeep } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
@@ -11,7 +10,9 @@ import { DeserializedChoice, DeserializedChoiceField } from 'src/globalTypes'
 import { useTypedSelector } from 'store/reducers'
 import { fieldSelector } from 'store/selectors'
 import { fetchFieldsChoices } from 'store/actions/cataloguesActions'
-import { addFieldChoiceToState } from 'store/actions/settingsActions'
+import {
+    addFieldChoiceToState, removeFieldChoiceFromState, toggleFieldEdit, postChoiceFieldChanges
+} from 'store/actions/settingsActions'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Button from 'components/global-components/button/button'
@@ -43,12 +44,7 @@ const ChoiceField = (props: Props) => {
     }
 
     const handleAddChoice = (name: string) => {
-        let newChoices = cloneDeep(choices)
-        newChoices.push({
-            id: Date.now().toString(),
-            name,
-        })
-        setChoices(newChoices)
+        dispatch(addFieldChoiceToState(name, props.field.id, props.field.catalogueId))
     }
 
     const handleConfirm = () => {

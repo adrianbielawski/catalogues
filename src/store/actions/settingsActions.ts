@@ -6,6 +6,8 @@ import {
     MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
     MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT, MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE,
     AppActionTypes,
+    MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
+    MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
 } from '../storeTypes'
 
 export const toggleUsernameEdit = (isEditing: boolean): AppActionTypes => ({
@@ -102,6 +104,17 @@ export const removeFieldChoiceFromState = (
 ): AppActionTypes => ({
     type: MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
     id,
+    fieldId,
+    catalogueId,
+})
+
+export const addFieldChoiceToState = (
+    name: string,
+    fieldId: number,
+    catalogueId: number,
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
+    name,
     fieldId,
     catalogueId,
 })
