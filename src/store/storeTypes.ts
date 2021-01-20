@@ -47,6 +47,7 @@ export const MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS = 'MANAGE_CATALOGUES/CRE
 export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FAILURE = 'MANAGE_CATALOGUES/CREATE_CATALOGUE/FAILURE'
 export const MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT = 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT'
 export const MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT = 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT'
+export const MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE = 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS'
@@ -285,6 +286,13 @@ interface toggleFieldEdit {
     catalogueId: number,
 }
 
+export interface removeFieldChoiceFromState {
+    type: typeof MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
+    id: number,
+    fieldId: number,
+    catalogueId: number,
+}
+
 export interface changeCatalogueName {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     catalogueId: number,
@@ -314,3 +322,4 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure
     | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
     | toggleEditCatalogueName | changeCatalogueName | changeCatalogueNameStart | changeCatalogueNameSuccess | changeCatalogueNameFailure
+    | toggleFieldEdit | removeFieldChoiceFromState

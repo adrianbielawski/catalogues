@@ -70,6 +70,7 @@ export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
     id: choice.id,
     fieldId: choice.field_id,
     value: choice.value,
+    removed: false,
 })
 
 export const choicesDeserializer = (choices: Choice[]): DeserializedChoice[] => (

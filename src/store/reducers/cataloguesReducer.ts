@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash'
-import { DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
+import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
 import {
     catalogueDeserializer, choicesDeserializer, fieldsDeserializer, itemDeserializer, listDeserializer
 } from 'src/serializers'
@@ -35,6 +35,16 @@ const getFieldById = (
 ): DeserializedField => (
     getCatalogueById(state, catalogueId).fields.filter(f => f.id === fieldId)[0]
 )
+
+const getChoiceById = (
+    state: CataloguesState,
+    catalogueId: number,
+    fieldId: number,
+    choiceId: number,
+): DeserializedChoice => {
+    const field = getFieldById(state, catalogueId, fieldId) as DeserializedChoiceField
+    return field.choices.filter(choice => choice.id === choiceId)[0]
+}
 
 const cataloguesReducer = (
     state = initialState,
@@ -109,6 +119,12 @@ const cataloguesReducer = (
         case 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT': {
             const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
             field.isEditing = !field.isEditing
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE': {
+            const choice = getChoiceById(newState, action.catalogueId, action.fieldId, action.id) as DeserializedChoice
+            choice.removed = true
             return newState
         }
 

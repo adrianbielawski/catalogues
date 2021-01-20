@@ -7,16 +7,12 @@ import styles from './choices.scss'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
-
-export interface Choice {
-    id: string,
-    name: string,
-}
+import { DeserializedChoice } from 'src/globalTypes'
 
 type Props = {
-    choices: Choice[],
+    choices: DeserializedChoice[],
     className: string,
-    onRemove: (id: string) => void,
+    onRemove: (id: number) => void,
     onAdd: (name: string) => void,
 }
 
@@ -35,8 +31,11 @@ const Choices = (props: Props) => {
 
     const choices = (
         props.choices.map(choice => {
+            if (choice.removed) {
+                return
+            }
             const handleRemove = () => {
-                props.onRemove(choice.id)
+                props.onRemove(choice.id!)
             }
 
             return (
@@ -44,7 +43,7 @@ const Choices = (props: Props) => {
                     <TransparentButton className={styles.removeButton} onClick={handleRemove}>
                         <FontAwesomeIcon icon={faTimes} />
                     </TransparentButton>
-                    <span>{choice.name}</span>
+                    <span>{choice.value}</span>
                 </li>
             )
 

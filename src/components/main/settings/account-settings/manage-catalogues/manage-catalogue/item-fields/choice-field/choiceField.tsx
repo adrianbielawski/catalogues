@@ -6,6 +6,7 @@ import { cloneDeep } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
+import { DeserializedChoice, DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { fieldSelector } from 'store/selectors'
@@ -37,11 +38,8 @@ const ChoiceField = (props: Props) => {
         dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
     }
 
-    const handleRemoveChoice = (id: string) => {
-        let newChoices = cloneDeep(choices)
-        const choiceIndex = newChoices.findIndex(choice => choice.id === id)        
-        newChoices.splice(choiceIndex, 1)
-        setChoices(newChoices)
+    const handleRemoveChoice = (id: number) => {
+        dispatch(removeFieldChoiceFromState(id, props.field.id, props.field.catalogueId))
     }
 
     const handleAddChoice = (name: string) => {

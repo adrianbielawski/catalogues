@@ -97,6 +97,7 @@ export interface DeserializedChoice {
     id: number,
     fieldId: number,
     value: string,
+    removed: boolean,
 }
 
 export interface DeserializedChoiceField {
