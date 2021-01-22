@@ -4,6 +4,7 @@ import {
     MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     CATALOGUES_FETCH_ITEMS_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
+    MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
     CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_REFRESH_FIELD,
@@ -111,6 +112,7 @@ export const fetchCatalogueFieldEpic: Epic<AppActionTypes> = action$ => action$.
 export const refreshFieldEpic: Epic<AppActionTypes> = action$ => action$.pipe(
     ofType<AppActionTypes, RefreshFieldEpic>(
         MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+        MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
         CATALOGUES_REFRESH_FIELD
     ),
     mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))

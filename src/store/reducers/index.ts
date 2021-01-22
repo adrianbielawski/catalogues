@@ -15,7 +15,8 @@ import {
   fetchFieldsChoicesEpic,
 } from 'store/epics/catalogueEpics'
 import {
-  changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic, postChoiceFieldChangesEpic
+  changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic, postTextFieldNameChangeEpic,
+  postChoiceFieldChangesEpic,
 } from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
@@ -30,6 +31,7 @@ const rootEpic = combineEpics(
   fetchCatalogueFieldEpic,
   fetchItemsFieldsEpic,
   fetchFieldsChoicesEpic,
+  postTextFieldNameChangeEpic,
   postChoiceFieldChangesEpic,
 )
 const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, RootState>()

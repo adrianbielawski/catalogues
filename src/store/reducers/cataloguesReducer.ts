@@ -130,7 +130,7 @@ const cataloguesReducer = (
         }
 
         case 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE': {
-            const choice = getChoiceById(newState, action.catalogueId, action.fieldId, action.id) as DeserializedChoice
+            const choice = getChoiceById(newState, action.catalogueId, action.fieldId, action.id)
             choice.removed = true
             return newState
         }
@@ -146,14 +146,16 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE/START':
         case 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/START': {
-            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            const field = getFieldById(newState, action.catalogueId, action.fieldId)
             field.isSubmitting = true
             return newState
         }
 
+        case 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE/FAILURE':
         case 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/FAILURE': {
-            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            const field = getFieldById(newState, action.catalogueId, action.fieldId)
             field.isSubmitting = false
             return newState
         }

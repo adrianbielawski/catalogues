@@ -54,6 +54,10 @@ export const MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT = 'MANAGE_CATALOGUES/T
 export const MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT = 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT'
 export const MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE = 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE'
 export const MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE = 'MANAGE_CATALOGUES/ADD_FIELD_CHOICE_TO_STATE'
+export const MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE = 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE'
+export const MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_START = 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE/START'
+export const MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS = 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE/SUCCESS'
+export const MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_FAILURE = 'MANAGE_CATALOGUES/POST_TEXT_FIELD_NAME_CHANGE/FAILURE'
 export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES'
 export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/START'
 export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/SUCCESS'
@@ -341,6 +345,31 @@ export interface addFieldChoiceToState {
     catalogueId: number,
 }
 
+export interface PostTextFieldNameChange {
+    type: typeof MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE,
+    fieldName: string,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface PostTextFieldNameChangeStart {
+    type: typeof MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_START,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface PostTextFieldNameChangeSuccess {
+    type: typeof MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface PostTextFieldNameChangeFailure {
+    type: typeof MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_FAILURE,
+    fieldId: number,
+    catalogueId: number,
+}
+
 export interface PostChoiceFieldChanges {
     type: typeof MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
     field: DeserializedChoiceField,
@@ -384,7 +413,7 @@ interface changeCatalogueNameFailure {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
 }
 
-export type RefreshFieldEpic = RefreshField | PostChoiceFieldChangesSuccess
+export type RefreshFieldEpic = RefreshField | PostChoiceFieldChangesSuccess | PostTextFieldNameChangeSuccess
 
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
@@ -399,4 +428,5 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
     | toggleEditCatalogueName | changeCatalogueName | changeCatalogueNameStart | changeCatalogueNameSuccess | changeCatalogueNameFailure
     | toggleFieldEdit | removeFieldChoiceFromState | addFieldChoiceToState
+    | PostTextFieldNameChange | PostTextFieldNameChangeStart | PostTextFieldNameChangeSuccess | PostTextFieldNameChangeFailure
     | PostChoiceFieldChanges | PostChoiceFieldChangesSuccess | PostChoiceFieldChangesStart | PostChoiceFieldChangesFailure

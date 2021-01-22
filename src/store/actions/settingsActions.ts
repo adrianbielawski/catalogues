@@ -7,6 +7,7 @@ import {
     MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT,
     MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
     MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
+    MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_START, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_FAILURE,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
     AppActionTypes,
 } from '../storeTypes'
@@ -116,6 +117,44 @@ export const addFieldChoiceToState = (
 ): AppActionTypes => ({
     type: MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
     name,
+    fieldId,
+    catalogueId,
+})
+
+export const postTextFieldNameChange = (
+    fieldId: number,
+    catalogueId: number,
+    fieldName: string
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE,
+    fieldId,
+    catalogueId,
+    fieldName,
+})
+
+export const postTextFieldNameChangeStart = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_START,
+    fieldId,
+    catalogueId,
+})
+
+export const postTextFieldNameChangeSuccess = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
+    fieldId,
+    catalogueId,
+})
+
+export const postTextFieldNameChangeFailure = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_FAILURE,
     fieldId,
     catalogueId,
 })

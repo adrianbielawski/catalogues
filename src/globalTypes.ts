@@ -121,6 +121,8 @@ export interface DeserializedTextField {
     name: string,
     filterName: string,
     position: number,
+    isEditing: boolean,
+    isSubmitting: boolean,
 }
 
 export type DeserializedField = DeserializedTextField | DeserializedChoiceField

@@ -14,7 +14,6 @@ const InputWithConfirmButton = (props: Props) => {
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
-        inputRef.current!.value = ''
     }
 
     return (

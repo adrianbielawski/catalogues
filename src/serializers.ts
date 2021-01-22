@@ -52,6 +52,8 @@ export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
     name: field.name,
     filterName: field.filter_name,
     position: field.position,
+    isEditing: false,
+    isSubmitting: false,
 })
 
 export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField => ({

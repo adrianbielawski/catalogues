@@ -1,39 +1,35 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
+//Redux
+import { postTextFieldNameChange, toggleFieldEdit } from 'store/actions/settingsActions'
+import { useTypedSelector } from 'store/reducers'
+import { fieldSelector } from 'store/selectors'
 //Types
-import { DeserializedField } from 'src/globalTypes'
+import { DeserializedTextField } from 'src/globalTypes'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 
 type Props = {
-    field: DeserializedField,
-    onEditConfirm: (input: string) => void,
+    field: DeserializedTextField,
 }
 
 const cx = classNames.bind(styles)
 
 const TextField = (props: Props) => {
-    const [isEditing, setIsEditing] = useState(false)
-    const [confirmed, setConfirmed] = useState(false)
+    const dispatch = useDispatch()
+    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
 
     const handleEdit = () => {
-        setIsEditing(!isEditing)
+        dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
     }
 
     const handleConfirm = (input: string) => {
-        setConfirmed(true)
-        Promise.resolve(
-            props.onEditConfirm(input)
-        )
-            .then(() => {
-                setConfirmed(false)
-                setIsEditing(false)
-            })
-            .catch(() => setConfirmed(false))
+        dispatch(postTextFieldNameChange(props.field.id, props.field.catalogueId, input))
     }
 
     const fieldClass = cx(
@@ -43,7 +39,7 @@ const TextField = (props: Props) => {
     const buttonClass = cx(
         'button',
         {
-            active: isEditing,
+            active: field.isEditing,
         }
     )
 
@@ -52,11 +48,11 @@ const TextField = (props: Props) => {
             <TransparentButton className={buttonClass} onClick={handleEdit}>
                 <FontAwesomeIcon icon={faEdit} />
             </TransparentButton>
-                {isEditing
+                {field.isEditing
                     ? (
                         <InputWithConfirmButton
-                            placeholder={props.field.name}
-                            loading={confirmed}
+                            defaultValue={props.field.name}
+                            loading={field.isSubmitting}
                             onConfirm={handleConfirm}
                         />
                     )
