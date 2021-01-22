@@ -6,7 +6,8 @@ import {
     CATALOGUES_FETCH_FIELDS_CHOICES,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
     CATALOGUES_FETCH_CATALOGUE_FIELD,
-    AppActionTypes, fetchItemsFields, fetchFieldsChoices, PostChoiceFieldChangesSuccess, FetchCatalogueField,
+    CATALOGUES_REFRESH_FIELD,
+    AppActionTypes, fetchItemsFields, fetchFieldsChoices, FetchCatalogueField, RefreshFieldEpic,
 } from "store/storeTypes"
 import { Observable, concat, of, from, throwError, defer, timer } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, map } from 'rxjs/operators'
@@ -108,7 +109,10 @@ export const fetchCatalogueFieldEpic: Epic<AppActionTypes> = action$ => action$.
 )
 
 export const refreshFieldEpic: Epic<AppActionTypes> = action$ => action$.pipe(
-    ofType<AppActionTypes, PostChoiceFieldChangesSuccess>(MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS),
+    ofType<AppActionTypes, RefreshFieldEpic>(
+        MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+        CATALOGUES_REFRESH_FIELD
+    ),
     mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))
 )
 

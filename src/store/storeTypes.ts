@@ -384,6 +384,8 @@ interface changeCatalogueNameFailure {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
 }
 
+export type RefreshFieldEpic = RefreshField | PostChoiceFieldChangesSuccess
+
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState

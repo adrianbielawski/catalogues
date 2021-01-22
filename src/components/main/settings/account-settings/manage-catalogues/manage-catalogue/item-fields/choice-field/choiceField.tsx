@@ -9,7 +9,7 @@ import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { fieldSelector } from 'store/selectors'
-import { fetchFieldsChoices } from 'store/actions/cataloguesActions'
+import { fetchFieldsChoices, refreshField } from 'store/actions/cataloguesActions'
 import {
     addFieldChoiceToState, removeFieldChoiceFromState, toggleFieldEdit, postChoiceFieldChanges
 } from 'store/actions/settingsActions'
@@ -53,8 +53,7 @@ const ChoiceField = (props: Props) => {
     }
 
     const handleCancel = () => {
-        setIsEditing(false)
-        setChoices(props.field.choices)
+        dispatch(refreshField(props.field.id, props.field.catalogueId))
     }
 
     const fieldClass = cx(
