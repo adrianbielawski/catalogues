@@ -5,7 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
-import { DeserializedChoice, DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { fieldSelector } from 'store/selectors'
@@ -48,17 +48,8 @@ const ChoiceField = (props: Props) => {
     }
 
     const handleConfirm = () => {
-        setConfirmed(true)
-        const name = nameInputRef.current?.value || props.field.name
-
-        Promise.resolve(
-            props.onEditConfirm(name, choices)
-        )
-            .then(() => {
-                setConfirmed(false)
-                setIsEditing(false)
-            })
-            .catch(() => setConfirmed(false))
+        const fieldName = nameInputRef.current!.value
+        dispatch(postChoiceFieldChanges(field, fieldName))
     }
 
     const handleCancel = () => {
@@ -89,7 +80,7 @@ const ChoiceField = (props: Props) => {
                 ? (
                     <div>
                         <Input
-                            placeholder={props.field.name}
+                            defaultValue={props.field.name}
                             className={styles.nameInput}
                             minLength={2}
                             ref={nameInputRef}
@@ -101,13 +92,21 @@ const ChoiceField = (props: Props) => {
                             onAdd={handleAddChoice}
                         />
                         <div className={styles.buttons}>
-                            <Button className={styles.button} onClick={handleConfirm}>
-                                {confirmed
+                            <Button
+                                className={styles.button}
+                                onClick={handleConfirm}
+                                disabled={field.isSubmitting}
+                            >
+                                {field.isSubmitting
                                     ? <Loader size={25} />
                                     : 'Save'
                                 }
                             </Button>
-                            <Button className={styles.button} onClick={handleCancel}>
+                            <Button
+                                className={styles.button}
+                                onClick={handleCancel}
+                                disabled={field.isSubmitting}
+                            >
                                 Cancel
                             </Button>
                         </div>

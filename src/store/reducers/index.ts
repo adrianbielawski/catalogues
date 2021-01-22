@@ -11,9 +11,12 @@ import settingsReducer from './settingsReducer'
 import { AppActionTypes } from 'store/storeTypes'
 //Epics
 import {
-  createCatalogueEpic, fetchCataloguesEpic, fetchItemsFieldsEpic, fetchFieldsChoicesEpic
+  createCatalogueEpic, fetchCataloguesEpic, refreshFieldEpic, fetchCatalogueFieldEpic, fetchItemsFieldsEpic,
+  fetchFieldsChoicesEpic,
 } from 'store/epics/catalogueEpics'
-import { changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic } from 'store/epics/settingsEpics'
+import {
+  changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic, postChoiceFieldChangesEpic
+} from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
@@ -23,8 +26,11 @@ const rootEpic = combineEpics(
   changeCatalogueNameEpic,
   changeUsernameEpic,
   changePasswordEpic,
+  refreshFieldEpic,
+  fetchCatalogueFieldEpic,
   fetchItemsFieldsEpic,
   fetchFieldsChoicesEpic,
+  postChoiceFieldChangesEpic,
 )
 const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, RootState>()
 

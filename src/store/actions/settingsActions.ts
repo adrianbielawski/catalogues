@@ -1,13 +1,14 @@
-import { User } from 'src/globalTypes'
+import { DeserializedChoiceField, User } from 'src/globalTypes'
 import {
     MY_ACCOUNT_TOGGLE_USERNAME_EDIT, MY_ACCOUNT_CHANGE_USERNAME, MY_ACCOUNT_CHANGE_USERNAME_SUCCESS, MY_ACCOUNT_CHANGE_USERNAME_FAILURE,
     MY_ACCOUNT_TOGGLE_PASSWORD_EDIT, MY_ACCOUNT_CHANGE_PASSWORD, MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS, MY_ACCOUNT_CHANGE_PASSWORD_FAILURE,
     MANAGE_CATALOGUES_CREATE_CATALOGUE, MANAGE_CATALOGUES_CREATE_CATALOGUE_START, MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS, MANAGE_CATALOGUES_CREATE_CATALOGUE_FAILURE,
     MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS, MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
-    MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT, MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE,
-    AppActionTypes,
+    MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT,
     MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
     MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
+    MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
+    AppActionTypes,
 } from '../storeTypes'
 
 export const toggleUsernameEdit = (isEditing: boolean): AppActionTypes => ({
@@ -119,3 +120,38 @@ export const addFieldChoiceToState = (
     catalogueId,
 })
 
+export const postChoiceFieldChanges = (
+    field: DeserializedChoiceField,
+    fieldName: string
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
+    field,
+    fieldName,
+})
+
+export const postChoiceFieldChangesStart = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START,
+    fieldId,
+    catalogueId,
+})
+
+export const postChoiceFieldChangesSuccess = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+    fieldId,
+    catalogueId,
+})
+
+export const postChoiceFieldChangesFailure = (
+    fieldId: number,
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
+    fieldId,
+    catalogueId,
+})

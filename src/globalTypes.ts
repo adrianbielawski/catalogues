@@ -85,6 +85,7 @@ export interface Field {
     name: string,
     filter_name: string,
     position: number,
+    choices?: Choice[],
 }
 
 export interface Choice {
@@ -110,6 +111,7 @@ export interface DeserializedChoiceField {
     choices: DeserializedChoice[],
     fetchingChoices: boolean,
     isEditing: boolean,
+    isSubmitting: boolean,
 }
 
 export interface DeserializedTextField {

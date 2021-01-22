@@ -2,6 +2,8 @@ import axiosInstance from 'src/axiosInstance'
 import { Catalogue, Choice, Field, ListData } from 'src/globalTypes'
 import {
     CATALOGUES_FETCH_ITEMS_FIELDS, CATALOGUES_FETCH_ITEMS_FIELDS_START, CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS, CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
+    CATALOGUES_REFRESH_FIELD,
+    CATALOGUES_FETCH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD_START, CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS, CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE,
     CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_START, CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE, 
@@ -58,6 +60,37 @@ export const fetchItemsFieldsSuccess = (data: Field[], catalogueId: number): App
 export const fetchItemsFieldsFailure = (catalogueId: number): AppActionTypes => ({
     type: CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
     catalogueId
+})
+
+export const refreshField = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_REFRESH_FIELD,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchCatalogueField = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELD,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchCatalogueFieldStart = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELD_START,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchCatalogueFieldSuccess = (data: Field, fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS,
+    data,
+    fieldId,
+    catalogueId,
+})
+
+export const fetchCatalogueFieldFailure = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE,
+    fieldId,
+    catalogueId,
 })
 
 export const fetchFieldsChoices = (fieldId: number, catalogueId: number): AppActionTypes => ({

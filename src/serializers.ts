@@ -61,9 +61,10 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     name: field.name,
     filterName: field.filter_name,
     position: field.position,
-    choices: [],
+    choices: field.choices ? choicesDeserializer(field.choices) : [],
     fetchingChoices: false,
     isEditing: false,
+    isSubmitting: false,
 })
 
 export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
@@ -74,22 +75,24 @@ export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
 })
 
 export const choicesDeserializer = (choices: Choice[]): DeserializedChoice[] => (
-    choices.map(choice => choiceDeserializer(choice))
+    choices.map(choiceDeserializer)
 )
 
+export const fieldDeserializer = (field: Field): DeserializedField => {
+    switch (field.type) {
+        case 'short_text':
+        case 'long_text':
+            return textFieldDeserializer(field)
+
+        case 'single_choice':
+        case 'multiple_choice':
+            return choiceFieldDeserializer(field)
+
+        default:
+            return textFieldDeserializer(field)
+    }
+}
+
 export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
-    fields.map(field => {
-        switch (field.type) {
-            case 'short_text':
-            case 'long_text':
-                return textFieldDeserializer(field)
-
-            case 'single_choice':
-            case 'multiple_choice':
-                return choiceFieldDeserializer(field)
-
-            default:
-                return textFieldDeserializer(field)
-        }
-    })
+    fields.map(fieldDeserializer)
 )

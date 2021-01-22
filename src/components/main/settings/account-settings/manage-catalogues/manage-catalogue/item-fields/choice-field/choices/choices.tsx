@@ -39,7 +39,7 @@ const Choices = (props: Props) => {
             }
 
             return (
-                <li className={styles.choice} key={choice.id}>
+                <li className={styles.choice} key={choice.value}>
                     <TransparentButton className={styles.removeButton} onClick={handleRemove}>
                         <FontAwesomeIcon icon={faTimes} />
                     </TransparentButton>

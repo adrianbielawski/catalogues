@@ -1,7 +1,8 @@
 import { cloneDeep } from 'lodash'
 import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
 import {
-    catalogueDeserializer, choicesDeserializer, fieldsDeserializer, itemDeserializer, listDeserializer
+    catalogueDeserializer, choicesDeserializer,  fieldDeserializer,  fieldsDeserializer,
+    itemDeserializer, listDeserializer,
 } from 'src/serializers'
 import { CataloguesState, AppActionTypes } from 'store/storeTypes'
 
@@ -28,7 +29,7 @@ const getCatalogueById = (
     state.catalogues.filter(c => c.id === id)[0]
 )
 
-const getFieldById = (
+export const getFieldById = (
     state: CataloguesState,
     catalogueId: number,
     fieldId: number
@@ -91,6 +92,12 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'CATALOGUES/FETCH_CATALOGUE_FIELD/SUCCESS': {
+            let field = getFieldById(newState, action.catalogueId, action.fieldId)
+            Object.assign(field, fieldDeserializer(action.data))
+            return newState
+        }
+
         case 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.fetchingFields = false
@@ -136,6 +143,18 @@ const cataloguesReducer = (
                 value: action.name,
                 removed: false,
             })
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/START': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.isSubmitting = true
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/FAILURE': {
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.isSubmitting = false
             return newState
         }
 

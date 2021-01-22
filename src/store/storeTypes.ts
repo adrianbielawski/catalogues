@@ -2,7 +2,7 @@ import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
 import {
-    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice
+    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice, DeserializedChoiceField
 } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
@@ -27,6 +27,11 @@ export const CATALOGUES_FETCH_ITEMS_FIELDS = 'CATALOGUES/FETCH_ITEMS_FIELDS'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_START = 'CATALOGUES/FETCH_ITEMS_FIELDS/START'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS = 'CATALOGUES/FETCH_ITEMS_FIELDS/SUCCESS'
 export const CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE = 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE'
+export const CATALOGUES_REFRESH_FIELD = 'CATALOGUES/REFRESH_FIELD'
+export const CATALOGUES_FETCH_CATALOGUE_FIELD = 'CATALOGUES/FETCH_CATALOGUE_FIELD'
+export const CATALOGUES_FETCH_CATALOGUE_FIELD_START = 'CATALOGUES/FETCH_CATALOGUE_FIELD/START'
+export const CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS = 'CATALOGUES/FETCH_CATALOGUE_FIELD/SUCCESS'
+export const CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE = 'CATALOGUES/FETCH_CATALOGUE_FIELD/FAILURE'
 export const CATALOGUES_FETCH_FIELDS_CHOICES = 'CATALOGUES/FETCH_FIELDS_CHOICES'
 export const CATALOGUES_FETCH_FIELDS_CHOICES_START = 'CATALOGUES/FETCH_FIELDS_CHOICES/START'
 export const CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS = 'CATALOGUES/FETCH_FIELDS_CHOICES/SUCCESS'
@@ -49,6 +54,10 @@ export const MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT = 'MANAGE_CATALOGUES/T
 export const MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT = 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT'
 export const MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE = 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE'
 export const MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE = 'MANAGE_CATALOGUES/ADD_FIELD_CHOICE_TO_STATE'
+export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES'
+export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/START'
+export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/SUCCESS'
+export const MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE = 'MANAGE_CATALOGUES/POST_CHOICE_FIELD_CHANGES/FAILURE'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS'
@@ -154,6 +163,37 @@ interface fetchItemsFieldsStart {
 interface fetchItemsFieldsSuccess {
     type: typeof CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS,
     data: Field[],
+    catalogueId: number,
+}
+
+export interface RefreshField {
+    type: typeof CATALOGUES_REFRESH_FIELD,
+    fieldId: number,
+    catalogueId: number,
+}
+
+export interface FetchCatalogueField {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_FIELD,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface FetchCatalogueFieldStart {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_FIELD_START,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface FetchCatalogueFieldSuccess {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS,
+    data: Field,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface FetchCatalogueFieldFailure {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE,
+    fieldId: number,
     catalogueId: number,
 }
 
@@ -301,6 +341,30 @@ export interface addFieldChoiceToState {
     catalogueId: number,
 }
 
+export interface PostChoiceFieldChanges {
+    type: typeof MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
+    field: DeserializedChoiceField,
+    fieldName: string,
+}
+
+interface PostChoiceFieldChangesStart {
+    type: typeof MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START,
+    fieldId: number,
+    catalogueId: number,
+}
+
+export interface PostChoiceFieldChangesSuccess {
+    type: typeof MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+    fieldId: number,
+    catalogueId: number,
+}
+
+interface PostChoiceFieldChangesFailure {
+    type: typeof MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
+    fieldId: number,
+    catalogueId: number,
+}
+
 export interface changeCatalogueName {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     catalogueId: number,
@@ -324,6 +388,8 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | logInStart | logInSuccess | logInFailure | signUpStart | signUpSuccess | signUpFailure
     | getCataloguesItemsStart | getCataloguesItemsSuccess | getCataloguesItemsFailure | clearAppState
     | fetchItemsFields | fetchItemsFieldsStart | fetchItemsFieldsSuccess | fetchItemsFieldsFailure
+    | RefreshField
+    | FetchCatalogueField | FetchCatalogueFieldStart | FetchCatalogueFieldSuccess | FetchCatalogueFieldFailure
     | fetchFieldsChoices | fetchFieldsChoicesStart | fetchFieldsChoicesSuccess | fetchFieldsChoicesFailure
     | createCatalogue | createCatalogueStart | createCatalogueSuccess | createCatalogueFailure
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
@@ -331,3 +397,4 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
     | toggleEditCatalogueName | changeCatalogueName | changeCatalogueNameStart | changeCatalogueNameSuccess | changeCatalogueNameFailure
     | toggleFieldEdit | removeFieldChoiceFromState | addFieldChoiceToState
+    | PostChoiceFieldChanges | PostChoiceFieldChangesSuccess | PostChoiceFieldChangesStart | PostChoiceFieldChangesFailure
