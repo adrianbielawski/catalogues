@@ -2,14 +2,15 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styles from './manageCatalogue.scss'
 //Types
-import { DeserializedCatalogue } from 'src/globalTypes'
+import { DeserializedCatalogue, DeserializedChoiceField, DeserializedTextField } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { catalogueSelector } from 'store/selectors'
 import { fetchItemsFields } from 'store/actions/cataloguesActions'
 //Custom components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
-import ItemFields from './item-fields/itemFields'
+import TextField from './catalogue-fields/text-field/textField'
+import ChoiceField from './catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
 
 type Props = {
@@ -27,6 +28,28 @@ const ManageCatalogue = (props: Props) => {
         dispatch(fetchItemsFields(props.catalogue.id))
     }, [])
 
+    
+    const fields = catalogue.fields.map(field => {
+        switch (field.type) {
+            case 'short_text':
+            case 'long_text':
+                return (
+                    <TextField
+                        field={field as DeserializedTextField}
+                        key={field.id}
+                    />
+                )
+            case 'single_choice':
+            case 'multiple_choice':
+                return (
+                    <ChoiceField
+                        field={field as DeserializedChoiceField}
+                        key={field.id}
+                    />
+                )
+        }
+    })
+
     return (
         <div className={styles.manageCatalogue}>
             <CatalogueTitle
@@ -34,7 +57,7 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.manageItem}>
-                <ItemFields fields={props.catalogue.fields} />
+                {fields}
                 <AddField />
             </div>
         </div>
