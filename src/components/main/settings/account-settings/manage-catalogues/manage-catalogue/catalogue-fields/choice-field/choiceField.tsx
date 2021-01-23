@@ -18,7 +18,6 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
-import Loader from 'components/global-components/loader/loader'
 
 type Props = {
     field: DeserializedChoiceField,
@@ -93,18 +92,16 @@ const ChoiceField = (props: Props) => {
                         <div className={styles.buttons}>
                             <Button
                                 className={styles.button}
-                                onClick={handleConfirm}
+                                loading={field.isSubmitting}
                                 disabled={field.isSubmitting}
+                                onClick={handleConfirm}
                             >
-                                {field.isSubmitting
-                                    ? <Loader size={25} />
-                                    : 'Save'
-                                }
+                                Save
                             </Button>
                             <Button
                                 className={styles.button}
-                                onClick={handleCancel}
                                 disabled={field.isSubmitting}
+                                onClick={handleCancel}
                             >
                                 Cancel
                             </Button>
