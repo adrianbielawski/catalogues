@@ -10,8 +10,6 @@ const initialState: SettingsState = {
     },
     manageCatalogues: {
         creatingNewCatalogue: false,
-        editingCatalogueName: null,
-        submittingCatalogueName: null,
     }
 }
 
@@ -56,25 +54,6 @@ const settingsReducer = (
         case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/FAILURE':
         case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/SUCCESS':
             newState.manageCatalogues.creatingNewCatalogue = false
-            return newState
-
-        case 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT':
-            let editingCatalogueName = action.catalogueId
-            if (action.catalogueId === newState.manageCatalogues.editingCatalogueName) {
-                editingCatalogueName = null
-            }
-
-            newState.manageCatalogues.editingCatalogueName = editingCatalogueName
-            return newState
-
-        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START':
-            newState.manageCatalogues.submittingCatalogueName = action.catalogueId
-            return newState
-
-        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS':
-        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/FAILURE':
-            newState.manageCatalogues.submittingCatalogueName = null
-            newState.manageCatalogues.editingCatalogueName = null
             return newState
 
         default:

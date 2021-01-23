@@ -131,6 +131,6 @@ export const fetchCataloguesSuccess = (catalogues: Catalogue[]): AppActionTypes 
     catalogues,
 })
 
-export const fetchCatalogueFailure = (): AppActionTypes => ({
+export const fetchCataloguesFailure = (): AppActionTypes => ({
     type: CATALOGUES_FETCH_CATALOGUES_FAILURE,
 })

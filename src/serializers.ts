@@ -20,6 +20,8 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     slug: catalogue.slug,
     fields: [],
     fetchingFields: false,
+    isEditingCatalogueName: false,
+    isSubmittingCatalogueName: false,
     isAddFieldFormActive: false,
     isSubmittingNewField: false,
 })

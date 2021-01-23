@@ -1,7 +1,6 @@
 import {
     MANAGE_CATALOGUES_CREATE_CATALOGUE, MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS,
     CATALOGUES_FETCH_CATALOGUES,
-    MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     CATALOGUES_FETCH_ITEMS_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
@@ -18,7 +17,7 @@ import axiosInstance from "src/axiosInstance"
 import { RootState } from "store/reducers"
 import { ActionsObservable, Epic, ofType, StateObservable } from "redux-observable"
 import {
-    fetchCataloguesStart, fetchCataloguesSuccess, fetchCatalogueFailure,
+    fetchCataloguesStart, fetchCataloguesSuccess, fetchCataloguesFailure,
     fetchItemsFieldsStart, fetchItemsFieldsSuccess, fetchItemsFieldsFailure,
     fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
@@ -57,7 +56,6 @@ export const fetchCataloguesEpic = (
     ofType(
         CATALOGUES_FETCH_CATALOGUES,
         MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS,
-        MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     ),
     withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
     switchMap(([_, id]) => concat(
@@ -66,7 +64,7 @@ export const fetchCataloguesEpic = (
             params: { created_by: id }
         })).pipe(
             mergeMap(response => of(fetchCataloguesSuccess(response.data))),
-            catchError(err => of(fetchCatalogueFailure()))
+            catchError(err => of(fetchCataloguesFailure()))
         )
     ))
 )

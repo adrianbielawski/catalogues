@@ -2,7 +2,8 @@ import { ThunkAction as BaseThunkAction } from 'redux-thunk'
 import { Action } from 'redux'
 import { RootState } from 'store/reducers/index'
 import {
-    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice, DeserializedChoiceField
+    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice,
+    DeserializedChoiceField
 } from 'src/globalTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
@@ -106,8 +107,6 @@ export interface SettingsState {
     },
     manageCatalogues: {
         creatingNewCatalogue: boolean,
-        editingCatalogueName: number | null,
-        submittingCatalogueName: number | null,
     }
 }
 
@@ -325,11 +324,6 @@ interface changePasswordFailure {
     type: typeof MY_ACCOUNT_CHANGE_PASSWORD_FAILURE,
 }
 
-interface toggleEditCatalogueName {
-    type: typeof MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT,
-    catalogueId: number | null,
-}
-
 interface toggleFieldEdit {
     type: typeof MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT,
     fieldId: number,
@@ -399,23 +393,30 @@ interface PostChoiceFieldChangesFailure {
     catalogueId: number,
 }
 
-export interface changeCatalogueName {
+interface ToggleCatalogueNameEdit {
+    type: typeof MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT,
+    catalogueId: number,
+}
+
+export interface ChangeCatalogueName {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     catalogueId: number,
     newName: string,
 }
 
-interface changeCatalogueNameStart {
+interface ChangeCatalogueNameStart {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START,
     catalogueId: number,
 }
 
-interface changeCatalogueNameSuccess {
+export interface ChangeCatalogueNameSuccess {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
+    catalogue: Catalogue,
 }
 
-interface changeCatalogueNameFailure {
+interface ChangeCatalogueNameFailure {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
+    catalogueId: number,
 }
 
 interface ToggleAddField {
@@ -459,7 +460,7 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | fetchCatalogues | fetchCataloguesStart | fetchCataloguesSuccess | fetchCataloguesFailure
     | toggleUsernameEdit | changeUsername | changeUsernameSuccess | changeUsernameFailure
     | togglePasswordEdit | changePassword | changePasswordSuccess | changePasswordFailure
-    | toggleEditCatalogueName | changeCatalogueName | changeCatalogueNameStart | changeCatalogueNameSuccess | changeCatalogueNameFailure
+    | ToggleCatalogueNameEdit | ChangeCatalogueName | ChangeCatalogueNameStart | ChangeCatalogueNameSuccess | ChangeCatalogueNameFailure
     | toggleFieldEdit | removeFieldChoiceFromState | addFieldChoiceToState
     | PostTextFieldNameChange | PostTextFieldNameChangeStart | PostTextFieldNameChangeSuccess | PostTextFieldNameChangeFailure
     | PostChoiceFieldChanges | PostChoiceFieldChangesSuccess | PostChoiceFieldChangesStart | PostChoiceFieldChangesFailure

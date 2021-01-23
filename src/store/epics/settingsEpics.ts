@@ -8,7 +8,7 @@ import {
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
     MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD,
-    AppActionTypes, changeUsername, changePassword, changeCatalogueName, PostChoiceFieldChanges,
+    AppActionTypes, changeUsername, changePassword, ChangeCatalogueName, PostChoiceFieldChanges,
     PostTextFieldNameChange, CreateCatalogueField,
 } from "store/storeTypes"
 import {
@@ -51,17 +51,18 @@ export const changePasswordEpic = (
     )
 )
 
-export const changeCatalogueNameEpic = (
-    action$: ActionsObservable<AppActionTypes>
-): Observable<any> => action$.pipe(
-    ofType(MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME),
+export const changeCatalogueNameEpic: Epic<AppActionTypes> = action$ => action$.pipe(
+    ofType<AppActionTypes, ChangeCatalogueName>(MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME),
     switchMap((action) => concat(
-        of(changeCatalogueNameStart((action as changeCatalogueName).catalogueId)),
-        from(axiosInstance.patch(`/catalogues/${(action as changeCatalogueName).catalogueId}/`, {
-            name: (action as changeCatalogueName).newName
-        })).pipe(
-            mergeMap(() => of(changeCatalogueNameSuccess())),
-            catchError(() => of(changeCatalogueNameFailure()))
+        of(changeCatalogueNameStart(action.catalogueId)),
+        forkJoin([concat(
+            from(axiosInstance.patch(`/catalogues/${action.catalogueId}/`, {
+                name: action.newName
+            })),
+            from(axiosInstance.get(`/catalogues/${action.catalogueId}`))
+        )]).pipe(
+            mergeMap(response => of(changeCatalogueNameSuccess(response[0].data))),
+            catchError(() => of(changeCatalogueNameFailure(action.catalogueId)))
         )
     ))
 )

@@ -4,6 +4,7 @@ import styles from './catalogueTitle.scss'
 //Redux
 import { toggleCatalogueNameEdit, changeCatalogueName } from 'store/actions/settingsActions'
 import { useTypedSelector } from 'store/reducers'
+import { catalogueSelector } from 'store/selectors'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
 
@@ -14,8 +15,7 @@ type Props = {
 
 const CatalogueTitle = (props: Props) => {
     const dispatch = useDispatch()
-    const submittingCatalogueName = useTypedSelector(state => state.settings.manageCatalogues.submittingCatalogueName)    
-    const editingCatalogueName = useTypedSelector(state => state.settings.manageCatalogues.editingCatalogueName)    
+    const catalogue = useTypedSelector(catalogueSelector(props.id))  
 
     const handleEditName = () => {
         dispatch(toggleCatalogueNameEdit(props.id))
@@ -31,8 +31,8 @@ const CatalogueTitle = (props: Props) => {
                 id={`Catalogue title ${props.id}`}
                 title="Name"
                 content={[`${props.name}`]}
-                isEditing={editingCatalogueName === props.id}
-                isSubmitting={submittingCatalogueName === props.id}
+                isEditing={catalogue.isEditingCatalogueName}
+                isSubmitting={catalogue.isSubmittingCatalogueName}
                 onEditClick={handleEditName}
                 onConfirm={handleNameChange}
             />

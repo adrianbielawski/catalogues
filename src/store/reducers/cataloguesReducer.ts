@@ -1,7 +1,7 @@
 import { cloneDeep } from 'lodash'
 import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
 import {
-    catalogueDeserializer, choicesDeserializer,  fieldDeserializer,  fieldsDeserializer,
+    catalogueDeserializer, choicesDeserializer, fieldDeserializer, fieldsDeserializer,
     itemDeserializer, listDeserializer,
 } from 'src/serializers'
 import { CataloguesState, AppActionTypes } from 'store/storeTypes'
@@ -53,6 +53,33 @@ const cataloguesReducer = (
 ): CataloguesState => {
     let newState = cloneDeep(state)
     switch (action.type) {
+        case 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isEditingCatalogueName = !catalogue.isEditingCatalogueName
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isSubmittingCatalogueName = true
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS': {
+            const catalogue = getCatalogueById(newState, action.catalogue.id)
+            catalogue.name = action.catalogue.name
+            catalogue.slug = action.catalogue.slug
+            catalogue.isSubmittingCatalogueName = false
+            catalogue.isEditingCatalogueName = false
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isSubmittingCatalogueName = false
+            return newState
+        }
+
         case 'CATALOGUES/FETCH_CATALOGUES/START':
             newState.fetchingCatalogues = true
             return newState
