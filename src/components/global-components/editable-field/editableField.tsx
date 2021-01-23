@@ -57,7 +57,7 @@ const EditableField = (props: Props) => {
         if (props.isEditing && props.onConfirm !== undefined) {
             return (
                 <InputWithConfirmButton
-                    placeholder={props.content[inputCount]}
+                    defaultValue={props.content[inputCount]}
                     loading={isSubmitting}
                     {...props.inputProps}
                     autoFocus
