@@ -9,6 +9,8 @@ import {
     MANAGE_CATALOGUES_ADD_FIELD_CHOICE_TO_STATE,
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_START, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS, MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_FAILURE,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_START, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS, MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
+    MANAGE_CATALOGUES_TOGGLE_ADD_FIELD,
+    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD, MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_START, MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS, MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_FAILURE,
     AppActionTypes,
 } from '../storeTypes'
 
@@ -192,5 +194,46 @@ export const postChoiceFieldChangesFailure = (
 ): AppActionTypes => ({
     type: MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_FAILURE,
     fieldId,
+    catalogueId,
+})
+
+export const toggleAddField = (
+    catalogueId: number
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_TOGGLE_ADD_FIELD,
+    catalogueId,
+})
+
+export const createCatalogueField = (
+    catalogueId: number,
+    fieldName: string,
+    fieldType: string,
+    position: number,
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD,
+    catalogueId,
+    fieldName,
+    fieldType,
+    position,
+})
+
+export const createCatalogueFieldStart = (
+    catalogueId: number,
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_START,
+    catalogueId,
+})
+
+export const createCatalogueFieldSuccess = (
+    catalogueId: number,
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
+    catalogueId,
+})
+
+export const createCatalogueFieldFailure = (
+    catalogueId: number,
+): AppActionTypes => ({
+    type: MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_FAILURE,
     catalogueId,
 })

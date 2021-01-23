@@ -160,6 +160,31 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'MANAGE_CATALOGUES/TOGGLE_ADD_FIELD': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isAddFieldFormActive = !catalogue.isAddFieldFormActive
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/START': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isSubmittingNewField = true
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/SUCCESS': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isSubmittingNewField = false
+            catalogue.isAddFieldFormActive = false
+            return newState
+        }
+
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isSubmittingNewField = false
+            return newState
+        }
+
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)
             return newState

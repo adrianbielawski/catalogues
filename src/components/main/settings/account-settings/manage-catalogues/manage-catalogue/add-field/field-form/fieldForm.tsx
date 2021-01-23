@@ -1,22 +1,48 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
+//Redux
+import { catalogueSelector, fieldsSelector } from 'store/selectors'
+import { useTypedSelector } from 'store/reducers'
+import { createCatalogueField, toggleAddField } from 'store/actions/settingsActions'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
 
+const TYPES = [
+    {
+        id: 'short_text',
+        name: 'Short text',
+    },
+    {
+        id: 'long_text',
+        name: 'Long text',
+    },
+    {
+        id: 'single_choice',
+        name: 'Single choice',
+    },
+    {
+        id: 'multiple_choice',
+        name: 'Multiple choice',
+    },
+]
+
 type Props = {
     active: boolean,
-    onConfirm: () => void,
-    onCancel: () => void,
+    catalogueId: number,
 }
 
 const cx = classNames.bind(styles)
 
 const FieldForm = (props: Props) => {
-    const [isNameEditing, setIsNameEditing] = useState(false)
-    const [fieldType, setFieldType] = useState<string | null>(null)
+    const dispatch = useDispatch()
+    const fields = useTypedSelector(fieldsSelector(props.catalogueId))
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const [isNameEditing, setIsNameEditing] = useState(true)
+    const [fieldType, setFieldType] = useState<string>('')
     const [fieldName, setFieldName] = useState('')
 
     const handleEditName = () => {
@@ -33,34 +59,12 @@ const FieldForm = (props: Props) => {
     }
 
     const handleConfirm = () => {
-        console.log(fieldName, fieldType)
-        props.onConfirm()
+        dispatch(createCatalogueField(props.catalogueId, fieldName, fieldType, fields.length))
     }
 
     const handleCancel = () => {
-        setFieldName('')
-        setFieldType(null)
-        props.onCancel()
+        dispatch(toggleAddField(catalogue.id))
     }
-
-    const TYPES = [
-        {
-            id: '1',
-            name: 'Short text',
-        },
-        {
-            id: '2',
-            name: 'Long text',
-        },
-        {
-            id: '3',
-            name: 'Single choice',
-        },
-        {
-            id: '4',
-            name: 'Multiple choice',
-        },
-    ]
 
     const formClass = cx(
         'fieldForm',
@@ -76,10 +80,10 @@ const FieldForm = (props: Props) => {
                 <EditableField
                     id={`addField`}
                     title="New field name"
-                    content={[`${fieldName || 'Field name'}`]}
+                    content={[fieldName]}
                     isEditing={isNameEditing}
                     isSubmitting={false}
-                    inputProps={{ minLength: 2 }}
+                    inputProps={{ minLength: 1, autoFocus: true }}
                     onEditClick={handleEditName}
                     onConfirm={handleNameChange}
                 />
@@ -91,10 +95,17 @@ const FieldForm = (props: Props) => {
                     onChange={handleTypeChange}
                 />
                 <div className={styles.buttons}>
-                    <Button onClick={handleConfirm}>
+                    <Button
+                        loading={catalogue.isSubmittingNewField}
+                        disabled={catalogue.isSubmittingNewField}
+                        onClick={handleConfirm}
+                    >
                         Add field
                     </Button>
-                    <Button onClick={handleCancel}>
+                    <Button
+                        disabled={catalogue.isSubmittingNewField}
+                        onClick={handleCancel}
+                    >
                         Cancel
                     </Button>
                 </div>

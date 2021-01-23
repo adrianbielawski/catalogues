@@ -8,7 +8,9 @@ import {
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
     CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_REFRESH_FIELD,
+    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
     AppActionTypes, fetchItemsFields, fetchFieldsChoices, FetchCatalogueField, RefreshFieldEpic,
+    CreateCatalogueFieldSuccess,
 } from "store/storeTypes"
 import { Observable, concat, of, from, throwError, defer, timer } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, map } from 'rxjs/operators'
@@ -69,11 +71,12 @@ export const fetchCataloguesEpic = (
     ))
 )
 
-export const fetchItemsFieldsEpic = (
-    action$: ActionsObservable<AppActionTypes>
-): Observable<AppActionTypes> => action$.pipe(
-    ofType(CATALOGUES_FETCH_ITEMS_FIELDS),
-    map((action) => (action as fetchItemsFields).catalogueId),
+export const fetchItemsFieldsEpic: Epic<AppActionTypes> = action$ => action$.pipe(
+    ofType<AppActionTypes, fetchItemsFields | CreateCatalogueFieldSuccess>(
+        CATALOGUES_FETCH_ITEMS_FIELDS,
+        MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS
+    ),
+    map((action) => action.catalogueId),
     mergeMap((catalogueId) => concat(
         of(fetchItemsFieldsStart(catalogueId)),
         defer(() => axiosInstance.get('/fields/', {

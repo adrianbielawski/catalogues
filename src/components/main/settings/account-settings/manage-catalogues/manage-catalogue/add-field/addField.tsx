@@ -1,30 +1,39 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import styles from './addField.scss'
+//Redux
+import { useTypedSelector } from 'store/reducers'
+import { catalogueSelector } from 'store/selectors'
+import { toggleAddField } from 'store/actions/settingsActions'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import FieldForm from './field-form/fieldForm'
 
-const AddField = () => {
-    const [active, setActive] = useState(false)
+type Props = {
+    catalogueId: number,
+}
 
-    const toggleAddFieldForm = () => {
-        setActive(!active)
+const AddField = (props: Props) => {
+    const dispatch = useDispatch()
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+
+    const handleAddClick = () => {
+        dispatch(toggleAddField(catalogue.id))
     }
 
     return (
         <div className={styles.addField}>
-            { !active
+            {!catalogue.isAddFieldFormActive
                 ?
                 <AddButton
                     className={styles.addButton}
                     text="Add new field"
-                    onClick={toggleAddFieldForm}
+                    onClick={handleAddClick}
                 />
                 :
                 <FieldForm
-                    active={active}
-                    onConfirm={toggleAddFieldForm}
-                    onCancel={toggleAddFieldForm}
+                    catalogueId={props.catalogueId}
+                    active={catalogue.isAddFieldFormActive}
                 />
             }
         </div>

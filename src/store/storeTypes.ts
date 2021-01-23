@@ -66,6 +66,11 @@ export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME = 'MANAGE_CATALOGUES/CHANGE
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_START = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/START'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/SUCCESS'
 export const MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE = 'MANAGE_CATALOGUES/CHANGE_CATALOGUE_NAME/FAILURE'
+export const MANAGE_CATALOGUES_TOGGLE_ADD_FIELD = 'MANAGE_CATALOGUES/TOGGLE_ADD_FIELD'
+export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD'
+export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_START = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/START'
+export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/SUCCESS'
+export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_FAILURE = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/FAILURE'
 
 export type ThunkAction<ReturnType = void> = BaseThunkAction<
     ReturnType,
@@ -413,6 +418,34 @@ interface changeCatalogueNameFailure {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_FAILURE,
 }
 
+interface ToggleAddField {
+    type: typeof MANAGE_CATALOGUES_TOGGLE_ADD_FIELD,
+    catalogueId: number,
+}
+
+export interface CreateCatalogueField {
+    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD,
+    catalogueId: number,
+    fieldName: string,
+    fieldType: string,
+    position: number,
+}
+
+interface CreateCatalogueFieldStart {
+    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_START,
+    catalogueId: number,
+}
+
+export interface CreateCatalogueFieldSuccess {
+    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
+    catalogueId: number,
+}
+
+interface CreateCatalogueFieldFailure {
+    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_FAILURE,
+    catalogueId: number,
+}
+
 export type RefreshFieldEpic = RefreshField | PostChoiceFieldChangesSuccess | PostTextFieldNameChangeSuccess
 
 export type AppActionTypes = changeScreenHeight | authInitialized | getUserSuccess | getUserFailure
@@ -430,3 +463,4 @@ export type AppActionTypes = changeScreenHeight | authInitialized | getUserSucce
     | toggleFieldEdit | removeFieldChoiceFromState | addFieldChoiceToState
     | PostTextFieldNameChange | PostTextFieldNameChangeStart | PostTextFieldNameChangeSuccess | PostTextFieldNameChangeFailure
     | PostChoiceFieldChanges | PostChoiceFieldChangesSuccess | PostChoiceFieldChangesStart | PostChoiceFieldChangesFailure
+    | ToggleAddField | CreateCatalogueField | CreateCatalogueFieldStart | CreateCatalogueFieldSuccess | CreateCatalogueFieldFailure

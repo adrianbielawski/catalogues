@@ -58,7 +58,7 @@ const ManageCatalogue = (props: Props) => {
             />
             <div className={styles.manageItem}>
                 {fields}
-                <AddField />
+                <AddField catalogueId={props.catalogue.id} />
             </div>
         </div>
     )

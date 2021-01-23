@@ -1,6 +1,7 @@
 import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
-    Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice, DeserializedChoice,
+    Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
+    DeserializedChoice,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -19,6 +20,8 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     slug: catalogue.slug,
     fields: [],
     fetchingFields: false,
+    isAddFieldFormActive: false,
+    isSubmittingNewField: false,
 })
 
 export const listDeserializer = (

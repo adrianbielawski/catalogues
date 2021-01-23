@@ -34,6 +34,8 @@ export interface DeserializedCatalogue {
     slug: string,
     fields: DeserializedField[],
     fetchingFields: boolean,
+    isAddFieldFormActive: boolean,
+    isSubmittingNewField: boolean,
 }
 
 export interface ListData {

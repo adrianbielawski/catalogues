@@ -9,3 +9,7 @@ export const catalogueSelector = (id: number): Selector<RootState, DeserializedC
 export const fieldSelector = (catalogueId: number, fieldId: number): Selector<RootState, DeserializedField> => {
     return state => state.catalogues.catalogues.filter(c => c.id == catalogueId)[0].fields.filter(f => f.id == fieldId)[0]
 }
+
+export const fieldsSelector = (catalogueId: number): Selector<RootState, DeserializedField[]> => {
+    return state => state.catalogues.catalogues.filter(c => c.id == catalogueId)[0].fields
+}

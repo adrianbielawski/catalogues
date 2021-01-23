@@ -7,8 +7,9 @@ import {
     MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
+    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD,
     AppActionTypes, changeUsername, changePassword, changeCatalogueName, PostChoiceFieldChanges,
-    PostTextFieldNameChange,
+    PostTextFieldNameChange, CreateCatalogueField,
 } from "store/storeTypes"
 import {
     changeUsernameSuccess, changeUsernameFailure,
@@ -16,6 +17,7 @@ import {
     changeCatalogueNameStart, changeCatalogueNameSuccess, changeCatalogueNameFailure,
     postTextFieldNameChangeStart, postTextFieldNameChangeSuccess, postTextFieldNameChangeFailure,
     postChoiceFieldChangesStart, postChoiceFieldChangesSuccess, postChoiceFieldChangesFailure,
+    createCatalogueFieldStart, createCatalogueFieldSuccess, createCatalogueFieldFailure,
 } from "store/actions/settingsActions"
 
 export const changeUsernameEpic = (
@@ -109,4 +111,20 @@ export const postChoiceFieldChangesEpic: Epic<AppActionTypes> = action$ => actio
             ),
         )
     })
+)
+
+export const createCatalogueFieldEpic: Epic<AppActionTypes> = action$ => action$.pipe(
+    ofType<AppActionTypes, CreateCatalogueField>(MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD),
+    switchMap(action => concat(
+        of(createCatalogueFieldStart(action.catalogueId)),
+        from(axiosInstance.post(`/fields/`, {
+            name: action.fieldName,
+            catalogue_id: action.catalogueId,
+            type: action.fieldType,
+            position: action.position,
+        })).pipe(
+            mapTo(createCatalogueFieldSuccess(action.catalogueId)),
+            catchError(() => of(createCatalogueFieldFailure(action.catalogueId)))
+        ))
+    )
 )
