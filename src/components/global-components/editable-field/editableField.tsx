@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './editableField.scss'
+//Custom hooks
+import { useDelay } from 'src/custom-hooks'
 //Custom components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
@@ -17,10 +19,9 @@ interface Props {
 }
 
 const EditableField = (props: Props) => {
-    const timeout = useRef<ReturnType<typeof setTimeout>>()
+    const delayCompleated = useDelay(props.isSubmitting)
     const [inputCount, setInputCount] = useState(0)
     const [userInput, setUserInput] = useState<string[]>([])
-    const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         if (!props.isEditing) {
@@ -28,17 +29,6 @@ const EditableField = (props: Props) => {
             setInputCount(0)
         }
     }, [props.isEditing])
-
-    useEffect(() => {
-        if (props.isSubmitting) {
-            timeout.current = setTimeout(() => {
-                setIsSubmitting(true)
-            }, 200)
-        } else if (!props.isSubmitting && timeout.current) {
-            clearTimeout(timeout.current)
-            setIsSubmitting(false)
-        }
-    }, [props.isSubmitting])
 
     const handleEdit = () => {
         props.onEditClick(props.id)
@@ -58,7 +48,7 @@ const EditableField = (props: Props) => {
             return (
                 <InputWithConfirmButton
                     defaultValue={props.content[inputCount]}
-                    loading={isSubmitting}
+                    loading={delayCompleated}
                     {...props.inputProps}
                     autoFocus
                     onConfirm={handleConfirm}
