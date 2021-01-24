@@ -5,6 +5,8 @@ import styles from './manageCatalogues.scss'
 import { useTypedSelector } from 'store/reducers'
 import { fetchCatalogues } from 'store/actions/cataloguesActions'
 import { createCatalogue } from 'store/actions/settingsActions'
+//Custom hooks
+import { useDelay } from 'src/customHooks'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -15,6 +17,7 @@ const ManageCatalogues = () => {
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const creatingNewCatalogue = useTypedSelector(state => state.settings.manageCatalogues.creatingNewCatalogue)
+    const delayCompleated = useDelay(creatingNewCatalogue)
 
     useEffect(() => {
         if (catalogues.length === 0) {
@@ -34,7 +37,7 @@ const ManageCatalogues = () => {
         <div className={styles.manageCatalogues}>
             <AddButton
                 text="Add new catalogue"
-                loading={creatingNewCatalogue}
+                loading={delayCompleated}
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />

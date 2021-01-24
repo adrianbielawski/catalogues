@@ -6,6 +6,8 @@ import styles from './fieldForm.scss'
 import { catalogueSelector, fieldsSelector } from 'store/selectors'
 import { useTypedSelector } from 'store/reducers'
 import { createCatalogueField, toggleAddField } from 'store/actions/settingsActions'
+//Custom hooks
+import { useDelay } from 'src/customHooks'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
@@ -44,6 +46,7 @@ const FieldForm = (props: Props) => {
     const [isNameEditing, setIsNameEditing] = useState(true)
     const [fieldType, setFieldType] = useState<string>('')
     const [fieldName, setFieldName] = useState('')
+    const delayCompleated = useDelay(catalogue.isSubmittingNewField)
 
     const handleEditName = () => {
         setIsNameEditing(!isNameEditing)
@@ -96,7 +99,7 @@ const FieldForm = (props: Props) => {
                 />
                 <div className={styles.buttons}>
                     <Button
-                        loading={catalogue.isSubmittingNewField}
+                        loading={delayCompleated}
                         disabled={catalogue.isSubmittingNewField}
                         onClick={handleConfirm}
                     >

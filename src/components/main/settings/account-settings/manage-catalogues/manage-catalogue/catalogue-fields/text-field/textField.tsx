@@ -10,6 +10,8 @@ import { useTypedSelector } from 'store/reducers'
 import { fieldSelector } from 'store/selectors'
 //Types
 import { DeserializedTextField } from 'src/globalTypes'
+//Custom hooks
+import { useDelay } from 'src/customHooks'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
@@ -23,6 +25,7 @@ const cx = classNames.bind(styles)
 const TextField = (props: Props) => {
     const dispatch = useDispatch()
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
+    const delayCompleated = useDelay(field.isSubmitting)
 
     const handleEdit = () => {
         dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
@@ -52,7 +55,7 @@ const TextField = (props: Props) => {
                     ? (
                         <InputWithConfirmButton
                             defaultValue={props.field.name}
-                            loading={field.isSubmitting}
+                            loading={delayCompleated}
                             onConfirm={handleConfirm}
                         />
                     )

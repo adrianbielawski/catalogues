@@ -13,6 +13,8 @@ import { fetchFieldsChoices, refreshField } from 'store/actions/cataloguesAction
 import {
     addFieldChoiceToState, removeFieldChoiceFromState, toggleFieldEdit, postChoiceFieldChanges
 } from 'store/actions/settingsActions'
+//Custom hooks
+import { useDelay } from 'src/customHooks'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Button from 'components/global-components/button/button'
@@ -29,6 +31,7 @@ const ChoiceField = (props: Props) => {
     const dispatch = useDispatch()
     const nameInputRef = useRef<HTMLInputElement>(null)
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
+    const delayCompleated = useDelay(field.isSubmitting)
 
     useEffect(() => {
         dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
@@ -92,7 +95,7 @@ const ChoiceField = (props: Props) => {
                         <div className={styles.buttons}>
                             <Button
                                 className={styles.button}
-                                loading={field.isSubmitting}
+                                loading={delayCompleated}
                                 disabled={field.isSubmitting}
                                 onClick={handleConfirm}
                             >
