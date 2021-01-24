@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import { userDeserializer } from 'src/serializers'
-import { AppState, AppActionTypes } from 'store/storeTypes'
+import { AppState, AppActionTypes } from 'store/storeTypes/appTypes'
 
 const initialState: AppState = {
     screenHeight: window.innerHeight,

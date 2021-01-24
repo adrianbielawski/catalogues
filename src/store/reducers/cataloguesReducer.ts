@@ -1,10 +1,14 @@
 import { cloneDeep } from 'lodash'
+//Global types
 import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
+//Store types
+import { AppActionTypes } from 'store/storeTypes/appTypes'
+import { CataloguesState } from 'store/storeTypes/cataloguesTypes'
+//Serializers
 import {
     catalogueDeserializer, choicesDeserializer, fieldDeserializer, fieldsDeserializer,
     itemDeserializer, listDeserializer,
 } from 'src/serializers'
-import { CataloguesState, AppActionTypes } from 'store/storeTypes'
 
 const initialState: CataloguesState = {
     catalogues: [],
@@ -106,28 +110,28 @@ const cataloguesReducer = (
             newState.fetchingItems = false
             return newState
 
-        case 'CATALOGUES/FETCH_ITEMS_FIELDS/START': {
+        case 'CATALOGUES/FETCH_CATALOGUE_FIELDS/START': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.fetchingFields = true
             return newState
         }
 
-        case 'CATALOGUES/FETCH_ITEMS_FIELDS/SUCCESS': {
+        case 'CATALOGUES/FETCH_CATALOGUE_FIELDS/SUCCESS': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.fetchingFields = false
             catalogue.fields = fieldsDeserializer(action.data)
             return newState
         }
 
-        case 'CATALOGUES/FETCH_CATALOGUE_FIELD/SUCCESS': {
-            let field = getFieldById(newState, action.catalogueId, action.fieldId)
-            Object.assign(field, fieldDeserializer(action.data))
+        case 'CATALOGUES/FETCH_CATALOGUE_FIELDS/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingFields = false
             return newState
         }
 
-        case 'CATALOGUES/FETCH_ITEMS_FIELDS/FAILURE': {
-            const catalogue = getCatalogueById(newState, action.catalogueId)
-            catalogue.fetchingFields = false
+        case 'CATALOGUES/FETCH_CATALOGUE_FIELD/SUCCESS': {
+            let field = getFieldById(newState, action.catalogueId, action.fieldId)
+            Object.assign(field, fieldDeserializer(action.data))
             return newState
         }
 
@@ -211,6 +215,9 @@ const cataloguesReducer = (
             catalogue.isSubmittingNewField = false
             return newState
         }
+        case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/SUCCESS':
+            newState.catalogues.unshift(catalogueDeserializer(action.catalogue))
+            return newState
 
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)

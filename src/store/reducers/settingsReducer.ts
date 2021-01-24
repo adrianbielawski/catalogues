@@ -1,5 +1,7 @@
 import { cloneDeep } from 'lodash'
-import { AppActionTypes, SettingsState } from 'store/storeTypes'
+//Store types
+import { AppActionTypes } from 'store/storeTypes/appTypes'
+import { SettingsState } from 'store/storeTypes/settingsTypes'
 
 const initialState: SettingsState = {
     myAccount: {

@@ -6,7 +6,7 @@ import { DeserializedCatalogue, DeserializedChoiceField, DeserializedTextField }
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { catalogueSelector } from 'store/selectors'
-import { fetchItemsFields } from 'store/actions/cataloguesActions'
+import { fetchCatalogueFields } from 'store/actions/cataloguesActions'
 //Custom components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
 import TextField from './catalogue-fields/text-field/textField'
@@ -22,10 +22,7 @@ const ManageCatalogue = (props: Props) => {
     const catalogue = useTypedSelector(catalogueSelector(props.catalogue.id))
 
     useEffect(() => {
-        if (catalogue.fields.length !== 0) {
-            return
-        }
-        dispatch(fetchItemsFields(props.catalogue.id))
+        dispatch(fetchCatalogueFields(props.catalogue.id))
     }, [])
 
     

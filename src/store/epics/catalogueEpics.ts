@@ -1,62 +1,33 @@
-import {
-    MANAGE_CATALOGUES_CREATE_CATALOGUE, MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS,
-    CATALOGUES_FETCH_CATALOGUES,
-    CATALOGUES_FETCH_ITEMS_FIELDS,
-    CATALOGUES_FETCH_FIELDS_CHOICES,
-    MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
-    MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
-    CATALOGUES_FETCH_CATALOGUE_FIELD,
-    CATALOGUES_REFRESH_FIELD,
-    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
-    AppActionTypes, fetchItemsFields, fetchFieldsChoices, FetchCatalogueField, RefreshFieldEpic,
-    CreateCatalogueFieldSuccess,
-} from "store/storeTypes"
-import { Observable, concat, of, from, throwError, defer, timer } from 'rxjs'
-import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, map } from 'rxjs/operators'
+import { combineEpics, ofType } from "redux-observable"
+import { concat, of, from, defer } from 'rxjs'
+import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen } from 'rxjs/operators'
 import axiosInstance from "src/axiosInstance"
-import { RootState } from "store/reducers"
-import { ActionsObservable, Epic, ofType, StateObservable } from "redux-observable"
+//Store observables
+import { retry$ } from "store/storeObservables"
+//Store types
+import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
+import {
+    CATALOGUES_FETCH_CATALOGUES,
+    CATALOGUES_FETCH_CATALOGUE_FIELD,
+    CATALOGUES_FETCH_CATALOGUE_FIELDS,
+    CATALOGUES_FETCH_FIELDS_CHOICES,
+    FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
+    FetchFieldsChoices
+} from "store/storeTypes/cataloguesTypes"
+import {
+    REFRESH_CATALOGUE_FIELDS_EPIC, REFRESH_CATALOGUE_FIELD_EPIC,
+    RefreshCatalogueFieldEpic, RefreshCatalogueFieldsEpic,
+} from "store/storeTypes/epicsTypes"
+//Store actions
 import {
     fetchCataloguesStart, fetchCataloguesSuccess, fetchCataloguesFailure,
-    fetchItemsFieldsStart, fetchItemsFieldsSuccess, fetchItemsFieldsFailure,
+    fetchCatalogueFields, fetchCatalogueFieldsStart, fetchCatalogueFieldsSuccess, fetchCatalogueFieldsFailure,
     fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
 } from "store/actions/cataloguesActions"
-import {
-    createCatalogueStart, createCatalogueSuccess, createCatalogueFailure,
-} from "store/actions/settingsActions"
 
-const retry$ = (err: Observable<any>, attempts: number = 2) => (
-    err.pipe(mergeMap((_, i) => (
-        i + 1 < attempts + 1
-            ? timer((i + 1) * 500)
-            : throwError(err)
-    )))
-)
-
-export const createCatalogueEpic = (
-    action$: ActionsObservable<AppActionTypes>
-): Observable<any> => action$.pipe(
-    ofType(MANAGE_CATALOGUES_CREATE_CATALOGUE),
-    switchMap(() => concat(
-        of(createCatalogueStart()),
-        from(axiosInstance.post('/catalogues/', {
-            name: 'New catalogue'
-        })).pipe(
-            mergeMap(() => of(createCatalogueSuccess())),
-            catchError(err => of(createCatalogueFailure()))
-        )
-    ))
-)
-
-export const fetchCataloguesEpic = (
-    action$: ActionsObservable<AppActionTypes>,
-    state$: StateObservable<RootState>
-): Observable<any> => action$.pipe(
-    ofType(
-        CATALOGUES_FETCH_CATALOGUES,
-        MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS,
-    ),
+export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
+    ofType<AppActionTypes, FetchCatalogues>(CATALOGUES_FETCH_CATALOGUES),
     withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
     switchMap(([_, id]) => concat(
         of(fetchCataloguesStart()),
@@ -64,35 +35,41 @@ export const fetchCataloguesEpic = (
             params: { created_by: id }
         })).pipe(
             mergeMap(response => of(fetchCataloguesSuccess(response.data))),
-            catchError(err => of(fetchCataloguesFailure()))
+            catchError(() => of(fetchCataloguesFailure()))
         )
     ))
 )
 
-export const fetchItemsFieldsEpic: Epic<AppActionTypes> = action$ => action$.pipe(
-    ofType<AppActionTypes, fetchItemsFields | CreateCatalogueFieldSuccess>(
-        CATALOGUES_FETCH_ITEMS_FIELDS,
-        MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS
-    ),
-    map((action) => action.catalogueId),
-    mergeMap((catalogueId) => concat(
-        of(fetchItemsFieldsStart(catalogueId)),
+export const refreshCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, RefreshCatalogueFieldsEpic>(REFRESH_CATALOGUE_FIELDS_EPIC),
+    mergeMap(action => of(fetchCatalogueFields(action.catalogueId)))
+)
+
+export const fetchCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, FetchCatalogueFields>(CATALOGUES_FETCH_CATALOGUE_FIELDS),
+    mergeMap(action => concat(
+        of(fetchCatalogueFieldsStart(action.catalogueId)),
         defer(() => axiosInstance.get('/fields/', {
-            params: { catalogue_id: catalogueId }
+            params: { catalogue_id: action.catalogueId }
         })).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
-                of(fetchItemsFieldsSuccess(
+                of(fetchCatalogueFieldsSuccess(
                     response.data,
-                    catalogueId
+                    action.catalogueId
                 ))
             ),
-            catchError(() => of(fetchItemsFieldsFailure(catalogueId)))
+            catchError(() => of(fetchCatalogueFieldsFailure(action.catalogueId)))
         )
     ))
 )
 
-export const fetchCatalogueFieldEpic: Epic<AppActionTypes> = action$ => action$.pipe(
+export const refreshCatalogueFieldEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, RefreshCatalogueFieldEpic>(REFRESH_CATALOGUE_FIELD_EPIC),
+    mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))
+)
+
+export const fetchCatalogueFieldEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueField>(CATALOGUES_FETCH_CATALOGUE_FIELD),
     mergeMap(action => concat(
         of(fetchCatalogueFieldStart(action.fieldId, action.catalogueId)),
@@ -110,20 +87,8 @@ export const fetchCatalogueFieldEpic: Epic<AppActionTypes> = action$ => action$.
     ))
 )
 
-export const refreshFieldEpic: Epic<AppActionTypes> = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshFieldEpic>(
-        MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
-        MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS,
-        CATALOGUES_REFRESH_FIELD
-    ),
-    mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))
-)
-
-export const fetchFieldsChoicesEpic = (
-    action$: ActionsObservable<AppActionTypes>
-): Observable<AppActionTypes> => action$.pipe(
-    ofType(CATALOGUES_FETCH_FIELDS_CHOICES),
-    map((action) => action as fetchFieldsChoices),
+export const fetchFieldsChoicesEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, FetchFieldsChoices>(CATALOGUES_FETCH_FIELDS_CHOICES),
     mergeMap((action) => concat(
         of(fetchFieldsChoicesStart(action.fieldId, action.catalogueId)),
         from(axiosInstance.get('/choices/', {
@@ -132,7 +97,16 @@ export const fetchFieldsChoicesEpic = (
             mergeMap(response =>
                 of(fetchFieldsChoicesSuccess(action.fieldId, action.catalogueId, response.data))
             ),
-            catchError(err => of(fetchFieldsChoicesFailure(action.fieldId, action.catalogueId)))
+            catchError(() => of(fetchFieldsChoicesFailure(action.fieldId, action.catalogueId)))
         )
     ))
+)
+
+export const cataloguesEpics = combineEpics(
+    fetchCataloguesEpic,
+    refreshCatalogueFieldEpic,
+    fetchCatalogueFieldEpic,
+    refreshCatalogueFieldsEpic,
+    fetchCatalogueFieldsEpic,
+    fetchFieldsChoicesEpic,
 )

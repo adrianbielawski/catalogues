@@ -8,32 +8,16 @@ import authReducer from './authReducer'
 import cataloguesReducer from './cataloguesReducer'
 import settingsReducer from './settingsReducer'
 //Types
-import { AppActionTypes } from 'store/storeTypes'
+import { AppActionTypes } from 'store/storeTypes/appTypes'
 //Epics
-import {
-  createCatalogueEpic, fetchCataloguesEpic, refreshFieldEpic, fetchCatalogueFieldEpic, fetchItemsFieldsEpic,
-  fetchFieldsChoicesEpic,
-} from 'store/epics/catalogueEpics'
-import {
-  changePasswordEpic, changeUsernameEpic, changeCatalogueNameEpic, postTextFieldNameChangeEpic,
-  postChoiceFieldChangesEpic, createCatalogueFieldEpic,
-} from 'store/epics/settingsEpics'
+import { cataloguesEpics } from 'store/epics/catalogueEpics'
+import { settingsEpics } from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
 const rootEpic = combineEpics(
-  createCatalogueEpic,
-  fetchCataloguesEpic,
-  changeCatalogueNameEpic,
-  changeUsernameEpic,
-  changePasswordEpic,
-  refreshFieldEpic,
-  fetchCatalogueFieldEpic,
-  fetchItemsFieldsEpic,
-  fetchFieldsChoicesEpic,
-  postTextFieldNameChangeEpic,
-  postChoiceFieldChangesEpic,
-  createCatalogueFieldEpic,
+  cataloguesEpics,
+  settingsEpics,
 )
 const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, RootState>()
 

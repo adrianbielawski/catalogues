@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash'
-import { AuthState, AppActionTypes } from 'store/storeTypes'
+import { AppActionTypes } from 'store/storeTypes/appTypes'
+import { AuthState } from 'store/storeTypes/authTypes'
 
 const initialState: AuthState = {
     isInitialized: false,

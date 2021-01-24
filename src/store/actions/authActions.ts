@@ -1,14 +1,15 @@
 import axiosInstance from 'src/axiosInstance'
-import { ThunkAction } from 'store/storeTypes'
-import { History, Location } from 'history';
+import { History, Location } from 'history'
+import { clearAppState } from './appActions'
+//Global types
 import { LocationState, User } from 'src/globalTypes'
-import { clearAppState } from './appActions';
+//Store types
+import { ThunkAction, AppActionTypes, ErrorData } from 'store/storeTypes/appTypes'
 import {
     AUTH_INITIALIZED, AUTH_GET_USER_SUCCESS, AUTH_GET_USER_FAILURE,
     AUTH_LOG_IN_START, AUTH_LOG_IN_SUCCESS, AUTH_LOG_IN_FAILURE,
     AUTH_SIGN_UP_START, AUTH_SIGN_UP_SUCCESS, AUTH_SIGN_UP_FAILURE,
-    AppActionTypes, ErrorData
-} from '../storeTypes'
+} from 'store/storeTypes/authTypes'
 
 export const authInitialized = (): AppActionTypes => ({
     type: AUTH_INITIALIZED,

@@ -1,14 +1,15 @@
 import axiosInstance from 'src/axiosInstance'
 import { Catalogue, Choice, Field, ListData } from 'src/globalTypes'
+import { AppActionTypes, ThunkAction, ErrorData, } from 'store/storeTypes/appTypes'
 import {
-    CATALOGUES_FETCH_ITEMS_FIELDS, CATALOGUES_FETCH_ITEMS_FIELDS_START, CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS, CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
-    CATALOGUES_REFRESH_FIELD,
+    CATALOGUES_REFRESH_CATALOGUE_FIELD,
     CATALOGUES_FETCH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD_START, CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS, CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE,
+    CATALOGUES_REFRESH_CATALOGUE_FIELDS,
+    CATALOGUES_FETCH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS_START, CATALOGUES_FETCH_CATALOGUE_FIELDS_SUCCESS, CATALOGUES_FETCH_CATALOGUE_FIELDS_FAILURE,
     CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_GET_CATALOGUE_ITEMS_START, CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE, 
-    AppActionTypes, ThunkAction, ErrorData,
-} from '../storeTypes'
+} from 'store/storeTypes/cataloguesTypes'
 
 const fetchCatalogueItemsStart = (): AppActionTypes => ({
     type: CATALOGUES_GET_CATALOGUE_ITEMS_START,
@@ -41,29 +42,34 @@ export const fetchCatalogueItems = (
         })
 }
 
-export const fetchItemsFields = (catalogueId: number): AppActionTypes => ({
-    type: CATALOGUES_FETCH_ITEMS_FIELDS,
+export const refreshCatalogueFields = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_REFRESH_CATALOGUE_FIELDS,
     catalogueId,
 })
 
-export const fetchItemsFieldsStart = (catalogueId: number): AppActionTypes => ({
-    type: CATALOGUES_FETCH_ITEMS_FIELDS_START,
+export const fetchCatalogueFields = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELDS,
     catalogueId,
 })
 
-export const fetchItemsFieldsSuccess = (data: Field[], catalogueId: number): AppActionTypes => ({
-    type: CATALOGUES_FETCH_ITEMS_FIELDS_SUCCESS,
+export const fetchCatalogueFieldsStart = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELDS_START,
+    catalogueId,
+})
+
+export const fetchCatalogueFieldsSuccess = (data: Field[], catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELDS_SUCCESS,
     data,
     catalogueId,
 })
 
-export const fetchItemsFieldsFailure = (catalogueId: number): AppActionTypes => ({
-    type: CATALOGUES_FETCH_ITEMS_FIELDS_FAILURE,
+export const fetchCatalogueFieldsFailure = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_FIELDS_FAILURE,
     catalogueId
 })
 
-export const refreshField = (fieldId: number, catalogueId: number): AppActionTypes => ({
-    type: CATALOGUES_REFRESH_FIELD,
+export const refreshCatalogueField = (fieldId: number, catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_REFRESH_CATALOGUE_FIELD,
     fieldId,
     catalogueId,
 })
