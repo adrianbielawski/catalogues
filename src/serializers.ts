@@ -1,7 +1,7 @@
 import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
-    DeserializedChoice,
+    DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -18,7 +18,18 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     createdBy: catalogue.created_by,
     name: catalogue.name,
     slug: catalogue.slug,
+    itemsData: {
+        count: null,
+        pageSize: null,
+        startIndex: null,
+        endIndex: null,
+        current: null,
+        next: null,
+        previous: null,
+        results: [],
+    },
     fields: [],
+    fetchingItems: false,
     fetchingFields: false,
     isEditingCatalogueName: false,
     isSubmittingCatalogueName: false,
@@ -26,10 +37,10 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     isSubmittingNewField: false,
 })
 
-export const listDeserializer = (
+export const itemsDataDeserializer = (
     data: ListData,
     itemDeserializer: ItemDeserializer
-): DeserializedListData => ({
+): DeserializedItemsData => ({
     count: data.count,
     pageSize: data.page_size,
     startIndex: data.start_index,
@@ -40,14 +51,38 @@ export const listDeserializer = (
     results: data.results.map(itemDeserializer)
 })
 
+export const listDeserializer = (
+    data: ListData,
+    resultsDeserializer: ListResultsDeserializer
+): DeserializedListData => ({
+    count: data.count,
+    pageSize: data.page_size,
+    startIndex: data.start_index,
+    endIndex: data.end_index,
+    current: data.current,
+    next: data.next,
+    previous: data.previous,
+    results: data.results.map(resultsDeserializer)
+})
+
+export const itemFieldDeserializer = (field: ItemField): DeserializedItemField => ({
+    itemId: field.item_id,
+    fieldId: field.field_id,
+    values: field.value,
+})
+
 export const itemDeserializer = (item: Item): DeserializedItem => ({
     id: item.id,
     createdBy: item.created_by,
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
-    name: item.name,
-    slug: item.slug,
-    catalogue: catalogueDeserializer(item.catalogue),
+    catalogue: {
+        id: item.catalogue.id,
+        createdBy: item.catalogue.created_by,
+        name: item.catalogue.name,
+        slug: item.catalogue.slug,
+    },
+    fields: item.values.map(itemFieldDeserializer)
 })
 
 export const textFieldDeserializer = (field: Field): DeserializedTextField => ({

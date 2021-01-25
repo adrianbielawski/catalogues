@@ -32,13 +32,25 @@ export interface DeserializedCatalogue {
     createdBy: number,
     name: string,
     slug: string,
+    itemsData: DeserializedItemsData,
     fields: DeserializedField[],
+    fetchingItems: boolean,
     fetchingFields: boolean,
     isEditingCatalogueName: boolean,
     isSubmittingCatalogueName: boolean,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
 }
+
+export interface ItemsData extends ListData {
+    results: Item[]
+}
+
+export interface DeserializedItemsData extends DeserializedListData {
+    results: DeserializedItem[]
+}
+
+export type ListDataResults = Item[]
 
 export interface ListData {
     count: number,
@@ -48,8 +60,10 @@ export interface ListData {
     current: number,
     next: number,
     previous: number,
-    results: Item[]
+    results: ListDataResults
 }
+
+export type DeserializedListDataResults = DeserializedItem[] 
 
 export interface DeserializedListData {
     count: number | null,
@@ -59,17 +73,25 @@ export interface DeserializedListData {
     current: number | null,
     next: number | null,
     previous: number | null,
-    results: DeserializedItem[]
+    results: DeserializedListDataResults
 }
+
+export type ListResultsDeserializer = ItemDeserializer
+
+export type ItemDeserializer = (item: Item) => DeserializedItem
 
 export interface Item {
     id: number,
     created_by: number,
     created_at: string,
     modified_at: string,
-    name: string,
-    slug: string,
-    catalogue: Catalogue
+    catalogue: {
+        id: number,
+        created_by: number,
+        name: string,
+        slug: string,
+    },
+    values: ItemField[]
 }
 
 export interface DeserializedItem {
@@ -77,9 +99,25 @@ export interface DeserializedItem {
     createdBy: number,
     createdAt: string,
     modifiedAt: string,
-    name: string,
-    slug: string,
-    catalogue: DeserializedCatalogue
+    catalogue: {
+        id: number,
+        createdBy: number,
+        name: string,
+        slug: string,
+    },
+    fields: DeserializedItemField[],
+}
+
+export interface ItemField {
+    item_id: number,
+    field_id: number,
+    value: string | string[],
+}
+
+export interface DeserializedItemField {
+    itemId: number,
+    fieldId: number,
+    values: string | string[],
 }
 
 export interface Field {
@@ -135,5 +173,3 @@ export type Image = {
     url: string,
     isMain: boolean,
 }
-
-export type ItemDeserializer = (item: Item) => DeserializedItem

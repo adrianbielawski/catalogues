@@ -8,11 +8,12 @@ import { retry$ } from "store/storeObservables"
 import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
 import {
     CATALOGUES_FETCH_CATALOGUES,
+    CATALOGUES_FETCH_CATALOGUE_ITEMS,
     CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_FETCH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
     FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
-    FetchFieldsChoices
+    FetchFieldsChoices, FetchCatalogueItems,
 } from "store/storeTypes/cataloguesTypes"
 import {
     REFRESH_CATALOGUE_FIELDS_EPIC, REFRESH_CATALOGUE_FIELD_EPIC,
@@ -24,6 +25,7 @@ import {
     fetchCatalogueFields, fetchCatalogueFieldsStart, fetchCatalogueFieldsSuccess, fetchCatalogueFieldsFailure,
     fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
+    fetchCatalogueItemsStart, fetchCatalogueItemsSuccess, fetchCatalogueItemsFailure,
 } from "store/actions/cataloguesActions"
 
 export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
@@ -87,9 +89,28 @@ export const fetchCatalogueFieldEpic: EpicType = action$ => action$.pipe(
     ))
 )
 
+export const fetchCatalogueItems: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, FetchCatalogueItems>(CATALOGUES_FETCH_CATALOGUE_ITEMS),
+    mergeMap(action => concat(
+        of(fetchCatalogueItemsStart(action.catalogueId)),
+        defer(() => axiosInstance.get('/items/', { params: {
+            catalogue_id: action.catalogueId}
+        })).pipe(
+            retryWhen(err => retry$(err)),
+            mergeMap(response =>
+                of(fetchCatalogueItemsSuccess(
+                    response.data,
+                    action.catalogueId,
+                ))
+            ),
+            catchError(() => of(fetchCatalogueItemsFailure(action.catalogueId)))
+        )
+    ))
+)
+
 export const fetchFieldsChoicesEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchFieldsChoices>(CATALOGUES_FETCH_FIELDS_CHOICES),
-    mergeMap((action) => concat(
+    mergeMap(action => concat(
         of(fetchFieldsChoicesStart(action.fieldId, action.catalogueId)),
         from(axiosInstance.get('/choices/', {
             params: { field_id: action.fieldId }
@@ -108,5 +129,6 @@ export const cataloguesEpics = combineEpics(
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
+    fetchCatalogueItems,
     fetchFieldsChoicesEpic,
 )

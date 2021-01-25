@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import styles from './catalogueItems.scss'
 //Redux
@@ -7,40 +7,30 @@ import { fetchCatalogueItems } from 'store/actions/cataloguesActions'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from '../catalogue-item/catalogueItem'
+import { catalogueSelector, itemsSelector } from 'store/selectors'
 
 type Props = {
-    slug: string
+    catalogueId: number,
 }
 
 const CatalogueItems = (props: Props) => {
     const dispatch = useDispatch()
-    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
-    const itemsData = useTypedSelector(state => state.catalogues.itemsData)
-    const fetchingItems = useTypedSelector(state => state.catalogues.fetchingItems)
-
-    const getActiveCatalogue = () => {
-        return catalogues.find(catalogue => catalogue.slug === props.slug)
-    }
-
-    const [activeCatalogue, setActiveCatalogue] = useState(getActiveCatalogue())
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const catalogueItems = useTypedSelector(itemsSelector(props.catalogueId))
 
     useEffect(() => {
-        dispatch(fetchCatalogueItems(activeCatalogue!.id))
-    }, [activeCatalogue])
-
-    useEffect(() => {
-        setActiveCatalogue(getActiveCatalogue())
-    }, [props.slug])
+        dispatch(fetchCatalogueItems(props.catalogueId))
+    }, [props.catalogueId])
 
     const getItems = () => {
-        return itemsData.results.map(item => (
+        return catalogueItems.map(item => (
             <CatalogueItem item={item} key={item.id} />
         ))
     }
 
 
     return (
-        fetchingItems && itemsData.results.length === 0
+        catalogue.fetchingItems && catalogueItems.length === 0
             ? <Loader className={styles.loader} />
             : (
                 <ul className={styles.items}>

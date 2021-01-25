@@ -13,17 +13,6 @@ import {
 const initialState: CataloguesState = {
     catalogues: [],
     fetchingCatalogues: true,
-    itemsData: {
-        count: null,
-        pageSize: null,
-        startIndex: null,
-        endIndex: null,
-        current: null,
-        next: null,
-        previous: null,
-        results: [],
-    },
-    fetchingItems: false,
 }
 
 const getCatalogueById = (
@@ -97,18 +86,24 @@ const cataloguesReducer = (
             newState.fetchingCatalogues = false
             return newState
 
-        case 'CATALOGUES/GET_CATALOGUE_ITEMS/START':
-            newState.fetchingItems = true
+        case 'CATALOGUES/FETCH_CATALOGUE_ITEMS/START': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingItems = true
             return newState
+        }
 
-        case 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS':
-            newState.itemsData = listDeserializer(action.data, itemDeserializer)
-            newState.fetchingItems = false
+        case 'CATALOGUES/FETCH_CATALOGUE_ITEMS/SUCCESS': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.itemsData = listDeserializer(action.data, itemDeserializer)
+            catalogue.fetchingItems = false
             return newState
+        }
 
-        case 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE':
-            newState.fetchingItems = false
+        case 'CATALOGUES/FETCH_CATALOGUE_ITEMS/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.fetchingItems = false
             return newState
+        }
 
         case 'CATALOGUES/FETCH_CATALOGUE_FIELDS/START': {
             const catalogue = getCatalogueById(newState, action.catalogueId)

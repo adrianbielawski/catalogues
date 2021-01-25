@@ -1,13 +1,13 @@
-import { Catalogue, DeserializedCatalogue, ListData, DeserializedListData, Field, Choice } from 'src/globalTypes'
-import { CreateCatalogueFieldSuccess, PostChoiceFieldChangesSuccess, PostTextFieldNameChangeSuccess } from './settingsTypes'
+import { Catalogue, DeserializedCatalogue, ListData, Field, Choice, Item } from 'src/globalTypes'
 
 export const CATALOGUES_FETCH_CATALOGUES = 'CATALOGUES/FETCH_CATALOGUES'
 export const CATALOGUES_FETCH_CATALOGUES_START = 'CATALOGUES/FETCH_CATALOGUES/START'
 export const CATALOGUES_FETCH_CATALOGUES_SUCCESS = 'CATALOGUES/FETCH_CATALOGUES/SUCCESS'
 export const CATALOGUES_FETCH_CATALOGUES_FAILURE = 'CATALOGUES/FETCH_CATALOGUES/FAILURE'
-export const CATALOGUES_GET_CATALOGUE_ITEMS_START = 'CATALOGUES/GET_CATALOGUE_ITEMS/START'
-export const CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/GET_CATALOGUE_ITEMS/SUCCESS'
-export const CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/GET_CATALOGUE_ITEMS/FAILURE'
+export const CATALOGUES_FETCH_CATALOGUE_ITEMS = 'CATALOGUES/FETCH_CATALOGUE_ITEMS'
+export const CATALOGUES_FETCH_CATALOGUE_ITEMS_START = 'CATALOGUES/FETCH_CATALOGUE_ITEMS/START'
+export const CATALOGUES_FETCH_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/FETCH_CATALOGUE_ITEMS/SUCCESS'
+export const CATALOGUES_FETCH_CATALOGUE_ITEMS_FAILURE = 'CATALOGUES/FETCH_CATALOGUE_ITEMS/FAILURE'
 export const CATALOGUES_REFRESH_CATALOGUE_FIELDS = 'CATALOGUES/REFRESH_CATALOGUE_FIELDS'
 export const CATALOGUES_FETCH_CATALOGUE_FIELDS = 'CATALOGUES/FETCH_CATALOGUE_FIELDS'
 export const CATALOGUES_FETCH_CATALOGUE_FIELDS_START = 'CATALOGUES/FETCH_CATALOGUE_FIELDS/START'
@@ -26,8 +26,6 @@ export const CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE = 'CATALOGUES/FETCH_FIELDS_
 export interface CataloguesState {
     catalogues: DeserializedCatalogue[],
     fetchingCatalogues: boolean,
-    itemsData: DeserializedListData,
-    fetchingItems: boolean,
 }
 
 export interface RefreshCatalogueFields {
@@ -112,17 +110,25 @@ interface FetchFieldsChoicesFailure {
     catalogueId: number,
 }
 
-interface GetCataloguesItemsStart {
-    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_START,
+export interface FetchCatalogueItems {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS,
+    catalogueId: number,
 }
 
-interface GetCataloguesItemsSuccess {
-    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_SUCCESS,
+interface FetchCatalogueItemsStart {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS_START,
+    catalogueId: number,
+}
+
+interface FetchCatalogueItemsSuccess {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS_SUCCESS,
     data: ListData,
+    catalogueId: number,
 }
 
-interface GetCataloguesItemsFailure {
-    type: typeof CATALOGUES_GET_CATALOGUE_ITEMS_FAILURE,
+interface FetchCatalogueItemsFailure {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS_FAILURE,
+    catalogueId: number,
 }
 
 export interface FetchCatalogues {
@@ -142,7 +148,8 @@ interface FetchCataloguesFailure {
     type: typeof CATALOGUES_FETCH_CATALOGUES_FAILURE,
 }
 
-export type CataloguesTypes = GetCataloguesItemsStart | GetCataloguesItemsSuccess | GetCataloguesItemsFailure
+export type CataloguesTypes =
+    FetchCatalogueItems | FetchCatalogueItemsStart | FetchCatalogueItemsSuccess | FetchCatalogueItemsFailure
     | RefreshCatalogueFields 
     | FetchCatalogueFields | FetchCatalogueFieldsStart | FetchCatalogueFieldsSuccess | FetchCatalogueFieldsFailure
     | RefreshCatalogueField
