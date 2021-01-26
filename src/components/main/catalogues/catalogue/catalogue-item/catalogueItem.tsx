@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import styles from './catalogueItem.scss'
 //Redux
+import { useTypedSelector } from 'store/reducers'
+import { itemSelector } from 'store/selectors'
+import { saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Custom components
@@ -16,19 +20,24 @@ type Props = {
 }
 
 const CatalogueItem = (props: Props) => {
-    const [isEditing, setIsEditing] = useState(false)
+    const dispatch = useDispatch()
+    const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const screenWidth = window.innerWidth
 
     const handleEdit = () => {
-        setIsEditing(true)
+        dispatch(toggleEditItem(props.item.catalogueId, item.id))
     }
 
-    const handleCloseModal = () => {
-        setIsEditing(false)
+    const handleEditConfirm = () => {
+        dispatch(saveItem(props.item.catalogueId, item))
+    }
+
+    const handleCancel = () => {
+        dispatch(toggleEditItem(props.item.catalogueId, item.id))
     }
 
     const mainImage = <MainImage />
-    const itemFields = <ItemFields item={props.item} />
+    const itemFields = <ItemFields item={item} />
     const editButton = (
         <TransparentButton className={styles.editButton} onClick={handleEdit}>
             <FontAwesomeIcon icon={faEdit} />
@@ -37,12 +46,14 @@ const CatalogueItem = (props: Props) => {
 
     return (
         <li className={styles.item}>
-            {isEditing
-                ? (<EditItem
-                    show={isEditing}
-                    item={props.item}
-                    onClose={handleCloseModal}
-                />
+            {item.isEditing
+                ? (
+                    <EditItem
+                        show={item.isEditing}
+                        item={props.item}
+                        onEditConfirm={handleEditConfirm}
+                        onCancel={handleCancel}
+                    />
                 )
                 : screenWidth <= 640
                     ? (
