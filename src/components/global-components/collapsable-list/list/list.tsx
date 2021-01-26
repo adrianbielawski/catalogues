@@ -7,6 +7,7 @@ type Item = {}
 
 type Props = {
     items: Item[],
+    itemsProps: {},
     itemComponent: React.ComponentType<any>,
     maxHeight: number,
 }
@@ -19,7 +20,7 @@ const List = (props: Props) => {
         const ItemComponent = props.itemComponent
         return props.items.map((item, i) => (
             <li className={styles.item} key={i}>
-                <ItemComponent item={item} />
+                <ItemComponent item={item} itemProps={props.itemsProps} />
             </li>
         ))
     }
