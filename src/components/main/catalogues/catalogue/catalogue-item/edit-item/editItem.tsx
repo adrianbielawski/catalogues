@@ -1,8 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from './editItem.scss'
+//Custom hooks
+import { useDelay } from 'src/customHooks'
 //Types
 import { DeserializedItem, Image } from 'src/globalTypes'
-import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
+//Redux
+import { useTypedSelector } from 'store/reducers'
+import { itemSelector } from 'store/selectors'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
@@ -13,12 +17,16 @@ import EditItemFields from './edit-item-fields/editItemFields'
 type Props = {
     show: boolean,
     item: DeserializedItem
-    onClose: () => void
+    onEditConfirm: () => void
+    onCancel: () => void
 }
 
 const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const EditItem = (props: Props) => {
+    const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
+    const delayCompleated = useDelay(item.isSubmitting)
+
     let IMAGES: Image[] = [
         {
             url: 'http://placekitten.com/400/400',
@@ -102,11 +110,26 @@ const EditItem = (props: Props) => {
                 onRemove={handleImageRemove}
                 onChange={handleImageChange}
             />
-            <AddImage className={styles.addImageButton} onConfirm={handleAddImage} />
+            <AddImage
+                className={styles.addImageButton}
+                onConfirm={handleAddImage}
+            />
             <EditItemFields itemId={props.item.id} />
-            <Button className={styles.closeButton} onClick={props.onClose}>
-                Close
-            </Button>
+            <div className={styles.buttons}>
+                <Button
+                    className={styles.closeButton}
+                    loading={delayCompleated}
+                    onClick={props.onEditConfirm}
+                >
+                    Save
+                </Button>
+                <Button
+                    className={styles.closeButton}
+                    onClick={props.onCancel}
+                >
+                    Close
+                </Button>
+            </div>
         </div>
     )
 }

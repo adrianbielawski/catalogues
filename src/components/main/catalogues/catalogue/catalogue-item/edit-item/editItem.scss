@@ -10,7 +10,11 @@
     .addImageButton {
         margin-top: 5px;
     }
-    .closeButton {
-        margin: 0 auto;
+    .buttons {
+        display: flex;
+        justify-content: center;
+        button {
+            margin: 0 10px;
+        }
     }
 }
