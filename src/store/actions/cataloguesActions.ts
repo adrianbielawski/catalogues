@@ -1,4 +1,4 @@
-import { Catalogue, Choice, Field, Item, ListData } from 'src/globalTypes'
+import { Catalogue, Choice, DeserializedItem, Field, Item, ListData } from 'src/globalTypes'
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 import {
     CATALOGUES_REFRESH_CATALOGUE_FIELD,
@@ -8,7 +8,8 @@ import {
     CATALOGUES_FETCH_CATALOGUE_ITEMS, CATALOGUES_FETCH_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_FETCH_CATALOGUE_ITEMS_START, CATALOGUES_FETCH_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
-    CATALOGUES_ADD_ITEM, CATALOGUES_ADD_ITEM_START, CATALOGUES_ADD_ITEM_SUCCESS, CATALOGUES_ADD_ITEM_FAILURE, 
+    CATALOGUES_TOGGLE_EDIT_ITEM,
+    CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
 } from 'store/storeTypes/cataloguesTypes'
 
 export const fetchCatalogueItems = (catalogueId: number): AppActionTypes => ({
@@ -129,4 +130,38 @@ export const fetchCataloguesSuccess = (catalogues: Catalogue[]): AppActionTypes 
 
 export const fetchCataloguesFailure = (): AppActionTypes => ({
     type: CATALOGUES_FETCH_CATALOGUES_FAILURE,
+})
+
+export const toggleEditItem = (catalogueId: number, itemId: number | string): AppActionTypes => ({
+    type: CATALOGUES_TOGGLE_EDIT_ITEM,
+    catalogueId,
+    itemId,
+})
+
+export const addItemToState = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_ADD_ITEM_TO_STATE,
+    catalogueId,
+})
+
+export const saveItem = (catalogueId: number, item: DeserializedItem): AppActionTypes => ({
+    type: CATALOGUES_SAVE_ITEM,
+    catalogueId,
+    item,
+})
+
+export const saveItemStart = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_SAVE_ITEM_START,
+    catalogueId,
+})
+
+export const saveItemSuccess = (catalogueId: number, previousId: number | string, item: Item): AppActionTypes => ({
+    type: CATALOGUES_SAVE_ITEM_SUCCESS,
+    catalogueId,
+    previousId,
+    item,
+})
+
+export const saveItemFailure = (catalogueId: number): AppActionTypes => ({
+    type: CATALOGUES_SAVE_ITEM_FAILURE,
+    catalogueId,
 })

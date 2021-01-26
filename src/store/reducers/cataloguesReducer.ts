@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 //Global types
-import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from 'src/globalTypes'
+import { DeserializedChoice, DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
 //Store types
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 import { CataloguesState } from 'store/storeTypes/cataloguesTypes'
@@ -22,10 +22,18 @@ const getCatalogueById = (
     state.catalogues.filter(c => c.id === id)[0]
 )
 
+export const getItemById = (
+    state: CataloguesState,
+    catalogueId: number,
+    itemId: number | string,
+): DeserializedItem => (
+    getCatalogueById(state, catalogueId).itemsData.results.filter(f => f.id === itemId)[0]
+)
+
 export const getFieldById = (
     state: CataloguesState,
     catalogueId: number,
-    fieldId: number
+    fieldId: number,
 ): DeserializedField => (
     getCatalogueById(state, catalogueId).fields.filter(f => f.id === fieldId)[0]
 )
@@ -210,9 +218,54 @@ const cataloguesReducer = (
             catalogue.isSubmittingNewField = false
             return newState
         }
+
         case 'MANAGE_CATALOGUES/CREATE_CATALOGUE/SUCCESS':
             newState.catalogues.unshift(catalogueDeserializer(action.catalogue))
             return newState
+
+        case 'CATALOGUES/TOGGLE_EDIT_ITEM': {
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            item.isEditing = !item.isEditing
+            return newState
+        }
+
+        case 'CATALOGUES/ADD_ITEM_TO_STATE': {
+            const item = {
+                id: `newItem_${Date.now()}`,
+                createdBy: null,
+                createdAt: '',
+                modifiedAt: '',
+                catalogueId: action.catalogueId,
+                fieldsValues: [],
+                images: [],
+                isEditing: true,
+                isSubmitting: false,
+            }
+
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.itemsData.results.unshift(item)
+            return newState
+        }
+
+        case 'CATALOGUES/SAVE_ITEM/START': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isAddingItem = true
+            return newState
+        }
+
+        case 'CATALOGUES/SAVE_ITEM/SUCCESS': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            const item = getItemById(newState, action.catalogueId, action.previousId)
+            Object.assign(item, itemDeserializer(action.item))
+            catalogue.isAddingItem = false
+            return newState
+        }
+
+        case 'CATALOGUES/SAVE_ITEM/FAILURE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.isAddingItem = false
+            return newState
+        }
 
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)

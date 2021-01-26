@@ -40,6 +40,7 @@ export interface DeserializedCatalogue {
     isSubmittingCatalogueName: boolean,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
+    isAddingItem: boolean,
 }
 
 export interface ItemsData extends ListData {
@@ -85,27 +86,21 @@ export interface Item {
     created_by: number,
     created_at: string,
     modified_at: string,
-    catalogue: {
-        id: number,
-        created_by: number,
-        name: string,
-        slug: string,
-    },
-    values: ItemField[]
+    catalogue_id: number,
+    values: ItemField[],
+    images: string[],
 }
 
 export interface DeserializedItem {
-    id: number,
-    createdBy: number,
+    id: number | string,
+    createdBy: number | null,
     createdAt: string,
     modifiedAt: string,
-    catalogue: {
-        id: number,
-        createdBy: number,
-        name: string,
-        slug: string,
-    },
-    fields: DeserializedItemField[],
+    catalogueId: number,
+    fieldsValues: DeserializedItemField[],
+    images: string[],
+    isEditing: boolean,
+    isSubmitting: boolean,
 }
 
 export interface ItemField {
@@ -115,9 +110,9 @@ export interface ItemField {
 }
 
 export interface DeserializedItemField {
-    itemId: number,
+    itemId: number | string,
     fieldId: number,
-    values: string | string[],
+    value: string | string[],
 }
 
 export interface Field {

@@ -12,8 +12,9 @@ import {
     CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_FETCH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
+    CATALOGUES_SAVE_ITEM,
     FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
-    FetchFieldsChoices, FetchCatalogueItems,
+    FetchFieldsChoices, FetchCatalogueItems, SaveItem,
 } from "store/storeTypes/cataloguesTypes"
 import {
     REFRESH_CATALOGUE_FIELDS_EPIC, REFRESH_CATALOGUE_FIELD_EPIC,
@@ -26,6 +27,7 @@ import {
     fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
     fetchCatalogueItemsStart, fetchCatalogueItemsSuccess, fetchCatalogueItemsFailure,
+    saveItemStart, saveItemSuccess, saveItemFailure,
 } from "store/actions/cataloguesActions"
 
 export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
@@ -93,8 +95,10 @@ export const fetchCatalogueItems: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueItems>(CATALOGUES_FETCH_CATALOGUE_ITEMS),
     mergeMap(action => concat(
         of(fetchCatalogueItemsStart(action.catalogueId)),
-        defer(() => axiosInstance.get('/items/', { params: {
-            catalogue_id: action.catalogueId}
+        defer(() => axiosInstance.get('/items/', {
+            params: {
+                catalogue_id: action.catalogueId
+            }
         })).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
@@ -123,6 +127,33 @@ export const fetchFieldsChoicesEpic: EpicType = action$ => action$.pipe(
     ))
 )
 
+export const saveItemEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, SaveItem>(CATALOGUES_SAVE_ITEM),
+    switchMap(action => {
+        const filteredValues = action.item.fieldsValues.filter(v => v.value.length > 0)
+        const values = filteredValues.map(field => ({
+            field_id: field.fieldId,
+            value: field.value,
+        }))
+
+        const axiosMethod = action.item.id.toString().startsWith('newItem')
+            ? axiosInstance.post
+            : axiosInstance.patch
+
+        return concat(
+            of(saveItemStart(action.catalogueId)),
+            from(axiosMethod('/items/', {
+                catalogue_id: action.catalogueId,
+                values,
+                images: action.item.images,
+            })).pipe(
+                mergeMap((response) => of(saveItemSuccess(action.catalogueId, action.item.id, response.data))),
+                catchError(() => of(saveItemFailure(action.catalogueId)))
+            )
+        )
+    })
+)
+
 export const cataloguesEpics = combineEpics(
     fetchCataloguesEpic,
     refreshCatalogueFieldEpic,
@@ -131,4 +162,5 @@ export const cataloguesEpics = combineEpics(
     fetchCatalogueFieldsEpic,
     fetchCatalogueItems,
     fetchFieldsChoicesEpic,
+    saveItemEpic,
 )

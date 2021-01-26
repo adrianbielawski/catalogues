@@ -35,6 +35,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     isSubmittingCatalogueName: false,
     isAddFieldFormActive: false,
     isSubmittingNewField: false,
+    isAddingItem: false,
 })
 
 export const itemsDataDeserializer = (
@@ -68,7 +69,7 @@ export const listDeserializer = (
 export const itemFieldDeserializer = (field: ItemField): DeserializedItemField => ({
     itemId: field.item_id,
     fieldId: field.field_id,
-    values: field.value,
+    value: field.value,
 })
 
 export const itemDeserializer = (item: Item): DeserializedItem => ({
@@ -76,13 +77,11 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     createdBy: item.created_by,
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
-    catalogue: {
-        id: item.catalogue.id,
-        createdBy: item.catalogue.created_by,
-        name: item.catalogue.name,
-        slug: item.catalogue.slug,
-    },
-    fields: item.values.map(itemFieldDeserializer)
+    catalogueId: item.catalogue_id,
+    fieldsValues: item.values.map(itemFieldDeserializer),
+    images: [],
+    isEditing: false,
+    isSubmitting: false,
 })
 
 export const textFieldDeserializer = (field: Field): DeserializedTextField => ({

@@ -1,4 +1,4 @@
-import { Catalogue, DeserializedCatalogue, ListData, Field, Choice, Item } from 'src/globalTypes'
+import { Catalogue, DeserializedCatalogue, ListData, Field, Choice, Item, DeserializedItem } from 'src/globalTypes'
 
 export const CATALOGUES_FETCH_CATALOGUES = 'CATALOGUES/FETCH_CATALOGUES'
 export const CATALOGUES_FETCH_CATALOGUES_START = 'CATALOGUES/FETCH_CATALOGUES/START'
@@ -22,6 +22,12 @@ export const CATALOGUES_FETCH_FIELDS_CHOICES = 'CATALOGUES/FETCH_FIELDS_CHOICES'
 export const CATALOGUES_FETCH_FIELDS_CHOICES_START = 'CATALOGUES/FETCH_FIELDS_CHOICES/START'
 export const CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS = 'CATALOGUES/FETCH_FIELDS_CHOICES/SUCCESS'
 export const CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE = 'CATALOGUES/FETCH_FIELDS_CHOICES/FAILURE'
+export const CATALOGUES_TOGGLE_EDIT_ITEM = 'CATALOGUES/TOGGLE_EDIT_ITEM'
+export const CATALOGUES_ADD_ITEM_TO_STATE = 'CATALOGUES/ADD_ITEM_TO_STATE'
+export const CATALOGUES_SAVE_ITEM = 'CATALOGUES/SAVE_ITEM'
+export const CATALOGUES_SAVE_ITEM_START = 'CATALOGUES/SAVE_ITEM/START'
+export const CATALOGUES_SAVE_ITEM_SUCCESS = 'CATALOGUES/SAVE_ITEM/SUCCESS'
+export const CATALOGUES_SAVE_ITEM_FAILURE = 'CATALOGUES/SAVE_ITEM/FAILURE'
 
 export interface CataloguesState {
     catalogues: DeserializedCatalogue[],
@@ -148,6 +154,40 @@ interface FetchCataloguesFailure {
     type: typeof CATALOGUES_FETCH_CATALOGUES_FAILURE,
 }
 
+interface ToggleEditItem {
+    type: typeof CATALOGUES_TOGGLE_EDIT_ITEM,
+    catalogueId: number,
+    itemId: number | string,
+}
+
+interface AddItemToState {
+    type: typeof CATALOGUES_ADD_ITEM_TO_STATE,
+    catalogueId: number,
+}
+
+export interface SaveItem {
+    type: typeof CATALOGUES_SAVE_ITEM,
+    catalogueId: number,
+    item: DeserializedItem,
+}
+
+interface SaveItemStart {
+    type: typeof CATALOGUES_SAVE_ITEM_START,
+    catalogueId: number,
+}
+
+interface SaveItemSuccess {
+    type: typeof CATALOGUES_SAVE_ITEM_SUCCESS,
+    catalogueId: number,
+    previousId: number | string,
+    item: Item,
+}
+
+interface SaveItemFailure {
+    type: typeof CATALOGUES_SAVE_ITEM_FAILURE,
+    catalogueId: number,
+}
+
 export type CataloguesTypes =
     FetchCatalogueItems | FetchCatalogueItemsStart | FetchCatalogueItemsSuccess | FetchCatalogueItemsFailure
     | RefreshCatalogueFields 
@@ -156,3 +196,5 @@ export type CataloguesTypes =
     | FetchCatalogueField | FetchCatalogueFieldStart | FetchCatalogueFieldSuccess | FetchCatalogueFieldFailure
     | FetchFieldsChoices | FetchFieldsChoicesStart | FetchFieldsChoicesSuccess | FetchFieldsChoicesFailure
     | FetchCatalogues | FetchCataloguesStart | FetchCataloguesSuccess | FetchCataloguesFailure
+    | ToggleEditItem
+    | AddItemToState | SaveItem | SaveItemStart | SaveItemSuccess | SaveItemFailure
