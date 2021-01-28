@@ -145,6 +145,11 @@ const ImagesCarousel = (props: Props) => {
 
             const dynamicStyles = getDynamicStyles(i)
 
+            const IMG = props.images[mod(i, count)]
+            const IMAGE_URL = IMG.id !== null
+            ? `${BASE_URL}${IMG.imageThumbnail}`
+            : IMG.image
+
             items.push(
                 <li key={i}>
                     <div
@@ -154,7 +159,7 @@ const ImagesCarousel = (props: Props) => {
                             '--size': `${IMAGE_SIZE}px`,
                         } as React.CSSProperties}
                     >
-                        <img src={`${BASE_URL}${props.images[mod(i, count)].image}`} />
+                        <img src={IMAGE_URL} />
                         {props.onRemove &&
                             <TransparentButton
                                 className={styles.trashButton}

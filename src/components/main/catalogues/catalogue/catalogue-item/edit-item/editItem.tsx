@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import styles from './editItem.scss'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
@@ -7,6 +8,7 @@ import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { itemSelector } from 'store/selectors'
+import { addImageToState } from 'store/actions/cataloguesActions'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
@@ -24,6 +26,7 @@ type Props = {
 const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const EditItem = (props: Props) => {
+    const dispatch = useDispatch()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const delayCompleated = useDelay(item.isSubmitting)
     const [images, setImages] = useState(IMAGES)
@@ -68,13 +71,7 @@ const EditItem = (props: Props) => {
     }
 
     const handleAddImage = (image: File) => {
-        let imgs = cloneDeep(images)
-        const newImage = {
-            url: URL.createObjectURL(image),
-            isMain: imgs.length === 0 ? true : false,
-        }
-        imgs.push(newImage)
-        setImages(imgs)
+        dispatch(addImageToState(item.catalogueId, item.id, image))
     }
 
     return (

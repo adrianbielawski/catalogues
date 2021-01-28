@@ -10,6 +10,7 @@ import {
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
     CATALOGUES_TOGGLE_EDIT_ITEM,
     CATALOGUES_CHANGE_ITEM_FIELD_VALUE,
+    CATALOGUES_ADD_IMAGE_TO_STATE,
     CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
 } from 'store/storeTypes/cataloguesTypes'
 
@@ -155,6 +156,17 @@ export const changeItemFieldValue = (
     itemId,
     fieldId,
     value,
+})
+
+export const addImageToState = (
+    catalogueId: number,
+    itemId: number | string,
+    image: File
+): AppActionTypes => ({
+    type: CATALOGUES_ADD_IMAGE_TO_STATE,
+    catalogueId,
+    itemId,
+    image,
 })
 
 export const saveItem = (catalogueId: number, item: DeserializedItem): AppActionTypes => ({

@@ -165,17 +165,17 @@ export interface DeserializedTextField {
 export type DeserializedField = DeserializedTextField | DeserializedChoiceField
 
 export type Image = {
-    id: number,
+    id: number | null,
     image: string,
     image_thumbnail: string,
     is_primary: boolean
-    item_id: number
+    item_id: number | string
 }
 
 export type DeserializedImage = {
-    id: number,
+    id: number | null,
     image: string,
     imageThumbnail: string,
     isPrimary: boolean
-    itemId: number
+    itemId: number | string
 }

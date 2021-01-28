@@ -289,6 +289,19 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'CATALOGUES/ADD_IMAGE_TO_STATE': {
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            const image = {
+                id: null,
+                image: URL.createObjectURL(action.image),
+                imageThumbnail: '',
+                isPrimary: item.images.length === 0 ? true : false,
+                itemId: item.id,
+            }
+            item.images.push(image)
+            return newState
+        }
+
         case 'CATALOGUES/SAVE_ITEM/START': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.isAddingItem = true
