@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import classNames from 'classnames/bind'
 import styles from './singleChoiceField.scss'
 //Types
 import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { fetchFieldsChoices } from 'store/actions/cataloguesActions'
+import { changeItemFieldValue, fetchFieldsChoices } from 'store/actions/cataloguesActions'
 //Custom components
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
@@ -18,10 +19,8 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const SingleChoiceField = (props: Props) => {
+    const dispatch = useDispatch()
     const [isEditing, setIsEditing] = useState(false)
-    const [confirmed, setConfirmed] = useState(false)
-    const [selectedId, setSelectedId] = useState<string>('222')
-    const selectedIndex = props.field.choices.findIndex(choice => choice.id === selectedId)
 
     useEffect(() => {
         dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
@@ -31,20 +30,13 @@ const SingleChoiceField = (props: Props) => {
         setIsEditing(!isEditing)
     }
 
-    const handleChange = (id: string) => {
-        setSelectedId(id)
-    }
-
-    const handleConfirm = () => {
-        setConfirmed(true)
-        Promise.resolve(
-            props.onEditConfirm(props.field.id, selectedId)
-        )
-            .then(() => {
-                setConfirmed(false)
-                setIsEditing(false)
-            })
-            .catch(() => setConfirmed(false))
+    const handleChange = (choice: DeserializedChoice) => {
+        dispatch(changeItemFieldValue(
+            props.field.catalogueId,
+            props.itemId,
+            props.field.id,
+            choice.value,
+        ))
     }
 
     const fieldClass = cx(
