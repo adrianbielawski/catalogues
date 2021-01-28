@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 //Global types
-import { DeserializedChoice, DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
+import { DeserializedChoice, DeserializedChoiceField, DeserializedField, DeserializedItem, DeserializedItemField } from 'src/globalTypes'
 //Store types
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 import { CataloguesState } from 'store/storeTypes/cataloguesTypes'
@@ -28,6 +28,23 @@ export const getItemById = (
     itemId: number | string,
 ): DeserializedItem => (
     getCatalogueById(state, catalogueId).itemsData.results.filter(f => f.id === itemId)[0]
+)
+
+export const getFieldValueById = (
+    state: CataloguesState,
+    catalogueId: number,
+    itemId: number | string,
+    fieldId: number | string,
+): DeserializedItemField => (
+    getFieldsValuesById(state, catalogueId, itemId).filter(f => f.fieldId === fieldId)[0]
+)
+
+export const getFieldsValuesById = (
+    state: CataloguesState,
+    catalogueId: number,
+    itemId: number | string,
+): DeserializedItemField[] => (
+    getItemById(state, catalogueId, itemId).fieldsValues
 )
 
 export const getFieldById = (
@@ -244,6 +261,31 @@ const cataloguesReducer = (
 
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.itemsData.results.unshift(item)
+            return newState
+        }
+
+        case 'CATALOGUES/CHANGE_ITEM_FIELD_VALUE': {
+            const fieldsValues = getFieldsValuesById(newState, action.catalogueId, action.itemId)
+            const fieldValue = fieldsValues.filter(f => f.fieldId === action.fieldId)[0]
+
+            const newField = {
+                itemId: action.itemId,
+                fieldId: action.fieldId,
+                value: action.value,
+            }
+
+            if (fieldValue) {
+                const selectedFieldValue = getFieldValueById(
+                    newState,
+                    action.catalogueId,
+                    action.itemId,
+                    action.fieldId
+                )
+                Object.assign(selectedFieldValue, newField)
+            } else {
+                fieldsValues.push(newField)
+            }
+
             return newState
         }
 
