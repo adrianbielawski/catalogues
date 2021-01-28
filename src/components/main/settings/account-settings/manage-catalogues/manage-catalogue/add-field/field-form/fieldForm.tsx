@@ -13,22 +13,27 @@ import EditableField from 'components/global-components/editable-field/editableF
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
 
-const TYPES = [
+interface FieldType {
+    id: string,
+    value: string,
+}
+
+const FIELD_TYPES = [
     {
         id: 'short_text',
-        name: 'Short text',
+        value: 'Short text',
     },
     {
         id: 'long_text',
-        name: 'Long text',
+        value: 'Long text',
     },
     {
         id: 'single_choice',
-        name: 'Single choice',
+        value: 'Single choice',
     },
     {
         id: 'multiple_choice',
-        name: 'Multiple choice',
+        value: 'Multiple choice',
     },
 ]
 
@@ -57,8 +62,8 @@ const FieldForm = (props: Props) => {
         setFieldName(input[0])
     }
 
-    const handleTypeChange = (id: string) => {
-        setFieldType(id)
+    const handleTypeChange = (choice: FieldType) => {
+        setFieldType(choice.id)
     }
 
     const handleConfirm = () => {
@@ -93,7 +98,7 @@ const FieldForm = (props: Props) => {
                 <p className={styles.type}>Type:</p>
                 <SingleChoiceList
                     className={styles.typeList}
-                    choices={TYPES}
+                    choices={FIELD_TYPES}
                     selected={fieldType}
                     onChange={handleTypeChange}
                 />
