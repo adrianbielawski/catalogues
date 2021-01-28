@@ -26,7 +26,7 @@ export interface Option {
 export type SortValue = Selected | undefined
 
 interface Selected {
-    [key: string]: string | null
+    [key: string]: number | string | null
 }
 
 export type SortMap = {

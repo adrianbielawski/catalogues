@@ -4,11 +4,11 @@ import styles from './checkBoxWithTitle.scss'
 import CheckBox from 'components/global-components/check-box/checkBox'
 
 type Props = {
-    id: string,
+    id: number | string,
     title: string,
     selected: boolean,
     className?: string,
-    onChange: (id: string, selected: boolean) => void
+    onChange: (id: number | string, selected: boolean) => void
 }
 
 const CheckBoxWithTitle = (props: Props) => {

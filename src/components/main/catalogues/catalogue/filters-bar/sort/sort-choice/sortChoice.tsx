@@ -19,7 +19,7 @@ const SortChoice: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const { selected, setSortValue } = useContext(SortContext)
 
-    const handleChange = (id: string) => {
+    const handleChange = (id: number | string) => {
         setSortValue({ [props.option.id]: id })
     }
 

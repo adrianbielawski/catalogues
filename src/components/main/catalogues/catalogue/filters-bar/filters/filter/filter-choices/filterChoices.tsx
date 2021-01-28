@@ -18,7 +18,7 @@ const FilterChoices = (props: Props) => {
     const selectedChoices = selectedFilters![props.filter.id]
 
     const choices = props.filter.choices!.map(choice => {
-        const handleChange = (choiceId: string, selected: boolean) => {
+        const handleChange = (choiceId: number | string, selected: boolean) => {
             let choices: SelectedFilter | null = {
                 ...selectedChoices,
                 [choiceId]: selected
