@@ -3,7 +3,7 @@ import styles from './editItem.scss'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Types
-import { DeserializedItem, Image } from 'src/globalTypes'
+import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { itemSelector } from 'store/selectors'
@@ -26,30 +26,6 @@ const mod = (i: number, n: number): number => ((i % n) + n) % n
 const EditItem = (props: Props) => {
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const delayCompleated = useDelay(item.isSubmitting)
-
-    let IMAGES: Image[] = [
-        {
-            url: 'http://placekitten.com/400/400',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/200/400',
-            isMain: true,
-        },
-        {
-            url: 'http://placekitten.com/400/200',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/200/200',
-            isMain: false,
-        },
-        {
-            url: 'http://placekitten.com/800/800',
-            isMain: false,
-        },
-    ]
-
     const [images, setImages] = useState(IMAGES)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
@@ -103,10 +79,10 @@ const EditItem = (props: Props) => {
 
     return (
         <div className={styles.editItem} ref={editItemRef} >
-            {images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
+            {item.images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
             <ImagesCarousel
                 width={screenWidth > 800 ? width * .8 : width}
-                images={images}
+                images={item.images}
                 onRemove={handleImageRemove}
                 onChange={handleImageChange}
             />

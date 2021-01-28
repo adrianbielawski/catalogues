@@ -88,7 +88,7 @@ export interface Item {
     modified_at: string,
     catalogue_id: number,
     values: ItemField[],
-    images: string[],
+    images: Image[],
 }
 
 export interface DeserializedItem {
@@ -98,7 +98,7 @@ export interface DeserializedItem {
     modifiedAt: string,
     catalogueId: number,
     fieldsValues: DeserializedItemField[],
-    images: string[],
+    images: DeserializedImage[],
     isEditing: boolean,
     isSubmitting: boolean,
 }
@@ -165,6 +165,17 @@ export interface DeserializedTextField {
 export type DeserializedField = DeserializedTextField | DeserializedChoiceField
 
 export type Image = {
-    url: string,
-    isMain: boolean,
+    id: number,
+    image: string,
+    image_thumbnail: string,
+    is_primary: boolean
+    item_id: number
+}
+
+export type DeserializedImage = {
+    id: number,
+    image: string,
+    imageThumbnail: string,
+    isPrimary: boolean
+    itemId: number
 }

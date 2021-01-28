@@ -2,6 +2,7 @@ import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
     DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
+    Image, DeserializedImage,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -79,7 +80,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,
     fieldsValues: item.values.map(itemFieldDeserializer),
-    images: [],
+    images: item.images.map(imageDeserializer),
     isEditing: false,
     isSubmitting: false,
 })
@@ -136,4 +137,16 @@ export const fieldDeserializer = (field: Field): DeserializedField => {
 
 export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
     fields.map(fieldDeserializer)
+)
+
+export const imageDeserializer = (image: Image): DeserializedImage => ({
+    id: image.id,
+    image: image.image,
+    imageThumbnail: image.image_thumbnail,
+    isPrimary: image.is_primary,
+    itemId: image.item_id,
+})
+
+export const imagesDeserializer = (images: Image[]): DeserializedImage[] => (
+    images.map(imageDeserializer)
 )

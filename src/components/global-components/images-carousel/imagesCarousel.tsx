@@ -5,14 +5,16 @@ import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
 //Types
-import { Image } from 'src/globalTypes'
+import { DeserializedImage } from 'src/globalTypes'
 //Custom components
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
 
+const BASE_URL = process.env.API_URL;
+
 type Props = {
     width: number,
-    images: Image[],
+    images: DeserializedImage[],
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
@@ -29,7 +31,7 @@ const ImagesCarousel = (props: Props) => {
     const carouselRef = useRef<HTMLDivElement>(null)
     const [touchStart, setTouchStart] = useState<number | null>(null)
     const [slideX, setSlideX] = useState<number>(0)
-    const [current, setCurrent] = useState(props.images.findIndex(img => img.isMain === true))
+    const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
 
     const MIN_SCALE = .7
     const MAX_SCALE = 1
@@ -152,7 +154,7 @@ const ImagesCarousel = (props: Props) => {
                             '--size': `${IMAGE_SIZE}px`,
                         } as React.CSSProperties}
                     >
-                        <img src={props.images[mod(i, count)].url} />
+                        <img src={`${BASE_URL}${props.images[mod(i, count)].image}`} />
                         {props.onRemove &&
                             <TransparentButton
                                 className={styles.trashButton}
