@@ -8,10 +8,9 @@ import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { itemSelector } from 'store/selectors'
-import { addImageToState, removeImageFromState } from 'store/actions/cataloguesActions'
+import { addImageToState, changePrimaryImage, removeImageFromState } from 'store/actions/cataloguesActions'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
-import { cloneDeep } from 'lodash'
 import AddImage from './add-image/addImage'
 import Button from 'components/global-components/button/button'
 import EditItemFields from './edit-item-fields/editItemFields'
@@ -27,7 +26,6 @@ const EditItem = (props: Props) => {
     const dispatch = useDispatch()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const delayCompleated = useDelay(item.isSubmitting)
-    const [images, setImages] = useState(IMAGES)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
     const screenWidth = window.innerWidth
@@ -55,11 +53,7 @@ const EditItem = (props: Props) => {
     }
 
     const handleImageChange = (i: number) => {
-        let imgs = cloneDeep(images)
-        const prevMain = imgs.findIndex(img => img.isMain === true)
-        imgs[prevMain].isMain = false
-        imgs[i].isMain = true
-        setImages(imgs)
+        dispatch(changePrimaryImage(item.catalogueId, item.id, i))
     }
 
     const handleAddImage = (image: File) => {

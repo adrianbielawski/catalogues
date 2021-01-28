@@ -314,6 +314,14 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'CATALOGUES/CHANGE_PRIMARY_IMAGE': {
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            const prevMain = item.images.findIndex(img => img.isPrimary === true)
+            item.images[prevMain].isPrimary = false
+            item.images[action.index].isPrimary = true
+            return newState
+        }
+
         case 'CATALOGUES/SAVE_ITEM/START': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.isAddingItem = true
