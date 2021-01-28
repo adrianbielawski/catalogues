@@ -15,6 +15,8 @@ const initialState: CataloguesState = {
     fetchingCatalogues: true,
 }
 
+const mod = (i: number, n: number): number => ((i % n) + n) % n
+
 const getCatalogueById = (
     state: CataloguesState,
     id: number
@@ -299,6 +301,16 @@ const cataloguesReducer = (
                 itemId: item.id,
             }
             item.images.push(image)
+            return newState
+        }
+
+        case 'CATALOGUES/REMOVE_IMAGE_FROM_STATE': {
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            if (item.images[action.index].isPrimary === true) {
+                let newPrimaryIndex = mod(action.index + 1, item.images.length)
+                item.images[newPrimaryIndex].isPrimary = true
+            }
+            item.images.splice(action.index, 1)
             return newState
         }
 

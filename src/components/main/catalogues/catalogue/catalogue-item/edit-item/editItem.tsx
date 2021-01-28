@@ -8,7 +8,7 @@ import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { itemSelector } from 'store/selectors'
-import { addImageToState } from 'store/actions/cataloguesActions'
+import { addImageToState, removeImageFromState } from 'store/actions/cataloguesActions'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import { cloneDeep } from 'lodash'
@@ -22,8 +22,6 @@ type Props = {
     onEditConfirm: () => void
     onCancel: () => void
 }
-
-const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 const EditItem = (props: Props) => {
     const dispatch = useDispatch()
@@ -53,13 +51,7 @@ const EditItem = (props: Props) => {
     }
 
     const handleImageRemove = (i: number) => {
-        let imgs = cloneDeep(images)
-        if (imgs[i].isMain === true) {
-            let newMainIndex = mod(i + 1, imgs.length)
-            imgs[newMainIndex].isMain = true
-        }
-        imgs.splice(i, 1)
-        setImages(imgs)
+        dispatch(removeImageFromState(item.catalogueId, item.id, i))
     }
 
     const handleImageChange = (i: number) => {

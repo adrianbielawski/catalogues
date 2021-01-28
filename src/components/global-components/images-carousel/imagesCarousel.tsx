@@ -136,7 +136,7 @@ const ImagesCarousel = (props: Props) => {
         let items = []
 
         for (let i = current - 3; i <= current + 3; i++) {
-            const onTrashClick = () => {
+            const onRemove = () => {
                 if (props.onRemove === undefined) {
                     return
                 }
@@ -163,7 +163,7 @@ const ImagesCarousel = (props: Props) => {
                         {props.onRemove &&
                             <TransparentButton
                                 className={styles.trashButton}
-                                onClick={onTrashClick}
+                                onClick={onRemove}
                             >
                                 <FontAwesomeIcon icon={faTrashAlt} />
                             </TransparentButton>
