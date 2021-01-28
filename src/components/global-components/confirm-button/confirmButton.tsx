@@ -8,7 +8,7 @@ import Loader from 'components/global-components/loader/loader'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 interface Props {
-    loading: boolean,
+    loading?: boolean,
     size: number,
     className?: string,
     onClick: () => void

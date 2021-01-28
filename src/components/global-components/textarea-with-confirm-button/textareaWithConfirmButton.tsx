@@ -4,7 +4,7 @@ import styles from './textareaWithConfirmButton.scss'
 import ConfirmButton from '../confirm-button/confirmButton'
 
 interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-    loading: boolean,
+    loading?: boolean,
     onConfirm: (input: string) => void
 }
 
