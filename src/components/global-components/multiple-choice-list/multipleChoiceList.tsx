@@ -1,48 +1,50 @@
 import React from 'react'
-import { upperFirst, includes } from 'lodash'
+import { upperFirst } from 'lodash'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
-
-export interface SelectedChoice {
-    [filterId: string]: boolean,
+interface BasicChoice {
+    id: number | string | null,
+    value: string,
 }
 
-export interface Choice {
-    id: string,
-    name: string,
-}
-
-type Props = {
-    id: string | number,
-    choices: Choice[],
-    selected: SelectedChoice,
+type Props<ChoiceType> = {
+    choices: ChoiceType[],
+    selected: (number | string | null)[],
     className?: string,
-    onChange: (choices: SelectedChoice) => void,
+    onChange: (choices: ChoiceType[]) => void,
 }
 
-const MultipleChoiceList = (props: Props) => {
-    const choices = props.choices!.map(choice => {
-        const handleChange = (choiceId: string, selected: boolean) => {
-            let choices: SelectedChoice = {
-                ...props.selected,
-                [choiceId]: selected
-            }
-
-            if (!includes(choices!, true)) {
-                choices = {}
-            }
-
-            props.onChange(choices)
+const MultipleChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) => {
+    const choices = props.choices.map(choice => {
+        if (choice.id === null) {
+            return
         }
 
-        const isSelected = props.selected?.[choice.id] === true
+        const handleChange = (choiceId: number | string, isSelected: boolean) => {
+            let selectedIds = [...props.selected]
+            if (isSelected) {
+                selectedIds.push(choiceId)
+            } else {
+                selectedIds = selectedIds.filter(id => id !== choiceId)
+            }
+
+            const selectedChoices = props.choices.filter(obj => {
+                if (selectedIds.includes(obj.id)) {
+                    return obj
+                }
+            })
+
+            props.onChange(selectedChoices)
+        }
+
+        const isSelected = props.selected.includes(choice.id)
 
         return (
             <li key={choice.id}>
                 <CheckBoxWithTitle
                     id={choice.id}
-                    title={upperFirst(choice.name)}
+                    title={upperFirst(choice.value)}
                     selected={isSelected}
                     onChange={handleChange}
                 />
