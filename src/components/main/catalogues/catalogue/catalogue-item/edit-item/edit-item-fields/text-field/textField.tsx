@@ -1,25 +1,16 @@
 import React, { useState } from 'react'
-import classNames from 'classnames/bind'
 import styles from './textField.scss'
+//Types
+import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Custom components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 
-
-export interface TextFieldInterface {
-    id: string,
-    name: string,
-    type: string,
-    content: string,
-    choices?: never,
-}
-
 interface Props {
-    field: TextFieldInterface,
-    onEditConfirm: (id: string, input: string) => void
+    itemId: number | string,
+    field: DeserializedField,
+    fieldValue?: DeserializedItemField,
 }
-
-const cx = classNames.bind(styles)
 
 const TextField = (props: Props) => {
     const [isEditing, setIsEditing] = useState(false)
@@ -42,7 +33,7 @@ const TextField = (props: Props) => {
     }
 
     return (
-        <div className={styles.textField}>
+        <li className={styles.textField}>
             <EditableFieldTitle
                 title={props.field.name}
                 isEditing={isEditing}
@@ -53,16 +44,15 @@ const TextField = (props: Props) => {
                     ? (
                         <InputWithConfirmButton
                             className={styles.input}
-                            placeholder={props.field.content}
-                            loading={confirmed}
+                            defaultValue={props.fieldValue?.value || ''}
                             autoFocus
                             onConfirm={handleConfirm}
                         />
                     )
-                    : props.field.content
+                    : props.fieldValue?.value
                 }
             </div>
-        </div>
+        </li>
     )
 }
 

@@ -1,23 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './singleChoiceField.scss'
 //Types
-import { Choice } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/choice-field/choices/choices'
+import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
+//Redux
+import { fetchFieldsChoices } from 'store/actions/cataloguesActions'
 //Custom components
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
-import ConfirmButton from 'components/global-components/confirm-button/confirmButton'
-
-export interface ChoiceFieldInterface {
-    id: string,
-    name: string,
-    type: string,
-    choices: Choice[],
-}
 
 interface Props {
-    field: ChoiceFieldInterface,
-    onEditConfirm: (id: string, input: string) => void
+    itemId: number | string,
+    field: DeserializedChoiceField,
+    fieldValue: DeserializedItemField,
 }
 
 const cx = classNames.bind(styles)
@@ -28,11 +23,12 @@ const SingleChoiceField = (props: Props) => {
     const [selectedId, setSelectedId] = useState<string>('222')
     const selectedIndex = props.field.choices.findIndex(choice => choice.id === selectedId)
 
+    useEffect(() => {
+        dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
+    }, [])
+
     const handleEdit = () => {
         setIsEditing(!isEditing)
-        if (isEditing) {
-            setSelectedId('222')
-        }
     }
 
     const handleChange = (id: string) => {
@@ -65,8 +61,10 @@ const SingleChoiceField = (props: Props) => {
         },
     )
 
+    const selected = props.field.choices.filter(f => f.value === props.fieldValue?.value)[0]
+
     return (
-        <div className={fieldClass}>
+        <li className={fieldClass}>
             <EditableFieldTitle
                 title={props.field.name}
                 isEditing={isEditing}
@@ -75,24 +73,16 @@ const SingleChoiceField = (props: Props) => {
             <div className={contentClass}>
                 {isEditing
                     ? (
-                        <>
-                            <SingleChoiceList
-                                choices={props.field.choices}
-                                selected={selectedId}
-                                onChange={handleChange}
-                            />
-                            <ConfirmButton
-                                className={styles.confirmButton}
-                                size={25}
-                                loading={confirmed}
-                                onClick={handleConfirm}
-                            />
-                        </>
+                        <SingleChoiceList
+                            choices={props.field.choices}
+                            selected={selected?.id}
+                            onChange={handleChange}
+                        />
                     )
-                    : props.field.choices[selectedIndex].name
+                    : props.fieldValue?.value || ''
                 }
             </div>
-        </div>
+        </li>
     )
 }
 

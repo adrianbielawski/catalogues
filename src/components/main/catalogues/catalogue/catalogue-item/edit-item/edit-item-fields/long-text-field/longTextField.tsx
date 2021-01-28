@@ -1,22 +1,16 @@
 import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './longTextField.scss'
+//Types
+import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Custom components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 
-
-export interface TextFieldInterface {
-    id: string,
-    name: string,
-    type: string,
-    content: string,
-    choices?: never,
-}
-
 interface Props {
-    field: TextFieldInterface,
-    onEditConfirm: (id: string, input: string) => void
+    itemId: number | string,
+    field: DeserializedField,
+    fieldValue?: DeserializedItemField,
 }
 
 const cx = classNames.bind(styles)
@@ -48,16 +42,18 @@ const LongTextField = (props: Props) => {
         },
     )
 
-    const contentText = () => {
-        if (props.field.content.length > 40) {
-            return `${props.field.content.slice(0, 40)}...`
+    const getValue = () => {
+        if (props.fieldValue === undefined) {
+            return
+        } else if (props.fieldValue.value.length > 40) {
+            return `${props.fieldValue.value.slice(0, 40)}...`
         } else {
-            return props.field.content
+            return props.fieldValue.value
         }
     }
 
     return (
-        <div className={fieldClass}>
+        <li className={fieldClass}>
             <EditableFieldTitle
                 title={props.field.name}
                 isEditing={isEditing}
@@ -67,16 +63,15 @@ const LongTextField = (props: Props) => {
                 {isEditing
                     ? (
                         <TextareaWithConfirmButton
-                            defaultValue={props.field.content}
-                            loading={confirmed}
+                            defaultValue={props.fieldValue?.value}
                             rows={4}
                             onConfirm={handleConfirm}
                         />
                     )
-                    : contentText()
+                    : getValue()
                 }
             </div>
-        </div>
+        </li>
     )
 }
 

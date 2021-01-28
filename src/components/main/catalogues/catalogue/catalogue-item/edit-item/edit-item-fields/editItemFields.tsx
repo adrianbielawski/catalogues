@@ -1,138 +1,65 @@
 import React from 'react'
 import styles from './editItemFields.scss'
 //Types
-import { SelectedChoice } from 'components/global-components/multiple-choice-list/multipleChoiceList'
-import { ChoiceFieldInterface } from 'components/main/settings/account-settings/manage-catalogues/manage-catalogue/item-fields/itemFields'
+import { DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
+//Redux
+import { useTypedSelector } from 'store/reducers'
+import { fieldsSelector, itemFieldsSelector } from 'store/selectors'
 //Custom components
-import TextField, { TextFieldInterface } from './text-field/textField'
+import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
 import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 
-type Field = TextFieldInterface | ChoiceFieldInterface
-
 type Props = {
-    itemId: string | number,
+    item: DeserializedItem,
 }
 
 const EditItemFields = (props: Props) => {
-    const FIELDS: Field[] = [
-        {
-            id: '1',
-            name: 'Name',
-            type: 'short text',
-            content: 'Cat 1',
-        },
-        {
-            id: '2',
-            name: 'Description',
-            type: 'long text',
-            content: 'Some cat with things',
-        },
-        {
-            id: '3',
-            name: 'thing',
-            type: 'single choice',
-            choices: [
-                {
-                    id: '111',
-                    name: 'choice 1',
-                },
-                {
-                    id: '222',
-                    name: 'choice 2',
-                },
-                {
-                    id: '113',
-                    name: 'choice 1',
-                },
-                {
-                    id: '223',
-                    name: 'choice 2',
-                },
-                {
-                    id: '114',
-                    name: 'choice 1',
-                },
-                {
-                    id: '225',
-                    name: 'choice 2',
-                },
-                {
-                    id: '116',
-                    name: 'choice 1',
-                },
-                {
-                    id: '227',
-                    name: 'choice 2',
-                },
-            ],
-        },
-        {
-            id: '4',
-            name: 'Many things',
-            type: 'multiple choice',
-            choices: [
-                {
-                    id: '111',
-                    name: 'choice 1',
-                },
-                {
-                    id: '222',
-                    name: 'choice 2',
-                },
-                {
-                    id: '333',
-                    name: 'choice 3',
-                },
-            ],
-        },
-    ]
+    const catalogueFields = useTypedSelector(fieldsSelector(props.item.catalogueId))
+    const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.catalogueId, props.item.id))
 
-    const handleFieldEditConfirm = (fieldId: string, input: string) => {
-        console.log('item id', props.itemId, 'field id', fieldId, 'input', input)
-    }
+    const fields = catalogueFields.map(field => {
+        const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]
 
-    const handleChoiceFieldEditConfirm = (fieldId: string, choice: SelectedChoice) => {
-        console.log('item id', props.itemId, 'field id', fieldId, 'choice', choice)
-    }
-
-    const fields = FIELDS.map(field => {
         switch (field.type) {
-            case 'short text':
-                let shortTextField = field as TextFieldInterface
+            case 'short_text':
+                let shortTextField = field as DeserializedField
                 return (
                     <TextField
+                        itemId={props.item.id}
                         field={shortTextField}
-                        onEditConfirm={handleFieldEditConfirm}
+                        fieldValue={fieldValue}
                         key={shortTextField.id}
                     />
                 )
-            case 'long text':
-                let longTextField = field as TextFieldInterface
+            case 'long_text':
+                let longTextField = field as DeserializedField
                 return (
                     <LongTextField
+                        itemId={props.item.id}
                         field={longTextField}
-                        onEditConfirm={handleFieldEditConfirm}
+                        fieldValue={fieldValue}
                         key={longTextField.id}
                     />
                 )
-            case 'single choice':
-                let singleChoiceField = field as ChoiceFieldInterface
+            case 'single_choice':
+                let singleChoiceField = field as DeserializedChoiceField
                 return (
                     <SingleChoiceField
+                        itemId={props.item.id}
                         field={singleChoiceField}
-                        onEditConfirm={handleFieldEditConfirm}
+                        fieldValue={fieldValue}
                         key={singleChoiceField.id}
                     />
                 )
-            case 'multiple choice':
-                let multipleChoiceField = field as ChoiceFieldInterface
+            case 'multiple_choice':
+                let multipleChoiceField = field as DeserializedChoiceField
                 return (
                     <MultipleChoiceField
+                        itemId={props.item.id}
                         field={multipleChoiceField}
-                        selected={{'222': true}}
-                        onEditConfirm={handleChoiceFieldEditConfirm}
+                        fieldValue={fieldValue}
                         key={multipleChoiceField.id}
                     />
                 )
@@ -140,12 +67,14 @@ const EditItemFields = (props: Props) => {
     })
 
     return (
-        <div className={styles.fields}>
-            <p className={styles.itemId}>
-                Item id: {props.itemId}
-            </p>
+        <ul className={styles.fields}>
+            <li key={`itemId${props.item.id}`}>
+                <p className={styles.itemId}>
+                    Item id: {props.item.id}
+                </p>
+            </li>
             {fields}
-        </div>
+        </ul>
     )
 }
 

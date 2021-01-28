@@ -114,7 +114,7 @@ const EditItem = (props: Props) => {
                 className={styles.addImageButton}
                 onConfirm={handleAddImage}
             />
-            <EditItemFields itemId={props.item.id} />
+            <EditItemFields item={props.item} />
             <div className={styles.buttons}>
                 <Button
                     className={styles.closeButton}
