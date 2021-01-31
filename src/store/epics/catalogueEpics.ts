@@ -8,17 +8,20 @@ import { retry$ } from "store/storeObservables"
 import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
 import {
     CATALOGUES_FETCH_CATALOGUES,
-    CATALOGUES_FETCH_CATALOGUE_ITEMS,
-    CATALOGUES_FETCH_CATALOGUE_FIELD,
-    CATALOGUES_FETCH_CATALOGUE_FIELDS,
+    CATALOGUES_FETCH_CATALOGUE_ITEM, CATALOGUES_FETCH_CATALOGUE_ITEMS,
+    CATALOGUES_REFRESH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD,
+    CATALOGUES_REFRESH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
     CATALOGUES_SAVE_ITEM,
     FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
     FetchFieldsChoices, FetchCatalogueItems, SaveItem,
 } from "store/storeTypes/cataloguesTypes"
 import {
-    REFRESH_CATALOGUE_FIELDS_EPIC, REFRESH_CATALOGUE_FIELD_EPIC,
-    RefreshCatalogueFieldEpic, RefreshCatalogueFieldsEpic,
+    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
+    MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+    MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS
+} from "store/storeTypes/settingsTypes"
+import {
 } from "store/storeTypes/epicsTypes"
 //Store actions
 import {
@@ -45,7 +48,10 @@ export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
 )
 
 export const refreshCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshCatalogueFieldsEpic>(REFRESH_CATALOGUE_FIELDS_EPIC),
+    ofType<AppActionTypes, RefreshCatalogueFieldsEpic>(
+        CATALOGUES_REFRESH_CATALOGUE_FIELDS,
+        MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS
+    ),
     mergeMap(action => of(fetchCatalogueFields(action.catalogueId)))
 )
 
@@ -69,7 +75,11 @@ export const fetchCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
 )
 
 export const refreshCatalogueFieldEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshCatalogueFieldEpic>(REFRESH_CATALOGUE_FIELD_EPIC),
+    ofType<AppActionTypes, RefreshCatalogueFieldEpic>(
+        CATALOGUES_REFRESH_CATALOGUE_FIELD,
+        MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
+        MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS
+    ),
     mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))
 )
 
