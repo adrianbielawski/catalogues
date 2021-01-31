@@ -1,13 +1,7 @@
 .items {
-    margin: 0 auto;
-    max-width: 80%;
+    margin: 0 auto 100px auto;
+    max-width: 95%;
 }
 .loader {
     margin: 0 auto;
-}
-
-@media only screen and (max-width: 768px) {
-    .items {
-        max-width: 95%;
-    }
 }

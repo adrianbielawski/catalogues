@@ -22,7 +22,6 @@ type Props = {
 const CatalogueItem = (props: Props) => {
     const dispatch = useDispatch()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
-    const screenWidth = window.innerWidth
 
     const handleEdit = () => {
         dispatch(toggleEditItem(props.item.catalogueId, item.id))
@@ -36,13 +35,7 @@ const CatalogueItem = (props: Props) => {
         dispatch(toggleEditItem(props.item.catalogueId, item.id))
     }
 
-    const mainImage = <MainImage />
-    const itemFields = <ItemFields item={item} />
-    const editButton = (
-        <TransparentButton className={styles.editButton} onClick={handleEdit}>
-            <FontAwesomeIcon icon={faEdit} />
-        </TransparentButton>
-    )
+    const image = item.images.filter(img => img.isPrimary)[0]
 
     return (
         <li className={styles.item}>
@@ -55,25 +48,20 @@ const CatalogueItem = (props: Props) => {
                         onCancel={handleCancel}
                     />
                 )
-                : screenWidth <= 640
-                    ? (
-                        <div className={styles.itemContent}>
-                            {mainImage}
-                            <div className={styles.contentWrapper}>
-                                {itemFields}
-                                {editButton}
-                            </div>
+                : <>
+                    <MainImage imgURL={image?.imageThumbnail as string} />
+                    <div className={styles.itemContent}>
+                        <div className={styles.wrapper}>
+                            <p className={styles.itemId}>
+                                Id:<span> {props.item.id}</span>
+                            </p>
+                            <TransparentButton className={styles.editButton} onClick={handleEdit}>
+                                <FontAwesomeIcon icon={faEdit} />
+                            </TransparentButton>
                         </div>
-                    )
-                    : (
-                        <>
-                            <div className={styles.itemContent}>
-                                {mainImage}
-                                {itemFields}
-                            </div>
-                            {editButton}
-                        </>
-                    )
+                        <ItemFields item={item} />
+                    </div>
+                </>
             }
         </li>
     )
