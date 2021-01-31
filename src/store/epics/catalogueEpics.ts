@@ -12,9 +12,9 @@ import {
     CATALOGUES_REFRESH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_REFRESH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
-    CATALOGUES_SAVE_ITEM,
+    CATALOGUES_REFRESH_CATALOGUE_ITEM,
     FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
-    FetchFieldsChoices, FetchCatalogueItems, SaveItem,
+    FetchFieldsChoices, FetchCatalogueItems, SaveItem, FetchCatalogueItem,
 } from "store/storeTypes/cataloguesTypes"
 import {
     MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
@@ -22,6 +22,7 @@ import {
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS
 } from "store/storeTypes/settingsTypes"
 import {
+    RefreshCatalogueFieldEpic, RefreshCatalogueFieldsEpic, RefreshCatalogueItemEpic,
 } from "store/storeTypes/epicsTypes"
 //Store actions
 import {
@@ -29,6 +30,7 @@ import {
     fetchCatalogueFields, fetchCatalogueFieldsStart, fetchCatalogueFieldsSuccess, fetchCatalogueFieldsFailure,
     fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
+    fetchCatalogueItemStart, fetchCatalogueItemSuccess, fetchCatalogueItemFailure,
     fetchCatalogueItemsStart, fetchCatalogueItemsSuccess, fetchCatalogueItemsFailure,
     saveItemStart, saveItemSuccess, saveItemFailure,
 } from "store/actions/cataloguesActions"
@@ -101,7 +103,32 @@ export const fetchCatalogueFieldEpic: EpicType = action$ => action$.pipe(
     ))
 )
 
-export const fetchCatalogueItems: EpicType = action$ => action$.pipe(
+export const refreshCatalogueItemEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, RefreshCatalogueItemEpic>(CATALOGUES_REFRESH_CATALOGUE_ITEM,
+        CATALOGUES_SAVE_ITEM_SUCCESS
+    ),
+    mergeMap(action => of(fetchCatalogueItem(action.catalogueId, action.itemId, action.prevId)))
+)
+
+export const fetchCatalogueItemEpic: EpicType = action$ => action$.pipe(
+    ofType<AppActionTypes, FetchCatalogueItem>(CATALOGUES_FETCH_CATALOGUE_ITEM),
+    mergeMap(action => concat(
+        of(fetchCatalogueItemStart(action.catalogueId, action.itemId)),
+        defer(() => axiosInstance.get(`/items/${action.itemId}/`)).pipe(
+            retryWhen(err => retry$(err)),
+            mergeMap(response =>
+                of(fetchCatalogueItemSuccess(
+                    response.data,
+                    action.catalogueId,
+                    action.prevId,
+                ))
+            ),
+            catchError(() => of(fetchCatalogueItemFailure(action.catalogueId, action.prevId)))
+        )
+    ))
+)
+
+export const fetchCatalogueItemsEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueItems>(CATALOGUES_FETCH_CATALOGUE_ITEMS),
     mergeMap(action => concat(
         of(fetchCatalogueItemsStart(action.catalogueId)),
@@ -170,7 +197,9 @@ export const cataloguesEpics = combineEpics(
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
-    fetchCatalogueItems,
+    refreshCatalogueItemEpic,
+    fetchCatalogueItemEpic,
+    fetchCatalogueItemsEpic,
     fetchFieldsChoicesEpic,
     saveItemEpic,
 )

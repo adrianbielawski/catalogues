@@ -1,6 +1,7 @@
 import {
     RefreshCatalogueField,
     RefreshCatalogueFields, FetchCatalogueFields,
+    RefreshCatalogueItem, SaveItemSuccess,
 } from "./cataloguesTypes";
 import {
     CreateCatalogueFieldSuccess,
@@ -10,3 +11,4 @@ import {
 
 export type RefreshCatalogueFieldEpic = RefreshCatalogueField | PostChoiceFieldChangesSuccess | PostTextFieldNameChangeSuccess
 export type RefreshCatalogueFieldsEpic = RefreshCatalogueFields | FetchCatalogueFields | CreateCatalogueFieldSuccess
+export type RefreshCatalogueItemEpic = RefreshCatalogueItem | SaveItemSuccess

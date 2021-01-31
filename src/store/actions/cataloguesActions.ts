@@ -5,6 +5,8 @@ import {
     CATALOGUES_FETCH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD_START, CATALOGUES_FETCH_CATALOGUE_FIELD_SUCCESS, CATALOGUES_FETCH_CATALOGUE_FIELD_FAILURE,
     CATALOGUES_REFRESH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS_START, CATALOGUES_FETCH_CATALOGUE_FIELDS_SUCCESS, CATALOGUES_FETCH_CATALOGUE_FIELDS_FAILURE,
+    CATALOGUES_REFRESH_CATALOGUE_ITEM,
+    CATALOGUES_FETCH_CATALOGUE_ITEM, CATALOGUES_FETCH_CATALOGUE_ITEM_SUCCESS, CATALOGUES_FETCH_CATALOGUE_ITEM_START, CATALOGUES_FETCH_CATALOGUE_ITEM_FAILURE,
     CATALOGUES_FETCH_CATALOGUE_ITEMS, CATALOGUES_FETCH_CATALOGUE_ITEMS_SUCCESS, CATALOGUES_FETCH_CATALOGUE_ITEMS_START, CATALOGUES_FETCH_CATALOGUE_ITEMS_FAILURE,
     CATALOGUES_FETCH_CATALOGUES, CATALOGUES_FETCH_CATALOGUES_START, CATALOGUES_FETCH_CATALOGUES_SUCCESS, CATALOGUES_FETCH_CATALOGUES_FAILURE,
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
@@ -13,6 +15,57 @@ import {
     CATALOGUES_ADD_IMAGE_TO_STATE, CATALOGUES_REMOVE_IMAGE_FROM_STATE, CATALOGUES_CHANGE_PRIMARY_IMAGE,
     CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
 } from 'store/storeTypes/cataloguesTypes'
+
+export const refreshCatalogueItem = (
+    catalogueId: number,
+    itemId: number,
+    prevId: number | string
+): AppActionTypes => ({
+    type: CATALOGUES_REFRESH_CATALOGUE_ITEM,
+    catalogueId,
+    itemId,
+    prevId,
+})
+
+export const fetchCatalogueItem = (
+    catalogueId: number,
+    itemId: number,
+    prevId: number | string
+): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_ITEM,
+    catalogueId,
+    itemId,
+    prevId,
+})
+
+export const fetchCatalogueItemStart = (
+    catalogueId: number,
+    itemId: number
+): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_ITEM_START,
+    catalogueId,
+    itemId,
+})
+
+export const fetchCatalogueItemSuccess = (
+    data: Item,
+    catalogueId: number,
+    prevId: number | string
+): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_ITEM_SUCCESS,
+    data,
+    catalogueId,
+    prevId,
+})
+
+export const fetchCatalogueItemFailure = (
+    catalogueId: number,
+    prevId: number | string,
+): AppActionTypes => ({
+    type: CATALOGUES_FETCH_CATALOGUE_ITEM_FAILURE,
+    catalogueId,
+    prevId,
+})
 
 export const fetchCatalogueItems = (catalogueId: number): AppActionTypes => ({
     type: CATALOGUES_FETCH_CATALOGUE_ITEMS,

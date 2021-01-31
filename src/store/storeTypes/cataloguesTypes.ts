@@ -4,6 +4,11 @@ export const CATALOGUES_FETCH_CATALOGUES = 'CATALOGUES/FETCH_CATALOGUES'
 export const CATALOGUES_FETCH_CATALOGUES_START = 'CATALOGUES/FETCH_CATALOGUES/START'
 export const CATALOGUES_FETCH_CATALOGUES_SUCCESS = 'CATALOGUES/FETCH_CATALOGUES/SUCCESS'
 export const CATALOGUES_FETCH_CATALOGUES_FAILURE = 'CATALOGUES/FETCH_CATALOGUES/FAILURE'
+export const CATALOGUES_REFRESH_CATALOGUE_ITEM = 'CATALOGUES/REFRESH_CATALOGUE_ITEM'
+export const CATALOGUES_FETCH_CATALOGUE_ITEM = 'CATALOGUES/FETCH_CATALOGUE_ITEM'
+export const CATALOGUES_FETCH_CATALOGUE_ITEM_START = 'CATALOGUES/FETCH_CATALOGUE_ITEM/START'
+export const CATALOGUES_FETCH_CATALOGUE_ITEM_SUCCESS = 'CATALOGUES/FETCH_CATALOGUE_ITEM/SUCCESS'
+export const CATALOGUES_FETCH_CATALOGUE_ITEM_FAILURE = 'CATALOGUES/FETCH_CATALOGUE_ITEM/FAILURE'
 export const CATALOGUES_FETCH_CATALOGUE_ITEMS = 'CATALOGUES/FETCH_CATALOGUE_ITEMS'
 export const CATALOGUES_FETCH_CATALOGUE_ITEMS_START = 'CATALOGUES/FETCH_CATALOGUE_ITEMS/START'
 export const CATALOGUES_FETCH_CATALOGUE_ITEMS_SUCCESS = 'CATALOGUES/FETCH_CATALOGUE_ITEMS/SUCCESS'
@@ -120,6 +125,39 @@ interface FetchFieldsChoicesFailure {
     catalogueId: number,
 }
 
+export interface RefreshCatalogueItem {
+    type: typeof CATALOGUES_REFRESH_CATALOGUE_ITEM,
+    catalogueId: number,
+    itemId: number,
+    prevId: number | string,
+}
+
+export interface FetchCatalogueItem {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEM,
+    catalogueId: number,
+    itemId: number,
+    prevId: number | string,
+}
+
+interface FetchCatalogueItemStart {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEM_START,
+    catalogueId: number,
+    itemId: number,
+}
+
+interface FetchCatalogueItemSuccess {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEM_SUCCESS,
+    data: Item,
+    catalogueId: number,
+    prevId: number | string,
+}
+
+interface FetchCatalogueItemFailure {
+    type: typeof CATALOGUES_FETCH_CATALOGUE_ITEM_FAILURE,
+    catalogueId: number,
+    prevId: number | string,
+}
+
 export interface FetchCatalogueItems {
     type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS,
     catalogueId: number,
@@ -222,12 +260,15 @@ interface SaveItemFailure {
 }
 
 export type CataloguesTypes =
-    FetchCatalogueItems | FetchCatalogueItemsStart | FetchCatalogueItemsSuccess | FetchCatalogueItemsFailure
+    RefreshCatalogueItem
+    | FetchCatalogueItem | FetchCatalogueItemStart | FetchCatalogueItemSuccess | FetchCatalogueItemFailure
+    | FetchCatalogueItems | FetchCatalogueItemsStart | FetchCatalogueItemsSuccess | FetchCatalogueItemsFailure
     | RefreshCatalogueFields 
     | FetchCatalogueFields | FetchCatalogueFieldsStart | FetchCatalogueFieldsSuccess | FetchCatalogueFieldsFailure
     | RefreshCatalogueField
     | FetchCatalogueField | FetchCatalogueFieldStart | FetchCatalogueFieldSuccess | FetchCatalogueFieldFailure
     | FetchFieldsChoices | FetchFieldsChoicesStart | FetchFieldsChoicesSuccess | FetchFieldsChoicesFailure
     | FetchCatalogues | FetchCataloguesStart | FetchCataloguesSuccess | FetchCataloguesFailure
-    | ToggleEditItem | ChangeItemFieldValue | AddImageToState | RemoveImageFromState | ChangePrimaryImage
+    | ToggleEditItem | ChangeItemFieldValue
+    | AddImageToState | RemoveImageFromState | ChangePrimaryImage
     | AddItemToState | SaveItem | SaveItemStart | SaveItemSuccess | SaveItemFailure

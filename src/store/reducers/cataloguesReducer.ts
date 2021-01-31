@@ -113,6 +113,18 @@ const cataloguesReducer = (
             newState.fetchingCatalogues = false
             return newState
 
+        case 'CATALOGUES/FETCH_CATALOGUE_ITEM/SUCCESS': {
+            const item = getItemById(newState, action.catalogueId, action.prevId)
+            Object.assign(item, itemDeserializer(action.data))
+            return newState
+        }
+
+        case 'CATALOGUES/FETCH_CATALOGUE_ITEM/FAILURE': {
+            const item = getItemById(newState, action.catalogueId, action.prevId)
+            item.isSubmitting = false
+            return newState
+        }
+
         case 'CATALOGUES/FETCH_CATALOGUE_ITEMS/START': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
             catalogue.fetchingItems = true
