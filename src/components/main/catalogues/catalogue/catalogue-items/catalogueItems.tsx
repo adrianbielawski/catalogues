@@ -30,7 +30,7 @@ const CatalogueItems = (props: Props) => {
 
 
     return (
-        catalogue.fetchingItems && catalogueItems.length === 0
+        catalogue.fetchingItems
             ? <Loader className={styles.loader} />
             : (
                 <ul className={styles.items}>

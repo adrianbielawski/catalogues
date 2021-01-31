@@ -11,6 +11,7 @@ import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from './filters-bar/filtersBar'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
+import Loader from 'components/global-components/loader/loader'
 
 type Params = {
     slug: string
@@ -30,24 +31,28 @@ const Catalogue = (props: RouteComponentProps<Params>) => {
     }
 
     return (
-        <div className={styles.catalogue}>
-            <FiltersBar />
-            <div id="catalogueMainContent" className={styles.mainContent}>
-                {screenWidth > 640
-                    ? (
-                        <AddButton
-                            text="Add new item"
-                            className={styles.addItemButton}
-                            onClick={handleAddItem}
-                        />
-                    )
-                    : (
-                        <FixedAddButton onClick={handleAddItem} />
-                    )
-                }
-                <CatalogueItems catalogueId={catalogue.id} />
-            </div>
-        </div>
+        catalogue.fetchingFields
+            ? <Loader />
+            : (
+                <div className={styles.catalogue}>
+                    <FiltersBar />
+                    <div id="catalogueMainContent" className={styles.mainContent}>
+                        {screenWidth > 640
+                            ? (
+                                <AddButton
+                                    text="Add new item"
+                                    className={styles.addItemButton}
+                                    onClick={handleAddItem}
+                                />
+                            )
+                            : (
+                                <FixedAddButton onClick={handleAddItem} />
+                            )
+                        }
+                        <CatalogueItems catalogueId={catalogue.id} />
+                    </div>
+                </div>
+            )
     )
 }
 
