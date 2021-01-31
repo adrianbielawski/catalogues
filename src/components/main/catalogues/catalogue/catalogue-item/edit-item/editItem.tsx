@@ -77,6 +77,7 @@ const EditItem = (props: Props) => {
             <div className={styles.buttons}>
                 <Button
                     className={styles.closeButton}
+                    disabled={item.isSubmitting}
                     loading={delayCompleated}
                     onClick={props.onEditConfirm}
                 >
@@ -84,9 +85,10 @@ const EditItem = (props: Props) => {
                 </Button>
                 <Button
                     className={styles.closeButton}
+                    disabled={item.isSubmitting}
                     onClick={props.onCancel}
                 >
-                    Close
+                    Cancel
                 </Button>
             </div>
         </div>

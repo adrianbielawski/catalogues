@@ -1,14 +1,9 @@
 @import "global-styles/variables_and_mixins";
 
 .longTextField {
-    display: flex;
-    align-items: center;
     margin: 5px auto;
     min-height: 30px;
     width: 100%;
-    &.active {
-        align-items: flex-start;
-    }
     .content {
         width: 100%;
         font-size: 18px;
@@ -16,24 +11,13 @@
         margin-left: 5px;
         box-sizing: border-box;
         border: none;
-        overflow-wrap: anywhere;
-        @include scroll;
+        @include clipText;
         textarea {
             resize: none;
             width: 100%;
             font-size: 16px;
             box-sizing: border-box;
-        }
-    }
-}
-
-@media only screen and (max-width: 800px) {
-    .longTextField {
-        &.active {
-            flex-direction: column;
-            .content {
-                margin: 5px 0 0 0;
-            }
+        @include scrollY;
         }
     }
 }

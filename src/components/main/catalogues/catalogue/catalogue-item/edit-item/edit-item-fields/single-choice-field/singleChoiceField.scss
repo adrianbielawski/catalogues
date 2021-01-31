@@ -4,9 +4,8 @@
     display: flex;
     align-items: center;
     margin: 5px auto;
-    min-height: 30px;
-    max-width: 100%;
     &.active {
+        flex-direction: column;
         align-items: flex-start;
     }
     .content {
@@ -17,29 +16,14 @@
         color: $darkGrey;
         margin: 0 0 0 5px;
         box-sizing: border-box;
-        overflow: hidden;
-        overflow-wrap: anywhere;
+        @include clipText;
         &.active ul {
             margin: 3px 0 10px 10px;
             padding-right: 20px;
             overflow-y: scroll;
             @include scrollBar;
-        }
-        .confirmButton {
-            margin: 2px 0 0 10px;
-        }
-    }
-}
-
-@media only screen and (max-width: 800px) {
-    .singleChoiceField {
-        &.active {
-            flex-direction: column;
-            .content {
-                margin: 5px 0 0 0;
-                &.active {
-                    margin: 5px 0 0 10px;
-                }
+            &::-webkit-scrollbar-track {
+                background: #fff;
             }
         }
     }

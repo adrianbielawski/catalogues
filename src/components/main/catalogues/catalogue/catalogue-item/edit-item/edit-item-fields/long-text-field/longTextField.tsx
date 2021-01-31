@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import classNames from 'classnames/bind'
 import styles from './longTextField.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
@@ -15,8 +14,6 @@ interface Props {
     field: DeserializedField,
     fieldValue?: DeserializedItemField,
 }
-
-const cx = classNames.bind(styles)
 
 const LongTextField = (props: Props) => {
     const dispatch = useDispatch()
@@ -36,25 +33,8 @@ const LongTextField = (props: Props) => {
         setIsEditing(false)
     }
 
-    const fieldClass = cx(
-        'longTextField',
-        {
-            active: isEditing
-        },
-    )
-
-    const getValue = () => {
-        if (props.fieldValue === undefined) {
-            return
-        } else if (props.fieldValue.value.length > 40) {
-            return `${props.fieldValue.value.slice(0, 40)}...`
-        } else {
-            return props.fieldValue.value
-        }
-    }
-
     return (
-        <li className={fieldClass}>
+        <li className={styles.longTextField}>
             <EditableFieldTitle
                 title={props.field.name}
                 isEditing={isEditing}
@@ -69,7 +49,7 @@ const LongTextField = (props: Props) => {
                             onConfirm={handleConfirm}
                         />
                     )
-                    : getValue()
+                    : props.fieldValue?.value
                 }
             </div>
         </li>
