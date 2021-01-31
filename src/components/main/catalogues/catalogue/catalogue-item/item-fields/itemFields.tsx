@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './itemFields.scss'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
@@ -15,14 +14,12 @@ type Props = {
 
 const ItemFields = (props: Props) => {
     const itemFields = useTypedSelector(itemFieldsSelector(props.item.catalogueId, props.item.id))
-    const screenWidth = window.innerWidth
-    const maxHeight = screenWidth <= 640 ? 25 : 73
-
+    const maxHeight = window.innerWidth <= 800 ? 55 : 95
     const itemsProps = { catalogueId: props.item.catalogueId }
 
     return (
         <CollapsableList >
-            <div className={styles.itemFields}>
+            <>
                 <CollapsableList.List
                     items={itemFields}
                     itemsProps={itemsProps}
@@ -30,7 +27,7 @@ const ItemFields = (props: Props) => {
                     itemComponent={Field}
                 />
                 <CollapsableList.Button />
-            </div>
+            </>
         </CollapsableList>
     )
 }

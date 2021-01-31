@@ -1,6 +1,11 @@
+@import "global-styles/variables_and_mixins";
+
 .field {
-    display: flex;
-    .value {
-        margin-left: 5px;
+    &.collapsed {
+        @include clipText;
+    }
+    .name {
+        font-weight: 700;
+        padding-right: 5px;
     }
 }
