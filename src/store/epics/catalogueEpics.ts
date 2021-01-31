@@ -1,5 +1,5 @@
 import { combineEpics, ofType } from "redux-observable"
-import { concat, of, from, defer } from 'rxjs'
+import { concat, of, from, defer, forkJoin } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen } from 'rxjs/operators'
 import axiosInstance from "src/axiosInstance"
 //Store observables
@@ -12,6 +12,7 @@ import {
     CATALOGUES_REFRESH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD,
     CATALOGUES_REFRESH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS,
     CATALOGUES_FETCH_FIELDS_CHOICES,
+    CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_SUCCESS,
     CATALOGUES_REFRESH_CATALOGUE_ITEM,
     FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
     FetchFieldsChoices, FetchCatalogueItems, SaveItem, FetchCatalogueItem,
@@ -32,8 +33,10 @@ import {
     fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
     fetchCatalogueItemStart, fetchCatalogueItemSuccess, fetchCatalogueItemFailure,
     fetchCatalogueItemsStart, fetchCatalogueItemsSuccess, fetchCatalogueItemsFailure,
-    saveItemStart, saveItemSuccess, saveItemFailure,
+    saveItemStart, saveItemSuccess, saveItemFailure, fetchCatalogueItem
 } from "store/actions/cataloguesActions"
+import { itemFieldSerializer } from "src/serializers"
+import { DeserializedImage } from "src/globalTypes"
 
 export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
     ofType<AppActionTypes, FetchCatalogues>(CATALOGUES_FETCH_CATALOGUES),
@@ -168,24 +171,53 @@ export const saveItemEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, SaveItem>(CATALOGUES_SAVE_ITEM),
     switchMap(action => {
         const filteredValues = action.item.fieldsValues.filter(v => v.value.length > 0)
-        const values = filteredValues.map(field => ({
-            field_id: field.fieldId,
-            value: field.value,
-        }))
+        const values = filteredValues.map(itemFieldSerializer)
 
-        const axiosMethod = action.item.id.toString().startsWith('newItem')
-            ? axiosInstance.post
-            : axiosInstance.patch
+        let request$
 
-        return concat(
-            of(saveItemStart(action.catalogueId)),
-            from(axiosMethod('/items/', {
+        if (action.item.id.toString().startsWith('newItem')) {
+            request$ = from(axiosInstance.post('/items/', {
                 catalogue_id: action.catalogueId,
                 values,
-                images: action.item.images,
-            })).pipe(
-                mergeMap((response) => of(saveItemSuccess(action.catalogueId, action.item.id, response.data))),
-                catchError(() => of(saveItemFailure(action.catalogueId)))
+            }))
+        } else {
+            request$ = from(axiosInstance.patch(`/items/${action.item.id}/`, {
+                values,
+            }))
+        }
+
+        const imagesRequests$ = (itemId: number) => {
+            const isNew = (img: DeserializedImage) => img.id.toString().startsWith('newImage')
+            const { images, removedImages } = action.item
+
+            return forkJoin([
+                ...images.filter(isNew).map(img => {
+                    const data = new FormData()
+                    data.append('image', img.image)
+                    data.append('item_id', JSON.stringify(itemId))
+                    data.append('is_primary', JSON.stringify(img.isPrimary))
+                    return from(axiosInstance.post('/images/', data))
+                }),
+
+                ...removedImages.map(img => from(axiosInstance.delete(`/images/${img.id}/`))),
+
+                // Set primary flag only on existing images. If a new image is primary,
+                // it gets the flag set at creation time.
+                ...images.filter(img => !isNew(img) && img.isPrimary).map(
+                    primary => from(axiosInstance.patch(`/images/${primary.id}/`, {
+                        is_primary: true
+                    }))
+                ),
+            ])
+        }
+
+        return concat(
+            of(saveItemStart(action.catalogueId, action.item.id)),
+            request$.pipe(
+                mergeMap(response => imagesRequests$(response.data.id).pipe(
+                    mergeMap(() => of(saveItemSuccess(action.catalogueId, response.data.id, action.item.id))),
+                    catchError(() => of(saveItemFailure(action.catalogueId, action.item.id)))
+                ))
             )
         )
     })

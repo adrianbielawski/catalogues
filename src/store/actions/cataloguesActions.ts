@@ -12,7 +12,8 @@ import {
     CATALOGUES_FETCH_FIELDS_CHOICES, CATALOGUES_FETCH_FIELDS_CHOICES_START, CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS, CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE,
     CATALOGUES_TOGGLE_EDIT_ITEM,
     CATALOGUES_CHANGE_ITEM_FIELD_VALUE,
-    CATALOGUES_ADD_IMAGE_TO_STATE, CATALOGUES_REMOVE_IMAGE_FROM_STATE, CATALOGUES_CHANGE_PRIMARY_IMAGE,
+    CATALOGUES_ADD_IMAGE_TO_STATE,
+    CATALOGUES_REMOVE_IMAGE_FROM_STATE, CATALOGUES_CHANGE_PRIMARY_IMAGE,
     CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
 } from 'store/storeTypes/cataloguesTypes'
 
@@ -250,19 +251,25 @@ export const saveItem = (catalogueId: number, item: DeserializedItem): AppAction
     item,
 })
 
-export const saveItemStart = (catalogueId: number): AppActionTypes => ({
+export const saveItemStart = (catalogueId: number, itemId: number | string): AppActionTypes => ({
     type: CATALOGUES_SAVE_ITEM_START,
     catalogueId,
+    itemId,
 })
 
-export const saveItemSuccess = (catalogueId: number, previousId: number | string, item: Item): AppActionTypes => ({
+export const saveItemSuccess = (
+    catalogueId: number,
+    itemId: number,
+    prevId: number| string
+): AppActionTypes => ({
     type: CATALOGUES_SAVE_ITEM_SUCCESS,
     catalogueId,
-    previousId,
-    item,
+    itemId,
+    prevId,
 })
 
-export const saveItemFailure = (catalogueId: number): AppActionTypes => ({
+export const saveItemFailure = (catalogueId: number, itemId: number | string): AppActionTypes => ({
     type: CATALOGUES_SAVE_ITEM_FAILURE,
     catalogueId,
+    itemId,
 })

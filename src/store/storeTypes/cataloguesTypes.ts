@@ -245,18 +245,20 @@ export interface SaveItem {
 interface SaveItemStart {
     type: typeof CATALOGUES_SAVE_ITEM_START,
     catalogueId: number,
+    itemId: number | string,
 }
 
-interface SaveItemSuccess {
+export interface SaveItemSuccess {
     type: typeof CATALOGUES_SAVE_ITEM_SUCCESS,
     catalogueId: number,
-    previousId: number | string,
-    item: Item,
+    itemId: number,
+    prevId: number | string,
 }
 
 interface SaveItemFailure {
     type: typeof CATALOGUES_SAVE_ITEM_FAILURE,
     catalogueId: number,
+    itemId: number | string,
 }
 
 export type CataloguesTypes =

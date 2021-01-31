@@ -343,22 +343,14 @@ const cataloguesReducer = (
         }
 
         case 'CATALOGUES/SAVE_ITEM/START': {
-            const catalogue = getCatalogueById(newState, action.catalogueId)
-            catalogue.isAddingItem = true
-            return newState
-        }
-
-        case 'CATALOGUES/SAVE_ITEM/SUCCESS': {
-            const catalogue = getCatalogueById(newState, action.catalogueId)
-            const item = getItemById(newState, action.catalogueId, action.previousId)
-            Object.assign(item, itemDeserializer(action.item))
-            catalogue.isAddingItem = false
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            item.isSubmitting = true
             return newState
         }
 
         case 'CATALOGUES/SAVE_ITEM/FAILURE': {
-            const catalogue = getCatalogueById(newState, action.catalogueId)
-            catalogue.isAddingItem = false
+            const item = getItemById(newState, action.catalogueId, action.itemId)
+            item.isSubmitting = false
             return newState
         }
 

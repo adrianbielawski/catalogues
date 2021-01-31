@@ -40,7 +40,6 @@ export interface DeserializedCatalogue {
     isSubmittingCatalogueName: boolean,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
-    isAddingItem: boolean,
 }
 
 export interface ItemsData extends ListData {
@@ -110,6 +109,11 @@ export interface ItemField {
     value: string | string[],
 }
 
+export interface SerializedItemField {
+    field_id: number,
+    value: string | string[],
+}
+
 export interface DeserializedItemField {
     itemId: number | string,
     fieldId: number,
@@ -169,6 +173,12 @@ export type Image = {
     id: number | null,
     image: string,
     image_thumbnail: string,
+    is_primary: boolean
+    item_id: number | string
+}
+
+export type SerializedImage = {
+    image: string,
     is_primary: boolean
     item_id: number | string
 }

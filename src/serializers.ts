@@ -2,7 +2,7 @@ import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
     DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
-    Image, DeserializedImage,
+    Image, DeserializedImage, SerializedItemField,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -36,7 +36,6 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     isSubmittingCatalogueName: false,
     isAddFieldFormActive: false,
     isSubmittingNewField: false,
-    isAddingItem: false,
 })
 
 export const itemsDataDeserializer = (
@@ -70,6 +69,11 @@ export const listDeserializer = (
 export const itemFieldDeserializer = (field: ItemField): DeserializedItemField => ({
     itemId: field.item_id,
     fieldId: field.field_id,
+    value: field.value,
+})
+
+export const itemFieldSerializer = (field: DeserializedItemField): SerializedItemField => ({
+    field_id: field.fieldId,
     value: field.value,
 })
 
