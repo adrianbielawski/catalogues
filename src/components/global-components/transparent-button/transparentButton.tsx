@@ -1,9 +1,11 @@
 import React from 'react'
 import classNames from 'classnames/bind'
 import styles from './transparentButton.scss'
+import Loader from '../loader/loader'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ComponentType<any> | string | HTMLElement | JSX.Element,
+    loading?: boolean,
     className?: string,
     onClick: () => void,
 }
@@ -11,7 +13,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const cx = classNames.bind(styles)
 
 const TransparentButton = (props: Props) => {
-    const { className, onClick, ...rest } = props
+    const { className, loading, onClick, ...rest } = props
     const transparentButtonClass = cx(
         'transparentButton',
         className,
@@ -19,7 +21,10 @@ const TransparentButton = (props: Props) => {
 
     return (
         <button className={transparentButtonClass} onClick={onClick} { ...rest }>
-            {props.children}
+            {loading
+                ? <Loader size={25} />
+                : props.children
+            }
         </button>
     )
 }
