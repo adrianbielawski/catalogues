@@ -146,9 +146,9 @@ const ImagesCarousel = (props: Props) => {
             const dynamicStyles = getDynamicStyles(i)
 
             const IMG = props.images[mod(i, count)]
-            const IMAGE_URL = IMG.id !== null
-            ? `${BASE_URL}${IMG.imageThumbnail}`
-            : IMG.image
+            const IMAGE_URL = IMG.id.toString().startsWith('newImage')
+            ? URL.createObjectURL(IMG.image)
+            : `${BASE_URL}${IMG.imageThumbnail}`
 
             items.push(
                 <li key={i}>

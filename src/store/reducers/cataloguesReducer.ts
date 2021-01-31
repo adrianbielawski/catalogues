@@ -257,6 +257,7 @@ const cataloguesReducer = (
                 catalogueId: action.catalogueId,
                 fieldsValues: [],
                 images: [],
+                removedImages: [],
                 isEditing: true,
                 isSubmitting: false,
             }
@@ -293,11 +294,12 @@ const cataloguesReducer = (
 
         case 'CATALOGUES/ADD_IMAGE_TO_STATE': {
             const item = getItemById(newState, action.catalogueId, action.itemId)
+
             const image = {
-                id: null,
-                image: URL.createObjectURL(action.image),
+                id: `newImage${Date.now()}`,
+                image: action.image,
                 imageThumbnail: '',
-                isPrimary: item.images.length === 0 ? true : false,
+                isPrimary: item.images.length === 0,
                 itemId: item.id,
             }
             item.images.push(image)
@@ -306,9 +308,15 @@ const cataloguesReducer = (
 
         case 'CATALOGUES/REMOVE_IMAGE_FROM_STATE': {
             const item = getItemById(newState, action.catalogueId, action.itemId)
-            if (item.images[action.index].isPrimary === true) {
+            const removedImage = item.images[action.index]
+
+            if (removedImage.isPrimary) {
                 let newPrimaryIndex = mod(action.index + 1, item.images.length)
                 item.images[newPrimaryIndex].isPrimary = true
+            }
+
+            if (!removedImage.id.toString().startsWith('newImage')) {
+                item.removedImages.push(removedImage)
             }
             item.images.splice(action.index, 1)
             return newState
@@ -316,8 +324,8 @@ const cataloguesReducer = (
 
         case 'CATALOGUES/CHANGE_PRIMARY_IMAGE': {
             const item = getItemById(newState, action.catalogueId, action.itemId)
-            const prevMain = item.images.findIndex(img => img.isPrimary === true)
-            item.images[prevMain].isPrimary = false
+            const prevPrimary = item.images.findIndex(img => img.isPrimary)
+            item.images[prevPrimary].isPrimary = false
             item.images[action.index].isPrimary = true
             return newState
         }

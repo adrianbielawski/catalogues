@@ -161,18 +161,18 @@ export const changeItemFieldValue = (
 export const addImageToState = (
     catalogueId: number,
     itemId: number | string,
-    image: File
+    image: File,
 ): AppActionTypes => ({
     type: CATALOGUES_ADD_IMAGE_TO_STATE,
     catalogueId,
     itemId,
-    image,
+    image, 
 })
 
 export const removeImageFromState = (
     catalogueId: number,
     itemId: number | string,
-    index: number
+    index: number,
 ): AppActionTypes => ({
     type: CATALOGUES_REMOVE_IMAGE_FROM_STATE,
     catalogueId,

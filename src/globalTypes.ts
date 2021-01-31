@@ -99,6 +99,7 @@ export interface DeserializedItem {
     catalogueId: number,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
+    removedImages: DeserializedImage[],
     isEditing: boolean,
     isSubmitting: boolean,
 }
@@ -173,8 +174,8 @@ export type Image = {
 }
 
 export type DeserializedImage = {
-    id: number | null,
-    image: string,
+    id: number | string,
+    image: string | File,
     imageThumbnail: string,
     isPrimary: boolean
     itemId: number | string

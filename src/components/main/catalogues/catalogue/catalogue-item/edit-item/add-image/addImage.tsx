@@ -81,7 +81,10 @@ const AddImage = (props: Props) => {
                 onChange={handleImageChange}
             />
             <div className={contentClass}>
-                {image !== undefined ? <ImagePreview image={image} onClick={showFileExplorer} /> : null}
+                {image !== undefined
+                    ? <ImagePreview image={image} onClick={showFileExplorer} />
+                    : null
+                }
                 <div className={styles.buttons}>
                     <TransparentButton className={styles.confirm} onClick={handleConfirm}>
                         <FontAwesomeIcon icon={faCheck} />

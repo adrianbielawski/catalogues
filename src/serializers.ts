@@ -81,6 +81,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     catalogueId: item.catalogue_id,
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
+    removedImages: [],
     isEditing: false,
     isSubmitting: false,
 })
@@ -140,7 +141,7 @@ export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
 )
 
 export const imageDeserializer = (image: Image): DeserializedImage => ({
-    id: image.id,
+    id: image.id as number,
     image: image.image,
     imageThumbnail: image.image_thumbnail,
     isPrimary: image.is_primary,

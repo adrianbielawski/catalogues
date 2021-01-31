@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './mainImage.scss'
 
+const BASE_URL = process.env.API_URL
+
 type Props = {
     imgURL?: string,
     className?: string,
@@ -33,9 +35,8 @@ const MainImage = (props: Props) => {
     )
 
     return (
-        <div className={imageClass} style={{ maxHeight: `${maxHeight}px` }} ref={imageRef}>
-            {props.imgURL! !== undefined
-                ? <img className={styles.img} src={props.imgURL} />
+            {props.imgURL !== undefined
+                ? <img className={styles.img} src={`${BASE_URL}${props.imgURL}`} />
                 : <div className={styles.placeholder}>No image</div>
             }
         </div>
