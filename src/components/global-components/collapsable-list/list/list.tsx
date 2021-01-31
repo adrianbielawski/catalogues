@@ -20,7 +20,11 @@ const List = (props: Props) => {
         const ItemComponent = props.itemComponent
         return props.items.map((item, i) => (
             <li className={styles.item} key={i}>
-                <ItemComponent item={item} itemProps={props.itemsProps} />
+                <ItemComponent
+                    item={item}
+                    itemProps={props.itemsProps}
+                    isShowingAllItems={state.showAllItems}
+                />
             </li>
         ))
     }
@@ -29,14 +33,14 @@ const List = (props: Props) => {
         const items = listRef.current!.children
 
         let maxH = 0
-        let maxCollapsedH = props.maxHeight
+        let maxHeightCollapsed = props.maxHeight
         let itemsInView = props.items.length
         for (let i = 0; i < items!.length; i++) {
             const itemH = items![i].getBoundingClientRect().height
             let newH = maxH + itemH
             if (itemsInView === props.items.length && newH > props.maxHeight) {
                 itemsInView = i
-                maxCollapsedH = maxH
+                maxHeightCollapsed = maxH
                 maxH = newH
             } else {
                 maxH = newH
@@ -46,19 +50,19 @@ const List = (props: Props) => {
             type: 'ITEMS_INSPECTED',
             itemsInView,
             maxHeight: maxH,
-            maxHeightCollapsed: maxCollapsedH,
+            maxHeightCollapsed: maxHeightCollapsed,
         })
     }
 
     useEffect(() => {
         inspectItemsHeight()
-    }, [props.items])
+    }, [props.items, state.showAllItems])
 
     const getDynamicStyles = () => {
-        if (!state.showAllItems) {
-            return { maxHeight: state.maxHeightCollapsed }
-        } else {
+        if (state.showAllItems) {
             return { maxHeight: state.maxHeight }
+        } else {
+            return { maxHeight: state.maxHeightCollapsed }
         }
     }
 

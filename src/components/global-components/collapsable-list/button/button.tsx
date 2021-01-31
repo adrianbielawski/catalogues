@@ -15,7 +15,8 @@ const cx = classNames.bind(styles)
 
 const Button = (props: Props) => {
     const { dispatch, ...state } = useContext(ListContext)
-    
+    const { className, ...rest } = props
+
     const handleClick = () => {
         dispatch({ type: 'BUTTON_CLICKED' })
     }
@@ -26,13 +27,23 @@ const Button = (props: Props) => {
     )
 
     return (
-        <div className={buttonClass} onClick={handleClick}>
-            <span>{state.showAllItems ? 'Show less' : 'Show more'}</span>
-            <FontAwesomeIcon
-                icon={state.showAllItems ? faLongArrowAltUp : faLongArrowAltDown}
-                className={styles.arrow}
-            />
-        </div>
+        state.maxHeightCollapsed < state.maxHeight
+            ? (
+                <button
+                    className={buttonClass}
+                    onClick={handleClick}
+                    {...rest}
+                >
+                    <>
+                        <span>{state.showAllItems ? 'Show less' : 'Show more'}</span>
+                        <FontAwesomeIcon
+                            icon={state.showAllItems ? faLongArrowAltUp : faLongArrowAltDown}
+                            className={styles.arrow}
+                        />
+                    </>
+                </button>
+            )
+            : null
     )
 }
 
