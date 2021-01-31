@@ -1,32 +1,42 @@
 @import "global-styles/variables_and_mixins";
 
 .mainImage {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 150px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-grow: 1;
     .img {
         max-width: 100%;
         max-height: 100%;
     }
     .placeholder {
         font-weight: 700;
+        font-size: 1.3em;
         color: $midLightGrey;
-        min-width: 100px;
-        min-height: 100px;
+        width: 150px;
+        height: 150px;
         border: 1px dotted $grey;
+        box-sizing: border-box;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 }
 
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 800px) {
     .mainImage {
         min-width: 100%;
+        height: auto;
+        .img {
+            max-width: 100%;
+            max-height: 600px;
+        }
         .placeholder {
-            min-width: 100%;
+            width: 100%;
+            height: 100px;
+            font-size: 1.4em;
         }
     }
 }
