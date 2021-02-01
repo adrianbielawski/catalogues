@@ -20,7 +20,6 @@ type Params = {
 const Catalogue = (props: RouteComponentProps<Params>) => {
     const dispatch = useDispatch()
     const catalogue = useTypedSelector(catalogueSelectorBySlug(props.match.params.slug))
-    const screenWidth = window.innerWidth
 
     useEffect(() => {
         dispatch(fetchCatalogueFields(catalogue.id))
@@ -30,29 +29,33 @@ const Catalogue = (props: RouteComponentProps<Params>) => {
         dispatch(addItemToState(catalogue.id))
     }
 
+    const getAddItemButton = () => {
+        if (window.innerWidth > 640) {
+            return (
+                <AddButton
+                    text="Add new item"
+                    className={styles.addItemButton}
+                    onClick={handleAddItem}
+                />
+            )
+        } else {
+            return <FixedAddButton onClick={handleAddItem} />
+        }
+    }
+
     return (
-        catalogue.fetchingFields
-            ? <Loader />
-            : (
-                <div className={styles.catalogue}>
-                    <FiltersBar />
+        <div className={styles.catalogue}>
+            <FiltersBar />
+            {catalogue.fetchingFields
+                ? <Loader className={styles.loader} />
+                : (
                     <div id="catalogueMainContent" className={styles.mainContent}>
-                        {screenWidth > 640
-                            ? (
-                                <AddButton
-                                    text="Add new item"
-                                    className={styles.addItemButton}
-                                    onClick={handleAddItem}
-                                />
-                            )
-                            : (
-                                <FixedAddButton onClick={handleAddItem} />
-                            )
-                        }
+                        {getAddItemButton()}
                         <CatalogueItems catalogueId={catalogue.id} />
                     </div>
-                </div>
-            )
+                )
+            }
+        </div>
     )
 }
 
