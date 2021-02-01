@@ -23,7 +23,7 @@ const Catalogue = (props: RouteComponentProps<Params>) => {
 
     useEffect(() => {
         dispatch(fetchCatalogueFields(catalogue.id))
-    }, [])
+    }, [catalogue.id])
 
     const handleAddItem = () => {
         dispatch(addItemToState(catalogue.id))

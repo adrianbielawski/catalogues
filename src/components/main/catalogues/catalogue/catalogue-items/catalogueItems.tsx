@@ -28,7 +28,6 @@ const CatalogueItems = (props: Props) => {
         ))
     }
 
-
     return (
         catalogue.fetchingItems
             ? <Loader className={styles.loader} />
