@@ -123,6 +123,20 @@ const Catalogues = () => {
         history.push(`/${user!.id}/settings/account/manage-catalogues`)
     }
 
+    const getNoCatalogueMessage = () => {
+        return (
+            <div className={styles.noContent}>
+                <p>You have no catalogues yet,</p>
+                <p
+                    className={styles.anchor}
+                    onClick={handleRedirectToSettings}
+                >
+                    click here to create your first catalogue
+                </p>
+            </div>
+        )
+    }
+
     const NAV_CONTENT: ItemType[] = [
         {
             title: 'Catalogues',
@@ -172,33 +186,23 @@ const Catalogues = () => {
                         extraItems={extraNavItems}
                         className={styles.nav}
                     />
-                    <Suspense fallback={<Loader />}>
-                        <Switch>
-                            {catalogues.length > 0 &&
-                                <Redirect
-                                    exact
-                                    from="/:userId/catalogues"
-                                    to={`/:userId/catalogues/${catalogues[0].slug}`}
-                                />
-                            }
-                            <Route
-                                path="/:userId/catalogues/:slug"
-                                component={Catalogue}
-                            />
-                        </Switch>
-                    </Suspense>
-                    {catalogues.length === 0 &&
-                        <div className={styles.noContent}>
-                            <p>
-                                You have no catalogues yet,
-                            </p>
-                            <p
-                                className={styles.anchor}
-                                onClick={handleRedirectToSettings}
-                            >
-                                click here to create your first catalogue
-                            </p>
-                        </div>
+                    {catalogues.length === 0
+                        ? getNoCatalogueMessage()
+                        : (
+                            <Suspense fallback={<Loader />}>
+                                <Switch>
+                                    <Redirect
+                                        exact
+                                        from="/:userId/catalogues"
+                                        to={`/:userId/catalogues/${catalogues[0].slug}`}
+                                    />
+                                    <Route
+                                        path="/:userId/catalogues/:slug"
+                                        component={Catalogue}
+                                    />
+                                </Switch>
+                            </Suspense>
+                        )
                     }
                 </div>
             }
