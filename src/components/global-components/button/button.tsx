@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styles from './button.scss'
 import classNames from 'classnames/bind'
 import Loader from '../loader/loader'
@@ -11,16 +11,28 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const cx = classNames.bind(styles)
 
 const Button = (props: Props) => {
-    const { loading, ...rest } = props
+    const { className, loading, ...rest } = props
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    const [width, setWidth] = useState(0)
+
+    useEffect(() => {
+        setWidth(buttonRef.current!.getBoundingClientRect().width)
+    }, [])
+
     const buttonClass = cx(
         'button',
-        props.className,
+        className,
     )
 
     return (
-        <button {...rest} className={buttonClass}>
+        <button
+            className={buttonClass}
+            style={loading ? { minWidth: `${width}px` } : {}}
+            ref={buttonRef}
+            {...rest}
+        >
             {props.loading
-                ? <Loader size={25} />
+                ? <Loader className={styles.loader} size={25} />
                 : props.children
             }
         </button>
