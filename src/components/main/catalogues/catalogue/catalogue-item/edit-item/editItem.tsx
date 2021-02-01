@@ -28,7 +28,6 @@ const EditItem = (props: Props) => {
     const delayCompleated = useDelay(item.isSubmitting)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
-    const screenWidth = window.innerWidth
 
     useEffect(() => {
         if (editItemRef.current && props.show) {
@@ -64,7 +63,7 @@ const EditItem = (props: Props) => {
         <div className={styles.editItem} ref={editItemRef} >
             {item.images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
             <ImagesCarousel
-                width={screenWidth > 800 ? width * .8 : width}
+                width={width}
                 images={item.images}
                 onRemove={handleImageRemove}
                 onChange={handleImageChange}
