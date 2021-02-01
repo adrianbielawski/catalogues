@@ -45,9 +45,10 @@ const EditableField = (props: Props) => {
 
     const getField = () => {
         if (props.isEditing && props.onConfirm !== undefined) {
+            const value = !props.hiddenContent ? props.content[inputCount] : ''
             return (
                 <InputWithConfirmButton
-                    defaultValue={props.content[inputCount]}
+                    defaultValue={value}
                     loading={delayCompleated}
                     {...props.inputProps}
                     autoFocus
