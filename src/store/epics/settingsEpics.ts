@@ -1,7 +1,7 @@
+import { combineEpics, ofType } from "redux-observable"
+import { axiosInstance$ } from "src/axiosInstance"
 import { of, from, concat, forkJoin } from 'rxjs'
 import { catchError, mapTo, mergeMap, switchMap } from 'rxjs/operators'
-import axiosInstance from "src/axiosInstance"
-import { combineEpics, ofType } from "redux-observable"
 //Store types
 import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
 import { 
@@ -27,9 +27,9 @@ import {
 export const changeUsernameEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, ChangeUsername>(MY_ACCOUNT_CHANGE_USERNAME),
     switchMap((action) =>
-        from(axiosInstance.patch('/user/', {
+        axiosInstance$.patch('/user/', {
             username: action.newName
-        })).pipe(
+        }).pipe(
             mergeMap((response) => of(
                 changeUsernameSuccess(response.data)
             )),
@@ -41,10 +41,10 @@ export const changeUsernameEpic: EpicType = action$ => action$.pipe(
 export const changePasswordEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, ChangePassword>(MY_ACCOUNT_CHANGE_PASSWORD),
     switchMap((action) =>
-        from(axiosInstance.post('/password/change/', {
+        axiosInstance$.post('/password/change/', {
             new_password1: action.newPassword1,
             new_password2: action.newPassword2
-        })).pipe(
+        }).pipe(
             mergeMap(() => of(changePasswordSuccess())),
             catchError(err => of(changePasswordFailure()))
         )
@@ -55,9 +55,9 @@ export const createCatalogueEpic: EpicType = action$ => action$.pipe(
     ofType(MANAGE_CATALOGUES_CREATE_CATALOGUE),
     switchMap(() => concat(
         of(createCatalogueStart()),
-        from(axiosInstance.post('/catalogues/', {
+        axiosInstance$.post('/catalogues/', {
             name: 'New catalogue'
-        })).pipe(
+        }).pipe(
             mergeMap((res) => of(createCatalogueSuccess(res.data))),
             catchError(() => of(createCatalogueFailure()))
         )
@@ -69,11 +69,11 @@ export const changeCatalogueNameEpic: EpicType = action$ => action$.pipe(
     switchMap((action) => concat(
         of(changeCatalogueNameStart(action.catalogueId)),
         forkJoin([concat(
-            from(axiosInstance.patch(`/catalogues/${action.catalogueId}/`, {
+            axiosInstance$.patch(`/catalogues/${action.catalogueId}/`, {
                 name: action.newName
-            })),
-            from(axiosInstance.get(`/catalogues/${action.catalogueId}`))
-        )]).pipe(
+            }),
+            axiosInstance$.get(`/catalogues/${action.catalogueId}`))
+        ]).pipe(
             mergeMap(response => of(changeCatalogueNameSuccess(response[0].data))),
             catchError(() => of(changeCatalogueNameFailure(action.catalogueId)))
         )
@@ -84,9 +84,9 @@ export const postTextFieldNameChangeEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, PostTextFieldNameChange>(MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE),
     switchMap(action => concat(
         of(postTextFieldNameChangeStart(action.fieldId, action.catalogueId)),
-        from(axiosInstance.patch(`/fields/${action.fieldId}/`, {
+        axiosInstance$.patch(`/fields/${action.fieldId}/`, {
             name: action.fieldName,
-        })).pipe(
+        }).pipe(
             mapTo(postTextFieldNameChangeSuccess(action.fieldId, action.catalogueId)),
             catchError(() => of(postTextFieldNameChangeFailure(action.fieldId, action.catalogueId)))
         ))
@@ -103,19 +103,19 @@ export const postChoiceFieldChangesEpic: EpicType = action$ => action$.pipe(
         if (removedChoices.length || newChoices.length) {
             requests.push(concat(
                 from(removedChoices).pipe(
-                    mergeMap(choice => from(axiosInstance.delete(`/choices/${choice.id}/`)))
+                    mergeMap(choice => axiosInstance$.delete(`/choices/${choice.id}/`))
                 ),
                 from(newChoices).pipe(
-                    mergeMap(choice => from(axiosInstance.post(`/choices/`, {
+                    mergeMap(choice => axiosInstance$.post(`/choices/`, {
                         field_id: choice.fieldId,
                         value: choice.value,
-                    }))),
+                    })),
                 ),
             ))
         }
-        requests.push(from(axiosInstance.patch(`/fields/${action.field.id}/`, {
+        requests.push(axiosInstance$.patch(`/fields/${action.field.id}/`, {
             name: action.fieldName,
-        })))
+        }))
 
         return concat(
             of(postChoiceFieldChangesStart(action.field.id, action.field.catalogueId)),
@@ -131,12 +131,12 @@ export const createCatalogueFieldEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, CreateCatalogueField>(MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD),
     switchMap(action => concat(
         of(createCatalogueFieldStart(action.catalogueId)),
-        from(axiosInstance.post(`/fields/`, {
+        axiosInstance$.post(`/fields/`, {
             name: action.fieldName,
             catalogue_id: action.catalogueId,
             type: action.fieldType,
             position: action.position,
-        })).pipe(
+        }).pipe(
             mapTo(createCatalogueFieldSuccess(action.catalogueId)),
             catchError(() => of(createCatalogueFieldFailure(action.catalogueId)))
         ))

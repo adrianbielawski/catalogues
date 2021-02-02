@@ -1,16 +1,28 @@
-import axios from 'axios';
+import axios from 'axios'
+import Axios from 'axios-observable'
 
-const instance = axios.create({
+export const axiosInstance = axios.create({
     baseURL: process.env.API_URL,
-});
+})
 
-instance.interceptors.request.use(request => {
-    const token = localStorage.getItem('token');
+axiosInstance.interceptors.request.use(request => {
+    const token = localStorage.getItem('token')
     if (token) {
-        request.headers.Authorization = `Token ${token}`;
+        request.headers.Authorization = `Token ${token}`
     }
 
-    return request;
-});
+    return request
+})
 
-export default instance;
+export const axiosInstance$ = Axios.create({
+    baseURL: process.env.API_URL,
+})
+
+axiosInstance$.interceptors.request.use(request => {
+    const token = localStorage.getItem('token')
+    if (token) {
+        request.headers.Authorization = `Token ${token}`
+    }
+
+    return request
+})

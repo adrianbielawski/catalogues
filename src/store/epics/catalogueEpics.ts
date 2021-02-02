@@ -1,7 +1,7 @@
 import { combineEpics, ofType } from "redux-observable"
-import { concat, of, from, defer, forkJoin } from 'rxjs'
+import { axiosInstance$ } from "src/axiosInstance"
+import { concat, of, defer, forkJoin } from 'rxjs'
 import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen } from 'rxjs/operators'
-import axiosInstance from "src/axiosInstance"
 //Store observables
 import { retry$ } from "store/storeObservables"
 //Store types
@@ -43,9 +43,9 @@ export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
     withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
     switchMap(([_, id]) => concat(
         of(fetchCataloguesStart()),
-        from(axiosInstance.get('/catalogues/', {
+        axiosInstance$.get('/catalogues/', {
             params: { created_by: id }
-        })).pipe(
+        }).pipe(
             mergeMap(response => of(fetchCataloguesSuccess(response.data))),
             catchError(() => of(fetchCataloguesFailure()))
         )
@@ -64,7 +64,7 @@ export const fetchCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueFields>(CATALOGUES_FETCH_CATALOGUE_FIELDS),
     mergeMap(action => concat(
         of(fetchCatalogueFieldsStart(action.catalogueId)),
-        defer(() => axiosInstance.get('/fields/', {
+        defer(() => axiosInstance$.get('/fields/', {
             params: { catalogue_id: action.catalogueId }
         })).pipe(
             retryWhen(err => retry$(err)),
@@ -92,7 +92,7 @@ export const fetchCatalogueFieldEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueField>(CATALOGUES_FETCH_CATALOGUE_FIELD),
     mergeMap(action => concat(
         of(fetchCatalogueFieldStart(action.fieldId, action.catalogueId)),
-        defer(() => axiosInstance.get(`/fields/${action.fieldId}/`)).pipe(
+        defer(() => axiosInstance$.get(`/fields/${action.fieldId}/`)).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
                 of(fetchCatalogueFieldSuccess(
@@ -117,7 +117,7 @@ export const fetchCatalogueItemEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueItem>(CATALOGUES_FETCH_CATALOGUE_ITEM),
     mergeMap(action => concat(
         of(fetchCatalogueItemStart(action.catalogueId, action.itemId)),
-        defer(() => axiosInstance.get(`/items/${action.itemId}/`)).pipe(
+        defer(() => axiosInstance$.get(`/items/${action.itemId}/`)).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
                 of(fetchCatalogueItemSuccess(
@@ -135,7 +135,7 @@ export const fetchCatalogueItemsEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchCatalogueItems>(CATALOGUES_FETCH_CATALOGUE_ITEMS),
     mergeMap(action => concat(
         of(fetchCatalogueItemsStart(action.catalogueId)),
-        defer(() => axiosInstance.get('/items/', {
+        defer(() => axiosInstance$.get('/items/', {
             params: {
                 catalogue_id: action.catalogueId
             }
@@ -156,9 +156,9 @@ export const fetchFieldsChoicesEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, FetchFieldsChoices>(CATALOGUES_FETCH_FIELDS_CHOICES),
     mergeMap(action => concat(
         of(fetchFieldsChoicesStart(action.fieldId, action.catalogueId)),
-        from(axiosInstance.get('/choices/', {
+        axiosInstance$.get('/choices/', {
             params: { field_id: action.fieldId }
-        })).pipe(
+        }).pipe(
             mergeMap(response =>
                 of(fetchFieldsChoicesSuccess(action.fieldId, action.catalogueId, response.data))
             ),
@@ -176,14 +176,14 @@ export const saveItemEpic: EpicType = action$ => action$.pipe(
         let request$
 
         if (action.item.id.toString().startsWith('newItem')) {
-            request$ = from(axiosInstance.post('/items/', {
+            request$ = axiosInstance$.post('/items/', {
                 catalogue_id: action.catalogueId,
                 values,
-            }))
+            })
         } else {
-            request$ = from(axiosInstance.patch(`/items/${action.item.id}/`, {
+            request$ = axiosInstance$.patch(`/items/${action.item.id}/`, {
                 values,
-            }))
+            })
         }
 
         const imagesRequests$ = (itemId: number) => {
@@ -196,17 +196,17 @@ export const saveItemEpic: EpicType = action$ => action$.pipe(
                     data.append('image', img.image)
                     data.append('item_id', JSON.stringify(itemId))
                     data.append('is_primary', JSON.stringify(img.isPrimary))
-                    return from(axiosInstance.post('/images/', data))
+                    return axiosInstance$.post('/images/', data)
                 }),
 
-                ...removedImages.map(img => from(axiosInstance.delete(`/images/${img.id}/`))),
+                ...removedImages.map(img => axiosInstance$.delete(`/images/${img.id}/`)),
 
                 // Set primary flag only on existing images. If a new image is primary,
                 // it gets the flag set at creation time.
                 ...images.filter(img => !isNew(img) && img.isPrimary).map(
-                    primary => from(axiosInstance.patch(`/images/${primary.id}/`, {
+                    primary => axiosInstance$.patch(`/images/${primary.id}/`, {
                         is_primary: true
-                    }))
+                    })
                 ),
             ])
         }

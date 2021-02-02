@@ -1,4 +1,4 @@
-import axiosInstance from 'src/axiosInstance'
+import { axiosInstance } from 'src/axiosInstance'
 import { History, Location } from 'history'
 import { clearAppState } from './appActions'
 //Global types
