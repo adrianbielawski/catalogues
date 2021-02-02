@@ -137,10 +137,9 @@ export interface Choice {
 }
 
 export interface DeserializedChoice {
-    id: number | null,
+    id: number | string,
     fieldId: number,
     value: string,
-    removed: boolean,
 }
 
 export interface DeserializedChoiceField {
@@ -151,6 +150,7 @@ export interface DeserializedChoiceField {
     filterName: string,
     position: number,
     choices: DeserializedChoice[],
+    removedChoices: DeserializedChoice[],
     fetchingChoices: boolean,
     isEditing: boolean,
     isSubmitting: boolean,

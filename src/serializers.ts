@@ -109,6 +109,7 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     filterName: field.filter_name,
     position: field.position,
     choices: field.choices ? choicesDeserializer(field.choices) : [],
+    removedChoices: [],
     fetchingChoices: true,
     isEditing: false,
     isSubmitting: false,
@@ -118,7 +119,6 @@ export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
     id: choice.id,
     fieldId: choice.field_id,
     value: choice.value,
-    removed: false,
 })
 
 export const choicesDeserializer = (choices: Choice[]): DeserializedChoice[] => (

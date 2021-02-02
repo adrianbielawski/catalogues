@@ -111,7 +111,7 @@ interface ToggleFieldEdit {
 
 export interface RemoveFieldChoiceFromState {
     type: typeof MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE,
-    id: number,
+    id: number | string,
     fieldId: number,
     catalogueId: number,
 }

@@ -12,7 +12,7 @@ import { DeserializedChoice } from 'src/globalTypes'
 type Props = {
     choices: DeserializedChoice[],
     className: string,
-    onRemove: (id: number) => void,
+    onRemove: (id: number | string) => void,
     onAdd: (name: string) => void,
 }
 
@@ -31,9 +31,6 @@ const Choices = (props: Props) => {
 
     const choices = (
         props.choices.map(choice => {
-            if (choice.removed) {
-                return
-            }
             const handleRemove = () => {
                 props.onRemove(choice.id!)
             }

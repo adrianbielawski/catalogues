@@ -63,7 +63,7 @@ const getChoiceById = (
     state: CataloguesState,
     catalogueId: number,
     fieldId: number,
-    choiceId: number,
+    choiceId: number | string,
 ): DeserializedChoice => {
     const field = getFieldById(state, catalogueId, fieldId) as DeserializedChoiceField
     return field.choices.filter(choice => choice.id === choiceId)[0]
@@ -198,17 +198,18 @@ const cataloguesReducer = (
 
         case 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE': {
             const choice = getChoiceById(newState, action.catalogueId, action.fieldId, action.id)
-            choice.removed = true
+            const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
+            field.removedChoices.push(choice)
+            field.choices = field.choices.filter(c => c.id !== action.id)
             return newState
         }
 
         case 'MANAGE_CATALOGUES/ADD_FIELD_CHOICE_TO_STATE': {
             const field = getFieldById(newState, action.catalogueId, action.fieldId) as DeserializedChoiceField
             field.choices.unshift({
-                id: null,
+                id: `newChoice_${Date.now()}`,
                 fieldId: action.fieldId,
                 value: action.name,
-                removed: false,
             })
             return newState
         }

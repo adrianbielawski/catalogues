@@ -23,6 +23,7 @@ import {
     postChoiceFieldChangesStart, postChoiceFieldChangesSuccess, postChoiceFieldChangesFailure,
     createCatalogueFieldStart, createCatalogueFieldSuccess, createCatalogueFieldFailure,
 } from "store/actions/settingsActions"
+import { DeserializedChoice } from "src/globalTypes"
 
 export const changeUsernameEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, ChangeUsername>(MY_ACCOUNT_CHANGE_USERNAME),
@@ -96,15 +97,18 @@ export const postTextFieldNameChangeEpic: EpicType = action$ => action$.pipe(
 export const postChoiceFieldChangesEpic: EpicType = action$ => action$.pipe(
     ofType<AppActionTypes, PostChoiceFieldChanges>(MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES),
     switchMap(action => {
-        const removedChoices = action.field.choices.filter(c => c.removed === true)
-        const newChoices = action.field.choices.filter(c => c.id === null)
+        const isNew = (choice: DeserializedChoice) => choice.id.toString().startsWith('newChoice')
+        const removedChoices = action.field.removedChoices
+        const newChoices = action.field.choices.filter(isNew)
 
         const requests = []
         if (removedChoices.length || newChoices.length) {
             requests.push(concat(
-                from(removedChoices).pipe(
-                    mergeMap(choice => axiosInstance$.delete(`/choices/${choice.id}/`))
-                ),
+                forkJoin([
+                    ...removedChoices.filter(c => !isNew(c)).map(choice =>
+                        axiosInstance$.delete(`/choices/${choice.id}/`)
+                    )
+                ]),
                 from(newChoices).pipe(
                     mergeMap(choice => axiosInstance$.post(`/choices/`, {
                         field_id: choice.fieldId,

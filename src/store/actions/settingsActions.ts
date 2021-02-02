@@ -106,7 +106,7 @@ export const toggleFieldEdit = (
 })
 
 export const removeFieldChoiceFromState = (
-    id: number,
+    id: number | string,
     fieldId: number,
     catalogueId: number,
 ): AppActionTypes => ({

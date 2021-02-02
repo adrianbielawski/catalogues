@@ -41,7 +41,7 @@ const ChoiceField = (props: Props) => {
         dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
     }
 
-    const handleRemoveChoice = (id: number) => {
+    const handleRemoveChoice = (id: number | string) => {
         dispatch(removeFieldChoiceFromState(id, props.field.id, props.field.catalogueId))
     }
 
