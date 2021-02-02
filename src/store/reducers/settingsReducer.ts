@@ -58,6 +58,11 @@ const settingsReducer = (
             newState.manageCatalogues.creatingNewCatalogue = false
             return newState
 
+        case 'AUTH/LOG_OUT/SUCCESS':
+        case 'APP/CLEAR_APP_STATE':
+            newState = cloneDeep(initialState)
+            return newState
+
         default:
             return newState
     }

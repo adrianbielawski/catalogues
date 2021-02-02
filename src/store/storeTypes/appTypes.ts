@@ -1,5 +1,3 @@
-import { ThunkAction as BaseThunkAction } from 'redux-thunk'
-import { Action } from 'redux'
 import { Epic } from 'redux-observable'
 import { RootState } from 'store/reducers/index'
 //Global types
@@ -11,13 +9,6 @@ import { SettingsTypes } from './settingsTypes'
 
 export const SCREEN_HEIGHT_CHANGED = 'APP/SCREEN_HEIGHT_CHANGED'
 export const APP_CLEAR_APP_STATE = 'APP/CLEAR_APP_STATE'
-
-export type ThunkAction<ReturnType = void> = BaseThunkAction<
-    ReturnType,
-    RootState,
-    unknown,
-    Action<string>
->
 
 export  type EpicType = Epic<AppActionTypes, AppActionTypes, RootState> 
 

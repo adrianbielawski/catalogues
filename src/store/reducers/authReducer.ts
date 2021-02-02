@@ -21,6 +21,7 @@ const authReducer = (
             return newState;
 
         case 'AUTH/LOG_IN/START':
+            newState.isInitialized = true;
             newState.isLoggingIn = true
             return newState
 
@@ -30,6 +31,7 @@ const authReducer = (
             return newState
 
         case 'AUTH/SIGN_UP/START':
+            newState.isInitialized = true;
             newState.isSigningUp = true;
             return newState;
 
@@ -37,6 +39,11 @@ const authReducer = (
         case 'AUTH/SIGN_UP/FAILURE':
             newState.isSigningUp = false;
             return newState;
+
+        case 'AUTH/LOG_OUT/SUCCESS':
+        case 'APP/CLEAR_APP_STATE':
+            newState = cloneDeep(initialState)
+            return newState
 
         default:
             return state

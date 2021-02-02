@@ -1,5 +1,4 @@
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
 import { createSelectorHook } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 //Reducers
@@ -10,12 +9,14 @@ import settingsReducer from './settingsReducer'
 //Types
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 //Epics
+import { authEpics } from 'store/epics/authEpics'
 import { cataloguesEpics } from 'store/epics/catalogueEpics'
 import { settingsEpics } from 'store/epics/settingsEpics'
 
 export type RootState = ReturnType<typeof rootReducer>
 
 const rootEpic = combineEpics(
+  authEpics,
   cataloguesEpics,
   settingsEpics,
 )
@@ -36,7 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 
 export const store = createStore(
   rootReducer,
-  composeEnhancers(applyMiddleware(thunk, epicMiddleware))
+  composeEnhancers(applyMiddleware(epicMiddleware))
 )
 
 epicMiddleware.run(rootEpic)

@@ -24,6 +24,7 @@ const appReducer = (
             newState.user = userDeserializer(action.user);
             return newState;
 
+        case 'AUTH/LOG_OUT/SUCCESS':
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)
             return newState

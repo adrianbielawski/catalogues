@@ -1,6 +1,8 @@
 import { cloneDeep } from 'lodash'
 //Global types
-import { DeserializedChoice, DeserializedChoiceField, DeserializedField, DeserializedItem, DeserializedItemField } from 'src/globalTypes'
+import {
+    DeserializedChoice, DeserializedChoiceField, DeserializedField, DeserializedItem, DeserializedItemField
+} from 'src/globalTypes'
 //Store types
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 import { CataloguesState } from 'store/storeTypes/cataloguesTypes'
@@ -354,6 +356,7 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'AUTH/LOG_OUT/SUCCESS':
         case 'APP/CLEAR_APP_STATE':
             newState = cloneDeep(initialState)
             return newState
