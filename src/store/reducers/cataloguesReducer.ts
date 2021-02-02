@@ -93,6 +93,9 @@ const cataloguesReducer = (
             catalogue.slug = action.catalogue.slug
             catalogue.isSubmittingCatalogueName = false
             catalogue.isEditingCatalogueName = false
+            action.location.state = {
+                referrer: `/${action.userId}/catalogues/${action.catalogue.slug}`
+            }
             return newState
         }
 

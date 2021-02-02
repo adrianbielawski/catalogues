@@ -1,4 +1,5 @@
-import { Catalogue, DeserializedChoiceField, User } from 'src/globalTypes'
+import { Location } from 'history'
+import { Catalogue, DeserializedChoiceField, LocationState, User } from 'src/globalTypes'
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 import {
     MY_ACCOUNT_TOGGLE_USERNAME_EDIT, MY_ACCOUNT_CHANGE_USERNAME, MY_ACCOUNT_CHANGE_USERNAME_SUCCESS, MY_ACCOUNT_CHANGE_USERNAME_FAILURE,
@@ -75,10 +76,15 @@ export const toggleCatalogueNameEdit = (catalogueId: number): AppActionTypes => 
     catalogueId,
 })
 
-export const changeCatalogueName = (catalogueId: number, newName: string): AppActionTypes => ({
+export const changeCatalogueName = (
+    catalogueId: number,
+    newName: string,
+    location: Location<LocationState>
+): AppActionTypes => ({
     type: MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     catalogueId,
     newName,
+    location,
 })
 
 export const changeCatalogueNameStart = (catalogueId: number): AppActionTypes => ({
@@ -86,9 +92,15 @@ export const changeCatalogueNameStart = (catalogueId: number): AppActionTypes =>
     catalogueId,
 })
 
-export const changeCatalogueNameSuccess = (catalogue: Catalogue): AppActionTypes => ({
+export const changeCatalogueNameSuccess = (
+    catalogue: Catalogue,
+    location: Location<LocationState>,
+    userId: number,
+): AppActionTypes => ({
     type: MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     catalogue,
+    location,
+    userId,
 })
 
 export const changeCatalogueNameFailure = (catalogueId: number): AppActionTypes => ({

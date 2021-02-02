@@ -1,4 +1,5 @@
-import { User, Catalogue, DeserializedChoiceField } from 'src/globalTypes'
+import { Location } from 'history'
+import { User, Catalogue, DeserializedChoiceField, LocationState } from 'src/globalTypes'
 
 export const MY_ACCOUNT_CHANGE_USERNAME = 'MY_ACCOUNT/CHANGE_USERNAME'
 export const MY_ACCOUNT_CHANGE_USERNAME_START = 'MY_ACCOUNT/CHANGE_USERNAME/START'
@@ -181,6 +182,7 @@ export interface ChangeCatalogueName {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     catalogueId: number,
     newName: string,
+    location: Location<LocationState>,
 }
 
 interface ChangeCatalogueNameStart {
@@ -191,6 +193,8 @@ interface ChangeCatalogueNameStart {
 export interface ChangeCatalogueNameSuccess {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     catalogue: Catalogue,
+    location: Location<LocationState>,
+    userId: number,
 }
 
 interface ChangeCatalogueNameFailure {

@@ -1,7 +1,7 @@
 import { combineEpics, ofType } from "redux-observable"
 import { axiosInstance$ } from "src/axiosInstance"
 import { of, from, concat, forkJoin } from 'rxjs'
-import { catchError, mapTo, mergeMap, switchMap } from 'rxjs/operators'
+import { catchError, mapTo, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/operators'
 //Store types
 import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
 import { 
@@ -65,7 +65,7 @@ export const createCatalogueEpic: EpicType = action$ => action$.pipe(
     ))
 )
 
-export const changeCatalogueNameEpic: EpicType = action$ => action$.pipe(
+export const changeCatalogueNameEpic: EpicType = (action$, state$) => action$.pipe(
     ofType<AppActionTypes, ChangeCatalogueName>(MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME),
     switchMap((action) => concat(
         of(changeCatalogueNameStart(action.catalogueId)),
@@ -75,7 +75,10 @@ export const changeCatalogueNameEpic: EpicType = action$ => action$.pipe(
             }),
             axiosInstance$.get(`/catalogues/${action.catalogueId}`))
         ]).pipe(
-            mergeMap(response => of(changeCatalogueNameSuccess(response[0].data))),
+            withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
+            mergeMap(([response, id]) =>
+                of(changeCatalogueNameSuccess(response[0].data, action.location, id as number))
+            ),
             catchError(() => of(changeCatalogueNameFailure(action.catalogueId)))
         )
     ))

@@ -63,7 +63,7 @@ const Nav = (props: Props) => {
                 setPrevLocation(location.state.referrer)
             }
         }
-    }, [])
+    }, [location.state])
 
     const toggleActive = () => {
         if (showList.show) {

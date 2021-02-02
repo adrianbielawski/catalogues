@@ -1,6 +1,9 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import styles from './catalogueTitle.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Redux
 import { toggleCatalogueNameEdit, changeCatalogueName } from 'store/actions/settingsActions'
 import { useTypedSelector } from 'store/reducers'
@@ -14,6 +17,7 @@ type Props = {
 }
 
 const CatalogueTitle = (props: Props) => {
+    const location = useLocation<LocationState>()
     const dispatch = useDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.id))  
 
@@ -22,7 +26,7 @@ const CatalogueTitle = (props: Props) => {
     }
 
     const handleNameChange = (input: string[]) => {
-        dispatch(changeCatalogueName(props.id, input[0]))
+        dispatch(changeCatalogueName(props.id, input[0], location))
     }
 
     return (
