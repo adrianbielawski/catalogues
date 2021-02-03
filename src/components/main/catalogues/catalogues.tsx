@@ -1,18 +1,22 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
-import { Route, Switch } from 'react-router-dom'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './catalogues.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
+import { NavItemType } from 'components/nav/nav'
 //Context
 import FiltersBarBulkContextProvider from './catalogue/filters-bar/filtersBarBulkContextProvider'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 import { fetchCatalogues } from 'store/actions/cataloguesActions'
+//Router
+import { RouteWithContext } from 'src/router'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
-import { ItemType } from 'components/nav/nav'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from './catalogue/filters-bar/filtersBar'
 
@@ -88,9 +92,10 @@ const filtersBarValue = {
 }
 
 const Catalogues = () => {
-    const history = useHistory()
-    const cataloguesRef = useRef<HTMLDivElement>(null)
+    const history = useHistory<LocationState>()
+    const location = useLocation<LocationState>()
     const dispatch = useDispatch()
+    const cataloguesRef = useRef<HTMLDivElement>(null)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const user = useTypedSelector(state => state.app.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
@@ -137,7 +142,7 @@ const Catalogues = () => {
         )
     }
 
-    const NAV_CONTENT: ItemType[] = [
+    const NAV_CONTENT: NavItemType[] = [
         {
             title: 'Catalogues',
             location: `/${user!.id}/catalogues`,
@@ -145,7 +150,7 @@ const Catalogues = () => {
                 return {
                     id: catalogue.id.toString(),
                     title: catalogue.name,
-                    url: `/${user!.id}/catalogues/${catalogue.slug}`
+                    url: `/${user!.id}/catalogues/${catalogue.slug}`,
                 }
             }),
         },
@@ -194,9 +199,12 @@ const Catalogues = () => {
                                     <Redirect
                                         exact
                                         from="/:userId/catalogues"
-                                        to={`/:userId/catalogues/${catalogues[0].slug}`}
+                                        to={{
+                                            pathname: `/:userId/catalogues/${catalogues[0].slug}`,
+                                            state: location.state,
+                                        }}
                                     />
-                                    <Route
+                                    <RouteWithContext
                                         path="/:userId/catalogues/:slug"
                                         component={Catalogue}
                                     />

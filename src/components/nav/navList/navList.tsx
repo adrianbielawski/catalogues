@@ -5,14 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 import styles from '../nav.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Custom components
 import NavLink from '../navLink/navLink'
-import { ItemWithUrl } from '../nav'
+import { NavItemWithUrl } from '../nav'
 
 interface Props {
     title: string,
     location: string,
-    children: ItemWithUrl[],
+    children: NavItemWithUrl[],
     show: boolean,
     index: number,
     onClick: (index: number) => void
@@ -22,7 +24,7 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const NavList = (props: Props) => {
-    const location = useLocation()
+    const location = useLocation<LocationState>()
     const [listTitle, setListTitle] = useState(props.title)
 
     useEffect(() => {
@@ -65,8 +67,7 @@ const NavList = (props: Props) => {
             } else {
                 return (
                     <NavLink
-                        title={item.title}
-                        url={item.url}
+                        item={item}
                         onClick={props.onLinkClick}
                         key={item.id}
                     />

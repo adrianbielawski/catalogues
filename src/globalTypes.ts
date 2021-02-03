@@ -16,8 +16,17 @@ export interface DeserializedUser {
     isAnonymous: boolean,
 }
 
+export interface Referrer {
+    path: string,
+    params: {
+        userId?: number,
+        slug?: string,
+        catalogue?: DeserializedCatalogue
+    }
+}
+
 export interface LocationState {
-    referrer: string;
+    referrer: Referrer;
 }
 
 export interface Catalogue {

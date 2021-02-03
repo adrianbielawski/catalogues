@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useLocation } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import styles from './accountSettings.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/reducers/index'
 //Custom components
@@ -12,6 +14,7 @@ import ManageCatalogues from './manage-catalogues/manageCatalogues'
 
 const AccountSettings = () => {
     const user = useTypedSelector(state => state.app.user)
+    const location = useLocation<LocationState>()
 
     const SIDE_MENU_CONTENT = [
         {
@@ -32,7 +35,10 @@ const AccountSettings = () => {
                     <Redirect
                         exact
                         from="/:userId/settings/account"
-                        to="/:userId/settings/account/manage-catalogues"
+                        to={{
+                            pathname: "/:userId/settings/account/manage-catalogues",
+                            state: location.state,
+                        }}
                     />
                     <Route
                         path="/:userId/settings/account/manage-catalogues"

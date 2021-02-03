@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
+//Router
+import { useUrlBuilder } from 'src/router'
 //Custom components
 import NavLink from './navLink/navLink'
 import NavList from './navList/navList'
 import MobileNavBar from './mobile-nav-bar/mobileNavBar'
 import GoBackButton from './go-back-button/goBackButton'
 
-export type ItemWithUrl = {
+export type NavItemWithUrl = {
     id: string,
     title: string,
     url: string,
@@ -21,10 +23,10 @@ type ItemWithChildren = {
     title: string,
     location: string
     url?: never,
-    children: ItemWithUrl[],
+    children: NavItemWithUrl[],
 }
 
-export type ItemType = ItemWithUrl | ItemWithChildren
+export type NavItemType = NavItemWithUrl | ItemWithChildren
 
 export type ExtraItem = {
     component: JSX.Element,
@@ -37,7 +39,7 @@ interface ShowList {
 }
 
 interface Props {
-    content: ItemType[],
+    content: NavItemType[],
     goBack?: { title: string, url: string, location: string },
     extraItems?: ExtraItem[],
     className?: string,
@@ -48,22 +50,12 @@ const cx = classNames.bind(styles)
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
     const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
-    const [prevLocation, setPrevLocation] = useState<string>('')
     const [active, setActive] = useState(false)
     const top = `${navRef.current?.getBoundingClientRect().bottom}px`
     const screenWidth = window.innerWidth
-
-    useEffect(() => {
-        if (location.state !== undefined && props.goBack !== undefined) {
-            if (location.state!.referrer.startsWith(props.goBack!.location)) {
-                setPrevLocation(props.goBack!.url)
-            } else {
-                setPrevLocation(location.state.referrer)
-            }
-        }
-    }, [location.state])
 
     const toggleActive = () => {
         if (showList.show) {
@@ -96,17 +88,12 @@ const Nav = (props: Props) => {
         }
     }
 
-    const handleGoBack = () => {
-        history.push(prevLocation! || props.goBack!.url)
-    }
-
     const getItems = (): React.ReactNode => {
         let items = props.content.map((item, index) => {
             if (item.url !== undefined) {
                 return (
                     <NavLink
-                        title={item.title}
-                        url={item.url}
+                        item={item}
                         onHover={handleLinkHover}
                         onClick={toggleActive}
                         key={index}
@@ -136,7 +123,27 @@ const Nav = (props: Props) => {
         return items
     }
 
+    const getPrevLocation = () => {
+        let prevLocation = props.goBack?.url
+
+        if (location.state !== undefined && props.goBack !== undefined) {
+            const referrer = buildUrl(location.state.referrer)
+            if (referrer.startsWith(props.goBack!.location)) {
+                prevLocation = props.goBack!.url
+            } else {
+                prevLocation = referrer
+            }
+        }
+        return prevLocation
+    }
+
+    const handleGoBack = () => {
+        const prevLocation = getPrevLocation()
+        history.push(prevLocation!)
+    }
+
     const getGoBackButton = () => {
+        const prevLocation = getPrevLocation()
         let title = 'Go back'
         if (props.goBack !== undefined) {
             if (prevLocation === '' || prevLocation === props.goBack.url) {
@@ -195,9 +202,7 @@ const Nav = (props: Props) => {
                         </ul>
                     )}
                 </div>
-                {screenWidth <= 640 &&
-                    <div className={styles.background} onClick={toggleActive}></div>
-                }
+                <div className={styles.background} onClick={toggleActive}></div>
             </nav>
         </div>
     )

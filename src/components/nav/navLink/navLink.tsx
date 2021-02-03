@@ -1,13 +1,15 @@
-import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { useHistory, useLocation, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from '../nav.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
+import { NavItemWithUrl } from '../nav'
+//Router context
+import { RouterContext } from 'src/router'
 
 interface Props {
-  title: string,
-  url: string,
+  item: NavItemWithUrl,
   onClick?: () => void,
   onHover?: () => void,
 }
@@ -16,11 +18,16 @@ const cx = classNames.bind(styles)
 const NavLink = (props: Props) => {
   const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
+  const params = useParams()
+  const routerContext = useContext(RouterContext)
 
   const handleClick = () => {
-    if (props.url !== undefined) {
-      history.push(props.url!, {
-        referrer: location.pathname
+    if (props.item.url !== undefined) {
+      history.push(props.item.url!, {
+        referrer: {
+          path: routerContext.match.path,
+          params,
+        }
       })
     }
     if (props.onClick !== undefined) {
@@ -31,13 +38,13 @@ const NavLink = (props: Props) => {
   const navLinkClass = cx(
       'navItem',
       {
-        active: location.pathname.startsWith(props.url),
+        active: location.pathname.startsWith(props.item.url),
       }
   )
 
   return (
     <li className={navLinkClass} onClick={handleClick} onMouseOver={props.onHover}>
-      <p>{props.title}</p>
+      <p>{props.item.title}</p>
     </li>
   )
 }

@@ -29,7 +29,7 @@ export const getUserEpic: EpicType = action$ => action$.pipe(
             mergeMap(response => concat(
                 of(getUserSuccess(response.data)),
                 defer(() => {
-                    if(location.pathname === '/') { 
+                    if (location.pathname === '/') {
                         action.history.push(`/${response.data.id}/catalogues`)
                     }
                 })
@@ -77,10 +77,11 @@ export const logInEpic: EpicType = action$ => action$.pipe(
                 }),
                 of(logInSuccess(response.data.user)),
                 defer(() => {
-                    const { referrer } = action.location.state
-                        || { referrer: `/${response.data.user.id}/catalogues` }
+                    const { path } = action.location.state?.referrer || {
+                        path: `/${response.data.user.id}/catalogues`
+                    }
 
-                    action.history.push(referrer)
+                    action.history.push(path)
                 }),
             )),
             catchError(() => of(logInFailure()))

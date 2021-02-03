@@ -194,7 +194,6 @@ export interface ChangeCatalogueNameSuccess {
     type: typeof MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     catalogue: Catalogue,
     location: Location<LocationState>,
-    userId: number,
 }
 
 interface ChangeCatalogueNameFailure {

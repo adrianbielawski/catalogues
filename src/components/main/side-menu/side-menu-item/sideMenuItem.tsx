@@ -16,17 +16,16 @@ const cx = classNames.bind(styles)
 const SideMenuItem = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    
     const handleClick = () => {
-        history.push(props.url!, {
-          referrer: location.pathname
-        })
+        history.push(props.url!, location.state)
         props.onClick()
     }
 
     const itemClass = cx(
         'item',
         {
-          active: location.pathname === props.url,
+            active: location.pathname === props.url,
         }
     )
 

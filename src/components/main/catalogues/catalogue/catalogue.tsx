@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './catalogue.scss'
+//Types
+import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { addItemToState, fetchCatalogueFields } from 'store/actions/cataloguesActions'
-import { useTypedSelector } from 'store/reducers'
-import { catalogueSelectorBySlug } from 'store/selectors'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from './filters-bar/filtersBar'
@@ -13,13 +12,9 @@ import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
 import Loader from 'components/global-components/loader/loader'
 
-type Params = {
-    slug: string
-}
-
-const Catalogue = (props: RouteComponentProps<Params>) => {
+const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
-    const catalogue = useTypedSelector(catalogueSelectorBySlug(props.match.params.slug))
+    const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
         dispatch(fetchCatalogueFields(catalogue.id))

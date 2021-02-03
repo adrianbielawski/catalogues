@@ -95,12 +95,10 @@ export const changeCatalogueNameStart = (catalogueId: number): AppActionTypes =>
 export const changeCatalogueNameSuccess = (
     catalogue: Catalogue,
     location: Location<LocationState>,
-    userId: number,
 ): AppActionTypes => ({
     type: MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME_SUCCESS,
     catalogue,
     location,
-    userId,
 })
 
 export const changeCatalogueNameFailure = (catalogueId: number): AppActionTypes => ({

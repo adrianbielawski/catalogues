@@ -75,9 +75,8 @@ export const changeCatalogueNameEpic: EpicType = (action$, state$) => action$.pi
             }),
             axiosInstance$.get(`/catalogues/${action.catalogueId}`))
         ]).pipe(
-            withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
-            mergeMap(([response, id]) =>
-                of(changeCatalogueNameSuccess(response[0].data, action.location, id as number))
+            mergeMap(response =>
+                of(changeCatalogueNameSuccess(response[0].data, action.location))
             ),
             catchError(() => of(changeCatalogueNameFailure(action.catalogueId)))
         )

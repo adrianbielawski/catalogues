@@ -1,7 +1,10 @@
 import React, { Suspense, useState, useEffect, useRef } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, useLocation } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
+import { NavItemType } from 'components/nav/nav'
 //Contexts
 import SideMenuContextProvider from '../side-menu/sideMenuContextProvider'
 //Redux
@@ -18,12 +21,13 @@ const sideMenuContextValue = {
 }
 
 const Settings = () => {
+    const location = useLocation<LocationState>()
     const settingsRef = useRef<HTMLDivElement>(null)
     const user = useTypedSelector(state => state.app.user)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
 
-    const NAV_CONTENT = [
+    const NAV_CONTENT: NavItemType[] = [
         {
             id: 'AccountSettings',
             title: 'Account settings',
@@ -81,7 +85,10 @@ const Settings = () => {
                     <Redirect
                         exact
                         from="/:userId/settings"
-                        to="/:userId/settings/account"
+                        to={{
+                            pathname: "/:userId/settings/account",
+                            state: location.state,
+                        }}
                     />
                     <Route
                         path="/:userId/settings/account"
