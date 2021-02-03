@@ -1,7 +1,7 @@
 import { combineEpics, ofType } from "redux-observable"
 import { axiosInstance$ } from "src/axiosInstance"
 import { concat, of, defer, forkJoin } from 'rxjs'
-import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen } from 'rxjs/operators'
+import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, defaultIfEmpty } from 'rxjs/operators'
 //Store observables
 import { retry$ } from "store/storeObservables"
 //Store types
@@ -215,6 +215,7 @@ export const saveItemEpic: EpicType = action$ => action$.pipe(
             of(saveItemStart(action.catalogueId, action.item.id)),
             request$.pipe(
                 mergeMap(response => imagesRequests$(response.data.id).pipe(
+                    defaultIfEmpty(),
                     mergeMap(() => of(saveItemSuccess(action.catalogueId, response.data.id, action.item.id))),
                     catchError(() => of(saveItemFailure(action.catalogueId, action.item.id)))
                 ))
