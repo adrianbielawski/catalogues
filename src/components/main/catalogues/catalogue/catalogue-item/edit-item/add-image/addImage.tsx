@@ -76,7 +76,6 @@ const AddImage = (props: Props) => {
                 className={styles.input}
                 type="file"
                 accept="image/png, image/jpeg"
-                capture="user"
                 ref={fileInputRef}
                 onChange={handleImageChange}
             />
