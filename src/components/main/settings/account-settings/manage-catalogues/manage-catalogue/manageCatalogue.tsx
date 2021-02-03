@@ -12,6 +12,7 @@ import CatalogueTitle from './catalogue-title/catalogueTitle'
 import TextField from './catalogue-fields/text-field/textField'
 import ChoiceField from './catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
+import Loader from 'components/global-components/loader/loader'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -25,7 +26,6 @@ const ManageCatalogue = (props: Props) => {
         dispatch(fetchCatalogueFields(props.catalogue.id))
     }, [])
 
-    
     const fields = catalogue.fields.map(field => {
         switch (field.type) {
             case 'short_text':
@@ -54,7 +54,10 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.manageItem}>
-                {fields}
+                {catalogue.fetchingFields
+                    ? <Loader />
+                    : fields
+                }
                 <AddField catalogueId={props.catalogue.id} />
             </div>
         </div>

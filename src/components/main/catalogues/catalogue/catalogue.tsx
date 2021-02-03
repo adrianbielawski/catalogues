@@ -41,15 +41,10 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     return (
         <div className={styles.catalogue}>
             <FiltersBar />
-            {catalogue.fetchingFields
-                ? <Loader className={styles.loader} />
-                : (
-                    <div id="catalogueMainContent" className={styles.mainContent}>
-                        {getAddItemButton()}
-                        <CatalogueItems catalogueId={catalogue.id} />
-                    </div>
-                )
-            }
+            <div id="catalogueMainContent" className={styles.mainContent}>
+                {getAddItemButton()}
+                <CatalogueItems catalogueId={catalogue.id} />
+            </div>
         </div>
     )
 }

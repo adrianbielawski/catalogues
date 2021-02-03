@@ -5,7 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import styles from './catalogueItem.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers'
-import { itemSelector } from 'store/selectors'
+import { catalogueSelector, itemSelector } from 'store/selectors'
 import { saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
@@ -14,6 +14,7 @@ import ItemFields from './item-fields/itemFields'
 import MainImage from './main-image/mainImage'
 import EditItem from './edit-item/editItem'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import Loader from 'components/global-components/loader/loader'
 
 type Props = {
     item: DeserializedItem
@@ -22,6 +23,7 @@ type Props = {
 const CatalogueItem = (props: Props) => {
     const dispatch = useDispatch()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
+    const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
 
     const handleEdit = () => {
         dispatch(toggleEditItem(props.item.catalogueId, item.id))
@@ -59,7 +61,10 @@ const CatalogueItem = (props: Props) => {
                                 <FontAwesomeIcon icon={faEdit} />
                             </TransparentButton>
                         </div>
-                        <ItemFields item={item} />
+                        {catalogue.fetchingFields
+                            ? <Loader />
+                            : <ItemFields item={item} />
+                        }
                     </div>
                 </>
             }

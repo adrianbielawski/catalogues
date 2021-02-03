@@ -6,9 +6,12 @@ import styles from './multipleChoiceField.scss'
 import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
 //Redux
 import { changeItemFieldValue, fetchFieldsChoices } from 'store/actions/cataloguesActions'
+import { fieldSelector } from 'store/selectors'
+import { useTypedSelector } from 'store/reducers'
 //Custom components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
+import Loader from 'components/global-components/loader/loader'
 
 interface Props {
     itemId: number | string,
@@ -21,6 +24,7 @@ const cx = classNames.bind(styles)
 const SingleChoiceField = (props: Props) => {
     const dispatch = useDispatch()
     const [isEditing, setIsEditing] = useState(false)
+    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
 
     useEffect(() => {
         dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
@@ -72,25 +76,28 @@ const SingleChoiceField = (props: Props) => {
     )
 
     return (
-        <li className={fieldClass}>
-            <EditableFieldTitle
-                title={props.field.name}
-                isEditing={isEditing}
-                onEdit={handleEdit}
-            />
-            <div className={contentClass}>
-                {isEditing
-                    ? (
-                        <MultipleChoiceList
-                            choices={props.field.choices}
-                            selected={getSelectedIds()}
-                            onChange={handleChange}
-                        />
-                    )
-                    : getChoices()
-                }
-            </div>
-        </li>
+        !field.fetchingChoices ? (
+            <li className={fieldClass}>
+                <EditableFieldTitle
+                    title={props.field.name}
+                    isEditing={isEditing}
+                    onEdit={handleEdit}
+                />
+                <div className={contentClass}>
+                    {isEditing
+                        ? (
+                            <MultipleChoiceList
+                                choices={props.field.choices}
+                                selected={getSelectedIds()}
+                                onChange={handleChange}
+                            />
+                        )
+                        : getChoices()
+                    }
+                </div>
+            </li>
+        )
+            : null
     )
 }
 

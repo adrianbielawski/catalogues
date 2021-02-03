@@ -41,10 +41,10 @@ const ManageCatalogues = () => {
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {(fetchingCatalogues && catalogues.length === 0) &&
-                <Loader size={50} className={styles.loader} />
+            {fetchingCatalogues
+                ? <Loader size={50} className={styles.loader} />
+                : items
             }
-            {items}
         </div>
     )
 }
