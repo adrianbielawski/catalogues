@@ -110,7 +110,7 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     position: field.position,
     choices: field.choices ? choicesDeserializer(field.choices) : [],
     removedChoices: [],
-    fetchingChoices: true,
+    fetchingChoices: false,
     isEditing: false,
     isSubmitting: false,
 })
