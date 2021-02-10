@@ -135,7 +135,9 @@ const cataloguesReducer = (
 
         case 'CATALOGUES/FETCH_CATALOGUE_ITEMS/SUCCESS': {
             const catalogue = getCatalogueById(newState, action.catalogueId)
+            const prevItems = cloneDeep(catalogue.itemsData.results)
             catalogue.itemsData = listDeserializer(action.data, itemDeserializer)
+            catalogue.itemsData.results.unshift(...prevItems)
             catalogue.fetchingItems = false
             return newState
         }

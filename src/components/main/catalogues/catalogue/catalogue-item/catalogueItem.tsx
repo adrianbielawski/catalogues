@@ -20,7 +20,10 @@ type Props = {
     item: DeserializedItem
 }
 
-const CatalogueItem = (props: Props) => {
+const CatalogueItem: React.ForwardRefRenderFunction<
+    HTMLLIElement,
+    Props
+> = (props, ref) => {
     const dispatch = useDispatch()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
@@ -40,7 +43,7 @@ const CatalogueItem = (props: Props) => {
     const image = item.images.filter(img => img.isPrimary)[0]
 
     return (
-        <li className={styles.item}>
+        <li className={styles.item} ref={ref}>
             {item.isEditing
                 ? (
                     <EditItem
@@ -72,4 +75,4 @@ const CatalogueItem = (props: Props) => {
     )
 }
 
-export default CatalogueItem
+export default React.forwardRef(CatalogueItem)

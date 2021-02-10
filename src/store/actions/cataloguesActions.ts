@@ -68,9 +68,10 @@ export const fetchCatalogueItemFailure = (
     prevId,
 })
 
-export const fetchCatalogueItems = (catalogueId: number): AppActionTypes => ({
+export const fetchCatalogueItems = (catalogueId: number, page: number): AppActionTypes => ({
     type: CATALOGUES_FETCH_CATALOGUE_ITEMS,
     catalogueId,
+    page,
 })
 
 export const fetchCatalogueItemsStart = (catalogueId: number): AppActionTypes => ({

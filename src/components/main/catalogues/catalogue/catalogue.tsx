@@ -10,7 +10,6 @@ import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from './filters-bar/filtersBar'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
-import Loader from 'components/global-components/loader/loader'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()

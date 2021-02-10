@@ -161,6 +161,7 @@ interface FetchCatalogueItemFailure {
 export interface FetchCatalogueItems {
     type: typeof CATALOGUES_FETCH_CATALOGUE_ITEMS,
     catalogueId: number,
+    page: number,
 }
 
 interface FetchCatalogueItemsStart {

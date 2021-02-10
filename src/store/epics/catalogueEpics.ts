@@ -137,7 +137,8 @@ export const fetchCatalogueItemsEpic: EpicType = action$ => action$.pipe(
         of(fetchCatalogueItemsStart(action.catalogueId)),
         defer(() => axiosInstance$.get('/items/', {
             params: {
-                catalogue_id: action.catalogueId
+                catalogue_id: action.catalogueId,
+                page: action.page,
             }
         })).pipe(
             retryWhen(err => retry$(err)),

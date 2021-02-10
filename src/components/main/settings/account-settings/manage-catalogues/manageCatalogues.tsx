@@ -6,7 +6,7 @@ import { useTypedSelector } from 'store/reducers'
 import { fetchCatalogues } from 'store/actions/cataloguesActions'
 import { createCatalogue } from 'store/actions/settingsActions'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay, useFirstRender } from 'src/customHooks'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -18,11 +18,10 @@ const ManageCatalogues = () => {
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const creatingNewCatalogue = useTypedSelector(state => state.settings.manageCatalogues.creatingNewCatalogue)
     const delayCompleated = useDelay(creatingNewCatalogue)
+    const firstRender = useFirstRender()
 
     useEffect(() => {
-        if (catalogues.length === 0) {
-            dispatch(fetchCatalogues())
-        }
+        dispatch(fetchCatalogues())
     }, [])
 
     const handleAddCatalogueClick = () => {
@@ -41,7 +40,7 @@ const ManageCatalogues = () => {
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {fetchingCatalogues
+            {fetchingCatalogues || firstRender
                 ? <Loader size={50} className={styles.loader} />
                 : items
             }

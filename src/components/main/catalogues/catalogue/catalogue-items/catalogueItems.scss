@@ -1,7 +1,18 @@
 .items {
-    margin: 0 auto 100px auto;
+    margin: 0 auto 30px auto;
     max-width: 95%;
+    .seeMoreButton {
+        margin: 30px auto;
+    }
 }
 .loader {
     margin: 0 auto;
+}
+
+@media only screen and (max-width: 640px) {
+    .items {
+        &.showingAll {
+            margin: 0 auto 90px auto;
+        }
+    }
 }

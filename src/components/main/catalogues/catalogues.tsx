@@ -19,6 +19,7 @@ import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from './catalogue/filters-bar/filtersBar'
+import { useFirstRender } from 'src/customHooks'
 
 const filtersValue = {
     filters: [
@@ -96,6 +97,7 @@ const Catalogues = () => {
     const location = useLocation<LocationState>()
     const dispatch = useDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
+    const firstRender = useFirstRender()
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const user = useTypedSelector(state => state.app.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
@@ -180,7 +182,7 @@ const Catalogues = () => {
             filtersBarValue={filtersBarValue}
             onChange={() => { }}
         >
-            {fetchingCatalogues ? <Loader className={styles.loader} /> :
+            {fetchingCatalogues || firstRender ? <Loader className={styles.loader} /> :
                 <div
                     className={styles.catalogues}
                     style={{ minHeight: `${minHeight}px` }}
