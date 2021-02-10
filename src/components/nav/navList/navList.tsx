@@ -81,10 +81,12 @@ const NavList = (props: Props) => {
             return (
                 <div className={titleClass} onClick={handleClick} onMouseOver={handleHover}>
                     <p>{listTitle}</p>
-                    <FontAwesomeIcon
-                        icon={props.show ? faLongArrowAltUp : faLongArrowAltDown}
-                        className={styles.arrow}
-                    />
+                    {props.children.length > 1 &&
+                        <FontAwesomeIcon
+                            icon={props.show ? faLongArrowAltUp : faLongArrowAltDown}
+                            className={styles.arrow}
+                        />
+                    }
                 </div>
             )
         } else {
