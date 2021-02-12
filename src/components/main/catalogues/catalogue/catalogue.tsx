@@ -5,6 +5,8 @@ import styles from './catalogue.scss'
 import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { addItemToState, fetchCatalogueFields } from 'store/actions/cataloguesActions'
+//Utils
+import { scrollTop } from 'src/utils'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from './filters-bar/filtersBar'
@@ -20,6 +22,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     }, [catalogue.id])
 
     const handleAddItem = () => {
+        scrollTop()
         dispatch(addItemToState(catalogue.id))
     }
 

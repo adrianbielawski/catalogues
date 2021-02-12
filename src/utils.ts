@@ -8,3 +8,8 @@ export const isElementInViewport = (el: HTMLElement) => {
         rect.top < (window.innerHeight || document.documentElement.clientHeight)
     )
 }
+
+export const scrollTop = () => {
+    document.body.scrollTo({ top: 0, behavior: 'smooth' })
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+}
