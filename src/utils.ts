@@ -1,3 +1,5 @@
+import { LegacyRef, MutableRefObject, RefCallback } from "react"
+
 export const isElementInViewport = (el: HTMLElement) => {
     var rect = el.getBoundingClientRect()
 
@@ -12,4 +14,18 @@ export const isElementInViewport = (el: HTMLElement) => {
 export const scrollTop = () => {
     document.body.scrollTo({ top: 0, behavior: 'smooth' })
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+export const mergeRefs = <T = any>(
+    refs: Array<MutableRefObject<T> | LegacyRef<T>>
+): RefCallback<T> => {
+    return (value) => {
+        refs.forEach((ref) => {
+            if (typeof ref === "function") {
+                ref(value)
+            } else if (ref != null) {
+                (ref as MutableRefObject<T | null>).current = value
+            }
+        })
+    }
 }

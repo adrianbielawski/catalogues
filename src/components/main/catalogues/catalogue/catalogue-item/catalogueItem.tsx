@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
@@ -9,8 +9,9 @@ import { catalogueSelector, itemSelector } from 'store/selectors'
 import { removeItemFromState, saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
-//Utils
-import { scrollTop } from 'src/utils'
+//Custom hooks and utils
+import { mergeRefs, scrollTop } from 'src/utils'
+import { useFirstRender } from 'src/customHooks'
 //Custom components
 import ItemFields from './item-fields/itemFields'
 import MainImage from './main-image/mainImage'
@@ -27,8 +28,16 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     Props
 > = (props, ref) => {
     const dispatch = useDispatch()
+    const itemRef = useRef<HTMLLIElement>()
     const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
+    const firstRender = useFirstRender()
+
+    useEffect(() => {
+        if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
+            itemRef.current!.scrollIntoView({ behavior: 'smooth' }) 
+        }
+    }, [item.isSubmitting])
 
     const handleEdit = () => {
         dispatch(toggleEditItem(props.item.catalogueId, item.id))
@@ -50,7 +59,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const image = item.images.filter(img => img.isPrimary)[0]
 
     return (
-        <li className={styles.item} ref={ref}>
+        <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
             {item.isEditing
                 ? (
                     <EditItem
