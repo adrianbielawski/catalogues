@@ -6,9 +6,11 @@ import styles from './catalogueItem.scss'
 //Redux
 import { useTypedSelector } from 'store/reducers'
 import { catalogueSelector, itemSelector } from 'store/selectors'
-import { saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
+import { removeItemFromState, saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
+//Utils
+import { scrollTop } from 'src/utils'
 //Custom components
 import ItemFields from './item-fields/itemFields'
 import MainImage from './main-image/mainImage'
@@ -37,7 +39,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }
 
     const handleCancel = () => {
-        dispatch(toggleEditItem(props.item.catalogueId, item.id))
+        if (item.id.toString().startsWith('newItem')) {
+            dispatch(removeItemFromState(props.item.catalogueId, item.id))
+            scrollTop()
+        } else {
+            dispatch(toggleEditItem(props.item.catalogueId, item.id))
+        }
     }
 
     const image = item.images.filter(img => img.isPrimary)[0]

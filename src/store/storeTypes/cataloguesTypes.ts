@@ -29,6 +29,7 @@ export const CATALOGUES_FETCH_FIELDS_CHOICES_SUCCESS = 'CATALOGUES/FETCH_FIELDS_
 export const CATALOGUES_FETCH_FIELDS_CHOICES_FAILURE = 'CATALOGUES/FETCH_FIELDS_CHOICES/FAILURE'
 export const CATALOGUES_TOGGLE_EDIT_ITEM = 'CATALOGUES/TOGGLE_EDIT_ITEM'
 export const CATALOGUES_ADD_ITEM_TO_STATE = 'CATALOGUES/ADD_ITEM_TO_STATE'
+export const CATALOGUES_REMOVE_ITEM_FROM_STATE = 'CATALOGUES/REMOVE_ITEM_FROM_STATE'
 export const CATALOGUES_CHANGE_ITEM_FIELD_VALUE = 'CATALOGUES/CHANGE_ITEM_FIELD_VALUE'
 export const CATALOGUES_ADD_IMAGE_TO_STATE = 'CATALOGUES/ADD_IMAGE_TO_STATE'
 export const CATALOGUES_REMOVE_IMAGE_FROM_STATE = 'CATALOGUES/REMOVE_IMAGE_FROM_STATE'
@@ -208,6 +209,12 @@ interface AddItemToState {
     catalogueId: number,
 }
 
+interface RemoveItemFromState {
+    type: typeof CATALOGUES_REMOVE_ITEM_FROM_STATE,
+    catalogueId: number,
+    itemId: number | string,
+}
+
 interface ChangeItemFieldValue {
     type: typeof CATALOGUES_CHANGE_ITEM_FIELD_VALUE,
     catalogueId: number,
@@ -274,4 +281,5 @@ export type CataloguesTypes =
     | FetchCatalogues | FetchCataloguesStart | FetchCataloguesSuccess | FetchCataloguesFailure
     | ToggleEditItem | ChangeItemFieldValue
     | AddImageToState | RemoveImageFromState | ChangePrimaryImage
-    | AddItemToState | SaveItem | SaveItemStart | SaveItemSuccess | SaveItemFailure
+    | AddItemToState | RemoveItemFromState
+    | SaveItem | SaveItemStart | SaveItemSuccess | SaveItemFailure

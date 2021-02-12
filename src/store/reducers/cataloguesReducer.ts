@@ -284,6 +284,12 @@ const cataloguesReducer = (
             return newState
         }
 
+        case 'CATALOGUES/REMOVE_ITEM_FROM_STATE': {
+            const catalogue = getCatalogueById(newState, action.catalogueId)
+            catalogue.itemsData.results = catalogue.itemsData.results.filter(i => i.id !== action.itemId)
+            return newState
+        }
+
         case 'CATALOGUES/CHANGE_ITEM_FIELD_VALUE': {
             const fieldsValues = getFieldsValuesById(newState, action.catalogueId, action.itemId)
             const fieldValue = fieldsValues.filter(f => f.fieldId === action.fieldId)[0]

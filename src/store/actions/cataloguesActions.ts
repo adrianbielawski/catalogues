@@ -14,7 +14,8 @@ import {
     CATALOGUES_CHANGE_ITEM_FIELD_VALUE,
     CATALOGUES_ADD_IMAGE_TO_STATE,
     CATALOGUES_REMOVE_IMAGE_FROM_STATE, CATALOGUES_CHANGE_PRIMARY_IMAGE,
-    CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
+    CATALOGUES_ADD_ITEM_TO_STATE, CATALOGUES_REMOVE_ITEM_FROM_STATE,
+    CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_START, CATALOGUES_SAVE_ITEM_SUCCESS, CATALOGUES_SAVE_ITEM_FAILURE, 
 } from 'store/storeTypes/cataloguesTypes'
 
 export const refreshCatalogueItem = (
@@ -198,6 +199,15 @@ export const toggleEditItem = (catalogueId: number, itemId: number | string): Ap
 export const addItemToState = (catalogueId: number): AppActionTypes => ({
     type: CATALOGUES_ADD_ITEM_TO_STATE,
     catalogueId,
+})
+
+export const removeItemFromState = (
+    catalogueId: number,
+    itemId: number | string
+): AppActionTypes => ({
+    type: CATALOGUES_REMOVE_ITEM_FROM_STATE,
+    catalogueId,
+    itemId,
 })
 
 export const changeItemFieldValue = (
