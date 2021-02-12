@@ -1,9 +1,4 @@
-@import "global-styles/variables_and_mixins";
-
 .field {
-    &.collapsed {
-        @include clipText;
-    }
     .name {
         font-weight: 700;
         padding-right: 5px;

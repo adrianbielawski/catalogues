@@ -26,24 +26,22 @@ const Button = (props: Props) => {
         props.className,
     )
 
+    if (!state.showButton) {
+        return null
+    }
+
     return (
-        state.maxHeightCollapsed < state.maxHeight
-            ? (
-                <button
-                    className={buttonClass}
-                    onClick={handleClick}
-                    {...rest}
-                >
-                    <>
-                        <span>{state.showAllItems ? 'Show less' : 'Show more'}</span>
-                        <FontAwesomeIcon
-                            icon={state.showAllItems ? faLongArrowAltUp : faLongArrowAltDown}
-                            className={styles.arrow}
-                        />
-                    </>
-                </button>
-            )
-            : null
+        <button
+            className={buttonClass}
+            onClick={handleClick}
+            {...rest}
+        >
+            <span>{state.showAllItems ? 'Show less' : 'Show more'}</span>
+            <FontAwesomeIcon
+                icon={state.showAllItems ? faLongArrowAltUp : faLongArrowAltDown}
+                className={styles.arrow}
+            />
+        </button>
     )
 }
 

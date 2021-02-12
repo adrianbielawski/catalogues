@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useContext } from 'react'
 import styles from './list.scss'
 //Contexts
 import { ListContext } from '../listStore'
+//Components
+import Item from '../item/item'
 
-type Item = {}
+type ItemType = {}
 
 type Props = {
-    items: Item[],
+    items: ItemType[],
     itemsProps: {},
     itemComponent: React.ComponentType<any>,
     maxHeight: number,
@@ -16,53 +18,73 @@ const List = (props: Props) => {
     const { dispatch, ...state } = useContext(ListContext)
     const listRef = useRef<HTMLUListElement>(null)
 
-    const getFields = () => {
-        const ItemComponent = props.itemComponent
-        return props.items.map((item, i) => (
-            <li className={styles.item} key={i}>
-                <ItemComponent
-                    item={item}
-                    itemProps={props.itemsProps}
-                    isShowingAllItems={state.showAllItems}
-                />
-            </li>
-        ))
-    }
+    useEffect(() => {
+        inspectItemsHeight()
+    }, [props.items])
+
+    useEffect(() => {
+        if (state.itemsInspected) {
+            inspectOverflow()
+        }
+    }, [state.itemsInspected])
 
     const inspectItemsHeight = () => {
         const items = listRef.current!.children
 
-        let maxH = 0
-        let maxHeightCollapsed = props.maxHeight
-        let itemsInView = props.items.length
-        for (let i = 0; i < items!.length; i++) {
-            const itemH = items![i].getBoundingClientRect().height
-            let newH = maxH + itemH
-            if (itemsInView === props.items.length && newH > props.maxHeight) {
-                itemsInView = i
-                maxHeightCollapsed = maxH
-                maxH = newH
-            } else {
-                maxH = newH
+        let totalHeight = 0
+        let collapsedHeight = 0
+        let itemsInView = 0
+
+        for (let item of Array.from(items)) {
+            totalHeight += item.getBoundingClientRect().height
+
+            if (totalHeight <= props.maxHeight) {
+                itemsInView++
+                collapsedHeight = totalHeight
             }
         }
+
         dispatch({
             type: 'ITEMS_INSPECTED',
             itemsInView,
-            maxHeight: maxH,
-            maxHeightCollapsed: maxHeightCollapsed,
+            totalHeight,
+            collapsedHeight,
         })
     }
 
-    useEffect(() => {
-        inspectItemsHeight()
-    }, [props.items, state.showAllItems])
+    const inspectOverflow = () => {
+        const items = listRef.current!.children
+
+        let hasOverflow = false
+
+        for (let item of Array.from(items)) {
+            if (item.scrollHeight > item.clientHeight) {
+                hasOverflow = true
+            }
+        }
+
+        dispatch({
+            type: 'OVERFLOW_INSPECTED',
+            hasOverflow,
+        })
+    }
+
+    const getItems = () => {
+        return props.items.map((item, i) => (
+            <Item
+                item={item}
+                itemProps={props.itemsProps}
+                itemComponent={props.itemComponent}
+                key={i}
+            />
+        ))
+    }
 
     const getDynamicStyles = () => {
         if (state.showAllItems) {
-            return { maxHeight: state.maxHeight }
+            return { maxHeight: state.totalHeight }
         } else {
-            return { maxHeight: state.maxHeightCollapsed }
+            return { maxHeight: state.collapsedHeight }
         }
     }
 
@@ -72,7 +94,7 @@ const List = (props: Props) => {
             style={getDynamicStyles()}
             ref={listRef}
         >
-            {getFields()}
+            {getItems()}
         </ul>
     )
 }

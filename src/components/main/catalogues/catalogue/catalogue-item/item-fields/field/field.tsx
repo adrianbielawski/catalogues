@@ -1,5 +1,4 @@
-import React from 'react'
-import classNames from 'classnames/bind'
+import React, { useRef } from 'react'
 import styles from './field.scss'
 //Global types
 import { DeserializedItemField } from 'src/globalTypes'
@@ -12,10 +11,7 @@ type Props = {
     itemProps: {
         catalogueId: number,
     },
-    isShowingAllItems: boolean,
 }
-
-const cx = classNames.bind(styles)
 
 const Field = (props: Props) => {
     const field = useTypedSelector(fieldSelector(props.itemProps.catalogueId, props.item.fieldId))
@@ -23,19 +19,12 @@ const Field = (props: Props) => {
     let value = props.item.value
 
     if (field.type === 'multiple_choice') {
-        let val = props.item.value as string[]
+        let val = value as string[]
         value = val.join(', ')
     }
 
-    const fieldClass = cx(
-        'field',
-        {
-            collapsed: !props.isShowingAllItems
-        }
-    )
-
     return (
-        <p className={fieldClass}>
+        <p className={styles.field}>
             <span className={styles.name}>{field.name}:</span>
             <span>{value}</span>
         </p>
