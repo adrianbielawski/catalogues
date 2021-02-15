@@ -40,7 +40,7 @@ import { DeserializedImage } from "src/globalTypes"
 
 export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
     ofType<AppActionTypes, FetchCatalogues>(CATALOGUES_FETCH_CATALOGUES),
-    withLatestFrom(state$.pipe(pluck('app', 'user', 'id'))),
+    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
     switchMap(([_, id]) => concat(
         of(fetchCataloguesStart()),
         axiosInstance$.get('/catalogues/', {

@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import styles from './login.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
-import { logIn } from 'store/actions/authActions'
+import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
 import { LocationState } from 'src/globalTypes'
+import { LOG_IN } from 'store/slices/authSlices/authSlices'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
@@ -13,7 +12,7 @@ import Input from 'components/global-components/input/input'
 
 
 const Login = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const isLoggingIn = useTypedSelector(state => state.auth.isLoggingIn)
     const [isValid, setIsValid] = useState(false);
     const history = useHistory()
@@ -26,7 +25,7 @@ const Login = () => {
         const email = emailInput.current!.value
         const password = passwordInput.current!.value
 
-        dispatch(logIn(email, password, history, location))
+        dispatch(LOG_IN({ email, password, history, location }))
     }
 
     const validateInput = (e: React.FormEvent<HTMLFormElement>) => {

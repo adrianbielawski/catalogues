@@ -1,108 +1,100 @@
-import { combineEpics, ofType } from "redux-observable"
+import { combineEpics } from "redux-observable"
 import { axiosInstance$ } from "src/axiosInstance"
-import { concat, of, defer } from 'rxjs'
-import { catchError, mergeMap, retryWhen } from 'rxjs/operators'
+import { concat, of, defer, Observable } from 'rxjs'
+import { catchError, filter, mergeMap, retryWhen } from 'rxjs/operators'
+import { Action } from "@reduxjs/toolkit"
 //Store observables
 import { retry$ } from "store/storeObservables"
-//Store types
-import { AppActionTypes, EpicType } from "store/storeTypes/appTypes"
+//Slices
 import {
-    GetUser, AUTH_GET_USER,
-    LogIn, AUTH_LOG_IN,
-    LogOut, AUTH_LOG_OUT,
-    SignUp, AUTH_SIGN_UP,
-} from 'store/storeTypes/authTypes'
-//Store actions
-import {
-    getUserStart, getUserSuccess, getUserFailure,
-    logInStart, logInSuccess, logInFailure,
-    logOutFailure, logOutStart, logOutSuccess,
-    signUpStart, signUpSuccess, signUpFailure,
-} from 'store/actions/authActions'
+    GET_USER, GET_USER_SUCCESS, GET_USER_FAILURE,
+    LOG_IN, LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAILURE,
+    LOG_OUT, LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
+    SIGN_UP, SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, 
+} from "store/slices/authSlices/authSlices"
 
-export const getUserEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, GetUser>(AUTH_GET_USER),
+export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(GET_USER.match),
     mergeMap(action => concat(
-        of(getUserStart()),
         axiosInstance$.get('/user/').pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
-                of(getUserSuccess(response.data)),
+                of(GET_USER_SUCCESS(response.data)),
                 defer(() => {
                     if (location.pathname === '/') {
-                        action.history.push(`/${response.data.id}/catalogues`)
+                        action.payload.history.push(`/${response.data.id}/catalogues`)
                     }
                 })
             )),
-            catchError(() => of(getUserFailure()))
+            catchError(() => of(GET_USER_FAILURE()))
         )
     ))
 )
 
-export const signUpEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, SignUp>(AUTH_SIGN_UP),
+export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(SIGN_UP.match),
     mergeMap(action => concat(
-        of(signUpStart()),
+        of(SIGN_UP_START()),
         axiosInstance$.post('/registration/', {
-            email: action.email,
-            password1: action.password,
-            password2: action.repeatedPassword,
-            username: action.userName,
+            email: action.payload.email,
+            password1: action.payload.password,
+            password2: action.payload.repeatedPassword,
+            username: action.payload.userName,
         }).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
-                of(signUpSuccess(response.data.user)),
+                of(SIGN_UP_SUCCESS(response.data.user)),
                 defer(() => {
                     localStorage.setItem('token', response.data.key)
-                    action.history.push(`/${response.data.user.id}/catalogues`)
+                    action.payload.history.push(`/${response.data.user.id}/catalogues`)
                 })
             )),
-            catchError(() => of(signUpFailure()))
+            catchError(() => of(SIGN_UP_FAILURE()))
         )
     ))
 )
 
-export const logInEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, LogIn>(AUTH_LOG_IN),
+export const logInEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(LOG_IN.match),
     mergeMap(action => concat(
-        of(logInStart()),
+        of(LOG_IN_START()),
         axiosInstance$.post('/login/', {
-            email: action.email,
-            password: action.password,
+            email: action.payload.email,
+            password: action.payload.password,
         }).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
                 defer(() => {
                     localStorage.setItem('token', response.data.key)
                 }),
-                of(logInSuccess(response.data.user)),
+                of(LOG_IN_SUCCESS(response.data.user)),
                 defer(() => {
-                    const { path } = action.location.state?.referrer || {
+                    const { path } = action.payload.location.state?.referrer || {
                         path: `/${response.data.user.id}/catalogues`
                     }
 
-                    action.history.push(path)
+                    action.payload.history.push(path)
                 }),
             )),
-            catchError(() => of(logInFailure()))
+            catchError(() => of(LOG_IN_FAILURE()))
         )
     ))
 )
 
-export const logOutEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, LogOut>(AUTH_LOG_OUT),
+export const logOutEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(LOG_OUT.match),
     mergeMap(action => concat(
-        of(logOutStart()),
+        of(LOG_OUT_START()),
         axiosInstance$.post('/logout/').pipe(
             retryWhen(err => retry$(err)),
             mergeMap(() => concat(
-                of(logOutSuccess()),
+                of(LOG_OUT_SUCCESS()),
                 defer(() => {
                     localStorage.removeItem('token')
-                    action.history.push('/')
+                    action.payload.history.push('/')
                 })
             )),
-            catchError(() => of(logOutFailure()))
+            catchError(() => of(LOG_OUT_FAILURE()))
         )
     ))
 )

@@ -99,7 +99,7 @@ const Catalogues = () => {
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
-    const user = useTypedSelector(state => state.app.user)
+    const user = useTypedSelector(state => state.auth.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const [minHeight, setMinHeight] = useState(0)

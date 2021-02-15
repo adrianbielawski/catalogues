@@ -1,18 +1,17 @@
 import React, { useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import styles from './signup.scss'
+//Redux
+import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { SIGN_UP } from 'store/slices/authSlices/authSlices'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
-//Redux
-import { useTypedSelector } from 'store/reducers/index'
-import { signUp } from 'store/actions/authActions'
 
 const Signup = () => {
     const history = useHistory()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const userNameInput = useRef<HTMLInputElement>(null)
     const emailInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
@@ -42,7 +41,13 @@ const Signup = () => {
         const userName = userNameInput.current!.value
         const email = emailInput.current!.value
 
-        dispatch(signUp(userName, email, password, repeatedPassword, history))
+        dispatch(SIGN_UP({
+            userName,
+            email,
+            password,
+            repeatedPassword,
+            history
+        }))
     }
 
     return (

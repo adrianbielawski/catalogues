@@ -13,7 +13,7 @@ import MyAccount from './my-account/myAccount'
 import ManageCatalogues from './manage-catalogues/manageCatalogues'
 
 const AccountSettings = () => {
-    const user = useTypedSelector(state => state.app.user)
+    const user = useTypedSelector(state => state.auth.user)
     const location = useLocation<LocationState>()
 
     const SIDE_MENU_CONTENT = [

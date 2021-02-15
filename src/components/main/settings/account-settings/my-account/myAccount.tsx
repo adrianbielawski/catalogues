@@ -9,7 +9,7 @@ import { changePassword, changeUsername, togglePasswordEdit, toggleUsernameEdit 
 
 const MyAccount = () => {
     const dispatch = useDispatch()
-    const user = useTypedSelector(state => state.app.user)
+    const user = useTypedSelector(state => state.auth.user)
     const myAccount = useTypedSelector(state => state.settings.myAccount)
 
     const handleEditUsername = () => {

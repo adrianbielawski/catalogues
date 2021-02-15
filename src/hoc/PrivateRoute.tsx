@@ -10,7 +10,7 @@ interface Props extends RouteProps {
 const PrivateRoute = (props: Props) => {
     const { component: Component, ...rest } = props
     const isInitialized = useTypedSelector(state => state.auth.isInitialized)
-    const user = useTypedSelector(state => state.app.user)
+    const user = useTypedSelector(state => state.auth.user)
     if (!isInitialized) {
         return <div>Loading...</div>
     }

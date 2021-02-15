@@ -1,19 +1,19 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
+import { useAppDispatch } from 'store/reducers'
 //Redux
-import { logOut } from 'store/actions/authActions'
+import { LOG_OUT } from 'store/slices/authSlices/authSlices'
 
 interface Props {
   className?: string,
 }
 
 const Logout = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const history = useHistory()
 
     const handleLogout = () => {
-        dispatch(logOut(history))
+        dispatch(LOG_OUT({ history }))
     }
 
     return (

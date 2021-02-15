@@ -3,6 +3,7 @@ import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styles from 'global-styles/app.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { GET_USER, INITIALIZED } from 'store/slices/authSlices/authSlices'
 import { CHANGE_SCREEN_HEIGHT } from 'store/slices/appSlices/appSlice'
 //Types
 import { LocationState } from 'src/globalTypes'
@@ -31,9 +32,9 @@ const App = () => {
 
   useEffect(() => {
       if (localStorage.getItem('token')) {
-        dispatch(getUser(history, location))
+        dispatch(GET_USER({ history, location }))
       } else {
-        dispatch(authInitialized())
+        dispatch(INITIALIZED())
       }
   }, [])
 

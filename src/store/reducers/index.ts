@@ -4,6 +4,7 @@ import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 //Slices
 import { appSlice } from 'store/slices/appSlices/appSlice'
+import { authSlice } from 'store/slices/authSlices/authSlices'
 import cataloguesReducer from './cataloguesReducer'
 import settingsReducer from './settingsReducer'
 //Types
@@ -25,6 +26,7 @@ const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, Root
 
 const rootReducer = combineReducers({
   app: appSlice.reducer,
+  auth: authSlice.reducer,
   catalogues: cataloguesReducer,
   settings: settingsReducer,
 })
@@ -34,6 +36,9 @@ export const store = configureStore({
   middleware: [
     ...getDefaultMiddleware({
       thunk: false,
+      serializableCheck: {
+        ignoredActionPaths: ['payload.history']
+      },
     }),
     epicMiddleware
   ]
