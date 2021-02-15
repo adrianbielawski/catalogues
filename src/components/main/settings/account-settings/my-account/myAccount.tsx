@@ -1,31 +1,35 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './myAccount.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
+import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import {
+    CHANGE_PASSWORD, CHANGE_USERNAME, TOGGLE_PASSWORD_EDIT, TOGGLE_USERNAME_EDIT
+} from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
-import { changePassword, changeUsername, togglePasswordEdit, toggleUsernameEdit } from 'store/actions/settingsActions'
 
 const MyAccount = () => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const user = useTypedSelector(state => state.auth.user)
     const myAccount = useTypedSelector(state => state.settings.myAccount)
 
     const handleEditUsername = () => {
-        dispatch(toggleUsernameEdit(!myAccount.isEditingUsername))
+        dispatch(TOGGLE_USERNAME_EDIT(!myAccount.isEditingUsername))
     }
 
     const handleUsernameChange = (input: string[]) => {
-        dispatch(changeUsername(input[0]))
+        dispatch(CHANGE_USERNAME(input[0]))
     }
 
     const handleEditPassword = () => {
-        dispatch(togglePasswordEdit(!myAccount.isEditingPassword))
+        dispatch(TOGGLE_PASSWORD_EDIT(!myAccount.isEditingPassword))
     }
 
     const handlePasswordChange = (input: string[]) => {
-        dispatch(changePassword(input[0], input[1]))
+        dispatch(CHANGE_PASSWORD({
+            password1: input[0],
+            password2: input[1],
+        }))
     }
 
     return (

@@ -1,20 +1,6 @@
 import { Location } from 'history'
-import { User, Catalogue, DeserializedChoiceField, LocationState } from 'src/globalTypes'
+import { Catalogue, DeserializedChoiceField, LocationState } from 'src/globalTypes'
 
-export const MY_ACCOUNT_CHANGE_USERNAME = 'MY_ACCOUNT/CHANGE_USERNAME'
-export const MY_ACCOUNT_CHANGE_USERNAME_START = 'MY_ACCOUNT/CHANGE_USERNAME/START'
-export const MY_ACCOUNT_CHANGE_USERNAME_SUCCESS = 'MY_ACCOUNT/CHANGE_USERNAME/SUCCESS'
-export const MY_ACCOUNT_CHANGE_USERNAME_FAILURE = 'MY_ACCOUNT/CHANGE_USERNAME/FAILURE'
-export const MY_ACCOUNT_TOGGLE_USERNAME_EDIT = 'MY_ACCOUNT/TOGGLE_USERNAME_EDIT'
-export const MY_ACCOUNT_TOGGLE_PASSWORD_EDIT = 'MY_ACCOUNT/TOGGLE_PASSWORD_EDIT'
-export const MY_ACCOUNT_CHANGE_PASSWORD = 'MY_ACCOUNT/CHANGE_PASSWORD'
-export const MY_ACCOUNT_CHANGE_PASSWORD_START = 'MY_ACCOUNT/CHANGE_PASSWORD/START'
-export const MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS = 'MY_ACCOUNT/CHANGE_PASSWORD/SUCCESS'
-export const MY_ACCOUNT_CHANGE_PASSWORD_FAILURE = 'MY_ACCOUNT/CHANGE_PASSWORD/FAILURE'
-export const MANAGE_CATALOGUES_CREATE_CATALOGUE = 'MANAGE_CATALOGUES/CREATE_CATALOGUE'
-export const MANAGE_CATALOGUES_CREATE_CATALOGUE_START = 'MANAGE_CATALOGUES/CREATE_CATALOGUE/START'
-export const MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS = 'MANAGE_CATALOGUES/CREATE_CATALOGUE/SUCCESS'
-export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FAILURE = 'MANAGE_CATALOGUES/CREATE_CATALOGUE/FAILURE'
 export const MANAGE_CATALOGUES_TOGGLE_CATALOGUE_NAME_EDIT = 'MANAGE_CATALOGUES/TOGGLE_CATALOGUE_NAME_EDIT'
 export const MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT = 'MANAGE_CATALOGUES/TOGGLE_FIELD_EDIT'
 export const MANAGE_CATALOGUES_REMOVE_FIELD_CHOICE_FROM_STATE = 'MANAGE_CATALOGUES/REMOVE_FIELD_CHOICE_FROM_STATE'
@@ -36,73 +22,6 @@ export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD = 'MANAGE_CATALOGUES/CREAT
 export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_START = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/START'
 export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/SUCCESS'
 export const MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_FAILURE = 'MANAGE_CATALOGUES/CREATE_CATALOGUE_FIELD/FAILURE'
-
-export interface SettingsState {
-    myAccount: {
-        isEditingUsername: boolean,
-        isSubmittingUsername: boolean,
-        isEditingPassword: boolean,
-        isSubmittingPassword: boolean,
-    },
-    manageCatalogues: {
-        creatingNewCatalogue: boolean,
-    }
-}
-
-interface CreateCatalogue {
-    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE,
-}
-
-interface CreateCatalogueStart {
-    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_START,
-}
-
-interface CreateCatalogueSuccess {
-    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_SUCCESS,
-    catalogue: Catalogue
-}
-
-interface CreateCatalogueFailure {
-    type: typeof MANAGE_CATALOGUES_CREATE_CATALOGUE_FAILURE,
-}
-
-interface ToggleUsernameEdit {
-    type: typeof MY_ACCOUNT_TOGGLE_USERNAME_EDIT,
-    isEditing: boolean,
-}
-
-export interface ChangeUsername {
-    type: typeof MY_ACCOUNT_CHANGE_USERNAME,
-    newName: string,
-}
-
-interface ChangeUsernameSuccess {
-    type: typeof MY_ACCOUNT_CHANGE_USERNAME_SUCCESS,
-    user: User,
-}
-
-interface ChangeUsernameFailure {
-    type: typeof MY_ACCOUNT_CHANGE_USERNAME_FAILURE,
-}
-
-interface TogglePasswordEdit {
-    type: typeof MY_ACCOUNT_TOGGLE_PASSWORD_EDIT,
-    isEditing: boolean,
-}
-
-export interface ChangePassword {
-    type: typeof MY_ACCOUNT_CHANGE_PASSWORD,
-    newPassword1: string,
-    newPassword2: string,
-}
-
-interface ChangePasswordSuccess {
-    type: typeof MY_ACCOUNT_CHANGE_PASSWORD_SUCCESS,
-}
-
-interface ChangePasswordFailure {
-    type: typeof MY_ACCOUNT_CHANGE_PASSWORD_FAILURE,
-}
 
 interface ToggleFieldEdit {
     type: typeof MANAGE_CATALOGUES_TOGGLE_FIELD_EDIT,
@@ -229,10 +148,7 @@ interface CreateCatalogueFieldFailure {
     catalogueId: number,
 }
 
-export type SettingsTypes = 
-    | CreateCatalogue | CreateCatalogueStart | CreateCatalogueSuccess | CreateCatalogueFailure
-    | ToggleUsernameEdit | ChangeUsername | ChangeUsernameSuccess | ChangeUsernameFailure
-    | TogglePasswordEdit | ChangePassword | ChangePasswordSuccess | ChangePasswordFailure
+export type SettingsTypes =
     | ToggleCatalogueNameEdit | ChangeCatalogueName | ChangeCatalogueNameStart | ChangeCatalogueNameSuccess | ChangeCatalogueNameFailure
     | ToggleFieldEdit | RemoveFieldChoiceFromState | AddFieldChoiceToState
     | PostTextFieldNameChange | PostTextFieldNameChangeStart | PostTextFieldNameChangeSuccess | PostTextFieldNameChangeFailure

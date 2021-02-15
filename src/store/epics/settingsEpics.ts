@@ -1,66 +1,71 @@
 import { combineEpics, ofType } from "redux-observable"
+import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-import { of, from, concat, forkJoin } from 'rxjs'
-import { catchError, mapTo, mergeMap, pluck, switchMap, withLatestFrom } from 'rxjs/operators'
+import { of, from, concat, forkJoin, Observable } from 'rxjs'
+import { catchError, filter, mapTo, mergeMap, switchMap } from 'rxjs/operators'
 //Store types
 import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
-import { 
-    MY_ACCOUNT_CHANGE_USERNAME, MY_ACCOUNT_CHANGE_PASSWORD,
-    MANAGE_CATALOGUES_CREATE_CATALOGUE,
+import {
     MANAGE_CATALOGUES_CHANGE_CATALOGUE_NAME,
     MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE,
     MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES,
     MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD,
-    ChangeUsername, ChangePassword, ChangeCatalogueName, PostChoiceFieldChanges,
+    ChangeCatalogueName, PostChoiceFieldChanges,
     PostTextFieldNameChange, CreateCatalogueField
 } from 'store/storeTypes/settingsTypes'
 import {
-    changeUsernameSuccess, changeUsernameFailure,
-    changePasswordSuccess, changePasswordFailure,
-    createCatalogueStart, createCatalogueSuccess, createCatalogueFailure,
     changeCatalogueNameStart, changeCatalogueNameSuccess, changeCatalogueNameFailure,
     postTextFieldNameChangeStart, postTextFieldNameChangeSuccess, postTextFieldNameChangeFailure,
     postChoiceFieldChangesStart, postChoiceFieldChangesSuccess, postChoiceFieldChangesFailure,
     createCatalogueFieldStart, createCatalogueFieldSuccess, createCatalogueFieldFailure,
 } from "store/actions/settingsActions"
 import { DeserializedChoice } from "src/globalTypes"
+import {
+    CHANGE_USERNAME, CHANGE_USERNAME_START, CHANGE_USERNAME_SUCCESS, CHANGE_USERNAME_FAILURE,
+    CHANGE_PASSWORD, CHANGE_PASSWORD_START, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE,
+} from "store/slices/settingsSlices/myAccountSlice/myAccountSlice"
+import {
+    CREATE_CATALOGUE, CREATE_CATALOGUE_START, CREATE_CATALOGUE_SUCCESS, CREATE_CATALOGUE_FAILURE,
+} from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice"
 
-export const changeUsernameEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, ChangeUsername>(MY_ACCOUNT_CHANGE_USERNAME),
-    switchMap((action) =>
+export const changeUsernameEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CHANGE_USERNAME.match),
+    switchMap(action => concat(
+        of(CHANGE_USERNAME_START()),
         axiosInstance$.patch('/user/', {
-            username: action.newName
+            username: action.payload
         }).pipe(
             mergeMap((response) => of(
-                changeUsernameSuccess(response.data)
+                CHANGE_USERNAME_SUCCESS(response.data)
             )),
-            catchError(err => of(changeUsernameFailure()))
+            catchError(() => of(CHANGE_USERNAME_FAILURE()))
         )
-    )
+    ))
 )
 
-export const changePasswordEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, ChangePassword>(MY_ACCOUNT_CHANGE_PASSWORD),
-    switchMap((action) =>
+export const changePasswordEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CHANGE_PASSWORD.match),
+    switchMap(action => concat(
+        of(CHANGE_PASSWORD_START()),
         axiosInstance$.post('/password/change/', {
-            new_password1: action.newPassword1,
-            new_password2: action.newPassword2
+            new_password1: action.payload.password1,
+            new_password2: action.payload.password2
         }).pipe(
-            mergeMap(() => of(changePasswordSuccess())),
-            catchError(err => of(changePasswordFailure()))
+            mergeMap(() => of(CHANGE_PASSWORD_SUCCESS())),
+            catchError(() => of(CHANGE_PASSWORD_FAILURE()))
         )
-    )
+    ))
 )
 
-export const createCatalogueEpic: EpicType = action$ => action$.pipe(
-    ofType(MANAGE_CATALOGUES_CREATE_CATALOGUE),
+export const createCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CREATE_CATALOGUE.match),
     switchMap(() => concat(
-        of(createCatalogueStart()),
+        of(CREATE_CATALOGUE_START()),
         axiosInstance$.post('/catalogues/', {
             name: 'New catalogue'
         }).pipe(
-            mergeMap((res) => of(createCatalogueSuccess(res.data))),
-            catchError(() => of(createCatalogueFailure()))
+            mergeMap(response => of(CREATE_CATALOGUE_SUCCESS(response.data))),
+            catchError(() => of(CREATE_CATALOGUE_FAILURE()))
         )
     ))
 )

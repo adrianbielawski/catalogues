@@ -6,7 +6,7 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import { appSlice } from 'store/slices/appSlices/appSlice'
 import { authSlice } from 'store/slices/authSlices/authSlices'
 import cataloguesReducer from './cataloguesReducer'
-import settingsReducer from './settingsReducer'
+import { settingsSlices } from 'store/slices/settingsSlices'
 //Types
 import { AppActionTypes } from 'store/storeTypes/appTypes'
 //Epics
@@ -14,7 +14,6 @@ import { appEpics } from 'store/epics/appEpics'
 import { authEpics } from 'store/epics/authEpics'
 import { cataloguesEpics } from 'store/epics/catalogueEpics'
 import { settingsEpics } from 'store/epics/settingsEpics'
-//Redux
 
 const rootEpic = combineEpics(
   appEpics,
@@ -27,8 +26,7 @@ const epicMiddleware = createEpicMiddleware<AppActionTypes, AppActionTypes, Root
 const rootReducer = combineReducers({
   app: appSlice.reducer,
   auth: authSlice.reducer,
-  catalogues: cataloguesReducer,
-  settings: settingsReducer,
+  settings: settingsSlices,
 })
 
 export const store = configureStore({
