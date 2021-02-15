@@ -1,11 +1,9 @@
 import React, { useEffect, Suspense } from 'react'
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import styles from 'global-styles/app.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
-import { changeScreenHeight } from 'store/actions/appActions'
-import { getUser, authInitialized } from 'store/actions/authActions'
+import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { CHANGE_SCREEN_HEIGHT } from 'store/slices/appSlices/appSlice'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
@@ -15,13 +13,13 @@ import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const history = useHistory()
   const location = useLocation<LocationState>()
   const screenHeight = useTypedSelector(state => state.app.screenHeight)
 
   const handleResize = () => {
-    dispatch(changeScreenHeight(window.innerHeight))
+    dispatch(CHANGE_SCREEN_HEIGHT(window.innerHeight))
   }
 
   useEffect(() => {
