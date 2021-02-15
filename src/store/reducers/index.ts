@@ -1,5 +1,5 @@
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import { createSelectorHook } from 'react-redux'
+import { combineReducers } from 'redux'
+import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 //Reducers
 import appReducer from './appReducer'
@@ -12,8 +12,7 @@ import { AppActionTypes } from 'store/storeTypes/appTypes'
 import { authEpics } from 'store/epics/authEpics'
 import { cataloguesEpics } from 'store/epics/catalogueEpics'
 import { settingsEpics } from 'store/epics/settingsEpics'
-
-export type RootState = ReturnType<typeof rootReducer>
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 
 const rootEpic = combineEpics(
   authEpics,
@@ -29,17 +28,19 @@ const rootReducer = combineReducers({
   settings: settingsReducer,
 })
 
-let composeEnhancers = compose
-
-if (process.env.NODE_ENV === 'development') {
-  composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-}
-
-export const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(epicMiddleware))
-)
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: [
+    ...getDefaultMiddleware({
+      thunk: false,
+    }),
+    epicMiddleware
+  ]
+})
 
 epicMiddleware.run(rootEpic)
 
+export type RootState = ReturnType<typeof rootReducer>
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>() 
 export const useTypedSelector = createSelectorHook<RootState>()
