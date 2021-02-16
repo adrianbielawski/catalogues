@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import styles from './catalogueItem.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
-import { removeItemFromState, saveItem, toggleEditItem } from 'store/actions/cataloguesActions'
+import {
+    REMOVE_ITEM_FROM_STATE, SAVE_ITEM, TOGGLE_EDIT_ITEM
+} from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Custom hooks and utils
@@ -27,9 +28,9 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
     Props
 > = (props, ref) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
-    const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
+    const item = useTypedSelector(itemSelector(props.item.id))
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
 
@@ -40,19 +41,19 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }, [item.isSubmitting])
 
     const handleEdit = () => {
-        dispatch(toggleEditItem(props.item.catalogueId, item.id))
+        dispatch(TOGGLE_EDIT_ITEM(item.id))
     }
 
     const handleEditConfirm = () => {
-        dispatch(saveItem(props.item.catalogueId, item))
+        dispatch(SAVE_ITEM(item))
     }
 
     const handleCancel = () => {
         if (item.id.toString().startsWith('newItem')) {
-            dispatch(removeItemFromState(props.item.catalogueId, item.id))
+            dispatch(REMOVE_ITEM_FROM_STATE(item.id))
             scrollTop()
         } else {
-            dispatch(toggleEditItem(props.item.catalogueId, item.id))
+            dispatch(TOGGLE_EDIT_ITEM(item.id))
         }
     }
 

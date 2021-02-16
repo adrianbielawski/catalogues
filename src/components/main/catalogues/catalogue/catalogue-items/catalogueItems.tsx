@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
-import { fetchCatalogueItems } from 'store/actions/cataloguesActions'
-import { catalogueSelector, itemsSelector } from 'store/selectors'
+import { FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { catalogueSelector } from 'store/selectors'
 //Custo hooks and utils
 import { useDelay } from 'src/customHooks'
 import { isElementInViewport } from 'src/utils'
@@ -21,11 +20,11 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const CatalogueItems = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>(null)
     const [lastItemInView, setLastItemInView] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
-    const catalogueItems = useTypedSelector(itemsSelector(props.catalogueId))
+    const itemsData = useTypedSelector(state => state.itemsData)
     const delayCompleted = useDelay(catalogue.fetchingItems)
 
     useEffect(() => {
@@ -33,7 +32,7 @@ const CatalogueItems = (props: Props) => {
     }, [props.catalogueId])
 
     useEffect(() => {
-        if (lastItemInView && catalogue.itemsData.next && catalogue.itemsData.next > 2) {
+        if (lastItemInView && itemsData.next && itemsData.next > 2) {
             fetchItems()
         }
     }, [lastItemInView])
@@ -47,7 +46,15 @@ const CatalogueItems = (props: Props) => {
     }, [])
 
     const fetchItems = () => {
-        dispatch(fetchCatalogueItems(props.catalogueId, catalogue.itemsData.next || 1))
+        let page = 1
+        
+        if (itemsData.catalogueId === props.catalogueId) {
+            page = itemsData.next || 1
+        }
+        dispatch(FETCH_ITEMS({
+            catalogueId: props.catalogueId,
+            page,
+        }))
     }
 
     const isLastItemInViewport = () => {
@@ -56,20 +63,20 @@ const CatalogueItems = (props: Props) => {
         }
     }
 
-    const getItems = () => catalogueItems.map((item, i) => {
-        let ref = i === catalogueItems.length - 1 ? itemRef : null
+    const getItems = () => itemsData.results.map((item, i) => {
+        let ref = i === itemsData.results.length - 1 ? itemRef : null
         return <CatalogueItem item={item} key={item.id} ref={ref} />
     })
 
     const itemsClass = cx(
         'items',
         {
-            showingAll: catalogue.itemsData.next === null
+            showingAll: itemsData.next === null
         },
     )
 
     return (
-        catalogue.fetchingItems && !catalogue.itemsData.results.length
+        catalogue.fetchingItems && !itemsData.results.length
             ? <Loader className={styles.loader} />
             : (
                 <div className={itemsClass}>
@@ -78,7 +85,7 @@ const CatalogueItems = (props: Props) => {
                     </ul>
                     {delayCompleted ?
                         <Loader className={styles.loader} />
-                        : (catalogue.itemsData.next && catalogue.itemsData.next <= 2) &&
+                        : (itemsData.next && itemsData.next <= 2) &&
                         <Button
                             className={styles.seeMoreButton}
                             loading={delayCompleted}

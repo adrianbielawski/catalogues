@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './longTextField.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { changeItemFieldValue } from 'store/actions/cataloguesActions'
+import { useAppDispatch } from 'store/storeConfig'
+import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const LongTextField = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
 
     const handleEdit = () => {
@@ -24,12 +24,11 @@ const LongTextField = (props: Props) => {
     }
 
     const handleConfirm = (input: string) => {
-        dispatch(changeItemFieldValue(
-            props.field.catalogueId,
-            props.itemId,
-            props.field.id,
-            input
-        ))
+        dispatch(CHANGE_ITEM_FIELD_VALUE({
+            itemId: props.itemId,
+            fieldId: props.field.id,
+            value: input,
+        }))
         setIsEditing(false)
     }
 

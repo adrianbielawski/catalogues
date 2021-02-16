@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './editItem.scss'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'
-import { addImageToState, changePrimaryImage, removeImageFromState } from 'store/actions/cataloguesActions'
+import { 
+    ADD_IMAGE_TO_STATE, CHANGE_PRIMARY_IMAGE, REMOVE_IMAGE_FROM_STATE
+} from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import AddImage from './add-image/addImage'
@@ -23,8 +24,8 @@ type Props = {
 }
 
 const EditItem = (props: Props) => {
-    const dispatch = useDispatch()
-    const item = useTypedSelector(itemSelector(props.item.catalogueId, props.item.id))
+    const dispatch = useAppDispatch()
+    const item = useTypedSelector(itemSelector(props.item.id))
     const delayCompleated = useDelay(item.isSubmitting)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
@@ -48,15 +49,24 @@ const EditItem = (props: Props) => {
     }
 
     const handleImageRemove = (i: number) => {
-        dispatch(removeImageFromState(item.catalogueId, item.id, i))
+        dispatch(REMOVE_IMAGE_FROM_STATE({
+            itemId: item.id,
+            index: i
+        }))
     }
 
     const handleImageChange = (i: number) => {
-        dispatch(changePrimaryImage(item.catalogueId, item.id, i))
+        dispatch(CHANGE_PRIMARY_IMAGE({
+            itemId: item.id,
+            index: i
+        }))
     }
 
     const handleAddImage = (image: File) => {
-        dispatch(addImageToState(item.catalogueId, item.id, image))
+        dispatch(ADD_IMAGE_TO_STATE({
+            itemId: item.id,
+            image
+        }))
     }
 
     return (

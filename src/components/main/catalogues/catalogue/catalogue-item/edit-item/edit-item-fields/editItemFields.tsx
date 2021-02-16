@@ -3,7 +3,7 @@ import styles from './editItemFields.scss'
 //Types
 import { DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useTypedSelector } from 'store/storeConfig'
 import { fieldsSelector, itemFieldsSelector } from 'store/selectors'
 //Custom components
 import TextField from './text-field/textField'
@@ -17,7 +17,7 @@ type Props = {
 
 const EditItemFields = (props: Props) => {
     const catalogueFields = useTypedSelector(fieldsSelector(props.item.catalogueId))
-    const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.catalogueId, props.item.id))
+    const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.id))
 
     const fields = catalogueFields.map(field => {
         const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]

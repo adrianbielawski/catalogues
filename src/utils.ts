@@ -29,3 +29,5 @@ export const mergeRefs = <T = any>(
         })
     }
 }
+
+export const mod = (i: number, n: number): number => ((i % n) + n) % n

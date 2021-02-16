@@ -5,6 +5,7 @@ import styles from './singleChoiceField.scss'
 import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
 //Redux
 import { FETCH_FIELDS_CHOICES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 //Custom components
@@ -36,12 +37,11 @@ const SingleChoiceField = (props: Props) => {
     }
 
     const handleChange = (choice: DeserializedChoice) => {
-        dispatch(changeItemFieldValue(
-            props.field.catalogueId,
-            props.itemId,
-            props.field.id,
-            choice.value,
-        ))
+        dispatch(CHANGE_ITEM_FIELD_VALUE({
+            itemId: props.itemId,
+            fieldId: props.field.id,
+            value: choice.value,
+        }))
     }
 
     const fieldClass = cx(
