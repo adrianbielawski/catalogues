@@ -8,7 +8,7 @@ import { NavItemType } from 'components/nav/nav'
 //Contexts
 import SideMenuContextProvider from '../side-menu/sideMenuContextProvider'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
+import { useTypedSelector } from 'store/storeConfig'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'

@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './myAccount.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import {
     CHANGE_PASSWORD, CHANGE_USERNAME, TOGGLE_PASSWORD_EDIT, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'

@@ -2,7 +2,7 @@ import React, { useEffect, Suspense } from 'react'
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styles from 'global-styles/app.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { GET_USER, INITIALIZED } from 'store/slices/authSlices/authSlices'
 import { CHANGE_SCREEN_HEIGHT } from 'store/slices/appSlices/appSlice'
 //Types

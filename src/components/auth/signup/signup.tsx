@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './signup.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { SIGN_UP } from 'store/slices/authSlices/authSlices'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'

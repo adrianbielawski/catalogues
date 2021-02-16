@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { Switch, Redirect } from 'react-router-dom'
 import styles from './main.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
+import { useTypedSelector } from 'store/storeConfig'
 //Router context
 import { RouteWithContext } from 'src/router'
 //Custom components

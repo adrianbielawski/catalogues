@@ -1,7 +1,7 @@
 import React from 'react'
 import { ComponentType, createContext } from 'react'
 import { generatePath, Route, RouteProps } from 'react-router-dom'
-import { useTypedSelector } from 'store/reducers'
+import { useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
 import { DeserializedCatalogue } from './globalTypes'
 import { StaticContext } from 'react-router'

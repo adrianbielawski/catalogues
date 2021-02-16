@@ -5,7 +5,7 @@ import styles from './accountSettings.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
+import { useTypedSelector } from 'store/storeConfig'
 //Custom components
 import SideMenu from 'components/main/side-menu/sideMenu'
 import Loader from 'components/global-components/loader/loader'

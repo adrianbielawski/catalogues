@@ -1,9 +1,9 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import styles from './field.scss'
 //Global types
 import { DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 
 type Props = {

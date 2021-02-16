@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from './login.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/reducers/index'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { LocationState } from 'src/globalTypes'
 import { LOG_IN } from 'store/slices/authSlices/authSlices'
 //Custom Components

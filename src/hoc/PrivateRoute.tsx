@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Redirect, RouteProps } from 'react-router-dom'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
+import { useTypedSelector } from 'store/storeConfig'
 
 interface Props extends RouteProps {
     component: React.ComponentType<any>
