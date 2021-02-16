@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './manageCatalogue.scss'
 //Types
 import { DeserializedCatalogue, DeserializedChoiceField, DeserializedTextField } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
-import { fetchCatalogueFields } from 'store/actions/cataloguesActions'
+import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
 import TextField from './catalogue-fields/text-field/textField'
@@ -19,11 +18,11 @@ type Props = {
 }
 
 const ManageCatalogue = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.catalogue.id))
 
     useEffect(() => {
-        dispatch(fetchCatalogueFields(props.catalogue.id))
+        dispatch(FETCH_CATALOGUE_FIELDS(props.catalogue.id))
     }, [])
 
     const fields = catalogue.fields.map(field => {

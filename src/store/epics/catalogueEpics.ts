@@ -1,239 +1,256 @@
-import { combineEpics, ofType } from "redux-observable"
+import { combineEpics } from "redux-observable"
+import { concat, of, defer, forkJoin, Observable, from } from 'rxjs'
+import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo } from 'rxjs/operators'
+import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-import { concat, of, defer, forkJoin } from 'rxjs'
-import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, defaultIfEmpty } from 'rxjs/operators'
 //Store observables
 import { retry$ } from "store/storeObservables"
-//Store types
-import { AppActionTypes, EpicType } from 'store/storeTypes/appTypes'
+//Types
+import { RootState } from "store/storeConfig"
+import { DeserializedChoice } from "src/globalTypes"
+//Actions
 import {
-    CATALOGUES_FETCH_CATALOGUES,
-    CATALOGUES_FETCH_CATALOGUE_ITEM, CATALOGUES_FETCH_CATALOGUE_ITEMS,
-    CATALOGUES_REFRESH_CATALOGUE_FIELD, CATALOGUES_FETCH_CATALOGUE_FIELD,
-    CATALOGUES_REFRESH_CATALOGUE_FIELDS, CATALOGUES_FETCH_CATALOGUE_FIELDS,
-    CATALOGUES_FETCH_FIELDS_CHOICES,
-    CATALOGUES_SAVE_ITEM, CATALOGUES_SAVE_ITEM_SUCCESS,
-    CATALOGUES_REFRESH_CATALOGUE_ITEM,
-    FetchCatalogues, FetchCatalogueField, FetchCatalogueFields,
-    FetchFieldsChoices, FetchCatalogueItems, SaveItem, FetchCatalogueItem,
-} from "store/storeTypes/cataloguesTypes"
-import {
-    MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS,
-    MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
-    MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS
-} from "store/storeTypes/settingsTypes"
-import {
-    RefreshCatalogueFieldEpic, RefreshCatalogueFieldsEpic, RefreshCatalogueItemEpic,
-} from "store/storeTypes/epicsTypes"
-//Store actions
-import {
-    fetchCataloguesStart, fetchCataloguesSuccess, fetchCataloguesFailure,
-    fetchCatalogueFields, fetchCatalogueFieldsStart, fetchCatalogueFieldsSuccess, fetchCatalogueFieldsFailure,
-    fetchFieldsChoicesStart, fetchFieldsChoicesSuccess, fetchFieldsChoicesFailure,
-    fetchCatalogueField, fetchCatalogueFieldStart, fetchCatalogueFieldSuccess, fetchCatalogueFieldFailure,
-    fetchCatalogueItemStart, fetchCatalogueItemSuccess, fetchCatalogueItemFailure,
-    fetchCatalogueItemsStart, fetchCatalogueItemsSuccess, fetchCatalogueItemsFailure,
-    saveItemStart, saveItemSuccess, saveItemFailure, fetchCatalogueItem
-} from "store/actions/cataloguesActions"
-import { itemFieldSerializer } from "src/serializers"
-import { DeserializedImage } from "src/globalTypes"
+    CREATE_CATALOGUE_FIELD_SUCCESS,
+    FETCH_CATALOGUES, FETCH_CATALOGUES_FAILURE, FETCH_CATALOGUES_START, FETCH_CATALOGUES_SUCCESS,
+    REFRESH_CATALOGUE_FIELD,
+    FETCH_CATALOGUE_FIELD, FETCH_CATALOGUE_FIELD_START, FETCH_CATALOGUE_FIELD_SUCCESS, FETCH_CATALOGUE_FIELD_FAILURE,
+    FETCH_CATALOGUE_FIELDS, FETCH_CATALOGUE_FIELDS_FAILURE, FETCH_CATALOGUE_FIELDS_START, FETCH_CATALOGUE_FIELDS_SUCCESS,
+    FETCH_FIELDS_CHOICES, FETCH_FIELDS_CHOICES_START, FETCH_FIELDS_CHOICES_SUCCESS, FETCH_FIELDS_CHOICES_FAILURE,
+    CREATE_CATALOGUE, CREATE_CATALOGUE_START, CREATE_CATALOGUE_SUCCESS, CREATE_CATALOGUE_FAILURE,
+    CHANGE_CATALOGUE_NAME, CHANGE_CATALOGUE_NAME_START, CHANGE_CATALOGUE_NAME_SUCCESS, CHANGE_CATALOGUE_NAME_FAILURE,
+    POST_TEXT_FIELD_NAME_CHANGE, POST_TEXT_FIELD_NAME_CHANGE_START, POST_TEXT_FIELD_NAME_CHANGE_SUCCESS, POST_TEXT_FIELD_NAME_CHANGE_FAILURE,
+    POST_CHOICE_FIELD_CHANGES, POST_CHOICE_FIELD_CHANGES_SUCCESS, POST_CHOICE_FIELD_CHANGES_START, POST_CHOICE_FIELD_CHANGES_FAILURE,
+    CREATE_CATALOGUE_FIELD, CREATE_CATALOGUE_FIELD_START, CREATE_CATALOGUE_FIELD_FAILURE, REFRESH_CATALOGUE_FIELDS,
+} from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice"
 
-export const fetchCataloguesEpic: EpicType = (action$, state$) => action$.pipe(
-    ofType<AppActionTypes, FetchCatalogues>(CATALOGUES_FETCH_CATALOGUES),
-    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
-    switchMap(([_, id]) => concat(
-        of(fetchCataloguesStart()),
-        axiosInstance$.get('/catalogues/', {
-            params: { created_by: id }
+export const createCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CREATE_CATALOGUE.match),
+    switchMap(() => concat(
+        of(CREATE_CATALOGUE_START()),
+        axiosInstance$.post('/catalogues/', {
+            name: 'New catalogue'
         }).pipe(
-            mergeMap(response => of(fetchCataloguesSuccess(response.data))),
-            catchError(() => of(fetchCataloguesFailure()))
+            mergeMap(response => of(CREATE_CATALOGUE_SUCCESS(response.data))),
+            catchError(() => of(CREATE_CATALOGUE_FAILURE()))
         )
     ))
 )
 
-export const refreshCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshCatalogueFieldsEpic>(
-        CATALOGUES_REFRESH_CATALOGUE_FIELDS,
-        MANAGE_CATALOGUES_CREATE_CATALOGUE_FIELD_SUCCESS
-    ),
-    mergeMap(action => of(fetchCatalogueFields(action.catalogueId)))
-)
-
-export const fetchCatalogueFieldsEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, FetchCatalogueFields>(CATALOGUES_FETCH_CATALOGUE_FIELDS),
-    mergeMap(action => concat(
-        of(fetchCatalogueFieldsStart(action.catalogueId)),
-        defer(() => axiosInstance$.get('/fields/', {
-            params: { catalogue_id: action.catalogueId }
-        })).pipe(
-            retryWhen(err => retry$(err)),
+export const changeCatalogueNameEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CHANGE_CATALOGUE_NAME.match),
+    switchMap((action) => concat(
+        of(CHANGE_CATALOGUE_NAME_START(action.payload.catalogueId)),
+        forkJoin([concat(
+            axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
+                name: action.payload.name
+            }),
+            axiosInstance$.get(`/catalogues/${action.payload.catalogueId}`))
+        ]).pipe(
             mergeMap(response =>
-                of(fetchCatalogueFieldsSuccess(
-                    response.data,
-                    action.catalogueId
-                ))
+                of(CHANGE_CATALOGUE_NAME_SUCCESS(response[0].data))
             ),
-            catchError(() => of(fetchCatalogueFieldsFailure(action.catalogueId)))
+            catchError(() => of(CHANGE_CATALOGUE_NAME_FAILURE(action.payload.catalogueId)))
         )
     ))
 )
 
-export const refreshCatalogueFieldEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshCatalogueFieldEpic>(
-        CATALOGUES_REFRESH_CATALOGUE_FIELD,
-        MANAGE_CATALOGUES_POST_CHOICE_FIELD_CHANGES_SUCCESS,
-        MANAGE_CATALOGUES_POST_TEXT_FIELD_NAME_CHANGE_SUCCESS
-    ),
-    mergeMap(action => of(fetchCatalogueField(action.fieldId, action.catalogueId)))
-)
-
-export const fetchCatalogueFieldEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, FetchCatalogueField>(CATALOGUES_FETCH_CATALOGUE_FIELD),
-    mergeMap(action => concat(
-        of(fetchCatalogueFieldStart(action.fieldId, action.catalogueId)),
-        defer(() => axiosInstance$.get(`/fields/${action.fieldId}/`)).pipe(
-            retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(fetchCatalogueFieldSuccess(
-                    response.data,
-                    action.fieldId,
-                    action.catalogueId,
-                ))
-            ),
-            catchError(() => of(fetchCatalogueFieldFailure(action.fieldId, action.catalogueId)))
-        )
-    ))
-)
-
-export const refreshCatalogueItemEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, RefreshCatalogueItemEpic>(CATALOGUES_REFRESH_CATALOGUE_ITEM,
-        CATALOGUES_SAVE_ITEM_SUCCESS
-    ),
-    mergeMap(action => of(fetchCatalogueItem(action.catalogueId, action.itemId, action.prevId)))
-)
-
-export const fetchCatalogueItemEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, FetchCatalogueItem>(CATALOGUES_FETCH_CATALOGUE_ITEM),
-    mergeMap(action => concat(
-        of(fetchCatalogueItemStart(action.catalogueId, action.itemId)),
-        defer(() => axiosInstance$.get(`/items/${action.itemId}/`)).pipe(
-            retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(fetchCatalogueItemSuccess(
-                    response.data,
-                    action.catalogueId,
-                    action.prevId,
-                ))
-            ),
-            catchError(() => of(fetchCatalogueItemFailure(action.catalogueId, action.prevId)))
-        )
-    ))
-)
-
-export const fetchCatalogueItemsEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, FetchCatalogueItems>(CATALOGUES_FETCH_CATALOGUE_ITEMS),
-    mergeMap(action => concat(
-        of(fetchCatalogueItemsStart(action.catalogueId)),
-        defer(() => axiosInstance$.get('/items/', {
-            params: {
-                catalogue_id: action.catalogueId,
-                page: action.page,
-            }
-        })).pipe(
-            retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(fetchCatalogueItemsSuccess(
-                    response.data,
-                    action.catalogueId,
-                ))
-            ),
-            catchError(() => of(fetchCatalogueItemsFailure(action.catalogueId)))
-        )
-    ))
-)
-
-export const fetchFieldsChoicesEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, FetchFieldsChoices>(CATALOGUES_FETCH_FIELDS_CHOICES),
-    mergeMap(action => concat(
-        of(fetchFieldsChoicesStart(action.fieldId, action.catalogueId)),
-        axiosInstance$.get('/choices/', {
-            params: { field_id: action.fieldId }
+export const postTextFieldNameChangeEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(POST_TEXT_FIELD_NAME_CHANGE.match),
+    switchMap(action => concat(
+        of(POST_TEXT_FIELD_NAME_CHANGE_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId
+        })),
+        axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
+            name: action.payload.name,
         }).pipe(
-            mergeMap(response =>
-                of(fetchFieldsChoicesSuccess(action.fieldId, action.catalogueId, response.data))
-            ),
-            catchError(() => of(fetchFieldsChoicesFailure(action.fieldId, action.catalogueId)))
-        )
-    ))
+            mapTo(POST_TEXT_FIELD_NAME_CHANGE_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })),
+            catchError(() => of(POST_TEXT_FIELD_NAME_CHANGE_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        ))
+    )
 )
 
-export const saveItemEpic: EpicType = action$ => action$.pipe(
-    ofType<AppActionTypes, SaveItem>(CATALOGUES_SAVE_ITEM),
+export const postChoiceFieldChangesEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(POST_CHOICE_FIELD_CHANGES.match),
     switchMap(action => {
-        const filteredValues = action.item.fieldsValues.filter(v => v.value.length > 0)
-        const values = filteredValues.map(itemFieldSerializer)
+        const isNew = (choice: DeserializedChoice) => choice.id.toString().startsWith('newChoice')
+        const removedChoices = action.payload.field.removedChoices
+        const newChoices = action.payload.field.choices.filter(isNew)
 
-        let request$
-
-        if (action.item.id.toString().startsWith('newItem')) {
-            request$ = axiosInstance$.post('/items/', {
-                catalogue_id: action.catalogueId,
-                values,
-            })
-        } else {
-            request$ = axiosInstance$.patch(`/items/${action.item.id}/`, {
-                values,
-            })
-        }
-
-        const imagesRequests$ = (itemId: number) => {
-            const isNew = (img: DeserializedImage) => img.id.toString().startsWith('newImage')
-            const { images, removedImages } = action.item
-
-            return forkJoin([
-                ...images.filter(isNew).map(img => {
-                    const data = new FormData()
-                    data.append('image', img.image)
-                    data.append('item_id', JSON.stringify(itemId))
-                    data.append('is_primary', JSON.stringify(img.isPrimary))
-                    return axiosInstance$.post('/images/', data)
-                }),
-
-                ...removedImages.map(img => axiosInstance$.delete(`/images/${img.id}/`)),
-
-                // Set primary flag only on existing images. If a new image is primary,
-                // it gets the flag set at creation time.
-                ...images.filter(img => !isNew(img) && img.isPrimary).map(
-                    primary => axiosInstance$.patch(`/images/${primary.id}/`, {
-                        is_primary: true
-                    })
+        const requests = []
+        if (removedChoices.length || newChoices.length) {
+            requests.push(concat(
+                forkJoin([
+                    ...removedChoices.filter(c => !isNew(c)).map(choice =>
+                        axiosInstance$.delete(`/choices/${choice.id}/`)
+                    )
+                ]),
+                from(newChoices).pipe(
+                    mergeMap(choice => axiosInstance$.post(`/choices/`, {
+                        field_id: choice.fieldId,
+                        value: choice.value,
+                    })),
                 ),
-            ])
+            ))
         }
+        requests.push(axiosInstance$.patch(`/fields/${action.payload.field.id}/`, {
+            name: action.payload.name,
+        }))
 
         return concat(
-            of(saveItemStart(action.catalogueId, action.item.id)),
-            request$.pipe(
-                mergeMap(response => imagesRequests$(response.data.id).pipe(
-                    defaultIfEmpty(),
-                    mergeMap(() => of(saveItemSuccess(action.catalogueId, response.data.id, action.item.id))),
-                    catchError(() => of(saveItemFailure(action.catalogueId, action.item.id)))
-                ))
-            )
+            of(POST_CHOICE_FIELD_CHANGES_START({
+                catalogueId: action.payload.field.catalogueId,
+                fieldId: action.payload.field.id,
+            })),
+            forkJoin(requests).pipe(
+                mapTo(POST_CHOICE_FIELD_CHANGES_SUCCESS({
+                    catalogueId: action.payload.field.catalogueId,
+                    fieldId: action.payload.field.id,
+                })),
+                catchError(() => of(POST_CHOICE_FIELD_CHANGES_FAILURE({
+                    catalogueId: action.payload.field.catalogueId,
+                    fieldId: action.payload.field.id,
+                })))
+            ),
         )
     })
 )
 
+export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(CREATE_CATALOGUE_FIELD.match),
+    switchMap(action => concat(
+        of(CREATE_CATALOGUE_FIELD_START(action.payload.catalogueId)),
+        axiosInstance$.post(`/fields/`, {
+            name: action.payload.name,
+            catalogue_id: action.payload.catalogueId,
+            type: action.payload.type,
+            position: action.payload.position,
+        }).pipe(
+            mapTo(CREATE_CATALOGUE_FIELD_SUCCESS(action.payload.catalogueId)),
+            catchError(() => of(CREATE_CATALOGUE_FIELD_FAILURE(action.payload.catalogueId)))
+        ))
+    )
+)
+
+export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+    filter(FETCH_CATALOGUES.match),
+    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
+    switchMap(([_, id]) => concat(
+        of(FETCH_CATALOGUES_START()),
+        axiosInstance$.get('/catalogues/', {
+            params: { created_by: id }
+        }).pipe(
+            mergeMap(response => of(FETCH_CATALOGUES_SUCCESS(response.data))),
+            catchError(() => of(FETCH_CATALOGUES_FAILURE()))
+        )
+    ))
+)
+
+export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(
+        CREATE_CATALOGUE_FIELD_SUCCESS.match ||
+        REFRESH_CATALOGUE_FIELDS.match
+    ),
+    mergeMap(action => of(FETCH_CATALOGUE_FIELDS(action.payload)))
+)
+
+export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(FETCH_CATALOGUE_FIELDS.match),
+    mergeMap(action => concat(
+        of(FETCH_CATALOGUE_FIELDS_START(action.payload)),
+        defer(() => axiosInstance$.get('/fields/', {
+            params: { catalogue_id: action.payload }
+        })).pipe(
+            retryWhen(err => retry$(err)),
+            mergeMap(response =>
+                of(FETCH_CATALOGUE_FIELDS_SUCCESS({
+                    data: response.data,
+                    catalogueId: action.payload
+                }))
+            ),
+            catchError(() => of(FETCH_CATALOGUE_FIELDS_FAILURE(action.payload)))
+        )
+    ))
+)
+
+export const refreshCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(
+        REFRESH_CATALOGUE_FIELD.match ||
+        POST_CHOICE_FIELD_CHANGES_SUCCESS.match ||
+        POST_TEXT_FIELD_NAME_CHANGE_SUCCESS.match
+    ),
+    mergeMap(action => of(FETCH_CATALOGUE_FIELD({
+        catalogueId: action.payload.catalogueId,
+        fieldId: action.payload.fieldId
+    })))
+)
+
+export const fetchCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(FETCH_CATALOGUE_FIELD.match),
+    mergeMap(action => concat(
+        of(FETCH_CATALOGUE_FIELD_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+        defer(() => axiosInstance$.get(`/fields/${action.payload.fieldId}/`)).pipe(
+            retryWhen(err => retry$(err)),
+            mergeMap(response =>
+                of(FETCH_CATALOGUE_FIELD_SUCCESS({
+                    data: response.data,
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                }))
+            ),
+            catchError(() => of(FETCH_CATALOGUE_FIELD_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
+    ))
+)
+
+export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(FETCH_FIELDS_CHOICES.match),
+    mergeMap(action => concat(
+        of(FETCH_FIELDS_CHOICES_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+        axiosInstance$.get('/choices/', {
+            params: { field_id: action.payload.fieldId }
+        }).pipe(
+            mergeMap(response =>
+                of(FETCH_FIELDS_CHOICES_SUCCESS({
+                    data: response.data,
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+
+                }))
+            ),
+            catchError(() => of(FETCH_FIELDS_CHOICES_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
+    ))
+)
+
 export const cataloguesEpics = combineEpics(
+    createCatalogueEpic,
+    changeCatalogueNameEpic,
+    postTextFieldNameChangeEpic,
+    postChoiceFieldChangesEpic,
+    createCatalogueFieldEpic,
     fetchCataloguesEpic,
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
-    refreshCatalogueItemEpic,
-    fetchCatalogueItemEpic,
-    fetchCatalogueItemsEpic,
     fetchFieldsChoicesEpic,
-    saveItemEpic,
 )

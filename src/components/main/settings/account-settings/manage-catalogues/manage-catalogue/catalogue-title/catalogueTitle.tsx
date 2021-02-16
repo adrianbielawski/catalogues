@@ -1,12 +1,8 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 import styles from './catalogueTitle.scss'
-//Types
-import { LocationState } from 'src/globalTypes'
 //Redux
-import { toggleCatalogueNameEdit, changeCatalogueName } from 'store/actions/settingsActions'
-import { useTypedSelector } from 'store/reducers'
+import { CHANGE_CATALOGUE_NAME, TOGGLE_CATALOGUE_NAME_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
@@ -17,16 +13,18 @@ type Props = {
 }
 
 const CatalogueTitle = (props: Props) => {
-    const location = useLocation<LocationState>()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.id))  
 
     const handleEditName = () => {
-        dispatch(toggleCatalogueNameEdit(props.id))
+        dispatch(TOGGLE_CATALOGUE_NAME_EDIT(props.id))
     }
 
     const handleNameChange = (input: string[]) => {
-        dispatch(changeCatalogueName(props.id, input[0], location))
+        dispatch(CHANGE_CATALOGUE_NAME({
+            catalogueId: props.id,
+            name: input[0]
+        }))
     }
 
     return (

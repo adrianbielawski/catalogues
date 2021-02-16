@@ -1,12 +1,11 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Redux
-import { postTextFieldNameChange, toggleFieldEdit } from 'store/actions/settingsActions'
-import { useTypedSelector } from 'store/reducers'
+import { POST_TEXT_FIELD_NAME_CHANGE, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 //Types
 import { DeserializedTextField } from 'src/globalTypes'
@@ -23,16 +22,23 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const TextField = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
     const delayCompleated = useDelay(field.isSubmitting)
 
     const handleEdit = () => {
-        dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
+        dispatch(TOGGLE_FIELD_EDIT({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }
 
     const handleConfirm = (input: string) => {
-        dispatch(postTextFieldNameChange(props.field.id, props.field.catalogueId, input))
+        dispatch(POST_TEXT_FIELD_NAME_CHANGE({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId,
+            name: input
+        }))
     }
 
     const fieldClass = cx(

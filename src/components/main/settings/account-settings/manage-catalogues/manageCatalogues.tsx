@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
 import styles from './manageCatalogues.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/reducers'
-import { fetchCatalogues } from 'store/actions/cataloguesActions'
-import { CREATE_CATALOGUE } from 'store/slices/settingsSlices/manageCataloguesSlice/manageCataloguesSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { CREATE_CATALOGUE, FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom hooks
 import { useDelay, useFirstRender } from 'src/customHooks'
 //Custom components
@@ -13,21 +12,19 @@ import Loader from 'components/global-components/loader/loader'
 
 const ManageCatalogues = () => {
     const dispatch = useAppDispatch()
-    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
-    const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
-    const creatingNewCatalogue = useTypedSelector(state => state.settings.manageCatalogues.creatingNewCatalogue)
-    const delayCompleated = useDelay(creatingNewCatalogue)
+    const catalogues = useTypedSelector(state => state.catalogues)
+    const delayCompleated = useDelay(catalogues.creatingNewCatalogue)
     const firstRender = useFirstRender()
 
     useEffect(() => {
-        dispatch(fetchCatalogues())
+        dispatch(FETCH_CATALOGUES())
     }, [])
 
     const handleAddCatalogueClick = () => {
         dispatch(CREATE_CATALOGUE())
     }
 
-    const items = catalogues.map(catalogue => (
+    const items = catalogues.catalogues.map(catalogue => (
         <ManageCatalogue catalogue={catalogue} key={catalogue.id} />
     ))
 
@@ -39,7 +36,7 @@ const ManageCatalogues = () => {
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {fetchingCatalogues || firstRender
+            {catalogues.fetchingCatalogues || firstRender
                 ? <Loader size={50} className={styles.loader} />
                 : items
             }

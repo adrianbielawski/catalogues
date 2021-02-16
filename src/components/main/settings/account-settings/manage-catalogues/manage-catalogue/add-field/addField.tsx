@@ -1,10 +1,9 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './addField.scss'
 //Redux
-import { useTypedSelector } from 'store/reducers'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
-import { toggleAddField } from 'store/actions/settingsActions'
+import { TOGGLE_ADD_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import FieldForm from './field-form/fieldForm'
@@ -14,11 +13,11 @@ type Props = {
 }
 
 const AddField = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
 
     const handleAddClick = () => {
-        dispatch(toggleAddField(catalogue.id))
+        dispatch(TOGGLE_ADD_FIELD(catalogue.id))
     }
 
     return (

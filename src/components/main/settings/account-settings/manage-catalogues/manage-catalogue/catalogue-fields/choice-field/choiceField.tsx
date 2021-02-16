@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -7,12 +6,12 @@ import styles from './choiceField.scss'
 //Types
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/reducers'
-import { fieldSelector } from 'store/selectors'
-import { fetchFieldsChoices, refreshCatalogueField } from 'store/actions/cataloguesActions'
 import {
-    addFieldChoiceToState, removeFieldChoiceFromState, toggleFieldEdit, postChoiceFieldChanges
-} from 'store/actions/settingsActions'
+    ADD_FIELD_CHOICE_TO_STATE, FETCH_FIELDS_CHOICES, POST_CHOICE_FIELD_CHANGES, REFRESH_CATALOGUE_FIELD,
+    REMOVE_FIELD_CHOICE_FROM_STATE, TOGGLE_FIELD_EDIT
+} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { fieldSelector } from 'store/selectors'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
@@ -29,34 +28,54 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const ChoiceField = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const nameInputRef = useRef<HTMLInputElement>(null)
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
     const delayCompleated = useDelay(field.isSubmitting)
 
     useEffect(() => {
-        dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
+        dispatch(FETCH_FIELDS_CHOICES({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }, [])
 
     const handleEdit = () => {
-        dispatch(toggleFieldEdit(props.field.id, props.field.catalogueId))
+        dispatch(TOGGLE_FIELD_EDIT({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }
 
     const handleRemoveChoice = (id: number | string) => {
-        dispatch(removeFieldChoiceFromState(id, props.field.id, props.field.catalogueId))
+        dispatch(REMOVE_FIELD_CHOICE_FROM_STATE({
+            id,
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }
 
     const handleAddChoice = (name: string) => {
-        dispatch(addFieldChoiceToState(name, props.field.id, props.field.catalogueId))
+        dispatch(ADD_FIELD_CHOICE_TO_STATE({
+            name,
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }
 
     const handleConfirm = () => {
-        const fieldName = nameInputRef.current!.value
-        dispatch(postChoiceFieldChanges(field, fieldName))
+        const name = nameInputRef.current!.value
+        dispatch(POST_CHOICE_FIELD_CHANGES({
+            field,
+            name,
+        }))
     }
 
     const handleCancel = () => {
-        dispatch(refreshCatalogueField(props.field.id, props.field.catalogueId))
+        dispatch(REFRESH_CATALOGUE_FIELD({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }
 
     const fieldClass = cx(

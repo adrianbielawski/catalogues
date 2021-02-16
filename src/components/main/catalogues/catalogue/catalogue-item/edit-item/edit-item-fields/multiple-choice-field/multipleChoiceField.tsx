@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import classNames from 'classnames/bind'
 import styles from './multipleChoiceField.scss'
 //Types
 import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { changeItemFieldValue, fetchFieldsChoices } from 'store/actions/cataloguesActions'
+import { FETCH_FIELDS_CHOICES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { fieldSelector } from 'store/selectors'
-import { useTypedSelector } from 'store/reducers'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
-import Loader from 'components/global-components/loader/loader'
 
 interface Props {
     itemId: number | string,
@@ -22,12 +20,15 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const SingleChoiceField = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
 
     useEffect(() => {
-        dispatch(fetchFieldsChoices(props.field.id, props.field.catalogueId))
+        dispatch(FETCH_FIELDS_CHOICES({
+            fieldId: props.field.id,
+            catalogueId: props.field.catalogueId
+        }))
     }, [])
 
     const handleEdit = () => {

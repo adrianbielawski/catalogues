@@ -41,7 +41,6 @@ export interface DeserializedCatalogue {
     createdBy: number,
     name: string,
     slug: string,
-    itemsData: DeserializedItemsData,
     fields: DeserializedField[],
     fetchingItems: boolean,
     fetchingFields: boolean,

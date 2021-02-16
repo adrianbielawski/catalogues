@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
 import styles from './catalogue.scss'
 //Types
 import { HydratedRouteComponentProps } from 'src/router'
 //Redux
-import { addItemToState, fetchCatalogueFields } from 'store/actions/cataloguesActions'
+import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Utils
 import { scrollTop } from 'src/utils'
 //Custom components
@@ -14,11 +13,11 @@ import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
-        dispatch(fetchCatalogueFields(catalogue.id))
+        dispatch(FETCH_CATALOGUE_FIELDS(catalogue.id))
     }, [catalogue.id])
 
     const handleAddItem = () => {

@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
 //Redux
 import { catalogueSelector, fieldsSelector } from 'store/selectors'
-import { useTypedSelector } from 'store/reducers'
-import { createCatalogueField, toggleAddField } from 'store/actions/settingsActions'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
@@ -45,7 +44,7 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const FieldForm = (props: Props) => {
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const fields = useTypedSelector(fieldsSelector(props.catalogueId))
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
     const [isNameEditing, setIsNameEditing] = useState(true)
@@ -67,11 +66,16 @@ const FieldForm = (props: Props) => {
     }
 
     const handleConfirm = () => {
-        dispatch(createCatalogueField(props.catalogueId, fieldName, fieldType, fields.length))
+        dispatch(CREATE_CATALOGUE_FIELD({
+            catalogueId: props.catalogueId,
+            name: fieldName,
+            type: fieldType,
+            position: fields.length
+        }))
     }
 
     const handleCancel = () => {
-        dispatch(toggleAddField(catalogue.id))
+        dispatch(TOGGLE_ADD_FIELD(catalogue.id))
     }
 
     const formClass = cx(

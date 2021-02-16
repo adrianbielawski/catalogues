@@ -1,7 +1,5 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
-import { Switch } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
@@ -9,17 +7,18 @@ import { NavItemType } from 'components/nav/nav'
 //Context
 import FiltersBarBulkContextProvider from './catalogue/filters-bar/filtersBarBulkContextProvider'
 //Redux
-import { useTypedSelector } from 'store/reducers/index'
-import { fetchCatalogues } from 'store/actions/cataloguesActions'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Router
 import { RouteWithContext } from 'src/router'
+//Custom hooks
+import { useFirstRender } from 'src/customHooks'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from './catalogue/filters-bar/filtersBar'
-import { useFirstRender } from 'src/customHooks'
 
 const filtersValue = {
     filters: [
@@ -95,7 +94,7 @@ const filtersBarValue = {
 const Catalogues = () => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
@@ -105,7 +104,7 @@ const Catalogues = () => {
     const [minHeight, setMinHeight] = useState(0)
 
     useEffect(() => {
-        dispatch(fetchCatalogues())
+        dispatch(FETCH_CATALOGUES())
     }, [])
 
     useEffect(() => {
