@@ -12,15 +12,14 @@ import { DeserializedImage } from "src/globalTypes"
 //Actions
 import * as actions from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
 
-export const refreshItemEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(
-        actions.REFRESH_ITEM.match ||
-        actions.SAVE_ITEM_SUCCESS.match
-    ),
-    mergeMap(action => of(actions.FETCH_ITEM({
+export const refreshItemEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.REFRESH_ITEM.match)),
+    action$.pipe(filter(actions.SAVE_ITEM_SUCCESS.match)),
+).pipe(
+    map(action => actions.FETCH_ITEM({
         itemId: action.payload.itemId,
         prevId: action.payload.prevId
-    })))
+    }))
 )
 
 export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(

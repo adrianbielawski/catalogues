@@ -140,13 +140,11 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
     ))
 )
 
-export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => action$.pipe(
-    // filter(action => 
-    //     actions.REFRESH_CATALOGUE_FIELDS.match(action) ||
-    //     actions.CREATE_CATALOGUE_FIELD_SUCCESS.match(action)
-    // ),
-    filter(actions.CREATE_CATALOGUE_FIELD_SUCCESS.match),
-    mergeMap(action => of(actions.FETCH_CATALOGUE_FIELDS(action.payload)))
+export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELDS.match)),
+    action$.pipe(filter(actions.CREATE_CATALOGUE_FIELD_SUCCESS.match)),
+).pipe(
+    map(action => actions.FETCH_CATALOGUE_FIELDS(action.payload))
 )
 
 export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$.pipe(
@@ -168,16 +166,15 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$
     ))
 )
 
-export const refreshCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(
-        actions.REFRESH_CATALOGUE_FIELD.match ||
-        actions.POST_CHOICE_FIELD_CHANGES_SUCCESS.match ||
-        actions.POST_TEXT_FIELD_NAME_CHANGE_SUCCESS.match
-    ),
-    mergeMap(action => of(actions.FETCH_CATALOGUE_FIELD({
+export const refreshCatalogueFieldEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELD.match)),
+    action$.pipe(filter(actions.POST_CHOICE_FIELD_CHANGES_SUCCESS.match)),
+    action$.pipe(filter(actions.POST_TEXT_FIELD_NAME_CHANGE_SUCCESS.match)),
+).pipe(
+    map(action => actions.FETCH_CATALOGUE_FIELD({
         catalogueId: action.payload.catalogueId,
         fieldId: action.payload.fieldId
-    })))
+    }))
 )
 
 export const fetchCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
