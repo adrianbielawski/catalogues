@@ -1,6 +1,6 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, defer, forkJoin, Observable, from } from 'rxjs'
-import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo } from 'rxjs/operators'
+import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
+import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
@@ -18,7 +18,7 @@ export const createCatalogueEpic = (action$: Observable<Action>) => action$.pipe
         axiosInstance$.post('/catalogues/', {
             name: 'New catalogue'
         }).pipe(
-            mergeMap(response => of(actions.CREATE_CATALOGUE_SUCCESS(response.data))),
+            map(response => actions.CREATE_CATALOGUE_SUCCESS(response.data)),
             catchError(() => of(actions.CREATE_CATALOGUE_FAILURE()))
         )
     ))
@@ -34,8 +34,8 @@ export const changeCatalogueNameEpic = (action$: Observable<Action>) => action$.
             }),
             axiosInstance$.get(`/catalogues/${action.payload.catalogueId}`))
         ]).pipe(
-            mergeMap(response =>
-                of(actions.CHANGE_CATALOGUE_NAME_SUCCESS(response[0].data))
+            map(response =>
+                actions.CHANGE_CATALOGUE_NAME_SUCCESS(response[0].data)
             ),
             catchError(() => of(actions.CHANGE_CATALOGUE_NAME_FAILURE(action.payload.catalogueId)))
         )
@@ -134,7 +134,7 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
         axiosInstance$.get('/catalogues/', {
             params: { created_by: id }
         }).pipe(
-            mergeMap(response => of(actions.FETCH_CATALOGUES_SUCCESS(response.data))),
+            map(response => actions.FETCH_CATALOGUES_SUCCESS(response.data)),
             catchError(() => of(actions.FETCH_CATALOGUES_FAILURE()))
         )
     ))
@@ -155,11 +155,11 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$
             params: { catalogue_id: action.payload }
         })).pipe(
             retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(actions.FETCH_CATALOGUE_FIELDS_SUCCESS({
+            map(response =>
+                actions.FETCH_CATALOGUE_FIELDS_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload
-                }))
+                })
             ),
             catchError(() => of(actions.FETCH_CATALOGUE_FIELDS_FAILURE(action.payload)))
         )
@@ -186,12 +186,12 @@ export const fetchCatalogueFieldEpic = (action$: Observable<Action>) => action$.
         })),
         defer(() => axiosInstance$.get(`/fields/${action.payload.fieldId}/`)).pipe(
             retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(actions.FETCH_CATALOGUE_FIELD_SUCCESS({
+            map(response =>
+                actions.FETCH_CATALOGUE_FIELD_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
                     fieldId: action.payload.fieldId,
-                }))
+                })
             ),
             catchError(() => of(actions.FETCH_CATALOGUE_FIELD_FAILURE({
                 catalogueId: action.payload.catalogueId,
@@ -211,13 +211,13 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => action$.p
         axiosInstance$.get('/choices/', {
             params: { field_id: action.payload.fieldId }
         }).pipe(
-            mergeMap(response =>
-                of(actions.FETCH_FIELDS_CHOICES_SUCCESS({
+            map(response =>
+                actions.FETCH_FIELDS_CHOICES_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
                     fieldId: action.payload.fieldId,
 
-                }))
+                })
             ),
             catchError(() => of(actions.FETCH_FIELDS_CHOICES_FAILURE({
                 catalogueId: action.payload.catalogueId,

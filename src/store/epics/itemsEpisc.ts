@@ -1,7 +1,8 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, defer, forkJoin, Observable } from 'rxjs'
-import { catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter } from 'rxjs/operators'
+import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
+import { catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
+import mime from 'mime-types'
 import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
 import { retry$ } from "store/storeObservables"
@@ -28,11 +29,11 @@ export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
         of(actions.FETCH_ITEM_START(action.payload.itemId)),
         defer(() => axiosInstance$.get(`/items/${action.payload.itemId}/`)).pipe(
             retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(actions.FETCH_ITEM_SUCCESS({
+            map(response =>
+                actions.FETCH_ITEM_SUCCESS({
                     data: response.data,
                     itemId: action.payload.prevId,
-                }))
+                })
             ),
             catchError(() => of(actions.FETCH_ITEM_FAILURE(action.payload.prevId)))
         )
@@ -50,11 +51,11 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
             }
         })).pipe(
             retryWhen(err => retry$(err)),
-            mergeMap(response =>
-                of(actions.FETCH_ITEMS_SUCCESS({
+            map(response =>
+                actions.FETCH_ITEMS_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
-                }))
+                })
             ),
             catchError(() => of(actions.FETCH_ITEMS_FAILURE()))
         )
@@ -113,10 +114,10 @@ export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
             request$.pipe(
                 mergeMap(response => imagesRequests$(response.data.id).pipe(
                     defaultIfEmpty(),
-                    mergeMap(() => of(actions.SAVE_ITEM_SUCCESS({
+                    map(() => actions.SAVE_ITEM_SUCCESS({
                         itemId: response.data.id,
                         prevId: action.payload.id,
-                    }))),
+                    })),
                     catchError(() => of(actions.SAVE_ITEM_FAILURE(action.payload.id)))
                 ))
             )

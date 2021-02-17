@@ -2,7 +2,7 @@ import { combineEpics } from "redux-observable"
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 import { of, concat, Observable } from 'rxjs'
-import { catchError, filter, mergeMap, switchMap } from 'rxjs/operators'
+import { catchError, filter, map, switchMap } from 'rxjs/operators'
 import * as actions from "store/slices/settingsSlices/myAccountSlice/myAccountSlice"
 
 export const changeUsernameEpic = (action$: Observable<Action>) => action$.pipe(
@@ -12,9 +12,7 @@ export const changeUsernameEpic = (action$: Observable<Action>) => action$.pipe(
         axiosInstance$.patch('/user/', {
             username: action.payload
         }).pipe(
-            mergeMap((response) => of(
-                actions.CHANGE_USERNAME_SUCCESS(response.data)
-            )),
+            map(response => actions.CHANGE_USERNAME_SUCCESS(response.data)),
             catchError(() => of(actions.CHANGE_USERNAME_FAILURE()))
         )
     ))
@@ -28,7 +26,7 @@ export const changePasswordEpic = (action$: Observable<Action>) => action$.pipe(
             new_password1: action.payload.password1,
             new_password2: action.payload.password2
         }).pipe(
-            mergeMap(() => of(actions.CHANGE_PASSWORD_SUCCESS())),
+            map(() => actions.CHANGE_PASSWORD_SUCCESS()),
             catchError(() => of(actions.CHANGE_PASSWORD_FAILURE()))
         )
     ))
