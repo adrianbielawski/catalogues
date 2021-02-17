@@ -25,7 +25,6 @@ export const FETCH_ITEM = createAction<T.FetchItemPayload>('ITEMS_DATA/FETCH_ITE
 export const FETCH_ITEM_START = createAction<number>('ITEMS_DATA/FETCH_ITEM_START')
 export const FETCH_ITEMS = createAction<T.FetchItemsPayload>('ITEMS_DATA/FETCH_ITEMS')
 export const SAVE_ITEM = createAction<DeserializedItem>('ITEMS_DATA/SAVE_ITEM')
-export const SAVE_ITEM_SUCCESS = createAction<T.SaveItemSuccessPayload>('ITEMS_DATA/SAVE_ITEM_SUCCESS')
 
 export const itemsDataSlice = createSlice({
     name: 'ITEMS_DATA',
@@ -139,6 +138,11 @@ export const itemsDataSlice = createSlice({
             const item = getItemById(state, action.payload)
             item.isSubmitting = true
         },
+        SAVE_ITEM_SUCCESS(state, action: PayloadAction<T.SaveItemSuccessPayload>) {
+            const item = getItemById(state, action.payload.prevId)
+            item.isSubmitting = false
+            item.isEditing = false
+        },
         SAVE_ITEM_FAILURE(state, action: PayloadAction<number | string>) {
             const item = getItemById(state, action.payload)
             item.isSubmitting = false
@@ -162,6 +166,6 @@ export const {
     ADD_IMAGE_TO_STATE,
     REMOVE_IMAGE_FROM_STATE,
     CHANGE_PRIMARY_IMAGE,
-    SAVE_ITEM_START, SAVE_ITEM_FAILURE,
+    SAVE_ITEM_START, SAVE_ITEM_SUCCESS, SAVE_ITEM_FAILURE,
     CLEAR_ITEMS_DATA,
 } = itemsDataSlice.actions
