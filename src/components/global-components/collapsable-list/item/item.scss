@@ -1,8 +1,8 @@
 @import "global-styles/variables_and_mixins";
 
 .item {
-    padding-bottom: 5px;
-    &.collapsedList {
+    margin-bottom: 5px;
+    &.clipText {
         @include clipText;
     }
 }

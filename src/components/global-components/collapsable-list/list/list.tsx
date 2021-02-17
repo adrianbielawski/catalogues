@@ -14,6 +14,8 @@ type Props = {
     maxHeight: number,
 }
 
+const ITEM_MARGIN = 5
+
 const List = (props: Props) => {
     const { dispatch, ...state } = useContext(ListContext)
     const listRef = useRef<HTMLUListElement>(null)
@@ -36,7 +38,7 @@ const List = (props: Props) => {
         let itemsInView = 0
 
         for (let item of Array.from(items)) {
-            totalHeight += item.getBoundingClientRect().height
+            totalHeight += item.getBoundingClientRect().height + ITEM_MARGIN
 
             if (totalHeight <= props.maxHeight) {
                 itemsInView++

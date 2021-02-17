@@ -19,7 +19,7 @@ const Item = (props: Props) => {
     const itemClass = cx(
         'item',
         {
-            collapsedList: !state.showAllItems && state.itemsInspected
+            clipText: !state.showAllItems && state.showButton
         }
     )
 
