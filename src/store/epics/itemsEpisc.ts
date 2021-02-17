@@ -10,46 +10,40 @@ import { itemFieldSerializer } from "src/serializers"
 //Types
 import { DeserializedImage } from "src/globalTypes"
 //Actions
-import {
-    SAVE_ITEM_SUCCESS,
-    REFRESH_ITEM,
-    FETCH_ITEM, FETCH_ITEM_START, FETCH_ITEM_SUCCESS, FETCH_ITEM_FAILURE,
-    FETCH_ITEMS, FETCH_ITEMS_SUCCESS, FETCH_ITEMS_START, FETCH_ITEMS_FAILURE,
-    SAVE_ITEM, SAVE_ITEM_START, SAVE_ITEM_FAILURE,
-} from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
+import * as actions from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
 
 export const refreshItemEpic = (action$: Observable<Action>) => action$.pipe(
     filter(
-        REFRESH_ITEM.match ||
-        SAVE_ITEM_SUCCESS.match
+        actions.REFRESH_ITEM.match ||
+        actions.SAVE_ITEM_SUCCESS.match
     ),
-    mergeMap(action => of(FETCH_ITEM({
+    mergeMap(action => of(actions.FETCH_ITEM({
         itemId: action.payload.itemId,
         prevId: action.payload.prevId
     })))
 )
 
 export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(FETCH_ITEM.match),
+    filter(actions.FETCH_ITEM.match),
     mergeMap(action => concat(
-        of(FETCH_ITEM_START(action.payload.itemId)),
+        of(actions.FETCH_ITEM_START(action.payload.itemId)),
         defer(() => axiosInstance$.get(`/items/${action.payload.itemId}/`)).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
-                of(FETCH_ITEM_SUCCESS({
+                of(actions.FETCH_ITEM_SUCCESS({
                     data: response.data,
                     itemId: action.payload.prevId,
                 }))
             ),
-            catchError(() => of(FETCH_ITEM_FAILURE(action.payload.prevId)))
+            catchError(() => of(actions.FETCH_ITEM_FAILURE(action.payload.prevId)))
         )
     ))
 )
 
 export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(FETCH_ITEMS.match),
+    filter(actions.FETCH_ITEMS.match),
     mergeMap(action => concat(
-        of(FETCH_ITEMS_START(action.payload.catalogueId)),
+        of(actions.FETCH_ITEMS_START()),
         defer(() => axiosInstance$.get('/items/', {
             params: {
                 catalogue_id: action.payload.catalogueId,
@@ -58,18 +52,18 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
         })).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response =>
-                of(FETCH_ITEMS_SUCCESS({
+                of(actions.FETCH_ITEMS_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
                 }))
             ),
-            catchError(() => of(FETCH_ITEMS_FAILURE(action.payload.catalogueId)))
+            catchError(() => of(actions.FETCH_ITEMS_FAILURE()))
         )
     ))
 )
 
 export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(SAVE_ITEM.match),
+    filter(actions.SAVE_ITEM.match),
     switchMap(action => {
         const filteredValues = action.payload.fieldsValues.filter(v => v.value.length > 0)
         const values = filteredValues.map(itemFieldSerializer)
@@ -113,15 +107,15 @@ export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
         }
 
         return concat(
-            of(SAVE_ITEM_START(action.payload.id)),
+            of(actions.SAVE_ITEM_START(action.payload.id)),
             request$.pipe(
                 mergeMap(response => imagesRequests$(response.data.id).pipe(
                     defaultIfEmpty(),
-                    mergeMap(() => of(SAVE_ITEM_SUCCESS({
+                    mergeMap(() => of(actions.SAVE_ITEM_SUCCESS({
                         itemId: response.data.id,
                         prevId: action.payload.id,
                     }))),
-                    catchError(() => of(SAVE_ITEM_FAILURE(action.payload.id)))
+                    catchError(() => of(actions.SAVE_ITEM_FAILURE(action.payload.id)))
                 ))
             )
         )

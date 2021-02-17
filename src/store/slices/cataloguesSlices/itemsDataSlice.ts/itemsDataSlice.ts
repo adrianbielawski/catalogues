@@ -4,13 +4,10 @@ import { mod } from 'src/utils'
 import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
 import { itemDeserializer, listDeserializer } from 'src/serializers'
 import { DeserializedItem } from 'src/globalTypes'
-import {
-    AddImageToStatePayload, FetchItemPayload, FetchItemSuccessPayload, FetchItemsPayload, ImagePayload,
-    ItemAndFieldIdPayload, ItemsDataState, SaveItemSuccessPayload, FetchItemsSuccessPayload,
-} from './itemsDataTypes'
+import * as T from './itemsDataTypes'
 import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
 
-const initialState: ItemsDataState = {
+const initialState: T.ItemsDataState = {
     catalogueId: null,
     fetchingItems: false,
     count: null,
@@ -23,18 +20,18 @@ const initialState: ItemsDataState = {
     results: [],
 }
 
-export const REFRESH_ITEM = createAction<FetchItemPayload>('ITEMS_DATA/REFRESH_ITEM')
-export const FETCH_ITEM = createAction<FetchItemPayload>('ITEMS_DATA/FETCH_ITEM')
+export const REFRESH_ITEM = createAction<T.FetchItemPayload>('ITEMS_DATA/REFRESH_ITEM')
+export const FETCH_ITEM = createAction<T.FetchItemPayload>('ITEMS_DATA/FETCH_ITEM')
 export const FETCH_ITEM_START = createAction<number>('ITEMS_DATA/FETCH_ITEM_START')
-export const FETCH_ITEMS = createAction<FetchItemsPayload>('ITEMS_DATA/FETCH_ITEMS')
+export const FETCH_ITEMS = createAction<T.FetchItemsPayload>('ITEMS_DATA/FETCH_ITEMS')
 export const SAVE_ITEM = createAction<DeserializedItem>('ITEMS_DATA/SAVE_ITEM')
-export const SAVE_ITEM_SUCCESS = createAction<SaveItemSuccessPayload>('ITEMS_DATA/SAVE_ITEM_SUCCESS')
+export const SAVE_ITEM_SUCCESS = createAction<T.SaveItemSuccessPayload>('ITEMS_DATA/SAVE_ITEM_SUCCESS')
 
 export const itemsDataSlice = createSlice({
     name: 'ITEMS_DATA',
     initialState,
     reducers: {
-        FETCH_ITEM_SUCCESS(state, action: PayloadAction<FetchItemSuccessPayload>) {
+        FETCH_ITEM_SUCCESS(state, action: PayloadAction<T.FetchItemSuccessPayload>) {
             const item = getItemById(state, action.payload.itemId)
             Object.assign(item, itemDeserializer(action.payload.data))
         },
@@ -45,14 +42,14 @@ export const itemsDataSlice = createSlice({
         FETCH_ITEMS_START(state) {
             state.fetchingItems = false
         },
-        FETCH_ITEMS_SUCCESS(state, action: PayloadAction<FetchItemsSuccessPayload>) {
+        FETCH_ITEMS_SUCCESS(state, action: PayloadAction<T.FetchItemsSuccessPayload>) {
             const prevState = cloneDeep(state)
             const list = listDeserializer(action.payload.data, itemDeserializer)
             if (prevState.catalogueId === action.payload.catalogueId) {
                 list.startIndex = prevState.startIndex || 1
                 list.results.unshift(...prevState.results)
             }
-            const newState: ItemsDataState = {
+            const newState: T.ItemsDataState = {
                 ...list,
                 catalogueId: action.payload.catalogueId,
                 fetchingItems: false,
@@ -85,7 +82,7 @@ export const itemsDataSlice = createSlice({
         REMOVE_ITEM_FROM_STATE(state, action: PayloadAction<number | string>) {
             state.results = state.results.filter(i => i.id !== action.payload)
         },
-        CHANGE_ITEM_FIELD_VALUE(state, action: PayloadAction<ItemAndFieldIdPayload>) {
+        CHANGE_ITEM_FIELD_VALUE(state, action: PayloadAction<T.ItemAndFieldIdPayload>) {
             const fieldsValues = getFieldsValuesById(state, action.payload.itemId)
             const fieldValue = fieldsValues.filter(f => f.fieldId === action.payload.fieldId)[0]
 
@@ -106,7 +103,7 @@ export const itemsDataSlice = createSlice({
                 fieldsValues.push(newField)
             }
         },
-        ADD_IMAGE_TO_STATE(state, action: PayloadAction<AddImageToStatePayload>) {
+        ADD_IMAGE_TO_STATE(state, action: PayloadAction<T.AddImageToStatePayload>) {
             const item = getItemById(state, action.payload.itemId)
 
             const image = {
@@ -118,7 +115,7 @@ export const itemsDataSlice = createSlice({
             }
             item.images.push(image)
         },
-        REMOVE_IMAGE_FROM_STATE(state, action: PayloadAction<ImagePayload>) {
+        REMOVE_IMAGE_FROM_STATE(state, action: PayloadAction<T.ImagePayload>) {
             const item = getItemById(state, action.payload.itemId)
             const removedImage = item.images[action.payload.index]
 
@@ -132,7 +129,7 @@ export const itemsDataSlice = createSlice({
             }
             item.images.splice(action.payload.index, 1)
         },
-        CHANGE_PRIMARY_IMAGE(state, action: PayloadAction<ImagePayload>) {
+        CHANGE_PRIMARY_IMAGE(state, action: PayloadAction<T.ImagePayload>) {
             const item = getItemById(state, action.payload.itemId)
             const prevPrimary = item.images.findIndex(img => img.isPrimary)
             item.images[prevPrimary].isPrimary = false

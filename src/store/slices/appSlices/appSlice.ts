@@ -1,7 +1,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppState } from './appTypes'
+import * as T from './appTypes'
 
-const initialState: AppState = {
+const initialState: T.AppState = {
     screenHeight: window.innerHeight,
 }
 

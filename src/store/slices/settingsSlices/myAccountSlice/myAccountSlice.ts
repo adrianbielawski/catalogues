@@ -1,9 +1,9 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { User } from 'src/globalTypes'
-import { ChangePasswordPayload, MyAccountState } from './myAccountTypes'
+import * as T from './myAccountTypes'
 import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
 
-const initialState: MyAccountState = {
+const initialState: T.MyAccountState = {
     isEditingUsername: false,
     isSubmittingUsername: false,
     isEditingPassword: false,
@@ -11,7 +11,7 @@ const initialState: MyAccountState = {
 }
 
 export const CHANGE_USERNAME = createAction<string>('CHANGE_USERNAME')
-export const CHANGE_PASSWORD = createAction<ChangePasswordPayload>('CHANGE_PASSWORD')
+export const CHANGE_PASSWORD = createAction<T.ChangePasswordPayload>('CHANGE_PASSWORD')
 
 export const myAccountSlice = createSlice({
     name: 'SETTINGS/MY_ACCOUNT',

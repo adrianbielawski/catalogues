@@ -1,10 +1,10 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { userDeserializer } from 'src/serializers'
-import { AuthState, GetUserDetails, HistoryPayload, LoginDetails, SignUpDetails } from './authTypes'
+import * as T from './authTypes'
 import { User } from 'src/globalTypes'
 import { CLEAR_APP_STATE } from '../appSlices/appSlice'
 
-const initialState: AuthState = {
+const initialState: T.AuthState = {
     user: null,
     isInitialized: false,
     isLoggingIn: false,
@@ -12,10 +12,10 @@ const initialState: AuthState = {
     isSigningUp: false,
 }
 
-export const GET_USER = createAction<GetUserDetails>('AUTH/GET_USER')
-export const LOG_IN = createAction<LoginDetails>('AUTH/LOG_IN')
-export const LOG_OUT = createAction<HistoryPayload>('AUTH/LOG_OUT')
-export const SIGN_UP = createAction<SignUpDetails>('AUTH/SIGN_UP')
+export const GET_USER = createAction<T.GetUserDetails>('AUTH/GET_USER')
+export const LOG_IN = createAction<T.LoginDetails>('AUTH/LOG_IN')
+export const LOG_OUT = createAction<T.HistoryPayload>('AUTH/LOG_OUT')
+export const SIGN_UP = createAction<T.SignUpDetails>('AUTH/SIGN_UP')
 
 export const authSlice = createSlice({
     name: 'AUTH',
@@ -56,7 +56,7 @@ export const authSlice = createSlice({
         LOG_OUT_START(state) {
             state.isLoggingOut = true
         },
-        LOG_OUT_SUCCESS(state) {
+        LOG_OUT_SUCCESS() {
             return initialState
         },
         LOG_OUT_FAILURE(state) {
