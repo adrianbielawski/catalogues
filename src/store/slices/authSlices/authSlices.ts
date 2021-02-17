@@ -3,6 +3,7 @@ import { userDeserializer } from 'src/serializers'
 import * as T from './authTypes'
 import { User } from 'src/globalTypes'
 import { CLEAR_APP_STATE } from '../appSlices/appSlice'
+import { CHANGE_USERNAME_SUCCESS } from '../settingsSlices/myAccountSlice/myAccountSlice'
 
 const initialState: T.AuthState = {
     user: null,
@@ -65,6 +66,9 @@ export const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
+        builder.addCase(CHANGE_USERNAME_SUCCESS, (state, action: PayloadAction<User>) => {
+            state.user!.username = action.payload.username
+        })
     },
 })
 

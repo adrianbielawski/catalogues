@@ -10,8 +10,8 @@ const initialState: T.MyAccountState = {
     isSubmittingPassword: false,
 }
 
-export const CHANGE_USERNAME = createAction<string>('CHANGE_USERNAME')
-export const CHANGE_PASSWORD = createAction<T.ChangePasswordPayload>('CHANGE_PASSWORD')
+export const CHANGE_USERNAME = createAction<string>('SETTINGS/MY_ACCOUNT/CHANGE_USERNAME')
+export const CHANGE_PASSWORD = createAction<T.ChangePasswordPayload>('SETTINGS/MY_ACCOUNT/CHANGE_PASSWORD')
 
 export const myAccountSlice = createSlice({
     name: 'SETTINGS/MY_ACCOUNT',
