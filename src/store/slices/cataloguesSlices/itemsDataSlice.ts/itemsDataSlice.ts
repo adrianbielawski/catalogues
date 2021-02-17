@@ -143,6 +143,9 @@ export const itemsDataSlice = createSlice({
             const item = getItemById(state, action.payload)
             item.isSubmitting = false
         },
+        CLEAR_ITEMS_DATA() {
+            return initialState
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -160,4 +163,5 @@ export const {
     REMOVE_IMAGE_FROM_STATE,
     CHANGE_PRIMARY_IMAGE,
     SAVE_ITEM_START, SAVE_ITEM_FAILURE,
+    CLEAR_ITEMS_DATA,
 } = itemsDataSlice.actions

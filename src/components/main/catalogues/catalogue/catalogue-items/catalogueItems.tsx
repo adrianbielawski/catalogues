@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Redux
-import { FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
@@ -27,6 +27,10 @@ const CatalogueItems = (props: Props) => {
 
     useEffect(() => {
         fetchItems()
+
+        return () => {
+            dispatch(CLEAR_ITEMS_DATA())
+        }
     }, [props.catalogueId])
 
     useEffect(() => {
