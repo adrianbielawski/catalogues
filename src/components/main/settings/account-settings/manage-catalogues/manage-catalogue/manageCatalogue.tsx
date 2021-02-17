@@ -12,6 +12,7 @@ import TextField from './catalogue-fields/text-field/textField'
 import ChoiceField from './catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
 import Loader from 'components/global-components/loader/loader'
+import { useDelay } from 'src/customHooks'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -20,6 +21,7 @@ type Props = {
 const ManageCatalogue = (props: Props) => {
     const dispatch = useAppDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.catalogue.id))
+    const delayCompleated = useDelay(catalogue.fetchingFields, 400)
 
     useEffect(() => {
         dispatch(FETCH_CATALOGUE_FIELDS(props.catalogue.id))
@@ -53,7 +55,7 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.manageItem}>
-                {catalogue.fetchingFields
+                {catalogue.fetchingFields && delayCompleated
                     ? <Loader />
                     : fields
                 }

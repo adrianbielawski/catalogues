@@ -13,7 +13,8 @@ import Loader from 'components/global-components/loader/loader'
 const ManageCatalogues = () => {
     const dispatch = useAppDispatch()
     const catalogues = useTypedSelector(state => state.catalogues)
-    const delayCompleated = useDelay(catalogues.creatingNewCatalogue)
+    const newCatalogueDelay = useDelay(catalogues.creatingNewCatalogue)
+    const cataloguesDelay = useDelay(catalogues.fetchingCatalogues)
     const firstRender = useFirstRender()
 
     useEffect(() => {
@@ -28,15 +29,17 @@ const ManageCatalogues = () => {
         <ManageCatalogue catalogue={catalogue} key={catalogue.id} />
     ))
 
+    const showLoader = catalogues.fetchingCatalogues && cataloguesDelay || firstRender
+
     return (
         <div className={styles.manageCatalogues}>
             <AddButton
                 text="Add new catalogue"
-                loading={delayCompleated}
+                loading={newCatalogueDelay}
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {catalogues.fetchingCatalogues || firstRender
+            {showLoader
                 ? <Loader size={50} className={styles.loader} />
                 : items
             }

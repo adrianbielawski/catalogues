@@ -92,50 +92,52 @@ const ChoiceField = (props: Props) => {
         }
     )
 
+    if (field.fetchingChoices) {
+        return null
+    }
+
     return (
-        field.fetchingChoices ? <Loader size={25} /> : (
-            <div className={fieldClass}>
-                <TransparentButton className={buttonClass} onClick={handleEdit}>
-                    <FontAwesomeIcon icon={faEdit} />
-                </TransparentButton>
-                {field.isEditing
-                    ? (
-                        <div>
-                            <Input
-                                defaultValue={props.field.name}
-                                className={styles.nameInput}
-                                minLength={2}
-                                ref={nameInputRef}
-                            />
-                            <Choices
-                                className={styles.choices}
-                                choices={field.choices}
-                                onRemove={handleRemoveChoice}
-                                onAdd={handleAddChoice}
-                            />
-                            <div className={styles.buttons}>
-                                <Button
-                                    className={styles.button}
-                                    loading={delayCompleated}
-                                    disabled={field.isSubmitting}
-                                    onClick={handleConfirm}
-                                >
-                                    Save
+        <div className={fieldClass}>
+            <TransparentButton className={buttonClass} onClick={handleEdit}>
+                <FontAwesomeIcon icon={faEdit} />
+            </TransparentButton>
+            {field.isEditing
+                ? (
+                    <div>
+                        <Input
+                            defaultValue={props.field.name}
+                            className={styles.nameInput}
+                            minLength={2}
+                            ref={nameInputRef}
+                        />
+                        <Choices
+                            className={styles.choices}
+                            choices={field.choices}
+                            onRemove={handleRemoveChoice}
+                            onAdd={handleAddChoice}
+                        />
+                        <div className={styles.buttons}>
+                            <Button
+                                className={styles.button}
+                                loading={delayCompleated}
+                                disabled={field.isSubmitting}
+                                onClick={handleConfirm}
+                            >
+                                Save
                             </Button>
-                                <Button
-                                    className={styles.button}
-                                    disabled={field.isSubmitting}
-                                    onClick={handleCancel}
-                                >
-                                    Cancel
+                            <Button
+                                className={styles.button}
+                                disabled={field.isSubmitting}
+                                onClick={handleCancel}
+                            >
+                                Cancel
                             </Button>
-                            </div>
                         </div>
-                    )
-                    : props.field.name
-                }
-            </div>
-        )
+                    </div>
+                )
+                : props.field.name
+            }
+        </div>
     )
 }
 
