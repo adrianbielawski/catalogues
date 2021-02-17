@@ -18,6 +18,7 @@ type Props = {
 const EditItemFields = (props: Props) => {
     const catalogueFields = useTypedSelector(fieldsSelector(props.item.catalogueId))
     const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.id))
+    const isNewItem = props.item.id.toString().startsWith('newItem')
 
     const fields = catalogueFields.map(field => {
         const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]
@@ -70,7 +71,7 @@ const EditItemFields = (props: Props) => {
         <ul className={styles.fields}>
             <li key={`itemId${props.item.id}`}>
                 <p className={styles.itemId}>
-                    Item id: {props.item.id}
+                    Item id: {!isNewItem ? props.item.id : null}
                 </p>
             </li>
             {fields}
