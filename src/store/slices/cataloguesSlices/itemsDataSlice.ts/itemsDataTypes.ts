@@ -2,6 +2,7 @@ import { DeserializedItem, Item, ListData } from "src/globalTypes";
 
 export interface ItemsDataState {
     catalogueId: number | null,
+    fetchingItems: boolean,
     count: number | null,
     pageSize: number | null,
     startIndex: number | null,

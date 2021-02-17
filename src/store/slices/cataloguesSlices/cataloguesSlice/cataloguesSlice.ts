@@ -11,7 +11,6 @@ import {
 import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
 import { catalogueDeserializer, choicesDeserializer, fieldDeserializer, fieldsDeserializer } from 'src/serializers'
 import { getCatalogueById, getChoiceById, getFieldById } from './cataloguesSlectors'
-import { FETCH_ITEMS_FAILURE, FETCH_ITEMS_START, FETCH_ITEMS_SUCCESS } from '../itemsDataSlice.ts/itemsDataSlice'
 
 const initialState: CataloguesState = {
     catalogues: [],
@@ -163,18 +162,6 @@ export const cataloguesSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
-        builder.addCase(FETCH_ITEMS_START, (state, action) => {
-            const catalogue = getCatalogueById(state, action.payload)
-            catalogue.fetchingItems = true
-        })
-        builder.addCase(FETCH_ITEMS_SUCCESS, (state, action) => {
-            const catalogue = getCatalogueById(state, action.payload.catalogueId)
-            catalogue.fetchingItems = false
-        })
-        builder.addCase(FETCH_ITEMS_FAILURE, (state, action) => {
-            const catalogue = getCatalogueById(state, action.payload)
-            catalogue.fetchingItems = false
-        })
     },
 })
 

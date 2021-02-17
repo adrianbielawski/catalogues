@@ -46,7 +46,6 @@ export interface DeserializedCatalogue {
     name: string,
     slug: string,
     fields: DeserializedField[],
-    fetchingItems: boolean,
     fetchingFields: boolean,
     isEditingCatalogueName: boolean,
     isSubmittingCatalogueName: boolean,

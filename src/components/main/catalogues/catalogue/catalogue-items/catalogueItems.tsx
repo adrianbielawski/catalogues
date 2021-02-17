@@ -4,7 +4,6 @@ import styles from './catalogueItems.scss'
 //Redux
 import { FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector } from 'store/selectors'
 //Custo hooks and utils
 import { useDelay } from 'src/customHooks'
 import { isElementInViewport } from 'src/utils'
@@ -23,9 +22,8 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>(null)
     const [lastItemInView, setLastItemInView] = useState(false)
-    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
     const itemsData = useTypedSelector(state => state.itemsData)
-    const delayCompleted = useDelay(catalogue.fetchingItems)
+    const delayCompleted = useDelay(itemsData.fetchingItems)
 
     useEffect(() => {
         fetchItems()
@@ -76,7 +74,7 @@ const CatalogueItems = (props: Props) => {
     )
 
     return (
-        catalogue.fetchingItems && !itemsData.results.length
+        itemsData.fetchingItems && !itemsData.results.length
             ? <Loader className={styles.loader} />
             : (
                 <div className={itemsClass}>

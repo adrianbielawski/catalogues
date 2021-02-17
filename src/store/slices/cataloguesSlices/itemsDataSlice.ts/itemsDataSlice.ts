@@ -12,6 +12,7 @@ import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsData
 
 const initialState: ItemsDataState = {
     catalogueId: null,
+    fetchingItems: false,
     count: null,
     pageSize: null,
     startIndex: null,
@@ -26,8 +27,6 @@ export const REFRESH_ITEM = createAction<FetchItemPayload>('ITEMS_DATA/REFRESH_I
 export const FETCH_ITEM = createAction<FetchItemPayload>('ITEMS_DATA/FETCH_ITEM')
 export const FETCH_ITEM_START = createAction<number>('ITEMS_DATA/FETCH_ITEM_START')
 export const FETCH_ITEMS = createAction<FetchItemsPayload>('ITEMS_DATA/FETCH_ITEMS')
-export const FETCH_ITEMS_START = createAction<number>('ITEMS_DATA/FETCH_ITEMS_START')
-export const FETCH_ITEMS_FAILURE = createAction<number>('ITEMS_DATA/FETCH_ITEMS_FAILURE')
 export const SAVE_ITEM = createAction<DeserializedItem>('ITEMS_DATA/SAVE_ITEM')
 export const SAVE_ITEM_SUCCESS = createAction<SaveItemSuccessPayload>('ITEMS_DATA/SAVE_ITEM_SUCCESS')
 
@@ -43,6 +42,9 @@ export const itemsDataSlice = createSlice({
             const item = getItemById(state, action.payload)
             item.isSubmitting = false
         },
+        FETCH_ITEMS_START(state) {
+            state.fetchingItems = false
+        },
         FETCH_ITEMS_SUCCESS(state, action: PayloadAction<FetchItemsSuccessPayload>) {
             const prevState = cloneDeep(state)
             const list = listDeserializer(action.payload.data, itemDeserializer)
@@ -52,9 +54,13 @@ export const itemsDataSlice = createSlice({
             }
             const newState: ItemsDataState = {
                 ...list,
-                catalogueId: action.payload.catalogueId
+                catalogueId: action.payload.catalogueId,
+                fetchingItems: false,
             }
             return newState
+        },
+        FETCH_ITEMS_FAILURE(state) {
+            state.fetchingItems = false
         },
         TOGGLE_EDIT_ITEM(state, action: PayloadAction<number | string>) {
             const item = getItemById(state, action.payload)
@@ -148,7 +154,7 @@ export const itemsDataSlice = createSlice({
 
 export const {
     FETCH_ITEM_SUCCESS, FETCH_ITEM_FAILURE,
-    FETCH_ITEMS_SUCCESS,
+    FETCH_ITEMS_START, FETCH_ITEMS_SUCCESS, FETCH_ITEMS_FAILURE,
     TOGGLE_EDIT_ITEM,
     ADD_ITEM_TO_STATE,
     REMOVE_ITEM_FROM_STATE,
