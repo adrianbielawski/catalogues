@@ -62,7 +62,7 @@ const EditItem = (props: Props) => {
         }))
     }
 
-    const handleAddImage = (image: File) => {
+    const handleAddImage = (image: string) => {
         dispatch(ADD_IMAGE_TO_STATE({
             itemId: item.id,
             image

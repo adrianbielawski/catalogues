@@ -41,7 +41,7 @@ export interface ItemAndFieldIdPayload {
 
 export interface AddImageToStatePayload {
     itemId: number | string,
-    image: File,
+    image: string,
 }
 
 export interface ImagePayload {

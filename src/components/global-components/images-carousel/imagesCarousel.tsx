@@ -147,7 +147,7 @@ const ImagesCarousel = (props: Props) => {
 
             const IMG = props.images[mod(i, count)]
             const IMAGE_URL = IMG.id.toString().startsWith('newImage')
-            ? URL.createObjectURL(IMG.image)
+            ? IMG.image
             : `${BASE_URL}${IMG.imageThumbnail}`
 
             items.push(

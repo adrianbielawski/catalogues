@@ -10,7 +10,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import ImagePreview from './image-preview/imagePreview'
 
 type Props = {
-    onConfirm: (image: File) => void,
+    onConfirm: (image: string) => void,
     className?: string,
 }
 interface Event<T = EventTarget> {
@@ -21,12 +21,12 @@ const cx = classNames.bind(styles)
 
 const AddImage = (props: Props) => {
     const fileInputRef = useRef<HTMLInputElement>(null)
-    const [image, setImage] = useState<File>()
+    const [image, setImage] = useState<string>()
 
     const handleImageChange = (e: Event<HTMLInputElement>) => {
         if (e.target.files !== null && e.target.files.length > 0) {
             const img = e.target.files[0]
-            setImage(img)
+            setImage(URL.createObjectURL(img))
         }
     }
 

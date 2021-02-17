@@ -86,13 +86,16 @@ export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
             const { images, removedImages } = action.payload
 
             return forkJoin([
-                ...images.filter(isNew).map(img => {
-                    const data = new FormData()
-                    data.append('image', img.image)
-                    data.append('item_id', JSON.stringify(itemId))
-                    data.append('is_primary', JSON.stringify(img.isPrimary))
-                    return axiosInstance$.post('/images/', data)
-                }),
+                ...images.filter(isNew).map(img => from(fetch(img.image)).pipe(
+                    mergeMap(r => r.blob()),
+                    mergeMap(imageBlob => {
+                        const data = new FormData()
+                        data.append('image', imageBlob, `image.${mime.extension(imageBlob.type)}`)
+                        data.append('item_id', JSON.stringify(itemId))
+                        data.append('is_primary', JSON.stringify(img.isPrimary))
+                        return axiosInstance$.post('/images/', data)
+                    }),
+                )),
 
                 ...removedImages.map(img => axiosInstance$.delete(`/images/${img.id}/`)),
 

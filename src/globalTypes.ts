@@ -196,7 +196,7 @@ export type SerializedImage = {
 
 export type DeserializedImage = {
     id: number | string,
-    image: string | File,
+    image: string,
     imageThumbnail: string,
     isPrimary: boolean
     itemId: number | string
