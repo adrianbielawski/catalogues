@@ -10,18 +10,15 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
 
 const InputWithConfirmButton = (props: Props) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const { placeholder, loading, onConfirm, ...rest } = props
+    const { loading, onConfirm, ...rest } = props
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
-        inputRef.current!.value = ''
-        inputRef.current!.focus()
     }
 
     return (
         <div className={styles.inputWrapper}>
             <input
-                placeholder={placeholder}
                 ref={inputRef}
                 {...rest}
                 autoFocus

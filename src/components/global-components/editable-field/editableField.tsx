@@ -53,6 +53,7 @@ const EditableField = (props: Props) => {
                     {...props.inputProps}
                     autoFocus
                     onConfirm={handleConfirm}
+                    key={inputCount}
                 />
             )
         } else {
