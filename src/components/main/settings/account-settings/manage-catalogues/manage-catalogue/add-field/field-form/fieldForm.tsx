@@ -11,6 +11,7 @@ import { useDelay } from 'src/customHooks'
 import EditableField from 'components/global-components/editable-field/editableField'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 interface FieldType {
     id: string,
@@ -48,15 +49,38 @@ const FieldForm = (props: Props) => {
     const fields = useTypedSelector(fieldsSelector(props.catalogueId))
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
     const [isNameEditing, setIsNameEditing] = useState(true)
-    const [fieldType, setFieldType] = useState<string>('')
+    const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')
+    const [formError, setFormError] = useState('')
     const delayCompleated = useDelay(catalogue.isSubmittingNewField)
 
     const handleEditName = () => {
         setIsNameEditing(!isNameEditing)
     }
 
+    const validateName = (name: string) => {
+        let error = null
+        
+        if(fields.find(field => field.name === name)) {
+            error = `Field ${name} already exist`
+        }
+
+        if(!name.length) {
+            error = `Please add field name`
+        }
+
+        return {
+            valid: error === null,
+            error,
+        }
+    }
+
     const handleNameChange = (input: string[]) => {
+        const { valid, error } = validateName(input[0])
+        if (!valid) {
+            setFormError(error!)
+            return
+        }
         setIsNameEditing(false)
         setFieldName(input[0])
     }
@@ -65,13 +89,42 @@ const FieldForm = (props: Props) => {
         setFieldType(choice.id)
     }
 
+    const validateInput = () => {
+        let error = null
+        if (isNameEditing) {
+            error = 'Please confirm field name'
+        }
+
+        if (fieldName.length === 0) {
+            error = 'Please add field name'
+        }
+
+        if(fieldType.length === 0) {
+            error = "Please select field type"
+        }
+
+        return {
+            valid: error === null,
+            error,
+        }
+    }
+
     const handleConfirm = () => {
+        const { valid, error } = validateInput()
+        if (!valid) {
+            setFormError(error!)
+            return
+        }
         dispatch(CREATE_CATALOGUE_FIELD({
             catalogueId: props.catalogueId,
             name: fieldName,
             type: fieldType,
             position: fields.length
         }))
+    }
+    
+    const clearFormError = () => {
+        setFormError('')
     }
 
     const handleCancel = () => {
@@ -122,6 +175,12 @@ const FieldForm = (props: Props) => {
                     </Button>
                 </div>
             </div>
+            <MessageModal
+                show={formError.length !== 0}
+                title={'Form error'}
+                message={formError}
+                onConfirm={clearFormError}
+            />
         </div>
     )
 }
