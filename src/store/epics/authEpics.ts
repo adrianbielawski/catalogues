@@ -94,7 +94,10 @@ export const logOutEpic = (action$: Observable<Action>) => action$.pipe(
                     action.payload.history.push('/')
                 })
             )),
-            catchError(() => of(actions.LOG_OUT_FAILURE()))
+            catchError(error => {
+                const message = getErrorMessage(error)
+                return of(actions.LOG_OUT_FAILURE(message))
+            })
         )
     ))
 )

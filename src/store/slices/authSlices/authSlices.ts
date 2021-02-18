@@ -11,6 +11,7 @@ const initialState: T.AuthState = {
     isLoggingIn: false,
     loginError: '',
     isLoggingOut: false,
+    logOutError: '',
     isSigningUp: false,
     signUpError: '',
 }
@@ -70,8 +71,12 @@ export const authSlice = createSlice({
         LOG_OUT_SUCCESS() {
             return initialState
         },
-        LOG_OUT_FAILURE(state) {
+        LOG_OUT_FAILURE(state, action: PayloadAction<string>) {
             state.isLoggingOut = false
+            state.logOutError = action.payload
+        },
+        CLEAR_LOGOUT_ERROR(state) {
+            state.logOutError = ''
         },
     },
     extraReducers: (builder) => {
@@ -86,5 +91,5 @@ export const {
     INITIALIZED, GET_USER_SUCCESS, GET_USER_FAILURE,
     LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAILURE, CLEAR_LOGIN_ERROR,
     SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, CLEAR_SIGNUP_ERROR,
-    LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
+    LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE, CLEAR_LOGOUT_ERROR,
 } = authSlice.actions
