@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.scss'
@@ -45,6 +45,8 @@ interface Props {
     className?: string,
 }
 
+interface HeightData { bodyHeight: number, top: number }
+
 const cx = classNames.bind(styles)
 
 const Nav = (props: Props) => {
@@ -54,8 +56,27 @@ const Nav = (props: Props) => {
     const navRef = useRef<HTMLDivElement>(null)
     const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
     const [active, setActive] = useState(false)
-    const top = `${navRef.current?.getBoundingClientRect().bottom}px`
+    const [heightData, setHeightData] = useState<HeightData>({ bodyHeight: 0, top: 0 })
     const screenWidth = window.innerWidth
+
+    useEffect(() => {
+        window.addEventListener('resize', inspectHeight)
+
+        return () => {
+            window.removeEventListener('resize', inspectHeight)
+        }
+    }, [])
+
+    useEffect(() => {
+        inspectHeight()
+    }, [active])
+
+    const inspectHeight = () => {
+        setHeightData({
+            bodyHeight: document.body.getBoundingClientRect().height,
+            top: navRef.current!.getBoundingClientRect().bottom + window.pageYOffset
+        })
+    }
 
     const toggleActive = () => {
         if (showList.show) {
@@ -189,7 +210,8 @@ const Nav = (props: Props) => {
             <nav
                 className={navClass}
                 style={{
-                    '--top': top,
+                    '--bodyHeight': `${heightData.bodyHeight}px`,
+                    '--top': `${heightData.top}px`,
                 } as React.CSSProperties}
             >
                 <div className={styles.contentWrapper}>
