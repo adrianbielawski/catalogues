@@ -8,6 +8,7 @@ export interface AuthState {
     loginError: string,
     isLoggingOut: boolean,
     isSigningUp: boolean,
+    signUpError: string,
 }
 
 export interface GetUserDetails {

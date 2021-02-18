@@ -37,7 +37,6 @@ export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
             password2: action.payload.repeatedPassword,
             username: action.payload.userName,
         }).pipe(
-            retryWhen(err => retry$(err)),
             mergeMap(response => concat(
                 of(actions.SIGN_UP_SUCCESS(response.data.user)),
                 defer(() => {
@@ -45,7 +44,10 @@ export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
                     action.payload.history.push(`/${response.data.user.id}/catalogues`)
                 })
             )),
-            catchError(() => of(actions.SIGN_UP_FAILURE()))
+            catchError(error => {
+                const message = getErrorMessage(error)
+                return of(actions.SIGN_UP_FAILURE(message))
+            })
         )
     ))
 )

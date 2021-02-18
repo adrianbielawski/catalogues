@@ -12,6 +12,7 @@ const initialState: T.AuthState = {
     loginError: '',
     isLoggingOut: false,
     isSigningUp: false,
+    signUpError: '',
 }
 
 export const GET_USER = createAction<T.GetUserDetails>('AUTH/GET_USER')
@@ -56,8 +57,12 @@ export const authSlice = createSlice({
             state.isSigningUp = false
             state.user = userDeserializer(action.payload)
         },
-        SIGN_UP_FAILURE(state) {
+        SIGN_UP_FAILURE(state, action: PayloadAction<string>) {
             state.isSigningUp = false
+            state.signUpError = action.payload
+        },
+        CLEAR_SIGNUP_ERROR(state) {
+            state.signUpError = ''
         },
         LOG_OUT_START(state) {
             state.isLoggingOut = true
@@ -80,6 +85,6 @@ export const authSlice = createSlice({
 export const {
     INITIALIZED, GET_USER_SUCCESS, GET_USER_FAILURE,
     LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAILURE, CLEAR_LOGIN_ERROR,
-    SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
+    SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, CLEAR_SIGNUP_ERROR,
     LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
 } = authSlice.actions
