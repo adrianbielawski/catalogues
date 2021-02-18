@@ -14,6 +14,7 @@ interface Props {
     isSubmitting: boolean,
     hiddenContent?: boolean,
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
+    reset?: boolean,
     onEditClick: (id: number | string) => void,
     onConfirm: (input: string[]) => void,
 }
@@ -21,27 +22,40 @@ interface Props {
 const EditableField = (props: Props) => {
     const delayCompleated = useDelay(props.isSubmitting)
     const [inputCount, setInputCount] = useState(0)
+    const [currentInput, setCurrentInput] = useState('')
     const [userInput, setUserInput] = useState<string[]>([])
 
     useEffect(() => {
-        if (!props.isEditing) {
-            setUserInput([])
-            setInputCount(0)
+        if (!props.isEditing || (props.reset !== undefined && !props.reset)) {
+            clearField()
         }
-    }, [props.isEditing])
+    }, [props.isEditing, props.reset])
 
     const handleEdit = () => {
         props.onEditClick(props.id)
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCurrentInput(e.target.value)
     }
 
     const handleConfirm = (input: string) => {
         if (props.content.length - 1 > inputCount) {
             setUserInput([...userInput, input])
             setInputCount(inputCount + 1)
+            setCurrentInput('')
         } else {
             props.onConfirm!([...userInput, input])
         }
     }
+
+    const clearField = () => {
+        setUserInput([])
+        setInputCount(0)
+        setCurrentInput('')
+    }
+
+    const disabledButton = props.content.length > 1 && currentInput.length === 0
 
     const getField = () => {
         if (props.isEditing && props.onConfirm !== undefined) {
@@ -50,8 +64,10 @@ const EditableField = (props: Props) => {
                 <InputWithConfirmButton
                     defaultValue={value}
                     loading={delayCompleated}
-                    {...props.inputProps}
+                    inputProps={props.inputProps}
+                    buttonProps={{ disabled: disabledButton }}
                     autoFocus
+                    onChange={handleChange}
                     onConfirm={handleConfirm}
                     key={inputCount}
                 />
