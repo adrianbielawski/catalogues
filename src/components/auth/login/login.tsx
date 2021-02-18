@@ -4,16 +4,17 @@ import styles from './login.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { LocationState } from 'src/globalTypes'
-import { LOG_IN } from 'store/slices/authSlices/authSlices'
+import { LOG_IN, CLEAR_LOGIN_ERROR } from 'store/slices/authSlices/authSlices'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 
 const Login = () => {
     const dispatch = useAppDispatch()
-    const isLoggingIn = useTypedSelector(state => state.auth.isLoggingIn)
+    const auth = useTypedSelector(state => state.auth)
     const [isValid, setIsValid] = useState(false);
     const history = useHistory()
     const location = useLocation<LocationState>()
@@ -44,18 +45,49 @@ const Login = () => {
         history.push('/signup')
     }
 
+    const clearError = () => {
+        dispatch(CLEAR_LOGIN_ERROR())
+    }
+
     return (
         <div className={styles.login}>
             <form onSubmit={handleSubmit} onChange={validateInput}>
-                <Input type="email" placeholder="e-mail" ref={emailInput} required />
-                <Input type="password" placeholder="password" ref={passwordInput} minLength={8} required />
-                {isLoggingIn ? <Loader /> : <Button type="submit" disabled={!isValid}>Login</Button>}
+                <Input
+                    type="email"
+                    placeholder="e-mail"
+                    ref={emailInput}
+                    required
+                />
+                <Input
+                    type="password"
+                    placeholder="password"
+                    ref={passwordInput}
+                    minLength={8}
+                    required
+                />
+                {auth.isLoggingIn
+                    ? <Loader />
+                    : <Button
+                        type="submit"
+                        disabled={!isValid}
+                    >
+                        Login
+                    </Button>}
             </form>
-            {!isLoggingIn &&
+            {!auth.isLoggingIn &&
                 <p>
-                    Don't have an account? <span onClick={handleSignUp}>Create new account here!</span>
+                    Don't have an account?
+                    <span onClick={handleSignUp}>
+                        Create new account here!
+                    </span>
                 </p>
             }
+            <MessageModal
+                show={auth.loginError.length !== 0}
+                title="Login error"
+                message={auth.loginError}
+                onConfirm={clearError}
+            />
         </div>
     )
 }

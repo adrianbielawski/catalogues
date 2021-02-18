@@ -2,6 +2,12 @@ export interface ErrorData {
     [field: string]: string
 }
 
+export interface ErrorObject {
+    response: {
+        data: ErrorData
+    }
+}
+
 export interface User {
     id: number,
     username: string,

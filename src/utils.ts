@@ -1,4 +1,5 @@
 import { LegacyRef, MutableRefObject, RefCallback } from "react"
+import { ErrorData, ErrorObject } from "./globalTypes"
 
 export const scrollTop = () => {
     document.body.scrollTo({ top: 0, behavior: 'smooth' })
@@ -7,16 +8,17 @@ export const scrollTop = () => {
 
 export const mergeRefs = <T = any>(
     refs: Array<MutableRefObject<T> | LegacyRef<T>>
-): RefCallback<T> => {
-    return (value) => {
-        refs.forEach((ref) => {
-            if (typeof ref === "function") {
-                ref(value)
-            } else if (ref != null) {
-                (ref as MutableRefObject<T | null>).current = value
-            }
-        })
-    }
+): RefCallback<T> => (value) => {
+    refs.forEach((ref) => {
+        if (typeof ref === "function") {
+            ref(value)
+        } else if (ref != null) {
+            (ref as MutableRefObject<T | null>).current = value
+        }
+    })
 }
 
 export const mod = (i: number, n: number): number => ((i % n) + n) % n
+
+export const getErrorMessage = (error: ErrorObject) =>
+    Object.values(error.response.data as ErrorData)[0][0] || 'Something went wrong'

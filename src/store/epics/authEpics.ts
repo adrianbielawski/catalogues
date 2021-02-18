@@ -7,6 +7,7 @@ import { Action } from "@reduxjs/toolkit"
 import { retry$ } from "store/storeObservables"
 //Slices
 import * as actions from "store/slices/authSlices/authSlices"
+import { getErrorMessage } from "src/utils"
 
 export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.GET_USER.match),
@@ -57,7 +58,6 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
             email: action.payload.email,
             password: action.payload.password,
         }).pipe(
-            retryWhen(err => retry$(err)),
             mergeMap(response => concat(
                 defer(() => {
                     localStorage.setItem('token', response.data.key)
@@ -71,7 +71,10 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                     action.payload.history.push(path)
                 }),
             )),
-            catchError(() => of(actions.LOG_IN_FAILURE()))
+            catchError(error => {
+                const message = getErrorMessage(error)
+                return of(actions.LOG_IN_FAILURE(message))
+            })
         )
     ))
 )

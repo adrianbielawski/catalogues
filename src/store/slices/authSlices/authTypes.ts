@@ -5,6 +5,7 @@ export interface AuthState {
     user: DeserializedUser | null,
     isInitialized: boolean,
     isLoggingIn: boolean,
+    loginError: string,
     isLoggingOut: boolean,
     isSigningUp: boolean,
 }
