@@ -11,35 +11,46 @@ interface Props {
     loading?: boolean,
     size: number,
     className?: string,
+    disabled?: boolean,
     onClick: () => void
 }
 
 const cx = classNames.bind(styles)
 
 const ConfirmButton = (props: Props) => {
+    const { loading, size, className, onClick, ...rest } = props
+
     const confirnButtonClass = cx(
         'buttonWrapper',
-        props.className,
+        className,
+    )
+
+    const buttonClass = cx(
+        'button',
+        {
+            disabled: props.disabled
+        }
     )
 
     return (
         <div
             className={confirnButtonClass}
             style={{
-                '--size': `${props.size}px`,
+                '--size': `${size}px`,
             } as React.CSSProperties}
         >
-            {!props.loading
+            {!loading
                 ? (
                     <TransparentButton
-                        className={styles.button}
-                        onClick={props.onClick}
+                        className={buttonClass}
+                        onClick={onClick}
+                        {...rest}
                     >
                         <FontAwesomeIcon icon={faCheck} />
                     </TransparentButton>
                 )
                 : (
-                    <Loader size={props.size} />
+                    <Loader size={size} />
                 )
             }
         </div>

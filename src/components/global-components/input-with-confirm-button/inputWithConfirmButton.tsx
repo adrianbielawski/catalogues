@@ -5,12 +5,14 @@ import ConfirmButton from '../confirm-button/confirmButton'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     loading?: boolean,
-    onConfirm: (input: string) => void
+    inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
+    buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>,
+    onConfirm: (input: string) => void,
 }
 
 const InputWithConfirmButton = (props: Props) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const { loading, onConfirm, ...rest } = props
+    const { loading, inputProps, buttonProps, onConfirm } = props
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
@@ -20,13 +22,15 @@ const InputWithConfirmButton = (props: Props) => {
         <div className={styles.inputWrapper}>
             <input
                 ref={inputRef}
-                {...rest}
+                {...inputProps}
+                onChange={props.onChange}
                 autoFocus
             />
             <ConfirmButton
                 className={styles.confirmButton}
                 size={25}
                 loading={loading}
+                {...buttonProps}
                 onClick={handleConfirm}
             />
         </div>

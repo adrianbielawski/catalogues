@@ -7,5 +7,8 @@
     .button {
         color: $green;
         font-size: calc(var(--size) * .8);
+        &.disabled {
+            color: $lightGrey;
+        }
     }
 }
