@@ -4,7 +4,7 @@ import styles from './manageCatalogues.scss'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { CREATE_CATALOGUE, FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom hooks
-import { useDelay, useFirstRender } from 'src/customHooks'
+import { useDelay } from 'src/customHooks'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
@@ -14,8 +14,6 @@ const ManageCatalogues = () => {
     const dispatch = useAppDispatch()
     const catalogues = useTypedSelector(state => state.catalogues)
     const newCatalogueDelay = useDelay(catalogues.creatingNewCatalogue)
-    const cataloguesDelay = useDelay(catalogues.fetchingCatalogues)
-    const firstRender = useFirstRender()
 
     useEffect(() => {
         dispatch(FETCH_CATALOGUES())
@@ -29,8 +27,6 @@ const ManageCatalogues = () => {
         <ManageCatalogue catalogue={catalogue} key={catalogue.id} />
     ))
 
-    const showLoader = catalogues.fetchingCatalogues && cataloguesDelay || firstRender
-
     return (
         <div className={styles.manageCatalogues}>
             <AddButton
@@ -39,7 +35,7 @@ const ManageCatalogues = () => {
                 className={styles.addButton}
                 onClick={handleAddCatalogueClick}
             />
-            {showLoader
+            {catalogues.fetchingCatalogues
                 ? <Loader size={50} className={styles.loader} />
                 : items
             }

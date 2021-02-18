@@ -55,10 +55,7 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.manageItem}>
-                {catalogue.fetchingFields && delayCompleated
-                    ? <Loader />
-                    : fields
-                }
+                {!catalogue.fetchingFields && fields}
                 <AddField catalogueId={props.catalogue.id} />
             </div>
         </div>
