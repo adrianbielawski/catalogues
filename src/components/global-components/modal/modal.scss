@@ -2,7 +2,7 @@
     position: absolute;
     top: 0;
     z-index: 100;
-    background: rgba(128, 128, 128, 0.5);
+    background: #80808080;
     opacity: 0;
     padding: 2%;
     box-sizing: border-box;
@@ -12,10 +12,5 @@
     }
     &.elevated {
         z-index: 10000;
-    }
-    .wrapper {
-        min-width: 90%;
-        background: #fff;
-        box-shadow: 0 0 10px #000;
     }
 }

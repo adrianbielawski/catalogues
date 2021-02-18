@@ -8,7 +8,7 @@ type Props = {
     children: JSX.Element,
     parent?: HTMLElement,
     className?: string,
-    onClose: () => void
+    onClose?: () => void
 }
 
 const cx = classNames.bind(styles)
@@ -55,15 +55,18 @@ const Modal = (props: Props) => {
     const handleWrapperClick = (e: React.MouseEvent) => {
         e.stopPropagation()
     }
-    const handleClose = (e: React.MouseEvent) => {
-        setIsMounted(false)
-        props.onClose()
+
+    const handleClose = () => {
+        if (props.onClose) {
+            setIsMounted(false)
+            props.onClose()
+        }
     }
 
     return (
         props.show ? ReactDOM.createPortal(
             <div className={modalClass} style={modalStyles} onClick={handleClose}>
-                <div className={styles.wrapper} onClick={handleWrapperClick}>
+                <div onClick={handleWrapperClick}>
                     {props.children}
                 </div>
             </div>, props.parent || document.body
