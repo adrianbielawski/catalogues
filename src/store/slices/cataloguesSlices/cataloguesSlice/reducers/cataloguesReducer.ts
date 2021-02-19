@@ -6,8 +6,8 @@ import { getCatalogueById } from '../cataloguesSlectors'
 
 type State = T.CataloguesState
 
-export const CREATE_CATALOGUE = createAction('CATALOGUES/CREATE_CATALOGUE')
 export const createCatalogueReducers = {
+    CREATE_CATALOGUE(state: State) {},
     CREATE_CATALOGUE_START(state: State) {
         state.creatingNewCatalogue = true
     },
@@ -20,8 +20,8 @@ export const createCatalogueReducers = {
     },
 }
 
-export const FETCH_CATALOGUES = createAction('CATALOGUES/FETCH_CATALOGUES')
 export const fetchCataloguesReducers = {
+    FETCH_CATALOGUES(state: State) {},
     FETCH_CATALOGUES_START(state: State) {
         state.fetchingCatalogues = true
     },
@@ -34,8 +34,8 @@ export const fetchCataloguesReducers = {
     },
 }
 
-export const CHANGE_CATALOGUE_NAME = createAction<T.ChangeCatalogueNamePayload>('CATALOGUES/CHANGE_CATALOGUE_NAME')
 export const changeCatalogueNameReducers = {
+    CHANGE_CATALOGUE_NAME(state: State, action: PayloadAction<T.ChangeCatalogueNamePayload>) {},
     TOGGLE_CATALOGUE_NAME_EDIT(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isEditingCatalogueName = !catalogue.isEditingCatalogueName
