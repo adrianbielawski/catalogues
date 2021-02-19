@@ -1,7 +1,7 @@
-import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { User } from 'src/globalTypes'
+import { createSlice } from '@reduxjs/toolkit'
 import * as T from './myAccountTypes'
 import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { changePasswordReducers, editUsername } from './myAccountReducer'
 
 const initialState: T.MyAccountState = {
     isEditingUsername: false,
@@ -10,41 +10,12 @@ const initialState: T.MyAccountState = {
     isSubmittingPassword: false,
 }
 
-export const CHANGE_USERNAME = createAction<string>('SETTINGS/MY_ACCOUNT/CHANGE_USERNAME')
-export const CHANGE_PASSWORD = createAction<T.ChangePasswordPayload>('SETTINGS/MY_ACCOUNT/CHANGE_PASSWORD')
-
 export const myAccountSlice = createSlice({
     name: 'SETTINGS/MY_ACCOUNT',
     initialState,
     reducers: {
-        TOGGLE_USERNAME_EDIT(state, action: PayloadAction<boolean>) {
-            state.isEditingUsername = action.payload
-        },
-        CHANGE_USERNAME_START(state) {
-            state.isSubmittingUsername = true
-        },
-        CHANGE_USERNAME_SUCCESS(state, action: PayloadAction<User>) {
-            state.isSubmittingUsername = false
-            state.isEditingUsername = false
-        },
-        CHANGE_USERNAME_FAILURE(state) {
-            state.isSubmittingUsername = false
-            state.isEditingUsername = false
-        },
-        TOGGLE_PASSWORD_EDIT(state, action: PayloadAction<boolean>) {
-            state.isEditingPassword = action.payload
-        },
-        CHANGE_PASSWORD_START(state) {
-            state.isSubmittingPassword = true
-        },
-        CHANGE_PASSWORD_SUCCESS(state) {
-            state.isSubmittingPassword = false
-            state.isEditingPassword = false
-        },
-        CHANGE_PASSWORD_FAILURE(state) {
-            state.isSubmittingPassword = false
-            state.isEditingPassword = false
-        }
+        ...editUsername,
+        ...changePasswordReducers,
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -52,7 +23,7 @@ export const myAccountSlice = createSlice({
 })
 
 export const { 
-    TOGGLE_USERNAME_EDIT, CHANGE_USERNAME_START, CHANGE_USERNAME_SUCCESS, CHANGE_USERNAME_FAILURE,
-    TOGGLE_PASSWORD_EDIT, CHANGE_PASSWORD_START, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE,
+    TOGGLE_USERNAME_EDIT, CHANGE_USERNAME, CHANGE_USERNAME_START, CHANGE_USERNAME_SUCCESS, CHANGE_USERNAME_FAILURE,
+    TOGGLE_PASSWORD_EDIT, CHANGE_PASSWORD, CHANGE_PASSWORD_START, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE,
 
 } = myAccountSlice.actions
