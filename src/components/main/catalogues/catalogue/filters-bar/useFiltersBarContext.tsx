@@ -5,15 +5,15 @@ import { SortContext } from './sort/sortStore'
 import { FiltersBarContext } from './filtersBarStore'
 
 const useFiltersBarContext = () => {
-    const { search } = useContext(SearchContext)
-    const { selected: sort } = useContext(SortContext)
-    const { selectedFilters: filters } = useContext(FiltersContext)
+    const searchContext = useContext(SearchContext)
+    const sortContext = useContext(SortContext)
+    const filtersContext = useContext(FiltersContext)
     const filtersBar = useContext(FiltersBarContext)
 
     return {
-        search,
-        sort,
-        filters,
+        searchContext,
+        sortContext,
+        filtersContext,
         filtersBar,
     }
 }

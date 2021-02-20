@@ -14,7 +14,7 @@ type Props = {
 }
 
 const FilterChoices = (props: Props) => {
-    const { selectedFilters, setFilterValue } = useContext(FiltersContext)
+    const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
     const selectedChoices = selectedFilters![props.filter.id]
 
     const choices = props.filter.choices!.map(choice => {
@@ -28,7 +28,7 @@ const FilterChoices = (props: Props) => {
                 choices = null
             }
 
-            setFilterValue(props.filter.id, choices)
+            changeSelectedFilters(props.filter.id, choices)
         }
 
         const isSelected = selectedChoices?.[choice.id] === true

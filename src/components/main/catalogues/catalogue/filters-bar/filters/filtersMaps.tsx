@@ -6,4 +6,5 @@ export const filterComponentMap: FilterComponentMap = {
     'number': FilterRange,
     'date': FilterRange,
     'multiple_choice': FilterChoices,
+    'single_choice': FilterChoices,
 }

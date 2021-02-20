@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext } from 'react'
 import styles from './filterRange.scss'
 //Types
-import { CHANGE_FILTER, FilterWithoutChoices } from '../../filtersTypes'
+import { FilterWithoutChoices } from '../../filtersTypes'
 //Context
 import { FiltersContext } from '../../filtersStore'
 //Custom components
@@ -18,7 +18,7 @@ type Range = {
 }
 
 const FilterRange = (props: Props) => {
-    const { selectedFilters, setFilterValue } = useContext(FiltersContext)
+    const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
     const fromRef = useRef<HTMLInputElement>(null)
     const toRef = useRef<HTMLInputElement>(null)
 
@@ -40,7 +40,7 @@ const FilterRange = (props: Props) => {
             value = null
         }
 
-        setFilterValue(props.filter.id, value)
+        changeSelectedFilters(props.filter.id, value)
     }
 
     return (

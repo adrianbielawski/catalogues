@@ -1,12 +1,12 @@
 import React, { useReducer } from 'react'
 //Contexts
 import { FiltersContext, reducer } from './filtersStore'
-import { FiltersInitialState, CHANGE_FILTER, FilterValue } from './filtersTypes'
+import { FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS } from './filtersTypes'
 
 type Props = {
     children: JSX.Element,
     value: FiltersInitialState,
-    onChange: (filterId: string, value: FilterValue) => void,
+    onChange: (filterId: number | string, value: FilterValue) => void,
 }
 
 const FiltersContextProvider = (props: Props) => {
@@ -16,18 +16,26 @@ const FiltersContextProvider = (props: Props) => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const setFilterValue = (filterId: string, value: FilterValue) => {
+    const changeSelectedFilters = (filterId: number | string, value: FilterValue) => {
         props.onChange(filterId, value)
         dispatch({
-            type: CHANGE_FILTER,
+            type: CHANGE_SELECTED_FILTERS,
             filterId,
             value,
         })
     }
 
+    const changeFilters = (filters: FilterType[]) => {
+        dispatch({
+            type: CHANGE_FILTERS,
+            filters,
+        })
+    }
+
     const context = {
         ...state,
-        setFilterValue,
+        changeSelectedFilters,
+        changeFilters,
     }
 
     return (

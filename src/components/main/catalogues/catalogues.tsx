@@ -21,52 +21,8 @@ import Catalogue from './catalogue/catalogue'
 import FiltersBar from './catalogue/filters-bar/filtersBar'
 
 const filtersValue = {
-    filters: [
-        {
-            id: '1',
-            title: 'id',
-            type: 'number',
-            minVal: '1',
-            maxVal: '3',
-        },
-        {
-            id: '2',
-            title: 'category',
-            type: 'multiple_choice',
-            choices: [
-                {
-                    id: '21',
-                    title: 'flowers',
-                },
-                {
-                    id: '22',
-                    title: 'animals',
-                },
-                {
-                    id: '23',
-                    title: 'flowers',
-                },
-                {
-                    id: '24',
-                    title: 'animals',
-                },
-                {
-                    id: '25',
-                    title: 'flowers',
-                },
-            ]
-        },
-        {
-            id: '3',
-            title: 'date',
-            type: 'date',
-            minVal: '2020-09-01',
-            maxVal: '2020-12-18',
-        },
-    ],
-    selectedFilters: {
-        '2': { '22': true }
-    }
+    filters: [],
+    selectedFilters: {}
 }
 const sortValue = {
     sortOptions: [

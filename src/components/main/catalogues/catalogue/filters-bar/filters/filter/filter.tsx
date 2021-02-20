@@ -19,12 +19,12 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Filter = (props: Props) => {
-    const { selectedFilters, setFilterValue } = useContext(FiltersContext)
+    const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
     const isActive = selectedFilters![props.filter.id] !== undefined
 
     const handleChange = () => {
         const value = isActive ? undefined : null
-        setFilterValue(props.filter.id, value)
+        changeSelectedFilters(props.filter.id, value)
     }
 
     const filterClass = cx(
