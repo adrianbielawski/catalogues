@@ -33,6 +33,13 @@ export interface FetchFieldChoicesPayload {
     fieldId: number,
 }
 
+export interface FetchFieldsChoicesPayload {
+    catalogueId: number,
+    data: {
+        [id: string]: Choice[],
+    }
+}
+
 export interface RemoveFieldToStatePayload {
     id: number | string,
     catalogueId: number,

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './multipleChoiceField.scss'
 //Types
 import { DeserializedChoice, DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { FETCH_FIELDS_CHOICES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { fieldSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -24,13 +23,6 @@ const SingleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
-
-    useEffect(() => {
-        dispatch(FETCH_FIELDS_CHOICES({
-            fieldId: props.field.id,
-            catalogueId: props.field.catalogueId
-        }))
-    }, [])
 
     const handleEdit = () => {
         setIsEditing(!isEditing)

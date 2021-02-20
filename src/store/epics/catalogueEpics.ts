@@ -1,6 +1,9 @@
 import { combineEpics } from "redux-observable"
 import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
-import { catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map } from 'rxjs/operators'
+import {
+    catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map,
+    defaultIfEmpty
+} from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
@@ -201,10 +204,10 @@ export const fetchCatalogueFieldEpic = (action$: Observable<Action>) => action$.
     ))
 )
 
-export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.FETCH_FIELDS_CHOICES.match),
+export const fetchFieldChoicesEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_FIELD_CHOICES.match),
     mergeMap(action => concat(
-        of(actions.FETCH_FIELDS_CHOICES_START({
+        of(actions.FETCH_FIELD_CHOICES_START({
             catalogueId: action.payload.catalogueId,
             fieldId: action.payload.fieldId,
         })),
@@ -212,20 +215,48 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => action$.p
             params: { field_id: action.payload.fieldId }
         }).pipe(
             map(response =>
-                actions.FETCH_FIELDS_CHOICES_SUCCESS({
+                actions.FETCH_FIELD_CHOICES_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
                     fieldId: action.payload.fieldId,
 
                 })
             ),
-            catchError(() => of(actions.FETCH_FIELDS_CHOICES_FAILURE({
+            catchError(() => of(actions.FETCH_FIELD_CHOICES_FAILURE({
                 catalogueId: action.payload.catalogueId,
                 fieldId: action.payload.fieldId,
             })))
         )
     ))
 )
+
+export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.FETCH_CATALOGUE_FIELDS_SUCCESS.match)),
+).pipe(mergeMap(action => {
+    const fields = action.payload.data.filter(f =>
+        f.type === 'multiple_choice' || f.type === 'single_choice'
+    )
+
+    const requests = Object.fromEntries(
+        fields.map(field => [
+            field.id,
+            axiosInstance$.get('/choices/', {
+                params: { field_id: field.id }
+            }).pipe(map(response => response.data))
+        ])
+    )
+
+    return concat(
+        of(actions.FETCH_FIELDS_CHOICES_START(action.payload.catalogueId)),
+        forkJoin<typeof requests, string>(requests).pipe(
+            defaultIfEmpty(),
+            map(data => actions.FETCH_FIELDS_CHOICES_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                data,
+            })),
+            catchError(() => of(actions.FETCH_FIELDS_CHOICES_FAILURE(action.payload.catalogueId)))
+        ))
+}))
 
 export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
@@ -238,5 +269,6 @@ export const cataloguesEpics = combineEpics(
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
+    fetchFieldChoicesEpic,
     fetchFieldsChoicesEpic,
 )

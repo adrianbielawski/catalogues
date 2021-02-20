@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -7,7 +7,7 @@ import styles from './choiceField.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import {
-    ADD_FIELD_CHOICE_TO_STATE, FETCH_FIELDS_CHOICES, POST_CHOICE_FIELD_CHANGES, REFRESH_CATALOGUE_FIELD,
+    ADD_FIELD_CHOICE_TO_STATE, POST_CHOICE_FIELD_CHANGES, REFRESH_CATALOGUE_FIELD,
     REMOVE_FIELD_CHOICE_FROM_STATE, TOGGLE_FIELD_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -19,7 +19,6 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
-import Loader from 'components/global-components/loader/loader'
 
 type Props = {
     field: DeserializedChoiceField,
@@ -32,13 +31,6 @@ const ChoiceField = (props: Props) => {
     const nameInputRef = useRef<HTMLInputElement>(null)
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
     const delayCompleated = useDelay(field.isSubmitting)
-
-    useEffect(() => {
-        dispatch(FETCH_FIELDS_CHOICES({
-            fieldId: props.field.id,
-            catalogueId: props.field.catalogueId
-        }))
-    }, [])
 
     const handleEdit = () => {
         dispatch(TOGGLE_FIELD_EDIT({

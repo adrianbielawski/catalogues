@@ -58,16 +58,38 @@ export const fetchCatalogueFieldsReducers = {
 
 export const fetchFieldsChoicesReducers = {
     FETCH_FIELDS_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
-    FETCH_FIELDS_CHOICES_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+    FETCH_FIELDS_CHOICES_START(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.fetchingFieldsChoices = true
+    },
+    FETCH_FIELDS_CHOICES_SUCCESS(state: State, action: PayloadAction<T.FetchFieldsChoicesPayload>) {
+        const catalogue = getCatalogueById(state, action.payload.catalogueId)
+        catalogue.fetchingFieldsChoices = false
+        const data = action.payload.data
+
+        for(const id in data) {
+            const field = getFieldById(state, action.payload.catalogueId, parseInt(id)) as DeserializedChoiceField
+            field.choices = choicesDeserializer(data[id])
+        }
+    },
+    FETCH_FIELDS_CHOICES_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.fetchingFieldsChoices = false
+    },
+}
+
+export const fetchFieldChoicesReducers = {
+    FETCH_FIELD_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
+    FETCH_FIELD_CHOICES_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.fetchingChoices = true
     },
-    FETCH_FIELDS_CHOICES_SUCCESS(state: State, action: PayloadAction<T.FetchFieldChoicesPayload>) {
+    FETCH_FIELD_CHOICES_SUCCESS(state: State, action: PayloadAction<T.FetchFieldChoicesPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.choices = choicesDeserializer(action.payload.data)
         field.fetchingChoices = false
     },
-    FETCH_FIELDS_CHOICES_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+    FETCH_FIELD_CHOICES_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.fetchingChoices = false
     },
