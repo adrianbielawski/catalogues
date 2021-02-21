@@ -50,6 +50,7 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
                 page: action.payload.page,
                 search: action.payload.search,
                 ordering: action.payload.sort,
+                ...action.payload.filters
             }
         })).pipe(
             retryWhen(err => retry$(err)),

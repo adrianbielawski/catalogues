@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
+//Types
+import { Range } from '../filters-bar/filters/filtersTypes'
+import { Filter } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataTypes'
 //Redux
 import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -42,6 +45,7 @@ const CatalogueItems = (props: Props) => {
     }, [
         searchContext.search,
         sortContext.selected,
+        filtersContext.selectedFilters,
     ])
 
     useEffect(() => {
@@ -78,12 +82,30 @@ const CatalogueItems = (props: Props) => {
 
         const sort = Object.values(sortContext.selected)[0]
 
+        let filters: Filter = {}
+        if (filtersContext.selectedFilters !== null) {
+            Object.entries(filtersContext.selectedFilters).forEach(([id, values]) => {
+                if (values === null) return
+
+                if ('gte' in values) {
+                    if (values.gte) {
+                        filters[`${id}__gte`] = (values as Range).gte!
+                    }
+                    if (values.lte) {
+                        filters[`${id}__lte`] = (values as Range).lte!
+                    }
+                } else {
+                    filters[`${id}__in`] = Object.keys(values).join('__')
+                }
+            })
         }
+
         dispatch(FETCH_ITEMS({
             catalogueId: props.catalogueId,
             page,
             search: searchContext.search || undefined,
             sort: sort ? sort : undefined,
+            filters: filters || undefined
         }))
     }
 
