@@ -26,6 +26,7 @@ export interface FetchItemSuccessPayload {
 export interface FetchItemsPayload {
     catalogueId: number,
     page: number,
+    search?: string,
 }
 
 export interface FetchItemsSuccessPayload {

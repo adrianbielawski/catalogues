@@ -48,6 +48,7 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
             params: {
                 catalogue_id: action.payload.catalogueId,
                 page: action.payload.page,
+                search: action.payload.search,
             }
         })).pipe(
             retryWhen(err => retry$(err)),

@@ -28,12 +28,13 @@ export const fetchItemsReducers = {
     },
     FETCH_ITEMS_SUCCESS(state: State, action: PayloadAction<T.FetchItemsSuccessPayload>) {
         const list = listDeserializer(action.payload.data, itemDeserializer)
-        if (state.catalogueId !== action.payload.catalogueId) {
+        if (state.catalogueId === action.payload.catalogueId) {
             list.startIndex = 1
         }
+        const prevResults = list.current === 1 ? [] : state.results
         return {
             ...list,
-            results: state.results.concat(list.results),
+            results: prevResults.concat(list.results),
             catalogueId: action.payload.catalogueId,
             fetchingItems: false,
         }

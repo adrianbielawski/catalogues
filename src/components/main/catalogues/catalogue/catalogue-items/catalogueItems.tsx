@@ -5,7 +5,8 @@ import styles from './catalogueItems.scss'
 import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay, useFirstRender } from 'src/customHooks'
+import useFiltersBarContext from '../filters-bar/useFiltersBarContext'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from '../catalogue-item/catalogueItem'
@@ -23,7 +24,9 @@ const CatalogueItems = (props: Props) => {
     const lastItemRef = useCallback(setLastItem, [])
     const observer = useRef<IntersectionObserver | null>()
     const itemsData = useTypedSelector(state => state.itemsData)
+    const { searchContext, sortContext, filtersContext } = useFiltersBarContext()
     const delayCompleted = useDelay(itemsData.fetchingItems)
+    const firstRender = useFirstRender()
 
     useEffect(() => {
         fetchItems()
@@ -32,6 +35,13 @@ const CatalogueItems = (props: Props) => {
             dispatch(CLEAR_ITEMS_DATA())
         }
     }, [props.catalogueId])
+
+    useEffect(() => {
+        if (firstRender) return
+        fetchItems(1)
+    }, [
+        searchContext.search,
+    ])
 
     useEffect(() => {
         if (lastItem) {
@@ -58,16 +68,22 @@ const CatalogueItems = (props: Props) => {
         observer.current.observe(element)
     }
 
-    const fetchItems = () => {
+    const fetchItems = (pageNum?: number) => {
         let page = 1
 
         if (itemsData.catalogueId === props.catalogueId) {
-            page = itemsData.next || 1
+            page = pageNum || itemsData.next || 1
+        }
         }
         dispatch(FETCH_ITEMS({
             catalogueId: props.catalogueId,
             page,
+            search: searchContext.search || undefined,
         }))
+    }
+
+    const handleMoreItemsClick = () => {
+        fetchItems()
     }
 
     const getItems = () => itemsData.results.map((item, i) => {
@@ -96,7 +112,7 @@ const CatalogueItems = (props: Props) => {
                         <Button
                             className={styles.seeMoreButton}
                             loading={delayCompleted}
-                            onClick={fetchItems}
+                            onClick={handleMoreItemsClick}
                         >
                             See more
                         </Button>
