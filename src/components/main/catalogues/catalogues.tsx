@@ -27,12 +27,12 @@ const filtersValue = {
 const sortValue = {
     sortOptions: [
         {
-            id: '1',
+            id: 'id',
             title: 'id',
             type: 'number',
         },
         {
-            id: '2',
+            id: 'date',
             title: 'date',
             type: 'date',
         },

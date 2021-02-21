@@ -27,14 +27,14 @@ const SortChoice: React.ForwardRefRenderFunction<
         <div className={styles.sortChoice} ref={ref}>
             <CheckBoxWithTitle
                 title={sortMap[props.option.type][0]}
-                id={'0'}
-                selected={selected?.[props.option.id] === '0'}
+                id={props.option.id}
+                selected={selected?.[props.option.id] === props.option.id}
                 onChange={handleChange}
             />
             <CheckBoxWithTitle
                 title={sortMap[props.option.type][1]}
-                id={'1'}
-                selected={selected?.[props.option.id] === '1'}
+                id={`-${props.option.id}`}
+                selected={selected?.[props.option.id] === `-${props.option.id}`}
                 onChange={handleChange}
             />
         </div>

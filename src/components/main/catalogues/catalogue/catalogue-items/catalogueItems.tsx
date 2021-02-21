@@ -41,6 +41,7 @@ const CatalogueItems = (props: Props) => {
         fetchItems(1)
     }, [
         searchContext.search,
+        sortContext.selected,
     ])
 
     useEffect(() => {
@@ -74,11 +75,15 @@ const CatalogueItems = (props: Props) => {
         if (itemsData.catalogueId === props.catalogueId) {
             page = pageNum || itemsData.next || 1
         }
+
+        const sort = Object.values(sortContext.selected)[0]
+
         }
         dispatch(FETCH_ITEMS({
             catalogueId: props.catalogueId,
             page,
             search: searchContext.search || undefined,
+            sort: sort ? sort : undefined,
         }))
     }
 
