@@ -1,30 +1,36 @@
 import { createContext } from 'react'
-import { cloneDeep } from 'lodash'
-import { FiltersInitialState, FiltersContextInterface, Action, CHANGE_SELECTED_FILTERS, CHANGE_FILTERS } from './filtersTypes'
+import { Draft } from 'immer'
+import {
+    FiltersInitialState, FiltersContextInterface, Action, CHANGE_SELECTED_FILTERS, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS
+} from './filtersTypes'
 
 export const initialState = {
     filters: [],
     selectedFilters: {},
-    changeSelectedFilters: () => null,
+    activeFilters: {},
     changeFilters: () => null,
+    changeSelectedFilters: () => null,
+    changeActiveFilters: () => null,
 }
 
 export const FiltersContext = createContext<FiltersContextInterface>(initialState)
 
-export const reducer = (state: FiltersInitialState, action: Action) => {
-    let newState = cloneDeep(state)
+export const reducer = (state: Draft<FiltersInitialState>, action: Action) => {
     switch (action.type) {
         case CHANGE_SELECTED_FILTERS:
-            if (action.value === undefined) {
-                delete newState.selectedFilters[action.filterId]
-            } else {
-                newState.selectedFilters[action.filterId] = action.value
+            state.selectedFilters[action.filterId] = action.value
+            break
+
+        case CHANGE_ACTIVE_FILTERS:
+            state.activeFilters[action.filterId] = action.value
+            if (!action.value) {
+                delete state.selectedFilters[action.filterId]
             }
-            return newState
+            break
 
         case CHANGE_FILTERS:
-            newState.filters = action.filters
-            return newState
+            state.filters = action.filters
+            break
 
         default:
             throw new Error()

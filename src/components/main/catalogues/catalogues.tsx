@@ -22,7 +22,8 @@ import FiltersBar from './catalogue/filters-bar/filtersBar'
 
 const filtersValue = {
     filters: [],
-    selectedFilters: {}
+    selectedFilters: {},
+    activeFilters: {},
 }
 const sortValue = {
     sortOptions: [

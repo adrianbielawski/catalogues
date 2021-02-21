@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useContext } from 'react'
 import styles from './filterRange.scss'
 //Types
-import { FilterWithoutChoices } from '../../filtersTypes'
+import { FilterWithoutChoices, Range } from '../../filtersTypes'
 //Context
 import { FiltersContext } from '../../filtersStore'
 //Custom components
@@ -12,31 +12,26 @@ type Props = {
     active: boolean,
 }
 
-type Range = {
-    from: string | null,
-    to: string | null,
-}
-
 const FilterRange = (props: Props) => {
     const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
-    const fromRef = useRef<HTMLInputElement>(null)
-    const toRef = useRef<HTMLInputElement>(null)
+    const gteRef = useRef<HTMLInputElement>(null)
+    const lteRef = useRef<HTMLInputElement>(null)
 
-    const value = selectedFilters![props.filter.id] || null
+    const value = selectedFilters![props.filter.id] as Range | null || null
 
     useEffect(() => {
         if (!props.active) {
-            fromRef.current!.value = ''
-            toRef.current!.value = ''
+            gteRef.current!.value = ''
+            lteRef.current!.value = ''
         }
     }, [props.active])
 
     const handleChange = () => {
-        let from = fromRef.current!.value || null
-        let to = toRef.current!.value || null
-        let value: Range | null = { from, to }
+        let gte = gteRef.current!.value || null
+        let lte = lteRef.current!.value || null
+        let value: Range | null = { gte, lte }
 
-        if (from === null && to === null) {
+        if (gte === null && lte === null) {
             value = null
         }
 
@@ -48,25 +43,25 @@ const FilterRange = (props: Props) => {
             <div className={styles.wrapper}>
                 <span>From:</span>
                 <Input
-                    value={value?.from || ''}
+                    value={value?.gte || ''}
                     type={props.filter.type}
                     className={styles.input}
                     min={props.filter.minVal}
-                    max={value !== null ? value.to || props.filter.maxVal : ''}
+                    max={value !== null ? value.lte || props.filter.maxVal : ''}
                     onChange={handleChange}
-                    ref={fromRef}
+                    ref={gteRef}
                 />
             </div>
             <div className={styles.wrapper}>
                 <span className={styles.to}>To:</span>
                 <Input
-                    value={value?.to || ''}
+                    value={value?.lte || ''}
                     type={props.filter.type}
                     className={styles.input}
-                    min={value !== null ? value.from || props.filter.minVal : ''}
+                    min={value !== null ? value.gte || props.filter.minVal : ''}
                     max={props.filter.maxVal}
                     onChange={handleChange}
-                    ref={toRef}
+                    ref={lteRef}
                 />
             </div>
         </div>

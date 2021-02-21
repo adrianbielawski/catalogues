@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { upperFirst, includes } from 'lodash'
 import styles from './filterChoices.scss'
 //Types
-import { FilterWithChoices, SelectedFilter } from '../../filtersTypes'
+import { FilterWithChoices, SelectedChoiceFilterValue, SelectedFilterValue } from '../../filtersTypes'
 //Context
 import { FiltersContext } from '../../filtersStore'
 //Custom components
@@ -15,13 +15,17 @@ type Props = {
 
 const FilterChoices = (props: Props) => {
     const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
-    const selectedChoices = selectedFilters![props.filter.id]
+    const selectedChoices = selectedFilters![props.filter.id] as SelectedChoiceFilterValue
 
     const choices = props.filter.choices!.map(choice => {
         const handleChange = (choiceId: number | string, selected: boolean) => {
-            let choices: SelectedFilter | null = {
+            let choices: SelectedFilterValue | null = {
                 ...selectedChoices,
-                [choiceId]: selected
+            } as SelectedChoiceFilterValue
+            if (selected) {
+                choices![choiceId] = true
+            } else {
+                delete choices![choiceId]
             }
 
             if (!includes(choices!, true)) {

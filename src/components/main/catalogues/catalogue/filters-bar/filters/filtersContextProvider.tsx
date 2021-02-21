@@ -1,7 +1,10 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
 //Contexts
 import { FiltersContext, reducer } from './filtersStore'
-import { FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS } from './filtersTypes'
+import {
+    FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS
+} from './filtersTypes'
 
 type Props = {
     children: JSX.Element,
@@ -9,17 +12,26 @@ type Props = {
     onChange: (filterId: number | string, value: FilterValue) => void,
 }
 
+
 const FiltersContextProvider = (props: Props) => {
     const initialState = {
         ...props.value,
     }
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const changeSelectedFilters = (filterId: number | string, value: FilterValue) => {
         props.onChange(filterId, value)
         dispatch({
             type: CHANGE_SELECTED_FILTERS,
+            filterId,
+            value,
+        })
+    }
+
+    const changeActiveFilters = (filterId: number | string, value: boolean) => {
+        dispatch({
+            type: CHANGE_ACTIVE_FILTERS,
             filterId,
             value,
         })
@@ -36,6 +48,7 @@ const FiltersContextProvider = (props: Props) => {
         ...state,
         changeSelectedFilters,
         changeFilters,
+        changeActiveFilters,
     }
 
     return (
