@@ -1,12 +1,12 @@
 @import "global-styles/variables_and_mixins";
 
 .mainImage {
-    max-width: 150px;
+    min-width: 150px;
+    width: 150px;
     height: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-grow: 1;
     .img {
         max-width: 100%;
         max-height: 100%;
