@@ -13,41 +13,14 @@ import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/
 import { RouteWithContext } from 'src/router'
 //Custom hooks
 import { useFirstRender } from 'src/customHooks'
+//Filter bar utils
+import { searchValue, sortValue, filtersValue, filtersBarValue } from './filter-bar-utils/contextInitialValues'
 //Custom components
 import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from './catalogue/filters-bar/filtersBar'
-
-const filtersValue = {
-    filters: [],
-    selectedFilters: {},
-    activeFilters: {},
-}
-const sortValue = {
-    sortOptions: [
-        {
-            id: 'id',
-            title: 'id',
-            type: 'number',
-        },
-        {
-            id: 'date',
-            title: 'date',
-            type: 'date',
-        },
-    ],
-    selected: {},
-}
-const searchValue = {
-    search: '',
-}
-
-const filtersBarValue = {
-    show: false,
-    isInitialized: false,
-}
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
