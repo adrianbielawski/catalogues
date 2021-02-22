@@ -46,6 +46,7 @@ const searchValue = {
 
 const filtersBarValue = {
     show: false,
+    isInitialized: false,
 }
 
 const Catalogues = () => {

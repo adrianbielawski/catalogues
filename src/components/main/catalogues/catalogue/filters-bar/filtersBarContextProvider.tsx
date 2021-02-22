@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react'
 //Contexts
 import { FiltersBarContext, reducer } from './filtersBarStore'
-import { FiltersBarInitialState, TOGGLE_FILTERS_BAR } from './filtersBarTypes'
+import { FiltersBarInitialState, INITIALIZED, TOGGLE_FILTERS_BAR } from './filtersBarTypes'
 
 type Props = {
     children: JSX.Element,
@@ -16,6 +16,11 @@ const FiltersBarContextProvider = (props: Props) => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
+    const initialized = () => {
+        dispatch({
+            type: INITIALIZED,
+        })
+    }
     const toggleFiltersBar = () => {
         props.onChange()
         dispatch({
@@ -25,6 +30,7 @@ const FiltersBarContextProvider = (props: Props) => {
 
     const context = {
         ...state,
+        initialized,
         toggleFiltersBar,
     }
 
