@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +19,10 @@ const SearchInput = (props: Props) => {
     const { onSearch, onClear, value, ...rest } = props
     const inputRef = useRef<HTMLInputElement>(null)
     const [userInput, setUserInput] = useState(value)
+
+    useEffect(() => {
+        setUserInput(value)
+    }, [value])
 
     const handleSearch = () => {
         if (inputRef.current !== null) {
