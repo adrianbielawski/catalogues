@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import styles from './searchInput.scss'
+//Utils
+import { confirmOnEnter } from 'src/utils'
 //Custom components
 import Input from 'components/global-components/input/input'
 import TransparentButton from '../transparent-button/transparentButton'
@@ -23,6 +25,7 @@ const SearchInput = (props: Props) => {
             onSearch(inputRef.current.value)
         }
     }
+    confirmOnEnter(inputRef, handleSearch)
 
     const handleClear = () => {
         if (inputRef.current !== null) {

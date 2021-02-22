@@ -1,10 +1,11 @@
-import { LegacyRef, MutableRefObject, RefCallback } from "react"
+import { LegacyRef, MutableRefObject, RefCallback, useEffect } from "react"
 import { ErrorData, ErrorObject } from "./globalTypes"
 
 export const scrollTop = () => {
     document.body.scrollTo({ top: 0, behavior: 'smooth' })
     document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
 }
+
 
 export const mergeRefs = <T = any>(
     refs: Array<MutableRefObject<T> | LegacyRef<T>>
@@ -18,7 +19,25 @@ export const mergeRefs = <T = any>(
     })
 }
 
+
 export const mod = (i: number, n: number): number => ((i % n) + n) % n
+
 
 export const getErrorMessage = (error: ErrorObject) =>
     Object.values(error.response.data as ErrorData)[0][0] || 'Something went wrong'
+
+
+export const confirmOnEnter = (element: React.RefObject<any>, callback: Function) => {
+    useEffect(() => {
+        element.current?.addEventListener('keyup', handleKeyUp)
+        return () => {
+            element.current?.removeEventListener('keyup', handleKeyUp)
+        }
+    }, [])
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            callback()
+        } 
+    }
+}

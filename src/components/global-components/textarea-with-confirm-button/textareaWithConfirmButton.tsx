@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 import styles from './textareaWithConfirmButton.scss'
+//Utils
+import { confirmOnEnter } from 'src/utils'
 //Custom components
 import ConfirmButton from '../confirm-button/confirmButton'
 
@@ -16,6 +18,7 @@ const TextareaWithConfirmButton = (props: Props) => {
         onConfirm(inputRef.current!.value)
         inputRef.current!.value = ''
     }
+    confirmOnEnter(inputRef, handleConfirm)
 
     return (
         <div className={styles.inputWrapper}>
