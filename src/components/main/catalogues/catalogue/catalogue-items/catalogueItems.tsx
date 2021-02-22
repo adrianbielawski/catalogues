@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import queryString from 'query-string'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Types
-import { Range } from '../filters-bar/filters/filtersTypes'
+import { QueryObj } from 'src/globalTypes'
 import { Filter } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataTypes'
 //Redux
 import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
@@ -23,6 +25,7 @@ const cx = classNames.bind(styles)
 
 const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
+    const history = useHistory()
     const [lastItem, setLastItem] = useState<HTMLLIElement | null>()
     const lastItemRef = useCallback(setLastItem, [])
     const observer = useRef<IntersectionObserver | null>()
@@ -79,26 +82,40 @@ const CatalogueItems = (props: Props) => {
         if (itemsData.catalogueId === props.catalogueId) {
             page = pageNum || itemsData.next || 1
         }
+        
+        const queryObj: QueryObj = {}
 
         const sort = Object.values(sortContext.selected)[0]
 
-        let filters: Filter = {}
+        queryObj['ordering'] = sort || ''
+        queryObj['search'] = searchContext.search
+
+        const filters: Filter = {}
         if (filtersContext.selectedFilters !== null) {
             Object.entries(filtersContext.selectedFilters).forEach(([id, values]) => {
                 if (values === null) return
 
                 if ('gte' in values) {
                     if (values.gte) {
+                        queryObj[`${id}__gte`] = (values as Range).gte!
                         filters[`${id}__gte`] = (values as Range).gte!
                     }
                     if (values.lte) {
+                        queryObj[`${id}__lte`] = (values as Range).lte!
                         filters[`${id}__lte`] = (values as Range).lte!
                     }
                 } else {
+                    queryObj[id] = Object.keys(values)
                     filters[`${id}__in`] = Object.keys(values).join('__')
                 }
             })
         }
+
+        const query = queryString.stringify(queryObj, {
+            arrayFormat: 'comma',
+            skipEmptyString: true
+        })
+        history.push({ search: query })
 
         dispatch(FETCH_ITEMS({
             catalogueId: props.catalogueId,

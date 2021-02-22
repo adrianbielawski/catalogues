@@ -39,6 +39,10 @@ export interface LocationState {
     referrer: Referrer;
 }
 
+export interface QueryObj {
+    [key: string]: number | string | string[]
+}
+
 export interface Catalogue {
     id: number,
     created_by: number,
