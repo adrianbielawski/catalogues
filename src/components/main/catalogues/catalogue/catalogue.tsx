@@ -47,7 +47,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     })
 
     const getFilters = (): FilterType[] => {
-        const fields = catalogue.fields.filter(f => 
+        const fields = catalogue.fields.filter(f =>
             (f.type === 'multiple_choice' || f.type === 'single_choice')
             && (f as DeserializedChoiceField).choices.length
         ) as DeserializedChoiceField[]
@@ -95,7 +95,9 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
             <FiltersBar />
             <div id="catalogueMainContent" className={styles.mainContent}>
                 {getAddItemButton()}
-                <CatalogueItems catalogueId={catalogue.id} />
+                {filtersContext.filters.length > 0 &&
+                    <CatalogueItems key={catalogue.id} catalogueId={catalogue.id} />
+                }
             </div>
         </div>
     )

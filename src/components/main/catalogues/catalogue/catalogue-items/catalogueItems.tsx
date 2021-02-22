@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import queryString from 'query-string'
+import { size, trimStart } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Types
-import { QueryObj } from 'src/globalTypes'
+import { LocationState, QueryObj } from 'src/globalTypes'
+import { Range, SelectedFilter } from '../filters-bar/filters/filtersTypes'
 import { Filter } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataTypes'
 //Redux
 import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks
-import { useDelay, useFirstRender } from 'src/customHooks'
+import { useDelay } from 'src/customHooks'
 import useFiltersBarContext from '../filters-bar/useFiltersBarContext'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
@@ -26,29 +28,67 @@ const cx = classNames.bind(styles)
 const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory()
+    const location = useLocation<LocationState>()
     const [lastItem, setLastItem] = useState<HTMLLIElement | null>()
     const lastItemRef = useCallback(setLastItem, [])
     const observer = useRef<IntersectionObserver | null>()
     const itemsData = useTypedSelector(state => state.itemsData)
-    const { searchContext, sortContext, filtersContext } = useFiltersBarContext()
+    const { searchContext, sortContext, filtersContext, filtersBar } = useFiltersBarContext()
     const delayCompleted = useDelay(itemsData.fetchingItems)
-    const firstRender = useFirstRender()
 
     useEffect(() => {
-        fetchItems()
+        const parsedQuery = queryString.parse(location.search || '')
+        const filters: SelectedFilter = {}
 
+        if (parsedQuery.search) {
+            searchContext.setSearchValue(parsedQuery.search || '')
+        }
+
+        if (parsedQuery.ordering) {
+            sortContext.setSortValue({
+                [trimStart(parsedQuery.ordering, '-')]: parsedQuery.ordering,
+            })
+        }
+
+        for (const filter of filtersContext.filters) {
+            if (filter.type === 'date' || filter.type === 'number') {
+                if (`${filter.id}__lte` in parsedQuery || `${filter.id}__gte` in parsedQuery) {
+                    filters[filter.id] = {
+                        gte: parsedQuery[`${filter.id}__gte`] || null,
+                        lte: parsedQuery[`${filter.id}__lte`] || null,
+                    }
+                }
+            }
+            else {
+                if (filter.id in parsedQuery) {
+                    filters[filter.id] = Object.fromEntries<boolean>(
+                        parsedQuery[filter.id].split(',').map((k: string) => [k, true])
+                    )
+                }
+            }
+        }
+
+        if (size(filters)) {
+            filtersContext.setSelectedFilters(filters)
+        }
+
+        filtersBar.initialized()
+    }, [])
+
+    useEffect(() => {
         return () => {
             dispatch(CLEAR_ITEMS_DATA())
         }
     }, [props.catalogueId])
 
     useEffect(() => {
-        if (firstRender) return
+        if (!filtersBar.isInitialized) return
         fetchItems(1)
     }, [
         searchContext.search,
         sortContext.selected,
         filtersContext.selectedFilters,
+        filtersBar.isInitialized,
     ])
 
     useEffect(() => {

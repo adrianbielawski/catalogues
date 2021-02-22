@@ -3,7 +3,8 @@ import { useImmerReducer } from 'use-immer'
 //Contexts
 import { FiltersContext, reducer } from './filtersStore'
 import {
-    FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS
+    FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS,
+    SET_SELECTED_FILTERS, SelectedFilter,
 } from './filtersTypes'
 
 type Props = {
@@ -19,6 +20,13 @@ const FiltersContextProvider = (props: Props) => {
     }
 
     const [state, dispatch] = useImmerReducer(reducer, initialState)
+
+    const setSelectedFilters = (filters: SelectedFilter) => {
+        dispatch({
+            type: SET_SELECTED_FILTERS,
+            filters,
+        })
+    }
 
     const changeSelectedFilters = (filterId: number | string, value: FilterValue) => {
         props.onChange(filterId, value)
@@ -46,6 +54,7 @@ const FiltersContextProvider = (props: Props) => {
 
     const context = {
         ...state,
+        setSelectedFilters,
         changeSelectedFilters,
         changeFilters,
         changeActiveFilters,

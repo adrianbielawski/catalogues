@@ -1,7 +1,8 @@
 import { createContext } from 'react'
 import { Draft } from 'immer'
 import {
-    FiltersInitialState, FiltersContextInterface, Action, CHANGE_SELECTED_FILTERS, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS
+    FiltersInitialState, FiltersContextInterface, Action, CHANGE_SELECTED_FILTERS, SET_SELECTED_FILTERS,
+    CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS
 } from './filtersTypes'
 
 export const initialState = {
@@ -9,6 +10,7 @@ export const initialState = {
     selectedFilters: {},
     activeFilters: {},
     changeFilters: () => null,
+    setSelectedFilters: () => null,
     changeSelectedFilters: () => null,
     changeActiveFilters: () => null,
 }
@@ -19,6 +21,15 @@ export const reducer = (state: Draft<FiltersInitialState>, action: Action) => {
     switch (action.type) {
         case CHANGE_SELECTED_FILTERS:
             state.selectedFilters[action.filterId] = action.value
+            break
+
+        case SET_SELECTED_FILTERS:
+            state.activeFilters = {}
+            state.selectedFilters = {}
+            for (const key in action.filters) {
+                state.activeFilters[key] = true
+                state.selectedFilters[key] = action.filters[key]
+            }
             break
 
         case CHANGE_ACTIVE_FILTERS:
