@@ -2,7 +2,7 @@ import { combineEpics } from "redux-observable"
 import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
 import {
     catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map,
-    defaultIfEmpty
+    defaultIfEmpty,
 } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
@@ -127,6 +127,17 @@ export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$
             catchError(() => of(actions.CREATE_CATALOGUE_FIELD_FAILURE(action.payload.catalogueId)))
         ))
     )
+)
+
+export const refreshCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.REFRESH_CATALOGUE.match),
+    switchMap(action => concat(
+        of(actions.REFRESH_CATALOGUE_START()),
+        axiosInstance$.get(`/catalogues/${action.payload}`).pipe(
+            map(response => actions.REFRESH_CATALOGUE_SUCCESS(response.data)),
+            catchError(() => of(actions.REFRESH_CATALOGUE_FAILURE()))
+        )
+    ))
 )
 
 export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
@@ -264,6 +275,7 @@ export const cataloguesEpics = combineEpics(
     postTextFieldNameChangeEpic,
     postChoiceFieldChangesEpic,
     createCatalogueFieldEpic,
+    refreshCatalogueEpic,
     fetchCataloguesEpic,
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,

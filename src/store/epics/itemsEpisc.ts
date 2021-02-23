@@ -1,6 +1,6 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
-import { catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map } from 'rxjs/operators'
+import { concat, of, defer, forkJoin, Observable, from, merge, iif } from 'rxjs'
+import { catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import mime from 'mime-types'
 import { axiosInstance$ } from "src/axiosInstance"
@@ -8,10 +8,14 @@ import { axiosInstance$ } from "src/axiosInstance"
 import { retry$ } from "store/storeObservables"
 //Serializers
 import { itemFieldSerializer } from "src/serializers"
+//Selectors
+import { getCatalogueById } from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlectors"
 //Types
 import { DeserializedImage } from "src/globalTypes"
+import { RootState } from "store/storeConfig"
 //Actions
 import * as actions from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
+import * as catalogueActions from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice"
 
 export const refreshItemEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_ITEM.match)),
@@ -65,7 +69,7 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
-export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
+export const saveItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
     filter(actions.SAVE_ITEM.match),
     switchMap(action => {
         const filteredValues = action.payload.fieldsValues.filter(v => v.value.length > 0)
@@ -117,10 +121,16 @@ export const saveItemEpic = (action$: Observable<Action>) => action$.pipe(
             request$.pipe(
                 mergeMap(response => imagesRequests$(response.data.id).pipe(
                     defaultIfEmpty(),
-                    map(() => actions.SAVE_ITEM_SUCCESS({
-                        itemId: response.data.id,
-                        prevId: action.payload.id,
-                    })),
+                    withLatestFrom(state$.pipe(pluck('catalogues'))),
+                    mergeMap(([_, state]) => merge(
+                        iif(() => getCatalogueById(state, action.payload.catalogueId).firstItemCreatedAt === null,
+                            of(catalogueActions.REFRESH_CATALOGUE(action.payload.catalogueId))
+                        ),
+                        of(actions.SAVE_ITEM_SUCCESS({
+                            itemId: response.data.id,
+                            prevId: action.payload.id,
+                        })),
+                    )),
                     catchError(() => of(actions.SAVE_ITEM_FAILURE(action.payload.id)))
                 ))
             )

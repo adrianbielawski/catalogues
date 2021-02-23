@@ -1,11 +1,11 @@
 export interface ErrorData {
-    [field: string]: string
+    [field: string]: string,
 }
 
 export interface ErrorObject {
     response: {
-        data: ErrorData
-    }
+        data: ErrorData,
+    },
 }
 
 export interface User {
@@ -31,8 +31,8 @@ export interface Referrer {
     params: {
         userId?: number,
         slug?: string,
-        catalogue?: DeserializedCatalogue
-    }
+        catalogue?: DeserializedCatalogue,
+    },
 }
 
 export interface LocationState {
@@ -48,6 +48,7 @@ export interface Catalogue {
     created_by: number,
     name: string,
     slug: string,
+    first_item_created_at: string | null,
 }
 
 export interface DeserializedCatalogue {
@@ -55,6 +56,7 @@ export interface DeserializedCatalogue {
     createdBy: number,
     name: string,
     slug: string,
+    firstItemCreatedAt: string | null,
     fields: DeserializedField[],
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,
@@ -65,11 +67,11 @@ export interface DeserializedCatalogue {
 }
 
 export interface ItemsData extends ListData {
-    results: Item[]
+    results: Item[],
 }
 
 export interface DeserializedItemsData extends DeserializedListData {
-    results: DeserializedItem[]
+    results: DeserializedItem[],
 }
 
 export type ListDataResults = Item[]
@@ -82,7 +84,7 @@ export interface ListData {
     current: number,
     next: number,
     previous: number,
-    results: ListDataResults
+    results: ListDataResults,
 }
 
 export type DeserializedListDataResults = DeserializedItem[] 
@@ -95,7 +97,7 @@ export interface DeserializedListData {
     current: number | null,
     next: number | null,
     previous: number | null,
-    results: DeserializedListDataResults
+    results: DeserializedListDataResults,
 }
 
 export type ListResultsDeserializer = ItemDeserializer
@@ -195,20 +197,20 @@ export type Image = {
     id: number | null,
     image: string,
     image_thumbnail: string,
-    is_primary: boolean
-    item_id: number | string
+    is_primary: boolean,
+    item_id: number | string,
 }
 
 export type SerializedImage = {
     image: string,
-    is_primary: boolean
-    item_id: number | string
+    is_primary: boolean,
+    item_id: number | string,
 }
 
 export type DeserializedImage = {
     id: number | string,
     image: string,
     imageThumbnail: string,
-    isPrimary: boolean
-    itemId: number | string
+    isPrimary: boolean,
+    itemId: number | string,
 }

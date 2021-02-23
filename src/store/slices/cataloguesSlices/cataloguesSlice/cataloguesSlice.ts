@@ -15,6 +15,7 @@ export const cataloguesSlice = createSlice({
     initialState,
     reducers: {
         ...cataloguesReducers.createCatalogueReducers,
+        ...cataloguesReducers.refreshCatalogueReducers,
         ...cataloguesReducers.fetchCataloguesReducers,
         ...cataloguesReducers.changeCatalogueNameReducers,
         ...fieldsReducers.fetchCatalogueFieldReducers,
@@ -31,6 +32,7 @@ export const cataloguesSlice = createSlice({
 
 export const {
     CREATE_CATALOGUE, CREATE_CATALOGUE_START, CREATE_CATALOGUE_SUCCESS, CREATE_CATALOGUE_FAILURE,
+    REFRESH_CATALOGUE, REFRESH_CATALOGUE_START, REFRESH_CATALOGUE_SUCCESS, REFRESH_CATALOGUE_FAILURE,
     FETCH_CATALOGUES, FETCH_CATALOGUES_START, FETCH_CATALOGUES_SUCCESS, FETCH_CATALOGUES_FAILURE,
     TOGGLE_CATALOGUE_NAME_EDIT,
     CHANGE_CATALOGUE_NAME, FETCH_CATALOGUE_FIELDS, CHANGE_CATALOGUE_NAME_START, CHANGE_CATALOGUE_NAME_SUCCESS, CHANGE_CATALOGUE_NAME_FAILURE,

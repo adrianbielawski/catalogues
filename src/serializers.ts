@@ -19,6 +19,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     createdBy: catalogue.created_by,
     name: catalogue.name,
     slug: catalogue.slug,
+    firstItemCreatedAt: catalogue.first_item_created_at,
     fields: [],
     fetchingFields: true,
     fetchingFieldsChoices: true,
