@@ -46,7 +46,7 @@ export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
 
 export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEMS.match),
-    mergeMap(action => concat(
+    switchMap(action => concat(
         of(actions.FETCH_ITEMS_START()),
         defer(() => axiosInstance$.get('/items/', {
             params: {
