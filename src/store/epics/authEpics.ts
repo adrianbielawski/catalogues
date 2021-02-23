@@ -13,16 +13,18 @@ export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.GET_USER.match),
     mergeMap(action => concat(
         axiosInstance$.get('/user/').pipe(
-            retryWhen(err => retry$(err)),
             mergeMap(response => concat(
                 of(actions.GET_USER_SUCCESS(response.data)),
                 defer(() => {
-                    if (location.pathname === '/') {
+                    if (action.payload.location.pathname === '/') {
                         action.payload.history.push(`/${response.data.id}/catalogues`)
                     }
                 })
             )),
-            catchError(() => of(actions.GET_USER_FAILURE()))
+            catchError(() => {
+                localStorage.removeItem('token')
+                return of(actions.GET_USER_FAILURE())
+            })
         )
     ))
 )
@@ -66,11 +68,11 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                 }),
                 of(actions.LOG_IN_SUCCESS(response.data.user)),
                 defer(() => {
-                    const { path } = action.payload.location.state?.referrer || {
-                        path: `/${response.data.user.id}/catalogues`
+                    const { pathname } = action.payload.location.state?.referrer || {
+                        pathname: `/${response.data.user.id}/catalogues`
                     }
 
-                    action.payload.history.push(path)
+                    action.payload.history.push(pathname)
                 }),
             )),
             catchError(error => {

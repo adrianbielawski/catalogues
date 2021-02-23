@@ -1,8 +1,11 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Redux
 import { CLEAR_LOGOUT_ERROR, LOG_OUT } from 'store/slices/authSlices/authSlices'
+//Components
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 interface Props {
@@ -11,7 +14,7 @@ interface Props {
 
 const Logout = (props: Props) => {
     const dispatch = useAppDispatch()
-    const history = useHistory()
+    const history = useHistory<LocationState>()
     const auth = useTypedSelector(state => state.auth)
 
     const handleLogout = () => {

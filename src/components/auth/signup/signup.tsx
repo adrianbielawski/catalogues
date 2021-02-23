@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './signup.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { SIGN_UP, CLEAR_SIGNUP_ERROR } from 'store/slices/authSlices/authSlices'
@@ -11,7 +13,7 @@ import Input from 'components/global-components/input/input'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 const Signup = () => {
-    const history = useHistory()
+    const history = useHistory<LocationState>()
     const dispatch = useAppDispatch()
     const userNameInput = useRef<HTMLInputElement>(null)
     const emailInput = useRef<HTMLInputElement>(null)

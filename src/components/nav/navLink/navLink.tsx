@@ -25,7 +25,7 @@ const NavLink = (props: Props) => {
     if (props.item.url !== undefined) {
       history.push(props.item.url!, {
         referrer: {
-          path: routerContext.match.path,
+          pathname: routerContext.match.path,
           params,
         }
       })

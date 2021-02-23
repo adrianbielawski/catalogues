@@ -80,9 +80,9 @@ const useParamHydrator = () => {
 export const useUrlBuilder = () => {
     const { dehydrate } = useParamHydrator()
 
-    return ({ path, params }: { path: string, params: HydratedParams }) => {
+    return ({ pathname, params }: { pathname: string, params: HydratedParams }) => {
         return generatePath(
-            path,
+            pathname,
             dehydrate(params)
         )
     }

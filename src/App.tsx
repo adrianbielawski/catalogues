@@ -15,7 +15,7 @@ import Loader from 'components/global-components/loader/loader'
 
 const App = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory()
+  const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
   const screenHeight = useTypedSelector(state => state.app.screenHeight)
 

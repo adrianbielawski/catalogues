@@ -16,7 +16,7 @@ const Login = () => {
     const dispatch = useAppDispatch()
     const auth = useTypedSelector(state => state.auth)
     const [isValid, setIsValid] = useState(false);
-    const history = useHistory()
+    const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
     const emailInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
