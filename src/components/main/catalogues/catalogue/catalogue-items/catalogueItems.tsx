@@ -8,13 +8,14 @@ import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/ite
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
-import useFiltersBarContext from '../filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/main/catalogues/catalogue/filters-bar/useFiltersBarContext'
+//Utils
+import parsedQueryBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
-import CatalogueItem from '../catalogue-item/catalogueItem'
+import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Button from 'components/global-components/button/button'
-import queryBuilder from '../../filter-bar-utils/queryBuilder'
-import parsedQueryBuilder from '../../filter-bar-utils/parsedQueryBuilder'
+import queryBuilder from 'components/main/catalogues/filter-bar-utils/queryBuilder'
 
 type Props = {
     catalogueId: number,

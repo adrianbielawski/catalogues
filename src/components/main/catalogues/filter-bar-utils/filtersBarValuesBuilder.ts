@@ -4,7 +4,7 @@ import { SelectedFilter } from 'components/main/catalogues/catalogue/filters-bar
 import { trimStart } from 'lodash'
 
 
-const parsedQueryBuilder = (context: UseFiltersBarContextInterface) => {
+const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
     const parsedQuery = queryString.parse(location.search || '')
 
     const searchValue = parsedQuery.search || ''
@@ -40,4 +40,4 @@ const parsedQueryBuilder = (context: UseFiltersBarContextInterface) => {
     }
 }
 
-export default parsedQueryBuilder
+export default filtersBarValuesBuilder
