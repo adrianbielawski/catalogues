@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
 //Contexts
 import { SideMenuContext, reducer } from './sideMenuStore'
 import { SideMenuInitialState, TOGGLE_SIDE_MENU } from './sideMenuTypes'
@@ -14,7 +15,7 @@ const SideMenuContextProvider = (props: Props) => {
         ...props.value
     }
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const toggleSideMenu = () => {
         props.onChange()
