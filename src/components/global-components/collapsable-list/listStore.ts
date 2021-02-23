@@ -1,5 +1,5 @@
 import { createContext, Dispatch } from 'react'
-import { cloneDeep } from 'lodash'
+import { Draft } from 'immer'
 
 const BUTTON_CLICKED = 'BUTTON_CLICKED'
 const ITEMS_INSPECTED = 'ITEMS_INSPECTED'
@@ -45,23 +45,22 @@ export const initialState = {
 
 export const ListContext = createContext<State>(initialState)
 
-export const reducer = (state: State, action: Action) => {
-    let newState = cloneDeep(state)
+export const reducer = (state: Draft<State>, action: Action) => {
     switch (action.type) {
         case 'BUTTON_CLICKED':
-            newState.showAllItems = !newState.showAllItems
-            return newState
+            state.showAllItems = !state.showAllItems
+            break
 
         case 'ITEMS_INSPECTED':
-            newState.itemsInView = action.itemsInView
-            newState.totalHeight = action.totalHeight
-            newState.collapsedHeight = action.collapsedHeight
-            newState.itemsInspected = true
-            return newState
+            state.itemsInView = action.itemsInView
+            state.totalHeight = action.totalHeight
+            state.collapsedHeight = action.collapsedHeight
+            state.itemsInspected = true
+            break
 
         case 'OVERFLOW_INSPECTED':
-            newState.showButton = newState.collapsedHeight < newState.totalHeight || action.hasOverflow
-            return newState
+            state.showButton = state.collapsedHeight < state.totalHeight || action.hasOverflow
+            break
             
         default:
             throw new Error()

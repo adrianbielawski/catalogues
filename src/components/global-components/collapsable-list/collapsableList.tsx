@@ -1,8 +1,10 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
+//Contexts
+import { ListContext, reducer, initialState } from './listStore'
+//Components
 import List from './list/list'
 import Button from './button/button'
-//Contexts
-import { ListContext, reducer, initialState } from './listStore';
 
 type Props = {
     children: React.ComponentType<any> | JSX.Element,
@@ -10,7 +12,7 @@ type Props = {
 }
 
 const CollapsableList = (props: Props) => {
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const context = {
         ...state,
