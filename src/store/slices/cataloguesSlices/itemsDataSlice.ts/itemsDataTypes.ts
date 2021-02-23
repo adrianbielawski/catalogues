@@ -3,6 +3,7 @@ import { DeserializedItem, Item, ListData } from "src/globalTypes";
 export interface ItemsDataState {
     catalogueId: number | null,
     fetchingItems: boolean,
+    creatingNewItem: boolean,
     count: number | null,
     pageSize: number | null,
     startIndex: number | null,

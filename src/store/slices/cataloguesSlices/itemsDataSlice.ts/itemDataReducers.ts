@@ -8,9 +8,9 @@ import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsData
 type State = T.ItemsDataState
 
 export const fetchItemReducers = {
-    REFRESH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) {},
-    FETCH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) {},
-    FETCH_ITEM_START(state: State, action: PayloadAction<number>) {},
+    REFRESH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) { },
+    FETCH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) { },
+    FETCH_ITEM_START(state: State, action: PayloadAction<number>) { },
     FETCH_ITEM_SUCCESS(state: State, action: PayloadAction<T.FetchItemSuccessPayload>) {
         const item = getItemById(state, action.payload.itemId)
         Object.assign(item, itemDeserializer(action.payload.data))
@@ -22,7 +22,7 @@ export const fetchItemReducers = {
 }
 
 export const fetchItemsReducers = {
-    FETCH_ITEMS(state: State, action: PayloadAction<T.FetchItemsPayload>) {},
+    FETCH_ITEMS(state: State, action: PayloadAction<T.FetchItemsPayload>) { },
     FETCH_ITEMS_START(state: State) {
         state.fetchingItems = false
     },
@@ -37,6 +37,7 @@ export const fetchItemsReducers = {
             results: prevResults.concat(list.results),
             catalogueId: action.payload.catalogueId,
             fetchingItems: false,
+            creatingNewItem: false,
         }
     },
     FETCH_ITEMS_FAILURE(state: State) {
@@ -64,8 +65,10 @@ export const EditItemReducers = {
         }
 
         state.results.unshift(item)
+        state.creatingNewItem = true
     },
     REMOVE_ITEM_FROM_STATE(state: State, action: PayloadAction<number | string>) {
+        state.creatingNewItem = false
         state.results = state.results.filter(i => i.id !== action.payload)
     },
     CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<T.ItemAndFieldIdPayload>) {
@@ -127,10 +130,11 @@ export const itemImageReducers = {
 }
 
 export const saveItem = {
-    SAVE_ITEM(state: State, action: PayloadAction<DeserializedItem>) {},
+    SAVE_ITEM(state: State, action: PayloadAction<DeserializedItem>) { },
     SAVE_ITEM_START(state: State, action: PayloadAction<number | string>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = true
+        state.creatingNewItem = false
     },
     SAVE_ITEM_SUCCESS(state: State, action: PayloadAction<T.SaveItemSuccessPayload>) {
         const item = getItemById(state, action.payload.prevId)

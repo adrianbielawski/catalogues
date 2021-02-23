@@ -6,6 +6,7 @@ import * as itemReducers from './itemDataReducers'
 const initialState: T.ItemsDataState = {
     catalogueId: null,
     fetchingItems: false,
+    creatingNewItem: false,
     count: null,
     pageSize: null,
     startIndex: null,
