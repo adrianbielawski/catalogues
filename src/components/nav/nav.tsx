@@ -68,6 +68,17 @@ const Nav = (props: Props) => {
     }, [])
 
     useEffect(() => {
+        if (showList.show === true) {
+            window.addEventListener('click', toggleActive)
+        } else {
+            window.removeEventListener('click', toggleActive)
+        }
+        return () => {
+            window.removeEventListener('click', toggleActive)
+        }
+    }, [showList.show])
+
+    useEffect(() => {
         inspectHeight()
     }, [active])
 
