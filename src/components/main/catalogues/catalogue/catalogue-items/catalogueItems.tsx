@@ -8,7 +8,7 @@ import { CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/ite
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
-import useFiltersBarContext from 'components/main/catalogues/catalogue/filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 //Utils
 import parsedQueryBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
 //Custom components

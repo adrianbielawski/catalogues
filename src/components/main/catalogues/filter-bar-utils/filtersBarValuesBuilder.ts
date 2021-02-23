@@ -1,6 +1,6 @@
 import queryString from 'query-string'
-import { UseFiltersBarContextInterface } from '../catalogue/filters-bar/filtersBarTypes'
-import { SelectedFilter } from 'components/main/catalogues/catalogue/filters-bar/filters/filtersTypes'
+import { UseFiltersBarContextInterface } from 'components/global-components/filters-bar/filtersBarTypes'
+import { SelectedFilter } from 'components/global-components/filters-bar/filters/filtersTypes'
 import { trimStart } from 'lodash'
 
 

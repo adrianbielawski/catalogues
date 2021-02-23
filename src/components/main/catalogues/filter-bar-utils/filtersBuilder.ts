@@ -1,6 +1,6 @@
 import moment from "moment"
 import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from "src/globalTypes"
-import { Choice, FilterType } from "../catalogue/filters-bar/filters/filtersTypes"
+import { Choice, FilterType } from "components/global-components/filters-bar/filters/filtersTypes"
 
 const buildFilterChoice = (choice: DeserializedChoice): Choice => ({
     id: choice.value,

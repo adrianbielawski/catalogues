@@ -5,7 +5,7 @@ import styles from './catalogues.scss'
 import { LocationState } from 'src/globalTypes'
 import { NavItemType } from 'components/nav/nav'
 //Context
-import FiltersBarBulkContextProvider from './catalogue/filters-bar/filtersBarBulkContextProvider'
+import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filtersBarBulkContextProvider'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
@@ -20,7 +20,7 @@ import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
-import FiltersBar from './catalogue/filters-bar/filtersBar'
+import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()

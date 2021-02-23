@@ -12,10 +12,10 @@ import { scrollTop } from 'src/utils'
 import buildFilters from '../filter-bar-utils/filtersBuilder'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
-import FiltersBar from './filters-bar/filtersBar'
+import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
-import useFiltersBarContext from './filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
