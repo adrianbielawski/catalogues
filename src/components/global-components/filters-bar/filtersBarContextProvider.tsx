@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
 //Contexts
 import { FiltersBarContext, reducer } from './filtersBarStore'
 import { FiltersBarInitialState, INITIALIZED, TOGGLE_FILTERS_BAR } from './filtersBarTypes'
@@ -14,7 +15,7 @@ const FiltersBarContextProvider = (props: Props) => {
         ...props.value
     }
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const initialized = () => {
         dispatch({

@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
 //Contexts
 import { SortContext, reducer } from './sortStore'
 import { SortInitialState, SortValue, CHANGE_SORT } from './sortTypes'
@@ -14,7 +15,7 @@ const SortContextProvider = (props: Props) => {
         ...props.value,
     }
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const setSortValue = (value: SortValue) => {
         props.onChange(value)

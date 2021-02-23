@@ -1,4 +1,5 @@
-import React, { useReducer } from 'react'
+import React from 'react'
+import { useImmerReducer } from 'use-immer'
 //Contexts
 import { SearchContext, reducer } from './searchStore'
 //Types
@@ -15,7 +16,7 @@ const SearchContextProvider = (props: Props) => {
         ...props.value,
     }
 
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const setSearchValue = (value: SearchValue) => {
         props.onChange(value)

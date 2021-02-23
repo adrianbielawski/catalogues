@@ -1,5 +1,5 @@
+import { Draft } from 'immer'
 import { createContext } from 'react'
-import { cloneDeep } from 'lodash'
 import { SortContextInterface, SortInitialState, Action, CHANGE_SORT } from './sortTypes'
 
 export const SortContext = createContext<SortContextInterface>({
@@ -8,16 +8,15 @@ export const SortContext = createContext<SortContextInterface>({
     setSortValue: () => {},
 })
 
-export const reducer = (state: SortInitialState, action: Action) => {
-    let newState = cloneDeep(state)
+export const reducer = (state: Draft<SortInitialState>, action: Action) => {
     switch (action.type) {
         case CHANGE_SORT:
             if (action.value === undefined) {
-                newState.selected = {}
+                state.selected = {}
             } else {
-                newState.selected = action.value
+                state.selected = action.value
             }
-            return newState
+            break
 
         default:
             throw new Error()

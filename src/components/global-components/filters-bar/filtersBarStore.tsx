@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { cloneDeep } from 'lodash'
+import { Draft } from 'immer'
 //Types
 import {
     FiltersBarInitialState, Action, TOGGLE_FILTERS_BAR, FiltersBarContextInterface, INITIALIZED
@@ -12,16 +12,15 @@ export const FiltersBarContext = createContext<FiltersBarContextInterface>({
     toggleFiltersBar: () => {},
 })
 
-export const reducer = (state: FiltersBarInitialState, action: Action) => {
-    let newState = cloneDeep(state)
+export const reducer = (state: Draft<FiltersBarInitialState>, action: Action) => {
     switch (action.type) {
         case INITIALIZED:
-            newState.isInitialized = true
-            return newState
+            state.isInitialized = true
+            break
 
         case TOGGLE_FILTERS_BAR:
-            newState.show = !newState.show
-            return newState
+            state.show = !state.show
+            break
 
         default:
             throw new Error()
