@@ -8,6 +8,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import { DeserializedChoice } from 'src/globalTypes'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
     choices: DeserializedChoice[],
@@ -20,12 +21,35 @@ const cx = classNames.bind(styles)
 
 const Choices = (props: Props) => {
     const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
+    const [inputError, setInputError] = useState('')
 
     const handleAddButtonClick = () => {
         setIsAddChoiceActive(true)
     }
 
+    const validateInput = (name: string) => {
+        let error = null
+
+        if (props.choices.find((choice) => choice.value.toLowerCase() === name.toLowerCase())) {
+            error = `Choice with name "${name}" already exists`
+        }
+
+        return {
+            valid: error === null,
+            error,
+        }
+    }
+    
+    const clearInputError = () => {
+        setInputError('')
+    }
+
     const handleConfirm = (name: string) => {
+        const { valid, error } = validateInput(name)
+        if (!valid) {
+            setInputError(error!)
+            return
+        }
         props.onAdd(name)
     }
 
@@ -43,7 +67,6 @@ const Choices = (props: Props) => {
                     <span>{choice.value}</span>
                 </li>
             )
-
         })
     )
 
@@ -75,6 +98,12 @@ const Choices = (props: Props) => {
                     />
                 )
             }
+            <MessageModal
+                show={inputError.length !== 0}
+                title={'Choice name error'}
+                message={inputError}
+                onConfirm={clearInputError}
+            />
         </div>
     )
 }
