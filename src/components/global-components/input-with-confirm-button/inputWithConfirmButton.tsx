@@ -9,6 +9,7 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     loading?: boolean,
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>,
+    clearOnConfirm?: boolean,
     onConfirm: (input: string) => void,
 }
 
@@ -18,6 +19,9 @@ const InputWithConfirmButton = (props: Props) => {
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
+        if (props.clearOnConfirm) {
+            inputRef.current!.value = ''
+        }
     }
     confirmOnEnter(inputRef, handleConfirm)
 

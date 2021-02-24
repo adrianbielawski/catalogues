@@ -62,6 +62,7 @@ const Choices = (props: Props) => {
                     <InputWithConfirmButton
                         placeholder="New choice name"
                         loading={false}
+                        clearOnConfirm={true}
                         onConfirm={handleConfirm}
                         autoFocus
                     />
