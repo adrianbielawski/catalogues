@@ -147,8 +147,8 @@ const ImagesCarousel = (props: Props) => {
 
             const IMG = props.images[mod(i, count)]
             const IMAGE_URL = IMG.id.toString().startsWith('newImage')
-            ? IMG.image
-            : `${BASE_URL}${IMG.imageThumbnail}`
+                ? IMG.image
+                : `${BASE_URL}${IMG.imageThumbnail}`
 
             items.push(
                 <li key={i}>
@@ -183,7 +183,10 @@ const ImagesCarousel = (props: Props) => {
     const CSSConstants = {
         '--size': `${IMAGE_SIZE}px`,
         '--minScale': MIN_SCALE,
+        '--scaledImagesQty': props.images.length >= 3 ? 2 : 0,
     } as React.CSSProperties
+
+    const displayButtons = props.images.length >= 2
 
     return (
         <div
@@ -193,19 +196,23 @@ const ImagesCarousel = (props: Props) => {
         >
             {count > 0 ? (
                 <>
-                    <ArrowButton
-                        className={styles.prev}
-                        leftArrow={true}
-                        onClick={handlePreviousImage}
-                    />
+                    {displayButtons && (
+                        <ArrowButton
+                            className={styles.prev}
+                            leftArrow={true}
+                            onClick={handlePreviousImage}
+                        />
+                    )}
                     <ul>
                         {getItems()}
                     </ul>
-                    <ArrowButton
-                        className={styles.next}
-                        leftArrow={false}
-                        onClick={handleNextImage}
-                    />
+                    {displayButtons && (
+                        <ArrowButton
+                            className={styles.next}
+                            leftArrow={false}
+                            onClick={handleNextImage}
+                        />
+                    )}
                 </>
             )
                 : <p className={styles.noContent}>No images yet</p>

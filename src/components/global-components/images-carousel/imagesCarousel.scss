@@ -1,7 +1,7 @@
 @import "global-styles/variables_and_mixins";
 
 .carousel {
-    width: calc(var(--size) * var(--minScale) * 2 + var(--size));
+    width: calc(var(--size) * var(--minScale) * var(--scaledImagesQty) + var(--size));
     height: var(--size);
     padding: 10px;
     margin: 0 auto;
