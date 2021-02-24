@@ -70,9 +70,11 @@ const EditItemFields = (props: Props) => {
     return (
         <ul className={styles.fields}>
             <li key={`itemId${props.item.id}`}>
-                <p className={styles.itemId}>
-                    Item id: {!isNewItem ? props.item.id : null}
-                </p>
+                {isNewItem &&
+                    <p className={styles.itemId}>
+                        Item id:props.item.id
+                    </p>
+                }
             </li>
             {fields}
         </ul>

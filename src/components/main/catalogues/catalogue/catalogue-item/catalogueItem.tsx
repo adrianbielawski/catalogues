@@ -33,10 +33,11 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const item = useTypedSelector(itemSelector(props.item.id))
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
+    const isNewItem = item.id.toString().startsWith('newItem')
 
     useEffect(() => {
         if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
-            itemRef.current!.scrollIntoView({ behavior: 'smooth' }) 
+            itemRef.current!.scrollIntoView({ behavior: 'smooth' })
         }
     }, [item.isSubmitting])
 
@@ -49,7 +50,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }
 
     const handleCancel = () => {
-        if (item.id.toString().startsWith('newItem')) {
+        if (isNewItem) {
             dispatch(REMOVE_ITEM_FROM_STATE(item.id))
             scrollTop()
         } else {
@@ -74,9 +75,11 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     <MainImage imgURL={image?.imageThumbnail as string} />
                     <div className={styles.itemContent}>
                         <div className={styles.wrapper}>
-                            <p className={styles.itemId}>
-                                Id:<span> {props.item.id}</span>
-                            </p>
+                            {!isNewItem &&
+                                <p className={styles.itemId}>
+                                    Id:<span> {props.item.id}</span>
+                                </p>
+                            }
                             <TransparentButton className={styles.editButton} onClick={handleEdit}>
                                 <FontAwesomeIcon icon={faEdit} />
                             </TransparentButton>
