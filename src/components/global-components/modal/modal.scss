@@ -6,7 +6,7 @@
     opacity: 0;
     padding: 2%;
     box-sizing: border-box;
-    transition: all 0.2s linear;
+    transition: opacity 0.2s linear;
     &.mounted {
         opacity: 1;
     }
