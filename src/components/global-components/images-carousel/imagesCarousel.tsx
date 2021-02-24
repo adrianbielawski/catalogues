@@ -10,7 +10,7 @@ import { DeserializedImage } from 'src/globalTypes'
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
 
-const BASE_URL = process.env.API_URL;
+const BASE_URL = process.env.API_URL
 
 type Props = {
     width: number,
@@ -180,14 +180,16 @@ const ImagesCarousel = (props: Props) => {
         props.className,
     )
 
+    const CSSConstants = {
+        '--size': `${IMAGE_SIZE}px`,
+        '--minScale': MIN_SCALE,
+    } as React.CSSProperties
+
     return (
         <div
             className={carouselClass}
             ref={carouselRef}
-            style={{
-                '--size': `${IMAGE_SIZE}px`,
-                '--minScale': MIN_SCALE,
-            } as React.CSSProperties}
+            style={props.images.length ? CSSConstants : undefined}
         >
             {count > 0 ? (
                 <>
