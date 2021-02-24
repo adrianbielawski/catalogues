@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import styles from './catalogueItem.scss'
@@ -16,10 +16,10 @@ import { mergeRefs, scrollTop } from 'src/utils'
 import { useFirstRender } from 'src/customHooks'
 //Custom components
 import ItemFields from './item-fields/itemFields'
-import MainImage from './main-image/mainImage'
 import EditItem from './edit-item/editItem'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from 'components/global-components/loader/loader'
+import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 
 type Props = {
     item: DeserializedItem
@@ -31,16 +31,37 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
+    const carouselWrapperRef = useRef<HTMLDivElement>(null)
     const item = useTypedSelector(itemSelector(props.item.id))
+    const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
     const isNewItem = item.id.toString().startsWith('newItem')
+    const screenWidth = window.innerWidth
 
     useEffect(() => {
         if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
             itemRef.current!.scrollIntoView({ behavior: 'smooth' })
         }
     }, [item.isSubmitting, item.isEditing])
+
+    useEffect(() => {
+        if (screenWidth > 800) {
+            window.addEventListener('resize', getCarouselWidth)
+        }
+        getCarouselWidth()
+
+        return () => {
+            window.addEventListener('resize', getCarouselWidth)
+        }
+    }, [])
+
+    const getCarouselWidth = () => {
+        if (carouselWrapperRef.current) {
+            const width = carouselWrapperRef.current.getBoundingClientRect().width
+            setCarouselWrapperWidth(width)
+        }
+    }
 
     const handleEdit = () => {
         dispatch(TOGGLE_EDIT_ITEM(item.id))
@@ -59,7 +80,8 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const image = item.images.filter(img => img.isPrimary)[0]
+    const imagesCawouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
+    const imagesCawouselHeight = screenWidth > 800 ? 200 : undefined
 
     return (
         <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
@@ -73,7 +95,14 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     />
                 )
                 : <>
-                    <MainImage imgURL={image?.imageThumbnail as string} />
+                    <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
+                        <ImagesCarousel
+                            width={imagesCawouselWidth}
+                            height={imagesCawouselHeight}
+                            images={item.images}
+                            singleView={true}
+                        />
+                    </div>
                     <div className={styles.itemContent}>
                         <div className={styles.wrapper}>
                             {!isNewItem &&

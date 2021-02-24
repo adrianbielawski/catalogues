@@ -8,6 +8,9 @@
     padding: 10px;
     display: flex;
     overflow: hidden;
+    .carouselWrapper {
+        min-width: 200px;
+    }
     .itemContent {
         margin-left: 10px;
         width: 100%;
