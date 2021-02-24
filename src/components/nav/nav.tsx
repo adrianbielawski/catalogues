@@ -85,7 +85,7 @@ const Nav = (props: Props) => {
     const inspectHeight = () => {
         setHeightData({
             bodyHeight: document.body.getBoundingClientRect().height,
-            top: navRef.current!.getBoundingClientRect().bottom + window.pageYOffset
+            top: navRef.current!.getBoundingClientRect().height
         })
     }
 
