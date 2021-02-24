@@ -30,8 +30,10 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.catalogue}>
-            <FiltersBar />
-            <div id="catalogueMainContent" className={styles.mainContent}>
+            {catalogue.itemsRanges.date.min &&
+                <FiltersBar />
+            }
+            <div className={styles.mainContent}>
                 {filtersContext.filters.length > 0 &&
                     <CatalogueItems key={catalogue.id} catalogueId={catalogue.id} />
                 }
