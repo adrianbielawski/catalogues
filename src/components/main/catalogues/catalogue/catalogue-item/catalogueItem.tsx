@@ -6,6 +6,7 @@ import styles from './catalogueItem.scss'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
 import {
+    REFRESH_ITEM,
     REMOVE_ITEM_FROM_STATE, SAVE_ITEM, TOGGLE_EDIT_ITEM
 } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
@@ -39,7 +40,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
             itemRef.current!.scrollIntoView({ behavior: 'smooth' })
         }
-    }, [item.isSubmitting])
+    }, [item.isSubmitting, item.isEditing])
 
     const handleEdit = () => {
         dispatch(TOGGLE_EDIT_ITEM(item.id))
@@ -54,7 +55,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
             dispatch(REMOVE_ITEM_FROM_STATE(item.id))
             scrollTop()
         } else {
-            dispatch(TOGGLE_EDIT_ITEM(item.id))
+            dispatch(REFRESH_ITEM({ itemId: item.id as number, prevId: item.id }))
         }
     }
 
