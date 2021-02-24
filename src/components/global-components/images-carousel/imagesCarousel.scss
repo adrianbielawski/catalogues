@@ -15,33 +15,44 @@
     .noContent {
         font-size: 1.5em;
     }
-
-    &:hover .prev,
-    &:hover .next {
-        opacity: 0.75;
-    }
-
     .prev,
-    .next {
+    .next,
+    .trashButton,
+    .fullScreenButton {
         position: absolute;
-        top: 50%;
-        transform: translateY(-30px);
-        padding: 0 5px;
-        font-size: 1.5em;
-        background: $lightGrey;
-        color: #000;
-        text-align: center;
-        height: 50%;
-        max-height: 60px;
-        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
         opacity: 0;
-        transition: opacity 0.5s ease-in-out;
+        z-index: 2;
+        transition: opacity 0.2s ease-in-out;
         &:hover {
-            opacity: 0.9;
+            background: $lightGrey;
+            opacity: 1;
         }
         &:active {
             background: $grey;
         }
+    }
+
+    .fullScreenButton {
+        top: 10px;
+        right: 10px;
+        padding: 10px;
+        font-size: 20px;
+        border-radius: 50%;
+    }
+
+    .prev,
+    .next {
+        top: 50%;
+        transform: translateY(-30px);
+        padding: 0 5px;
+        font-size: 1.5em;
+        color: #000;
+        height: 50%;
+        max-height: 60px;
     }
 
     .prev {
@@ -50,6 +61,12 @@
 
     .next {
         right: calc(10px * var(--scaledImagesQty));
+    }
+
+    &:hover .prev,
+    &:hover .next,
+    &:hover .fullScreenButton {
+        opacity: 0.75;
     }
 
     ul {
@@ -83,23 +100,11 @@
                 }
 
                 .trashButton {
-                    position: absolute;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     bottom: 15px;
                     left: 15px;
                     padding: 20px;
                     font-size: 20px;
-                    background: #fff;
                     border-radius: 50%;
-                    opacity: 0;
-                    &:hover {
-                        opacity: 0.9;
-                    }
-                    &:active {
-                        background: $grey;
-                    }
                 }
             }
         }

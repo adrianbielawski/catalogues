@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import { faExpand } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
@@ -14,13 +15,15 @@ import { useFirstRender } from 'src/customHooks'
 const BASE_URL = process.env.API_URL
 
 type Props = {
+    images: DeserializedImage[],
     width: number,
     height?: number,
-    images: DeserializedImage[],
     singleView?: boolean,
+    fullSizeImages?: boolean,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
+    onFullScreenView?: () => void,
 }
 
 const cx = classNames.bind(styles)
@@ -156,7 +159,8 @@ const ImagesCarousel = (props: Props) => {
             const IMG = props.images[mod(i, count)]
             const IMAGE_URL = IMG.id.toString().startsWith('newImage')
                 ? IMG.image
-                : `${BASE_URL}${IMG.imageThumbnail}`
+                : !props.fullSizeImages ? `${BASE_URL}${IMG.imageThumbnail}`
+                    : `${BASE_URL}${IMG.image}`
 
             items.push(
                 <li key={i}>
@@ -226,6 +230,14 @@ const ImagesCarousel = (props: Props) => {
                 </>
             )
                 : <p className={styles.noContent}>No images yet</p>
+            }
+            {props.onFullScreenView &&
+                <TransparentButton
+                    className={styles.fullScreenButton}
+                    onClick={props.onFullScreenView}
+                >
+                    <FontAwesomeIcon icon={faExpand} />
+                </TransparentButton>
             }
         </div>
     )
