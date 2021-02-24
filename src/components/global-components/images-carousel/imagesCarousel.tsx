@@ -15,7 +15,9 @@ const BASE_URL = process.env.API_URL
 
 type Props = {
     width: number,
+    height?: number,
     images: DeserializedImage[],
+    singleView?: boolean,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
@@ -37,7 +39,11 @@ const ImagesCarousel = (props: Props) => {
 
     const MIN_SCALE = .7
     const MAX_SCALE = 1
-    const IMAGE_SIZE = screenWidth > 800 ? (props.width) * .416 : props.width
+    const IMAGE_HEIGHT = props.height
+    let IMAGE_WIDTH = props.width
+    if (!props.singleView && screenWidth > 800) {
+        IMAGE_WIDTH = (props.width) * .416
+    }
 
     useEffect(() => {
         if (props.onChange !== undefined && props.images.length > 0 && !firstRender) {
@@ -79,7 +85,7 @@ const ImagesCarousel = (props: Props) => {
     }
 
     const handleTouchMove = (e: TouchEvent) => {
-        const newSlideX = (e.touches[0].pageX - touchStart!) / IMAGE_SIZE
+        const newSlideX = (e.touches[0].pageX - touchStart!) / IMAGE_WIDTH
         setSlideX(newSlideX)
     }
 
@@ -99,7 +105,7 @@ const ImagesCarousel = (props: Props) => {
 
     const getDynamicStyles = (i: number) => {
         let newCurrent = current - parseInt(slideX.toString())
-        const IMAGE_OFFSET = IMAGE_SIZE * 1.22
+        const IMAGE_OFFSET = IMAGE_WIDTH * 1.22
 
         let styles = {
             scale: i === current ? MAX_SCALE : MIN_SCALE,
@@ -158,7 +164,8 @@ const ImagesCarousel = (props: Props) => {
                         style={{
                             '--offset': dynamicStyles.offset,
                             '--scale': dynamicStyles.scale,
-                            '--size': `${IMAGE_SIZE}px`,
+                            '--width': `${IMAGE_WIDTH}px`,
+                            '--height': `${IMAGE_HEIGHT}px`,
                         } as React.CSSProperties}
                     >
                         <img src={IMAGE_URL} />
@@ -183,9 +190,10 @@ const ImagesCarousel = (props: Props) => {
     )
 
     const CSSConstants = {
-        '--size': `${IMAGE_SIZE}px`,
+        '--width': `${IMAGE_WIDTH}px`,
+        '--height': `${IMAGE_HEIGHT}px`,
         '--minScale': MIN_SCALE,
-        '--scaledImagesQty': props.images.length >= 3 ? 2 : 0,
+        '--scaledImagesQty': !props.singleView && props.images.length >= 3 ? 2 : 0,
     } as React.CSSProperties
 
     const displayButtons = props.images.length >= 2
