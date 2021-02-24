@@ -20,6 +20,7 @@ import EditItem from './edit-item/editItem'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from 'components/global-components/loader/loader'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
+import Modal from 'components/global-components/modal/modal'
 
 type Props = {
     item: DeserializedItem
@@ -34,6 +35,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
     const item = useTypedSelector(itemSelector(props.item.id))
     const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
+    const [fullScreenImagesView, setFullScreenImagesView] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
     const isNewItem = item.id.toString().startsWith('newItem')
@@ -80,6 +82,10 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
+    const toggleFullScreenImagesView = () => {
+        setFullScreenImagesView(!fullScreenImagesView)
+    }
+
     const imagesCawouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
     const imagesCawouselHeight = screenWidth > 800 ? 200 : undefined
 
@@ -101,6 +107,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             height={imagesCawouselHeight}
                             images={item.images}
                             singleView={true}
+                            onFullScreenView={item.images.length ? toggleFullScreenImagesView : undefined}
                         />
                     </div>
                     <div className={styles.itemContent}>
@@ -121,6 +128,18 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     </div>
                 </>
             }
+            <Modal
+                show={fullScreenImagesView}
+                className={styles.modal}
+                onClose={toggleFullScreenImagesView}
+            >
+                <ImagesCarousel
+                    width={screenWidth * .9}
+                    images={item.images}
+                    singleView={true}
+                    fullSizeImages={true}
+                />
+            </Modal>
         </li>
     )
 }
