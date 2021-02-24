@@ -123,7 +123,7 @@ export const saveItemEpic = (action$: Observable<Action>, state$: Observable<Roo
                     defaultIfEmpty(),
                     withLatestFrom(state$.pipe(pluck('catalogues'))),
                     mergeMap(([_, state]) => merge(
-                        iif(() => getCatalogueById(state, action.payload.catalogueId).firstItemCreatedAt === null,
+                        iif(() => getCatalogueById(state, action.payload.catalogueId).itemsRanges.date.min === null,
                             of(catalogueActions.REFRESH_CATALOGUE(action.payload.catalogueId))
                         ),
                         of(actions.SAVE_ITEM_SUCCESS({

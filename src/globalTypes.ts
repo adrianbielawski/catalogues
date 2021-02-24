@@ -43,12 +43,34 @@ export interface QueryObj {
     [key: string]: number | string | string[]
 }
 
+export interface ItemsRanges {
+    id: {
+        min: string,
+        max: string
+    },
+    date: {
+        min: string,
+        max: string
+    }
+}
+
+export interface DeserializedItemsRanges {
+    id: {
+        min: string,
+        max: string
+    },
+    date: {
+        min: string,
+        max: string
+    }
+}
+
 export interface Catalogue {
     id: number,
     created_by: number,
     name: string,
     slug: string,
-    first_item_created_at: string | null,
+    items_ranges: ItemsRanges
 }
 
 export interface DeserializedCatalogue {
@@ -56,7 +78,7 @@ export interface DeserializedCatalogue {
     createdBy: number,
     name: string,
     slug: string,
-    firstItemCreatedAt: string | null,
+    itemsRanges: DeserializedItemsRanges,
     fields: DeserializedField[],
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,

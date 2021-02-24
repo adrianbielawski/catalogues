@@ -2,7 +2,7 @@ import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
     DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
-    Image, DeserializedImage, SerializedItemField,
+    Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -14,12 +14,23 @@ export const userDeserializer = (user: User): DeserializedUser => ({
     isAnonymous: user.is_anonymous,
 })
 
+export const itemsRangeDeserializer = (itemsRanges: ItemsRanges): DeserializedItemsRanges => ({
+    id: {
+        min: itemsRanges.id.min,
+        max: itemsRanges.id.max,
+    },
+    date: {
+        min: itemsRanges.date.min,
+        max: itemsRanges.date.max,
+    },
+})
+
 export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalogue => ({
     id: catalogue.id,
     createdBy: catalogue.created_by,
     name: catalogue.name,
     slug: catalogue.slug,
-    firstItemCreatedAt: catalogue.first_item_created_at,
+    itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),
     fields: [],
     fetchingFields: true,
     fetchingFieldsChoices: true,

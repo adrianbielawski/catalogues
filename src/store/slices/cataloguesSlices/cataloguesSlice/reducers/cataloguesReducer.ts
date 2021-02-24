@@ -26,7 +26,7 @@ export const refreshCatalogueReducers = {
     REFRESH_CATALOGUE_SUCCESS(state: State, action: PayloadAction<Catalogue>) {
         const refreshedCatalogue = catalogueDeserializer(action.payload)
         const catalogue = getCatalogueById(state, action.payload.id)
-        catalogue.firstItemCreatedAt = refreshedCatalogue.firstItemCreatedAt
+        catalogue.itemsRanges.date.min = refreshedCatalogue.itemsRanges.date.min
         catalogue.name = refreshedCatalogue.name
         catalogue.slug = refreshedCatalogue.slug
     },

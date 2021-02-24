@@ -172,7 +172,7 @@ const CatalogueItems = (props: Props) => {
             ? <Loader className={styles.loader} />
             : (
                 <div className={itemsClass}>
-                    {catalogue.firstItemCreatedAt
+                    {catalogue.itemsRanges.date.min
                         ? getAddItemButton()
                         : getNoItemsMessage()
                     }
