@@ -134,13 +134,8 @@ export const saveItem = {
     SAVE_ITEM_START(state: State, action: PayloadAction<number | string>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = true
-        state.creatingNewItem = false
     },
-    SAVE_ITEM_SUCCESS(state: State, action: PayloadAction<T.SaveItemSuccessPayload>) {
-        const item = getItemById(state, action.payload.prevId)
-        item.isSubmitting = false
-        item.isEditing = false
-    },
+    SAVE_ITEM_SUCCESS(state: State, action: PayloadAction<T.SaveItemSuccessPayload>) {},
     SAVE_ITEM_FAILURE(state: State, action: PayloadAction<number | string>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = false
