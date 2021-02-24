@@ -9,6 +9,7 @@ import { DeserializedImage } from 'src/globalTypes'
 //Custom components
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
+import { useFirstRender } from 'src/customHooks'
 
 const BASE_URL = process.env.API_URL
 
@@ -32,13 +33,14 @@ const ImagesCarousel = (props: Props) => {
     const [touchStart, setTouchStart] = useState<number | null>(null)
     const [slideX, setSlideX] = useState<number>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
+    const firstRender = useFirstRender()
 
     const MIN_SCALE = .7
     const MAX_SCALE = 1
     const IMAGE_SIZE = screenWidth > 800 ? (props.width) * .416 : props.width
 
     useEffect(() => {
-        if (props.onChange !== undefined && props.images.length > 0) {
+        if (props.onChange !== undefined && props.images.length > 0 && !firstRender) {
             props.onChange(mod(current, count))
         }
     }, [current])
