@@ -1,5 +1,5 @@
 import moment from "moment"
-import { DeserializedChoice, DeserializedChoiceField, DeserializedField } from "src/globalTypes"
+import { DeserializedChoice, DeserializedChoiceField, DeserializedField, ItemsRanges } from "src/globalTypes"
 import { Choice, FilterType } from "components/global-components/filters-bar/filters/filtersTypes"
 
 const buildFilterChoice = (choice: DeserializedChoice): Choice => ({
@@ -14,7 +14,7 @@ const buildFilter = (field: DeserializedChoiceField): FilterType => ({
     choices: field.choices.map(buildFilterChoice)
 })
 
-const buildFilters = (fields: DeserializedField[]): FilterType[] => {
+const buildFilters = (fields: DeserializedField[], itemsRanges: ItemsRanges): FilterType[] => {
     const filteredFields = fields.filter(f =>
         (f.type === 'multiple_choice' || f.type === 'single_choice')
         && (f as DeserializedChoiceField).choices.length
@@ -25,14 +25,14 @@ const buildFilters = (fields: DeserializedField[]): FilterType[] => {
             id: 'id',
             title: 'id',
             type: 'number',
-            minVal: '1',
-            maxVal: '9999999999',
+            minVal: itemsRanges.id.min || '1',
+            maxVal: itemsRanges.id.max || '9999999999',
         },
         {
             id: 'date',
             title: 'date',
             type: 'date',
-            minVal: '2020-01-01',
+            minVal: moment(itemsRanges.date.min || '2021-01-01').format('YYYY-MM-DD'),
             maxVal: moment().format('YYYY-MM-DD'),
         },
         ...filteredFields.map(buildFilter)

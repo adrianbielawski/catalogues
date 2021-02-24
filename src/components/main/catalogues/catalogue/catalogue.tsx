@@ -23,7 +23,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     useEffect(() => {
         if (!catalogue.fetchingFieldsChoices) {
-            const filters = buildFilters(catalogue.fields)
+            const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
             filtersContext.changeFilters(filters)
         }
     }, [catalogue.fetchingFieldsChoices])
