@@ -4,6 +4,10 @@
     margin: 5px auto;
     min-height: 30px;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     .content {
         max-width: 95%;
         font-size: 18px;
@@ -19,6 +23,9 @@
             @include scrollBar;
             &::-webkit-scrollbar-track {
                 background: #fff;
+            }
+            li {
+                display: flex;
             }
         }
     }
