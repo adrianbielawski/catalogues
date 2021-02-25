@@ -2,6 +2,8 @@ export const CHANGE_SELECTED_FILTERS = 'CHANGE_SELECTED_FILTERS'
 export const SET_SELECTED_FILTERS = 'SET_SELECTED_FILTERS'
 export const CHANGE_ACTIVE_FILTERS = 'CHANGE_ACTIVE_FILTERS'
 export const CHANGE_FILTERS = 'CHANGE_FILTERS'
+export const CHANGE_CHOICES_SORT = 'CHANGE_CHOICES_SORT'
+export const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE'
 
 interface ChangeSelectedFilters {
     type: typeof CHANGE_SELECTED_FILTERS,
@@ -24,6 +26,24 @@ interface ChangeFilters {
     type: typeof CHANGE_FILTERS,
     filters: FilterType[],
 }
+
+interface ChangeChoicesSort {
+    type: typeof CHANGE_CHOICES_SORT,
+    filterId: number | string,
+}
+
+interface ChangeSearchValue {
+    type: typeof CHANGE_SEARCH_VALUE,
+    filterId: number | string,
+    input: string,
+}
+
+export type Action = ChangeSelectedFilters
+    | SetSelectedFilters
+    | ChangeActiveFilters
+    | ChangeFilters
+    | ChangeChoicesSort
+    | ChangeSearchValue
 
 export interface SelectedChoiceFilterValue {
     [id: string]: boolean,
@@ -69,13 +89,13 @@ export interface FilterWithChoices {
     title: string,
     type: string,
     choices: Choice[],
+    choicesSortDir: 'asc' | 'desc',
+    searchValue: string,
     minVal?: never,
     maxVal?: never,
 }
 
 export type FilterType = FilterWithoutChoices | FilterWithChoices
-
-export type Action = ChangeSelectedFilters | SetSelectedFilters | ChangeActiveFilters | ChangeFilters
 
 export interface FiltersInitialState {
     filters: FilterType[],
@@ -88,4 +108,6 @@ export interface FiltersContextInterface extends FiltersInitialState {
     changeSelectedFilters: (filterId: number | string, value: FilterValue) => void
     changeActiveFilters: (filterId: number | string, value: boolean) => void
     changeFilters: (filters: FilterType[]) => void
+    changeChoicesSort: (filterId: number | string) => void
+    changeSearchValue: (filterId: number | string, input: string) => void
 }

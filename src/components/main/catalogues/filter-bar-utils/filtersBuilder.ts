@@ -11,7 +11,9 @@ const buildFilter = (field: DeserializedChoiceField): FilterType => ({
     id: field.filterName,
     title: field.name,
     type: field.type,
-    choices: field.choices.map(buildFilterChoice)
+    choices: field.choices.map(buildFilterChoice),
+    choicesSortDir: 'asc',
+    searchValue: '',
 })
 
 const buildFilters = (fields: DeserializedField[], itemsRanges: ItemsRanges): FilterType[] => {

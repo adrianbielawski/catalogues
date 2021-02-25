@@ -4,7 +4,7 @@ import { useImmerReducer } from 'use-immer'
 import { FiltersContext, reducer } from './filtersStore'
 import {
     FiltersInitialState, CHANGE_SELECTED_FILTERS, FilterValue, FilterType, CHANGE_FILTERS, CHANGE_ACTIVE_FILTERS,
-    SET_SELECTED_FILTERS, SelectedFilter,
+    SET_SELECTED_FILTERS, SelectedFilter, CHANGE_CHOICES_SORT, CHANGE_SEARCH_VALUE,
 } from './filtersTypes'
 
 type Props = {
@@ -52,12 +52,29 @@ const FiltersContextProvider = (props: Props) => {
         })
     }
 
+    const changeChoicesSort = (filterId: number | string) => {
+        dispatch({
+            type: CHANGE_CHOICES_SORT,
+            filterId,
+        })
+    }
+
+    const changeSearchValue = (filterId: number | string, input: string) => {
+        dispatch({
+            type: CHANGE_SEARCH_VALUE,
+            filterId,
+            input,
+        })
+    }
+
     const context = {
         ...state,
         setSelectedFilters,
         changeSelectedFilters,
         changeFilters,
         changeActiveFilters,
+        changeChoicesSort,
+        changeSearchValue,
     }
 
     return (
