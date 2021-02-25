@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { upperFirst, includes } from 'lodash'
+import { upperFirst, includes, orderBy } from 'lodash'
 import styles from './filterChoices.scss'
 //Types
 import { FilterWithChoices, SelectedChoiceFilterValue, SelectedFilterValue } from '../../filtersTypes'
@@ -7,6 +7,7 @@ import { FilterWithChoices, SelectedChoiceFilterValue, SelectedFilterValue } fro
 import { FiltersContext } from '../../filtersStore'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
+import SearchBar from './search-bar/searchBar'
 
 type Props = {
     active: boolean,
@@ -14,10 +15,34 @@ type Props = {
 }
 
 const FilterChoices = (props: Props) => {
-    const { selectedFilters, changeSelectedFilters } = useContext(FiltersContext)
+    const {
+        selectedFilters,
+        changeSelectedFilters,
+        changeChoicesSort,
+        changeSearchValue
+    } = useContext(FiltersContext)
+
     const selectedChoices = selectedFilters![props.filter.id] as SelectedChoiceFilterValue
 
-    const choices = props.filter.choices!.map(choice => {
+    const handleSort = () => {
+        changeChoicesSort(props.filter.id)
+    }
+
+    const handleSearch = (input: string) => {
+        changeSearchValue(props.filter.id, input)
+    }
+
+    const filteredChoices = props.filter.choices.filter(choice =>
+        choice.title.toLowerCase().includes(props.filter.searchValue.toLowerCase())
+    )
+
+    const sortedChoices = orderBy(
+        filteredChoices,
+        (c) => c.title.toLowerCase(),
+        props.filter.choicesSortDir
+    )
+
+    const choices = () => sortedChoices.map(choice => {
         const handleChange = (choiceId: number | string, selected: boolean) => {
             let choices: SelectedFilterValue | null = {
                 ...selectedChoices,
@@ -50,9 +75,16 @@ const FilterChoices = (props: Props) => {
     })
 
     return (
-        <ul className={styles.filterChoices}>
-            {choices}
-        </ul>
+        <>
+            <SearchBar
+                sortDir={props.filter.choicesSortDir}
+                onSort={handleSort}
+                onSearch={handleSearch}
+            />
+            <ul className={styles.filterChoices}>
+                {choices()}
+            </ul>
+        </>
     )
 }
 
