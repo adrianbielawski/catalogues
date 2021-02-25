@@ -20,6 +20,7 @@ type Props = {
     height?: number,
     singleView?: boolean,
     fullSizeImages?: boolean,
+    background?: string,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
@@ -191,6 +192,10 @@ const ImagesCarousel = (props: Props) => {
     const carouselClass = cx(
         'carousel',
         props.className,
+        {
+            whiteBackground: props.background === 'white',
+            greyBackground: props.background === 'grey'
+        }
     )
 
     const CSSConstants = {

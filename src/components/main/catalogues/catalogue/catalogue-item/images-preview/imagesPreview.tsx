@@ -23,6 +23,7 @@ const ImagesPreview = (props: Props) => (
             images={props.images}
             singleView={true}
             fullSizeImages={true}
+            background={'grey'}
         />
     </Modal>
 )
