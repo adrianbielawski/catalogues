@@ -1,0 +1,14 @@
+@import "global-styles/variables_and_mixins";
+
+.serchBar {
+    width: 100%;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .sortButton {
+        color: $lightOrange;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+}
