@@ -135,6 +135,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
             >
                 <ImagesCarousel
                     width={screenWidth * .9}
+                    height={window.innerHeight * .9}
                     images={item.images}
                     singleView={true}
                     fullSizeImages={true}

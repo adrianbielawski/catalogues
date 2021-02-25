@@ -74,6 +74,7 @@ const EditItem = (props: Props) => {
             {item.images.length > 0 ? <p className={styles.currentImage}>Main image</p> : null}
             <ImagesCarousel
                 width={width}
+                height={400}
                 images={item.images}
                 onRemove={handleImageRemove}
                 onChange={handleImageChange}
