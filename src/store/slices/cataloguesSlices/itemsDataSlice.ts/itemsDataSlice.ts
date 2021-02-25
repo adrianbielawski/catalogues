@@ -26,6 +26,7 @@ export const itemsDataSlice = createSlice({
         ...itemReducers.EditItemReducers,
         ...itemReducers.itemImageReducers,
         ...itemReducers.saveItem,
+        ...itemReducers.deleteItem,
         CLEAR_ITEMS_DATA() {
             return initialState
         },
@@ -46,5 +47,6 @@ export const {
     REMOVE_IMAGE_FROM_STATE,
     CHANGE_PRIMARY_IMAGE,
     SAVE_ITEM, SAVE_ITEM_START, SAVE_ITEM_SUCCESS, SAVE_ITEM_FAILURE,
+    DELETE_ITEM, DELETE_ITEM_START, DELETE_ITEM_SUCCESS, DELETE_ITEM_FAILURE,
     CLEAR_ITEMS_DATA,
 } = itemsDataSlice.actions

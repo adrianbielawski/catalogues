@@ -138,9 +138,21 @@ export const saveItemEpic = (action$: Observable<Action>, state$: Observable<Roo
     })
 )
 
+export const deleteItemEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.DELETE_ITEM.match),
+    switchMap(action => concat(
+        of(actions.DELETE_ITEM_START(action.payload)),
+        defer(() => axiosInstance$.delete(`/items/${action.payload}`)).pipe(
+            map(() =>actions.DELETE_ITEM_SUCCESS(action.payload)),
+            catchError(() => of(actions.DELETE_ITEM_FAILURE(action.payload)))
+        )
+    ))
+)
+
 export const itemsEpics = combineEpics(
     refreshItemEpic,
     fetchItemEpic,
     fetchItemsEpic,
     saveItemEpic,
+    deleteItemEpic,
 )

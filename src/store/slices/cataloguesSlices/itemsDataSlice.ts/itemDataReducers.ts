@@ -62,6 +62,7 @@ export const EditItemReducers = {
             removedImages: [],
             isEditing: true,
             isSubmitting: false,
+            isDeleting: false,
         }
 
         state.results.unshift(item)
@@ -139,5 +140,22 @@ export const saveItem = {
     SAVE_ITEM_FAILURE(state: State, action: PayloadAction<number | string>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = false
+    },
+}
+
+export const deleteItem = {
+    DELETE_ITEM(state: State, action: PayloadAction<number>) { },
+    DELETE_ITEM_START(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isDeleting = true
+    },
+    DELETE_ITEM_SUCCESS(state: State, action: PayloadAction<number>) {
+        const itemIndex = state.results.findIndex(item => item.id === action.payload)
+        state.results.splice(itemIndex, 1)
+
+    },
+    DELETE_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isDeleting = false
     },
 }

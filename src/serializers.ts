@@ -90,6 +90,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     removedImages: [],
     isEditing: false,
     isSubmitting: false,
+    isDeleting: false,
 })
 
 export const textFieldDeserializer = (field: Field): DeserializedTextField => ({

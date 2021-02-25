@@ -147,6 +147,7 @@ export interface DeserializedItem {
     removedImages: DeserializedImage[],
     isEditing: boolean,
     isSubmitting: boolean,
+    isDeleting: boolean,
 }
 
 export interface ItemField {
