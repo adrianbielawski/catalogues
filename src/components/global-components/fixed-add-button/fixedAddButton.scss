@@ -10,6 +10,7 @@
     background: $lightGrey;
     opacity: .8;
     outline: none;
+    z-index: 10000;
     .plus {
         color: $green;
         font-size: 28px;
