@@ -5,8 +5,9 @@ import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch } from 'store/storeConfig'
-//Filter bar utils
+//Utils
 import buildFilters from '../filter-bar-utils/filtersBuilder'
+import { scrollTop } from 'src/utils'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
@@ -27,6 +28,10 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
             filtersContext.changeFilters(filters)
         }
     }, [catalogue.fetchingFieldsChoices])
+
+    useEffect(() => {
+        scrollTop()
+    }, [catalogue.id])
 
     return (
         <div className={styles.catalogue}>
