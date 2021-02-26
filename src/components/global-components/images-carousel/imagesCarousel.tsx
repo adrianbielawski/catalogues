@@ -5,12 +5,15 @@ import { faExpand } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
+//Custom hooks and utils
+import { useFirstRender } from 'src/customHooks'
+import { mod } from 'src/utils'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Custom components
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
-import { useFirstRender } from 'src/customHooks'
+import ImagesCounter from './images-counter/imagesCounter'
 
 const BASE_URL = process.env.API_URL
 
@@ -21,6 +24,7 @@ type Props = {
     singleView?: boolean,
     fullSizeImages?: boolean,
     background?: string,
+    showCounter?: boolean,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
@@ -28,8 +32,6 @@ type Props = {
 }
 
 const cx = classNames.bind(styles)
-
-const mod = (i: number, n: number): number => ((i % n) + n) % n
 
 interface TouchStart { x: number, y: number }
 
@@ -256,6 +258,9 @@ const ImagesCarousel = (props: Props) => {
                             leftArrow={false}
                             onClick={handleNextImage}
                         />
+                    )}
+                    {props.showCounter && (
+                        <ImagesCounter current={mod(current, count) + 1} total={count} />
                     )}
                 </>
             )
