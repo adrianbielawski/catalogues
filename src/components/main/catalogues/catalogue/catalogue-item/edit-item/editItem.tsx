@@ -103,6 +103,7 @@ const EditItem = (props: Props) => {
                 width={width}
                 height={400}
                 images={item.images}
+                showCounter={true}
                 onRemove={handleImageRemove}
                 onChange={handleImageChange}
             />

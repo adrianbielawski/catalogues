@@ -1,8 +1,9 @@
 import React from 'react'
 import styles from './imagesPreview.scss'
+//Types
+import { DeserializedImage } from 'src/globalTypes'
 //Components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
-import { DeserializedImage } from 'src/globalTypes'
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 
 type Props = {
@@ -23,6 +24,7 @@ const ImagesPreview = (props: Props) => (
             images={props.images}
             singleView={true}
             fullSizeImages={true}
+            showCounter={true}
             background={'grey'}
         />
     </AnimatedModal>
