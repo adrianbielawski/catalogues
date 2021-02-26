@@ -10,11 +10,8 @@ type Props = {
 }
 const cx = classNames.bind(styles)
 
-const NAV_BAR_HEIGHT = 38
-
 const SideBar = (props: Props) => {
     const screenWidth = window.innerWidth
-    const screenHeight = window.innerHeight
 
     const sideBarWrapperClass = cx(
         'sideBarWrapper',
@@ -28,15 +25,9 @@ const SideBar = (props: Props) => {
         props.className,
     )
 
-    const sideBarConstants = {
-        '--screenHeight': `${screenHeight}px`,
-        '--top': `${NAV_BAR_HEIGHT}px`,
-    } as React.CSSProperties
-
     return (
         <div className={sideBarWrapperClass}>
-            <div className={sideBarClass} 
-                style={sideBarConstants}>
+            <div className={sideBarClass}>
                 {props.children}
             </div>
             {screenWidth <= 640 &&
