@@ -1,3 +1,1 @@
-export interface AppState {
-    screenHeight: number,
-}
+export interface AppState {}

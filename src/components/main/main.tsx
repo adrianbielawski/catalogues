@@ -1,8 +1,6 @@
 import React, { Suspense } from 'react'
 import { Switch, Redirect } from 'react-router-dom'
 import styles from './main.scss'
-//Redux
-import { useTypedSelector } from 'store/storeConfig'
 //Router context
 import { RouteWithContext } from 'src/router'
 //Custom components
@@ -11,25 +9,21 @@ import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 
-const Main = () => {
-    const screenHeight = useTypedSelector(state => state.app.screenHeight)
-
-    return (
-        <div className={styles.main} style={{ minHeight: screenHeight }}>
-            <Header />
-            <Suspense fallback={<Loader />}>
-                <Switch>
-                    <Redirect
-                        exact
-                        from="/:userId"
-                        to="/:userId/catalogues"
-                    />
-                    <RouteWithContext path={"/:userId/catalogues/:slug?"} component={Catalogues} />
-                    <RouteWithContext path={"/:userId/settings"} component={Settings} />
-                </Switch>
-            </Suspense>
-        </div>
-    )
-}
+const Main = () => (
+    <div className={styles.main} style={{ minHeight: window.innerHeight }}>
+        <Header />
+        <Suspense fallback={<Loader />}>
+            <Switch>
+                <Redirect
+                    exact
+                    from="/:userId"
+                    to="/:userId/catalogues"
+                />
+                <RouteWithContext path={"/:userId/catalogues/:slug?"} component={Catalogues} />
+                <RouteWithContext path={"/:userId/settings"} component={Settings} />
+            </Switch>
+        </Suspense>
+    </div>
+)
 
 export default Main
