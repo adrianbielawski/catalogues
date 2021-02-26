@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './singleChoiceField.scss'
 //Types
@@ -10,6 +11,7 @@ import { fieldSelector } from 'store/selectors'
 //Custom components
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
+import SearchBar from 'components/global-components/search-bar/searchBar'
 
 interface Props {
     itemId: number | string,
@@ -22,6 +24,8 @@ const cx = classNames.bind(styles)
 const SingleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
+    const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
+    const [searchChoiceValue, setSearchChoiceValue] = useState('')
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
 
     const handleEdit = () => {
@@ -35,6 +39,31 @@ const SingleChoiceField = (props: Props) => {
             value: choice.value,
         }))
     }
+
+    const handleSort = () => {
+        let sort: 'asc' | 'desc' = 'asc'
+
+        if (choicesSortDir === 'asc') {
+            sort = 'desc'
+        } else {
+            sort = 'asc'
+        }
+        setChoicesSortDir(sort)
+    }
+
+    const handleSearch = (input: string) => {
+        setSearchChoiceValue(input)
+    }
+
+    const filteredChoices = props.field.choices.filter(choice =>
+        choice.value.toLowerCase().includes(searchChoiceValue.toLowerCase())
+    )
+
+    const sortedChoices = orderBy(
+        filteredChoices,
+        (c) => c.value.toLowerCase(),
+        choicesSortDir
+    )
 
     const fieldClass = cx(
         'singleChoiceField',
@@ -63,11 +92,18 @@ const SingleChoiceField = (props: Props) => {
                 <div className={contentClass}>
                     {isEditing
                         ? (
-                            <SingleChoiceList
-                                choices={props.field.choices}
-                                selected={selected?.id}
-                                onChange={handleChange}
-                            />
+                            <>
+                                <SearchBar
+                                    sortDir={choicesSortDir}
+                                    onSort={handleSort}
+                                    onSearch={handleSearch}
+                                />
+                                <SingleChoiceList
+                                    choices={sortedChoices}
+                                    selected={selected?.id}
+                                    onChange={handleChange}
+                                />
+                            </>
                         )
                         : props.fieldValue?.value || ''
                     }
