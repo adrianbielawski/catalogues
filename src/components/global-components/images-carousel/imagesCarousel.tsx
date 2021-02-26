@@ -53,13 +53,13 @@ const ImagesCarousel = (props: Props) => {
     }
 
     useEffect(() => {
-        if (props.onChange !== undefined && props.images.length > 0 && !firstRender) {
+        if (props.onChange !== undefined && count > 0 && !firstRender) {
             props.onChange(mod(current, count))
         }
     }, [current])
 
     useEffect(() => {
-        if (carouselRef.current !== null) {
+        if (carouselRef.current !== null && count > 1) {
             carouselRef.current.addEventListener('touchstart', handleTouchStart)
         }
 
@@ -227,16 +227,16 @@ const ImagesCarousel = (props: Props) => {
         '--width': `${IMAGE_WIDTH}px`,
         '--height': `${IMAGE_HEIGHT}px`,
         '--minScale': MIN_SCALE,
-        '--scaledImagesQty': !props.singleView && props.images.length >= 3 ? 2 : 0,
+        '--scaledImagesQty': !props.singleView && count >= 3 ? 2 : 0,
     } as React.CSSProperties
 
-    const displayButtons = props.images.length >= 2
+    const displayButtons = count >= 2
 
     return (
         <div
             className={carouselClass}
             ref={carouselRef}
-            style={props.images.length ? CSSConstants : undefined}
+            style={count ? CSSConstants : undefined}
         >
             {count > 0 ? (
                 <>
