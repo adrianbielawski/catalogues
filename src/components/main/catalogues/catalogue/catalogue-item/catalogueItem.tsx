@@ -86,8 +86,9 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         setShowImagesPreview(!showImagesPreview)
     }
 
-    const imagesCawouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
-    const imagesCawouselHeight = screenWidth > 800 ? 200 : undefined
+    const imagesCarouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
+    const imagesCarouselHeight = screenWidth > 800 ? 200 : undefined
+    const isImagesPreviesAllowed = item.images.length && screenWidth > 800
 
     return (
         <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
@@ -103,11 +104,11 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 : <>
                     <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
                         <ImagesCarousel
-                            width={imagesCawouselWidth}
-                            height={imagesCawouselHeight}
+                            width={imagesCarouselWidth}
+                            height={imagesCarouselHeight}
                             images={item.images}
                             singleView={true}
-                            onFullScreenView={item.images.length ? toggleImagesPreview : undefined}
+                            onFullScreenView={isImagesPreviesAllowed ? toggleImagesPreview : undefined}
                         />
                     </div>
                     <div className={styles.itemContent}>
