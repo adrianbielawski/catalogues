@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './multipleChoiceField.scss'
 //Types
@@ -10,6 +11,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
+import SearchBar from 'components/global-components/search-bar/searchBar'
 
 interface Props {
     itemId: number | string,
@@ -22,6 +24,8 @@ const cx = classNames.bind(styles)
 const SingleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
+    const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
+    const [searchChoiceValue, setSearchChoiceValue] = useState('')
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
 
     const handleEdit = () => {
@@ -54,6 +58,31 @@ const SingleChoiceField = (props: Props) => {
         }
     }
 
+    const handleSort = () => {
+        let sort: 'asc' | 'desc' = 'asc'
+
+        if (choicesSortDir === 'asc') {
+            sort = 'desc'
+        } else {
+            sort = 'asc'
+        }
+        setChoicesSortDir(sort)
+    }
+
+    const handleSearch = (input: string) => {
+        setSearchChoiceValue(input)
+    }
+
+    const filteredChoices = props.field.choices.filter(choice =>
+        choice.value.toLowerCase().includes(searchChoiceValue.toLowerCase())
+    )
+
+    const sortedChoices = orderBy(
+        filteredChoices,
+        (c) => c.value.toLowerCase(),
+        choicesSortDir
+    )
+
     const fieldClass = cx(
         'multipleChoiceField',
         {
@@ -79,11 +108,18 @@ const SingleChoiceField = (props: Props) => {
                 <div className={contentClass}>
                     {isEditing
                         ? (
-                            <MultipleChoiceList
-                                choices={props.field.choices}
-                                selected={getSelectedIds()}
-                                onChange={handleChange}
-                            />
+                            <>
+                                <SearchBar
+                                    sortDir={choicesSortDir}
+                                    onSort={handleSort}
+                                    onSearch={handleSearch}
+                                />
+                                <MultipleChoiceList
+                                    choices={sortedChoices}
+                                    selected={getSelectedIds()}
+                                    onChange={handleChange}
+                                />
+                            </>
                         )
                         : getChoices()
                     }
