@@ -1,16 +1,8 @@
 .modal {
-    position: absolute;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000;
     background: #80808080;
-    opacity: 0;
-    padding: 2%;
-    box-sizing: border-box;
-    transition: opacity 0.2s linear;
-    &.mounted {
-        opacity: 1;
-    }
-    &.elevated {
-        z-index: 10000;
-    }
 }
