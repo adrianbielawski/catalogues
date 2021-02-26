@@ -60,7 +60,7 @@ const TextField = (props: Props) => {
                 {field.isEditing
                     ? (
                         <InputWithConfirmButton
-                            defaultValue={props.field.name}
+                            inputProps={{ defaultValue: props.field.name}}
                             loading={delayCompleated}
                             onConfirm={handleConfirm}
                         />

@@ -31,6 +31,10 @@ const TextField = (props: Props) => {
         }))
         setIsEditing(false)
     }
+    
+    const inputProps = {
+        defaultValue: props.fieldValue?.value || ''
+    }
 
     return (
         <li className={styles.textField}>
@@ -44,8 +48,7 @@ const TextField = (props: Props) => {
                     ? (
                         <InputWithConfirmButton
                             className={styles.input}
-                            defaultValue={props.fieldValue?.value || ''}
-                            autoFocus
+                            inputProps={inputProps}
                             onConfirm={handleConfirm}
                         />
                     )
