@@ -31,12 +31,15 @@ const cx = classNames.bind(styles)
 
 const mod = (i: number, n: number): number => ((i % n) + n) % n
 
+interface TouchStart { x: number, y: number }
+
 const ImagesCarousel = (props: Props) => {
     const count = props.images.length
     const screenWidth = window.innerWidth
 
     const carouselRef = useRef<HTMLDivElement>(null)
-    const [touchStart, setTouchStart] = useState<number | null>(null)
+    const [touchStart, setTouchStart] = useState<TouchStart | null>(null)
+    const [touchStartTime, setTouchStartTime] = useState<number | null>(null)
     const [slideX, setSlideX] = useState<number>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
     const firstRender = useFirstRender()
@@ -85,26 +88,48 @@ const ImagesCarousel = (props: Props) => {
     }, [touchStart, slideX, current, count])
 
     const handleTouchStart = (e: TouchEvent) => {
-        setTouchStart(e.touches[0].pageX)
+        setTouchStart({
+            x: e.touches[0].clientX,
+            y: e.touches[0].clientY
+        })
+        setTouchStartTime(Date.now())
     }
 
     const handleTouchMove = (e: TouchEvent) => {
-        const newSlideX = (e.touches[0].pageX - touchStart!) / IMAGE_WIDTH
+        const slideX = e.touches[0].clientX - touchStart!.x
+        const slideY = e.touches[0].clientY - touchStart!.y
+        if (Math.abs(slideY) > Math.abs(slideX)) {
+            return
+        }
+        const newSlideX = (slideX) / IMAGE_WIDTH
         setSlideX(newSlideX)
     }
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (e: TouchEvent) => {
+        let newCurrent = current
+        if (Date.now() < touchStartTime! + 300) {
+            const slideX = e.changedTouches[0].clientX - touchStart!.x
+            if (slideX > 50) {
+                newCurrent-= 1
+            }
+            if (slideX < -50) {
+                newCurrent+= 1
+            }
+        } else {
+            newCurrent-= Math.round(slideX)
+        }
         setTouchStart(null)
         setSlideX(0)
-        setCurrent(current - Math.round(slideX))
+        setCurrent(newCurrent)
+        setTouchStartTime(null)
     }
 
     const handlePreviousImage = () => {
-        setCurrent(current - 1);
+        setCurrent(current - 1)
     }
 
     const handleNextImage = () => {
-        setCurrent(current + 1);
+        setCurrent(current + 1)
     }
 
     const getDynamicStyles = (i: number) => {
