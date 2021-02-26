@@ -2,8 +2,8 @@ import React from 'react'
 import styles from './imagesPreview.scss'
 //Components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
-import Modal from 'components/global-components/modal/modal'
 import { DeserializedImage } from 'src/globalTypes'
+import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 
 type Props = {
     show: boolean,
@@ -12,7 +12,7 @@ type Props = {
 }
 
 const ImagesPreview = (props: Props) => (
-    <Modal
+    <AnimatedModal
         show={props.show}
         className={styles.imagesPreview}
         onClose={props.onClose}
@@ -25,7 +25,7 @@ const ImagesPreview = (props: Props) => (
             fullSizeImages={true}
             background={'grey'}
         />
-    </Modal>
+    </AnimatedModal>
 )
 
 export default ImagesPreview

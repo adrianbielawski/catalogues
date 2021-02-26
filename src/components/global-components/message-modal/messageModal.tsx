@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './messageModal.scss'
 //Custom Components
-import Modal from 'components/global-components/modal/modal'
+import Modal from 'components/global-components/modals/modal'
 import Button from '../button/button'
 
 type Props = {
