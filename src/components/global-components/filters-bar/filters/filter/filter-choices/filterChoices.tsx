@@ -7,7 +7,7 @@ import { FilterWithChoices, SelectedChoiceFilterValue, SelectedFilterValue } fro
 import { FiltersContext } from '../../filtersStore'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
-import SearchBar from './search-bar/searchBar'
+import SearchBar from 'components/global-components/search-bar/searchBar'
 
 type Props = {
     active: boolean,
