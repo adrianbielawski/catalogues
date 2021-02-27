@@ -31,8 +31,8 @@ const Catalogues = () => {
     const user = useTypedSelector(state => state.auth.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
+    const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
-    const screenHeight = window.innerHeight
 
     useEffect(() => {
         dispatch(FETCH_CATALOGUES())

@@ -25,7 +25,7 @@ const Settings = () => {
     const settingsRef = useRef<HTMLDivElement>(null)
     const user = useTypedSelector(state => state.auth.user)
     const [minHeight, setMinHeight] = useState(0)
-    const screenHeight = window.innerHeight
+    const screenHeight = useTypedSelector(state => state.app.screenHeight)
 
     const NAV_CONTENT: NavItemType[] = [
         {
