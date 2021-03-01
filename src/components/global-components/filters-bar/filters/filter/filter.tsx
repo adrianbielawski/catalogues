@@ -37,7 +37,7 @@ const Filter = (props: Props) => {
         <li className={filterClass}>
             <CheckBoxWithTitle
                 id={props.filter.id}
-                title={`By ${props.filter.title}`}
+                title={`By ${props.filter.title.toLowerCase()}`}
                 selected={isActive}
                 onChange={handleChange}
             />
