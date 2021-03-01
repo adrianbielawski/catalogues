@@ -12,6 +12,7 @@ import { fieldSelector } from 'store/selectors'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import SearchBar from 'components/global-components/search-bar/searchBar'
+import AddChoice from 'components/global-components/add-choice/addChoice'
 
 interface Props {
     itemId: number | string,
@@ -102,6 +103,9 @@ const SingleChoiceField = (props: Props) => {
                                     choices={sortedChoices}
                                     selected={selected?.id}
                                     onChange={handleChange}
+                                />
+                                <AddChoice
+                                    field={props.field}
                                 />
                             </>
                         )

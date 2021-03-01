@@ -12,6 +12,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
 import SearchBar from 'components/global-components/search-bar/searchBar'
+import AddChoice from 'components/global-components/add-choice/addChoice'
 
 interface Props {
     itemId: number | string,
@@ -118,6 +119,9 @@ const SingleChoiceField = (props: Props) => {
                                     choices={sortedChoices}
                                     selected={getSelectedIds()}
                                     onChange={handleChange}
+                                />
+                                <AddChoice
+                                    field={props.field}
                                 />
                             </>
                         )
