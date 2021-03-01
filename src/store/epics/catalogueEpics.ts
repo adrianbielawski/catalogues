@@ -1,5 +1,5 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, defer, forkJoin, Observable, from, merge } from 'rxjs'
+import { concat, of, defer, forkJoin, Observable, merge } from 'rxjs'
 import {
     catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map,
     defaultIfEmpty,
@@ -10,7 +10,6 @@ import { axiosInstance$ } from "src/axiosInstance"
 import { retry$ } from "store/storeObservables"
 //Types
 import { RootState } from "store/storeConfig"
-import { DeserializedChoice } from "src/globalTypes"
 //Actions
 import * as actions from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice"
 
@@ -43,74 +42,6 @@ export const changeCatalogueNameEpic = (action$: Observable<Action>) => action$.
             catchError(() => of(actions.CHANGE_CATALOGUE_NAME_FAILURE(action.payload.catalogueId)))
         )
     ))
-)
-
-export const postTextFieldNameChangeEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.POST_TEXT_FIELD_NAME_CHANGE.match),
-    switchMap(action => concat(
-        of(actions.POST_TEXT_FIELD_NAME_CHANGE_START({
-            catalogueId: action.payload.catalogueId,
-            fieldId: action.payload.fieldId
-        })),
-        axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
-            name: action.payload.name,
-        }).pipe(
-            mapTo(actions.POST_TEXT_FIELD_NAME_CHANGE_SUCCESS({
-                catalogueId: action.payload.catalogueId,
-                fieldId: action.payload.fieldId,
-            })),
-            catchError(() => of(actions.POST_TEXT_FIELD_NAME_CHANGE_FAILURE({
-                catalogueId: action.payload.catalogueId,
-                fieldId: action.payload.fieldId,
-            })))
-        ))
-    )
-)
-
-export const postChoiceFieldChangesEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.POST_CHOICE_FIELD_CHANGES.match),
-    switchMap(action => {
-        const isNew = (choice: DeserializedChoice) => choice.id.toString().startsWith('newChoice')
-        // const removedChoices = action.payload.field.removedChoices
-        const newChoices = action.payload.field.choices.filter(isNew)
-
-        const requests = []
-        if (newChoices.length) {
-            requests.push(concat(
-                forkJoin([
-                    // ...removedChoices.filter(c => !isNew(c)).map(choice =>
-                    //     axiosInstance$.delete(`/choices/${choice.id}/`)
-                    // )
-                ]),
-                from(newChoices).pipe(
-                    mergeMap(choice => axiosInstance$.post(`/choices/`, {
-                        field_id: choice.fieldId,
-                        value: choice.value,
-                    })),
-                ),
-            ))
-        }
-        requests.push(axiosInstance$.patch(`/fields/${action.payload.field.id}/`, {
-            name: action.payload.name,
-        }))
-
-        return concat(
-            of(actions.POST_CHOICE_FIELD_CHANGES_START({
-                catalogueId: action.payload.field.catalogueId,
-                fieldId: action.payload.field.id,
-            })),
-            forkJoin(requests).pipe(
-                mapTo(actions.POST_CHOICE_FIELD_CHANGES_SUCCESS({
-                    catalogueId: action.payload.field.catalogueId,
-                    fieldId: action.payload.field.id,
-                })),
-                catchError(() => of(actions.POST_CHOICE_FIELD_CHANGES_FAILURE({
-                    catalogueId: action.payload.field.catalogueId,
-                    fieldId: action.payload.field.id,
-                })))
-            ),
-        )
-    })
 )
 
 export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
@@ -250,8 +181,6 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$
 
 export const refreshCatalogueFieldEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELD.match)),
-    action$.pipe(filter(actions.POST_CHOICE_FIELD_CHANGES_SUCCESS.match)),
-    action$.pipe(filter(actions.POST_TEXT_FIELD_NAME_CHANGE_SUCCESS.match)),
 ).pipe(
     map(action => actions.FETCH_CATALOGUE_FIELD({
         catalogueId: action.payload.catalogueId,
@@ -340,8 +269,6 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => merge(
 export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
-    postTextFieldNameChangeEpic,
-    postChoiceFieldChangesEpic,
     postChoiceEpic,
     removeChoiceEpic,
     changeFieldNameEpic,

@@ -7,15 +7,14 @@ import styles from './choiceField.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import {
-    CHANGE_FIELD_NAME, CLEAR_CHANGE_FIELD_NAME_ERROR, REFRESH_CATALOGUE_FIELD, TOGGLE_FIELD_EDIT
+    CHANGE_FIELD_NAME, CLEAR_CHANGE_FIELD_NAME_ERROR, TOGGLE_FIELD_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 //Custom hooks
-import { useDebouncedDispatch, useDelay } from 'src/customHooks'
+import { useDebouncedDispatch } from 'src/customHooks'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
 import MessageModal from 'components/global-components/message-modal/messageModal'
@@ -29,8 +28,7 @@ const cx = classNames.bind(styles)
 const ChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
-    const delayCompleated = useDelay(field.isSubmitting)
-    
+
     const catalogueAndFieldId = {
         fieldId: props.field.id,
         catalogueId: props.field.catalogueId
@@ -46,18 +44,6 @@ const ChoiceField = (props: Props) => {
 
     const handleNameEdit = () => {
         dispatch(TOGGLE_FIELD_EDIT(catalogueAndFieldId))
-    }
-
-    const handleConfirm = () => {
-        const name = nameInputRef.current!.value
-        dispatch(POST_CHOICE_FIELD_CHANGES({
-            field,
-            name,
-        }))
-    }
-
-    const handleCancel = () => {
-        dispatch(REFRESH_CATALOGUE_FIELD(catalogueAndFieldId))
     }
 
     const clearError = () => {
@@ -102,23 +88,6 @@ const ChoiceField = (props: Props) => {
                             field={field}
                             className={styles.choices}
                         />
-                        <div className={styles.buttons}>
-                            <Button
-                                className={styles.button}
-                                loading={delayCompleated}
-                                disabled={field.isSubmitting}
-                                onClick={handleConfirm}
-                            >
-                                Save
-                            </Button>
-                            <Button
-                                className={styles.button}
-                                disabled={field.isSubmitting}
-                                onClick={handleCancel}
-                            >
-                                Cancel
-                            </Button>
-                        </div>
                     </div>
                 )
                 : props.field.name

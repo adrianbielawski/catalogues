@@ -185,29 +185,8 @@ export const removeChoiceReducers = {
 }
 
 export const editFieldReducers = {
-    POST_TEXT_FIELD_NAME_CHANGE(state: State, action: PayloadAction<T.TextFieldNameChange>) { },
-    POST_TEXT_FIELD_NAME_CHANGE_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
-    POST_CHOICE_FIELD_CHANGES(state: State, action: PayloadAction<T.ChioceFieldChangesPayload>) { },
-    POST_CHOICE_FIELD_CHANGES_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     TOGGLE_FIELD_EDIT(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.isEditing = !field.isEditing
-    },
-    POST_TEXT_FIELD_NAME_CHANGE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.isSubmitting = true
-    },
-    POST_CHOICE_FIELD_CHANGES_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.isSubmitting = true
-
-    },
-    POST_TEXT_FIELD_NAME_CHANGE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.isSubmitting = false
-    },
-    POST_CHOICE_FIELD_CHANGES_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.isSubmitting = false
     },
 }
