@@ -8,6 +8,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 
 type Props = {
     sortDir: string,
+    defaultSearchValue: string,
     onSort: () => void,
     onSearch: (input: string) => void,
 }
@@ -29,7 +30,10 @@ const SearchBar = (props: Props) => {
                     }
                 />
             </TransparentButton>
-            <Input onChange={handleSearch} />
+            <Input
+                defaultValue={props.defaultSearchValue}
+                onChange={handleSearch}
+            />
         </div>
     )
 }

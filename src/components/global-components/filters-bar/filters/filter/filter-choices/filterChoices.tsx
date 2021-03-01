@@ -78,6 +78,7 @@ const FilterChoices = (props: Props) => {
         <>
             <SearchBar
                 sortDir={props.filter.choicesSortDir}
+                defaultSearchValue={props.filter.searchValue}
                 onSort={handleSort}
                 onSearch={handleSearch}
             />

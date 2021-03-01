@@ -22,7 +22,7 @@ interface Props {
 
 const cx = classNames.bind(styles)
 
-const SingleChoiceField = (props: Props) => {
+const MultipleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
     const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
@@ -112,6 +112,7 @@ const SingleChoiceField = (props: Props) => {
                             <>
                                 <SearchBar
                                     sortDir={choicesSortDir}
+                                    defaultSearchValue={searchChoiceValue}
                                     onSort={handleSort}
                                     onSearch={handleSearch}
                                 />
@@ -134,4 +135,4 @@ const SingleChoiceField = (props: Props) => {
     )
 }
 
-export default SingleChoiceField
+export default MultipleChoiceField

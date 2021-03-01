@@ -96,6 +96,7 @@ const SingleChoiceField = (props: Props) => {
                             <>
                                 <SearchBar
                                     sortDir={choicesSortDir}
+                                    defaultSearchValue={searchChoiceValue}
                                     onSort={handleSort}
                                     onSearch={handleSearch}
                                 />
