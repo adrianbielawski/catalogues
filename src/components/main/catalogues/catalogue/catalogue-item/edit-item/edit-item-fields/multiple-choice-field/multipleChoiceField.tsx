@@ -117,7 +117,8 @@ const MultipleChoiceField = (props: Props) => {
                                     onSearch={handleSearch}
                                 />
                                 <MultipleChoiceList
-                                    choices={sortedChoices}
+                                    choices={field.choices}
+                                    filteredChoices={sortedChoices}
                                     selected={getSelectedIds()}
                                     onChange={handleChange}
                                 />

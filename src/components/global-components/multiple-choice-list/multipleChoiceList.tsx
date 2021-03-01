@@ -10,13 +10,14 @@ interface BasicChoice {
 
 type Props<ChoiceType> = {
     choices: ChoiceType[],
+    filteredChoices: ChoiceType[],
     selected: (number | string | null)[],
     className?: string,
     onChange: (choices: ChoiceType[]) => void,
 }
 
 const MultipleChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) => {
-    const choices = props.choices.map(choice => {
+    const choices = props.filteredChoices.map(choice => {
         if (choice.id === null) {
             return
         }
