@@ -4,7 +4,7 @@ import styles from './addChoice.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useAppDispatch } from 'store/storeConfig'
-import { ADD_FIELD_CHOICE_TO_STATE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { ADD_CHOICE_ERROR, CLEAR_ADD_CHOICE_ERROR } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
@@ -17,7 +17,6 @@ type Props = {
 const AddChoice = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
-    const [inputError, setInputError] = useState('')
 
     const handleAddButtonClick = () => {
         setIsAddChoiceActive(true)
@@ -37,15 +36,27 @@ const AddChoice = (props: Props) => {
     }
 
     const clearInputError = () => {
-        setInputError('')
+        dispatch(CLEAR_ADD_CHOICE_ERROR({
+            catalogueId: props.field.catalogueId,
+            fieldId: props.field.id,
+        }))
     }
 
     const handleConfirm = (name: string) => {
         const { valid, error } = validateInput(name)
+
         if (!valid) {
-            setInputError(error!)
+            dispatch(ADD_CHOICE_ERROR({
+                catalogueId: props.field.catalogueId,
+                fieldId: props.field.id,
+                error: {
+                    title: 'Choice name error',
+                    message: error!,
+                }
+            }))
             return
         }
+
         handleAddChoice(name)
     }
 
@@ -56,6 +67,8 @@ const AddChoice = (props: Props) => {
             catalogueId: props.field.catalogueId
         }))
     }
+
+    const error = props.field.addChoiceError
 
     return (
         <>
@@ -75,9 +88,9 @@ const AddChoice = (props: Props) => {
                     />
                 )}
             <MessageModal
-                show={inputError.length !== 0}
-                title={'Choice name error'}
-                message={inputError}
+                show={error.message.length !== 0}
+                title={error.title}
+                message={error.message}
                 onConfirm={clearInputError}
             />
         </>

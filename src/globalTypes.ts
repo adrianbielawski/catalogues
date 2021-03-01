@@ -8,6 +8,11 @@ export interface ErrorObject {
     },
 }
 
+export interface ErrorMessage {
+    title?: string,
+    message: string,
+}
+
 export interface User {
     id: number,
     username: string,
@@ -199,6 +204,7 @@ export interface DeserializedChoiceField {
     choices: DeserializedChoice[],
     removedChoices: DeserializedChoice[],
     fetchingChoices: boolean,
+    addChoiceError: ErrorMessage,
     isEditing: boolean,
     isSubmitting: boolean,
 }

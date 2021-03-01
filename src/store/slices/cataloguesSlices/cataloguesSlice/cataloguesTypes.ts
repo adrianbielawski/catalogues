@@ -63,6 +63,12 @@ export interface ChioceFieldChangesPayload {
     field: DeserializedChoiceField,
 }
 
+export interface AddChoiceError {
+    catalogueId: number,
+    fieldId: number,
+    error: ErrorMessage,
+}
+
 export interface CreateCatalogueFieldPayload {
     name: string,
     catalogueId: number,

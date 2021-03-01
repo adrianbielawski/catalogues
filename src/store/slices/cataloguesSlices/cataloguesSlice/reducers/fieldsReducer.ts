@@ -135,4 +135,15 @@ export const editFieldReducers = {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.isSubmitting = false
     },
+    ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.AddChoiceError>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.addChoiceError = action.payload.error
+    },
+    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.addChoiceError = {
+            title: '',
+            message: '',
+        }
+    },
 }
