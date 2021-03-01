@@ -137,6 +137,27 @@ export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
+export const removeChoiceEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.REMOVE_CHOICE.match),
+    mergeMap(action => concat(
+        of(actions.REMOVE_CHOICE_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+            defer(() => axiosInstance$.delete(`/choices/${action.payload.choiceId}/`)).pipe(
+                map(() => actions.REMOVE_CHOICE_SUCCESS({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                    choiceId: action.payload.choiceId,
+                })),
+                catchError(() => of(actions.REMOVE_CHOICE_FAILURE({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                })))
+            )
+    ))
+)
+
 export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CREATE_CATALOGUE_FIELD.match),
     switchMap(action => concat(

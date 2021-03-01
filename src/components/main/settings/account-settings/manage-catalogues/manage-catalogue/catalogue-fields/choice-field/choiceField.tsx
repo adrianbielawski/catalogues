@@ -7,8 +7,7 @@ import styles from './choiceField.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import {
-    POST_CHOICE_FIELD_CHANGES, REFRESH_CATALOGUE_FIELD,
-    REMOVE_FIELD_CHOICE_FROM_STATE, TOGGLE_FIELD_EDIT
+    POST_CHOICE_FIELD_CHANGES, REFRESH_CATALOGUE_FIELD, TOGGLE_FIELD_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
@@ -34,14 +33,6 @@ const ChoiceField = (props: Props) => {
 
     const handleEdit = () => {
         dispatch(TOGGLE_FIELD_EDIT({
-            fieldId: props.field.id,
-            catalogueId: props.field.catalogueId
-        }))
-    }
-
-    const handleRemoveChoice = (id: number | string) => {
-        dispatch(REMOVE_FIELD_CHOICE_FROM_STATE({
-            id,
             fieldId: props.field.id,
             catalogueId: props.field.catalogueId
         }))
@@ -97,7 +88,6 @@ const ChoiceField = (props: Props) => {
                         <Choices
                             field={field}
                             className={styles.choices}
-                            onRemove={handleRemoveChoice}
                         />
                         <div className={styles.buttons}>
                             <Button

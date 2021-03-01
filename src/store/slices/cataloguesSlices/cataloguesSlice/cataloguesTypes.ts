@@ -87,3 +87,9 @@ export interface CreateCatalogueFieldPayload {
     type: string,
     position: number,
 }
+
+export interface RemoveChoicePayload {
+    catalogueId: number,
+    fieldId: number,
+    choiceId: number,
+}

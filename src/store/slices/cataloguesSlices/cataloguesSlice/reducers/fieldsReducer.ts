@@ -126,6 +126,35 @@ export const addChoiceReducers = {
         }
     },
 }
+
+export const removeChoiceReducers = {
+    REMOVE_CHOICE(state: State, action: PayloadAction<T.RemoveChoicePayload>) { },
+    REMOVE_CHOICE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.removingChoice = true
+    },
+    REMOVE_CHOICE_SUCCESS(state: State, action: PayloadAction<T.RemoveChoicePayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.choices = field.choices.filter(c => c.id !== action.payload.choiceId)
+        field.removingChoice = false
+    },
+    REMOVE_CHOICE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.removingChoice = false
+        field.removeChoiceError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+    CLEAR_REMOVE_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.removeChoiceError = {
+            title: '',
+            message: '',
+        }
+    },
+}
+
 export const editFieldReducers = {
     POST_TEXT_FIELD_NAME_CHANGE(state: State, action: PayloadAction<T.TextFieldNameChange>) { },
     POST_TEXT_FIELD_NAME_CHANGE_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
@@ -134,12 +163,6 @@ export const editFieldReducers = {
     TOGGLE_FIELD_EDIT(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.isEditing = !field.isEditing
-    },
-    REMOVE_FIELD_CHOICE_FROM_STATE(state: State, action: PayloadAction<T.RemoveFieldToStatePayload>) {
-        const choice = getChoiceById(state, action.payload.catalogueId, action.payload.fieldId, action.payload.id)
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.removedChoices.push(choice)
-        field.choices = field.choices.filter(c => c.id !== action.payload.id)
     },
     POST_TEXT_FIELD_NAME_CHANGE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
