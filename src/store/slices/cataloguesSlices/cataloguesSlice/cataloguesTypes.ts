@@ -93,3 +93,15 @@ export interface RemoveChoicePayload {
     fieldId: number,
     choiceId: number,
 }
+
+export interface ChangeFieldNamePayload {
+    catalogueId: number,
+    fieldId: number,
+    name: string,
+}
+
+export interface ChangeFieldNameSuccessPayload {
+    catalogueId: number,
+    fieldId: number,
+    field: Field,
+}

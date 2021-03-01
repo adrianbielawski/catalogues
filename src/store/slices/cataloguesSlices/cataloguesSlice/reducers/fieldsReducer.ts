@@ -127,6 +127,35 @@ export const addChoiceReducers = {
     },
 }
 
+export const changeFieldNameReducers = {
+    CHANGE_FIELD_NAME(state: State, action: PayloadAction<T.ChangeFieldNamePayload>) { },
+    CHANGE_FIELD_NAME_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.changingName = true
+    },
+    CHANGE_FIELD_NAME_SUCCESS(state: State, action: PayloadAction<T.ChangeFieldNameSuccessPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.changingName = false
+        field.name = action.payload.field.name
+        field.filterName = action.payload.field.filter_name
+    },
+    CHANGE_FIELD_NAME_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.changingName = false
+        field.changeNameError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+    CLEAR_CHANGE_FIELD_NAME_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.changeNameError = {
+            title: '',
+            message: '',
+        }
+    },
+}
+
 export const removeChoiceReducers = {
     REMOVE_CHOICE(state: State, action: PayloadAction<T.RemoveChoicePayload>) { },
     REMOVE_CHOICE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {

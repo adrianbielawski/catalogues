@@ -24,6 +24,7 @@ export const cataloguesSlice = createSlice({
         ...fieldsReducers.fetchFieldsChoicesReducers,
         ...fieldsReducers.addChoiceReducers,
         ...fieldsReducers.removeChoiceReducers,
+        ...fieldsReducers.changeFieldNameReducers,
         ...fieldsReducers.editFieldReducers,
         ...fieldsReducers.createCatalogueFieldReducers,
     },
@@ -48,6 +49,7 @@ export const {
     ADD_CHOICE_ERROR, CLEAR_ADD_CHOICE_ERROR,
     POST_CHOICE, POST_CHOICE_START, POST_CHOICE_SUCCESS, POST_CHOICE_FAILURE,
     REMOVE_CHOICE, REMOVE_CHOICE_START, REMOVE_CHOICE_SUCCESS, REMOVE_CHOICE_FAILURE, CLEAR_REMOVE_CHOICE_ERROR,
+    CHANGE_FIELD_NAME, CHANGE_FIELD_NAME_START, CHANGE_FIELD_NAME_SUCCESS, CHANGE_FIELD_NAME_FAILURE, CLEAR_CHANGE_FIELD_NAME_ERROR,
     TOGGLE_ADD_FIELD,
     CREATE_CATALOGUE_FIELD, CREATE_CATALOGUE_FIELD_START, CREATE_CATALOGUE_FIELD_SUCCESS, CREATE_CATALOGUE_FIELD_FAILURE
 } = cataloguesSlice.actions

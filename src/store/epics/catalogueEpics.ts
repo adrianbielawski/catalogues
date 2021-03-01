@@ -71,16 +71,16 @@ export const postChoiceFieldChangesEpic = (action$: Observable<Action>) => actio
     filter(actions.POST_CHOICE_FIELD_CHANGES.match),
     switchMap(action => {
         const isNew = (choice: DeserializedChoice) => choice.id.toString().startsWith('newChoice')
-        const removedChoices = action.payload.field.removedChoices
+        // const removedChoices = action.payload.field.removedChoices
         const newChoices = action.payload.field.choices.filter(isNew)
 
         const requests = []
-        if (removedChoices.length || newChoices.length) {
+        if (newChoices.length) {
             requests.push(concat(
                 forkJoin([
-                    ...removedChoices.filter(c => !isNew(c)).map(choice =>
-                        axiosInstance$.delete(`/choices/${choice.id}/`)
-                    )
+                    // ...removedChoices.filter(c => !isNew(c)).map(choice =>
+                    //     axiosInstance$.delete(`/choices/${choice.id}/`)
+                    // )
                 ]),
                 from(newChoices).pipe(
                     mergeMap(choice => axiosInstance$.post(`/choices/`, {
@@ -130,6 +130,29 @@ export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
                     choice: response.data,
                 })),
                 catchError(() => of(actions.POST_CHOICE_FAILURE({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                })))
+            )
+    ))
+)
+
+export const changeFieldNameEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_FIELD_NAME.match),
+    switchMap(action => concat(
+        of(actions.CHANGE_FIELD_NAME_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+            defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
+                name: action.payload.name,
+            })).pipe(
+                map(response => actions.CHANGE_FIELD_NAME_SUCCESS({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                    field: response.data,
+                })),
+                catchError(() => of(actions.CHANGE_FIELD_NAME_FAILURE({
                     catalogueId: action.payload.catalogueId,
                     fieldId: action.payload.fieldId,
                 })))
@@ -320,6 +343,8 @@ export const cataloguesEpics = combineEpics(
     postTextFieldNameChangeEpic,
     postChoiceFieldChangesEpic,
     postChoiceEpic,
+    removeChoiceEpic,
+    changeFieldNameEpic,
     createCatalogueFieldEpic,
     refreshCatalogueEpic,
     fetchCataloguesEpic,
