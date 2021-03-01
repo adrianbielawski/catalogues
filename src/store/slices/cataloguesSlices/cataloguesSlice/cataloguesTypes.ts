@@ -1,4 +1,4 @@
-import { Choice, DeserializedCatalogue, DeserializedChoiceField, Field } from "src/globalTypes"
+import { Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field } from "src/globalTypes"
 
 export interface CataloguesState {
     catalogues: DeserializedCatalogue[],
@@ -67,6 +67,18 @@ export interface AddChoiceError {
     catalogueId: number,
     fieldId: number,
     error: ErrorMessage,
+}
+
+export interface PostChoicePayload {
+    catalogueId: number,
+    fieldId: number,
+    name: string,
+}
+
+export interface PostChoiceSuccessPayload {
+    catalogueId: number,
+    fieldId: number,
+    choice: Choice,
 }
 
 export interface CreateCatalogueFieldPayload {

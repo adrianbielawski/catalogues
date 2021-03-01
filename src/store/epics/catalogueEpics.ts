@@ -113,6 +113,30 @@ export const postChoiceFieldChangesEpic = (action$: Observable<Action>) => actio
     })
 )
 
+export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.POST_CHOICE.match),
+    mergeMap(action => concat(
+        of(actions.POST_CHOICE_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+            defer(() => axiosInstance$.post(`/choices/`, {
+                field_id: action.payload.fieldId,
+                value: action.payload.name,
+            })).pipe(
+                map(response => actions.POST_CHOICE_SUCCESS({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                    choice: response.data,
+                })),
+                catchError(() => of(actions.POST_CHOICE_FAILURE({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                })))
+            )
+    ))
+)
+
 export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CREATE_CATALOGUE_FIELD.match),
     switchMap(action => concat(
@@ -274,6 +298,7 @@ export const cataloguesEpics = combineEpics(
     changeCatalogueNameEpic,
     postTextFieldNameChangeEpic,
     postChoiceFieldChangesEpic,
+    postChoiceEpic,
     createCatalogueFieldEpic,
     refreshCatalogueEpic,
     fetchCataloguesEpic,

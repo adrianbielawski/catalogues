@@ -204,6 +204,7 @@ export interface DeserializedChoiceField {
     choices: DeserializedChoice[],
     removedChoices: DeserializedChoice[],
     fetchingChoices: boolean,
+    postingChoice: boolean,
     addChoiceError: ErrorMessage,
     isEditing: boolean,
     isSubmitting: boolean,

@@ -4,7 +4,7 @@ import styles from './addChoice.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useAppDispatch } from 'store/storeConfig'
-import { ADD_CHOICE_ERROR, CLEAR_ADD_CHOICE_ERROR } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { ADD_CHOICE_ERROR, CLEAR_ADD_CHOICE_ERROR, POST_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
@@ -35,7 +35,7 @@ const AddChoice = (props: Props) => {
         }
     }
 
-    const clearInputError = () => {
+    const clearError = () => {
         dispatch(CLEAR_ADD_CHOICE_ERROR({
             catalogueId: props.field.catalogueId,
             fieldId: props.field.id,
@@ -61,7 +61,7 @@ const AddChoice = (props: Props) => {
     }
 
     const handleAddChoice = (name: string) => {
-        dispatch(ADD_FIELD_CHOICE_TO_STATE({
+        dispatch(POST_CHOICE({
             name,
             fieldId: props.field.id,
             catalogueId: props.field.catalogueId
@@ -91,7 +91,7 @@ const AddChoice = (props: Props) => {
                 show={error.message.length !== 0}
                 title={error.title}
                 message={error.message}
-                onConfirm={clearInputError}
+                onConfirm={clearError}
             />
         </>
     )

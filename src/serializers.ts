@@ -114,6 +114,7 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     choices: field.choices ? choicesDeserializer(field.choices) : [],
     removedChoices: [],
     fetchingChoices: false,
+    postingChoice: false,
     addChoiceError: {
         title: '',
         message: '',

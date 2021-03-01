@@ -1,13 +1,13 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedChoiceField, ErrorMessage } from 'src/globalTypes'
 import * as T from '../cataloguesTypes'
-import { choicesDeserializer, fieldDeserializer, fieldsDeserializer } from 'src/serializers'
+import { choiceDeserializer, choicesDeserializer, fieldDeserializer, fieldsDeserializer } from 'src/serializers'
 import { getCatalogueById, getChoiceById, getFieldById } from '../cataloguesSlectors'
 
 type State = T.CataloguesState
 
 export const createCatalogueFieldReducers = {
-    CREATE_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CreateCatalogueFieldPayload>) {},
+    CREATE_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CreateCatalogueFieldPayload>) { },
     TOGGLE_ADD_FIELD(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isAddFieldFormActive = !catalogue.isAddFieldFormActive
@@ -28,10 +28,10 @@ export const createCatalogueFieldReducers = {
 }
 
 export const fetchCatalogueFieldReducers = {
-    REFRESH_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
-    FETCH_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
-    FETCH_CATALOGUE_FIELD_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
-    FETCH_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
+    REFRESH_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
+    FETCH_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
+    FETCH_CATALOGUE_FIELD_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
+    FETCH_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     FETCH_CATALOGUE_FIELD_SUCCESS(state: State, action: PayloadAction<T.FetchCatalogueFieldSuccessPayload>) {
         let field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         Object.assign(field, fieldDeserializer(action.payload.data))
@@ -39,8 +39,8 @@ export const fetchCatalogueFieldReducers = {
 }
 
 export const fetchCatalogueFieldsReducers = {
-    REFRESH_CATALOGUE_FIELDS(state: State, action: PayloadAction<number>) {},
-    FETCH_CATALOGUE_FIELDS(state: State, action: PayloadAction<number>) {},
+    REFRESH_CATALOGUE_FIELDS(state: State, action: PayloadAction<number>) { },
+    FETCH_CATALOGUE_FIELDS(state: State, action: PayloadAction<number>) { },
     FETCH_CATALOGUE_FIELDS_START(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.fetchingFields = true
@@ -57,7 +57,7 @@ export const fetchCatalogueFieldsReducers = {
 }
 
 export const fetchFieldsChoicesReducers = {
-    FETCH_FIELDS_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
+    FETCH_FIELDS_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     FETCH_FIELDS_CHOICES_START(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.fetchingFieldsChoices = true
@@ -67,7 +67,7 @@ export const fetchFieldsChoicesReducers = {
         catalogue.fetchingFieldsChoices = false
         const data = action.payload.data
 
-        for(const id in data) {
+        for (const id in data) {
             const field = getFieldById(state, action.payload.catalogueId, parseInt(id)) as DeserializedChoiceField
             field.choices = choicesDeserializer(data[id])
         }
@@ -79,7 +79,7 @@ export const fetchFieldsChoicesReducers = {
 }
 
 export const fetchFieldChoicesReducers = {
-    FETCH_FIELD_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
+    FETCH_FIELD_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     FETCH_FIELD_CHOICES_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.fetchingChoices = true
@@ -95,11 +95,42 @@ export const fetchFieldChoicesReducers = {
     },
 }
 
+export const addChoiceReducers = {
+    ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.AddChoiceError>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.addChoiceError = action.payload.error
+    },
+    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.addChoiceError = {
+            title: '',
+            message: '',
+        }
+    },
+    POST_CHOICE(state: State, action: PayloadAction<T.PostChoicePayload>) { },
+    POST_CHOICE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.postingChoice = true
+    },
+    POST_CHOICE_SUCCESS(state: State, action: PayloadAction<T.PostChoiceSuccessPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.choices.push(choiceDeserializer(action.payload.choice))
+        field.postingChoice = false
+    },
+    POST_CHOICE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.postingChoice = false
+        field.addChoiceError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
 export const editFieldReducers = {
-    POST_TEXT_FIELD_NAME_CHANGE(state: State, action: PayloadAction<T.TextFieldNameChange>) {},
-    POST_TEXT_FIELD_NAME_CHANGE_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
-    POST_CHOICE_FIELD_CHANGES(state: State, action: PayloadAction<T.ChioceFieldChangesPayload>) {},
-    POST_CHOICE_FIELD_CHANGES_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {},
+    POST_TEXT_FIELD_NAME_CHANGE(state: State, action: PayloadAction<T.TextFieldNameChange>) { },
+    POST_TEXT_FIELD_NAME_CHANGE_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
+    POST_CHOICE_FIELD_CHANGES(state: State, action: PayloadAction<T.ChioceFieldChangesPayload>) { },
+    POST_CHOICE_FIELD_CHANGES_SUCCESS(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     TOGGLE_FIELD_EDIT(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.isEditing = !field.isEditing
@@ -109,14 +140,6 @@ export const editFieldReducers = {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.removedChoices.push(choice)
         field.choices = field.choices.filter(c => c.id !== action.payload.id)
-    },
-    ADD_FIELD_CHOICE_TO_STATE(state: State, action: PayloadAction<T.AddFieldToStatePayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.choices.unshift({
-            id: `newChoice_${Date.now()}`,
-            fieldId: action.payload.fieldId,
-            value: action.payload.name,
-        })
     },
     POST_TEXT_FIELD_NAME_CHANGE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
@@ -134,16 +157,5 @@ export const editFieldReducers = {
     POST_CHOICE_FIELD_CHANGES_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.isSubmitting = false
-    },
-    ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.AddChoiceError>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.addChoiceError = action.payload.error
-    },
-    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.addChoiceError = {
-            title: '',
-            message: '',
-        }
     },
 }
