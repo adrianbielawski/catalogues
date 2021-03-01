@@ -25,6 +25,9 @@ const AddChoice = (props: Props) => {
     const validateInput = (name: string) => {
         let error = null
 
+        if (name.length === 0) {
+            error = `Please add choice name`
+        }
         if (props.field.choices.find((choice) => choice.value.toLowerCase() === name.toLowerCase())) {
             error = `Choice with name "${name}" already exists`
         }
