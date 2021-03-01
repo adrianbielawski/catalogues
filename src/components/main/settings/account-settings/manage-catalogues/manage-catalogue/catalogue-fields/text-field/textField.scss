@@ -4,13 +4,12 @@
     display: flex;
     align-items: center;
     min-height: 30px;
-    .title {
+    .nameInput {
+        border: none;
+        border-bottom: 1px solid $midLightGrey;
         font-size: 18px;
-        font-weight: 700;
-        white-space: nowrap;
-    }
-    span {
-        margin-left: 5px;
+        margin-left: 3px;
+        max-width: 250px;
     }
     .button {
         margin-right: 3px;
