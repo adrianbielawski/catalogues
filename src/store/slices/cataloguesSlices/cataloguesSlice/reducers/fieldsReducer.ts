@@ -96,17 +96,6 @@ export const fetchFieldChoicesReducers = {
 }
 
 export const addChoiceReducers = {
-    ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.AddChoiceError>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.addChoiceError = action.payload.error
-    },
-    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.addChoiceError = {
-            title: '',
-            message: '',
-        }
-    },
     POST_CHOICE(state: State, action: PayloadAction<T.PostChoicePayload>) { },
     POST_CHOICE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
@@ -123,6 +112,13 @@ export const addChoiceReducers = {
         field.addChoiceError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
+        }
+    },
+    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.addChoiceError = {
+            title: '',
+            message: '',
         }
     },
 }

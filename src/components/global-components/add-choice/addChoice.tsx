@@ -4,7 +4,7 @@ import styles from './addChoice.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import { useAppDispatch } from 'store/storeConfig'
-import { ADD_CHOICE_ERROR, CLEAR_ADD_CHOICE_ERROR, POST_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CLEAR_ADD_CHOICE_ERROR, POST_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
@@ -17,6 +17,7 @@ type Props = {
 const AddChoice = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
+    const [inputError, setInputError] = useState('')
 
     const handleAddButtonClick = () => {
         setIsAddChoiceActive(true)
@@ -25,11 +26,12 @@ const AddChoice = (props: Props) => {
     const validateInput = (name: string) => {
         let error = null
 
-        if (name.length === 0) {
-            error = `Please add choice name`
-        }
-        if (props.field.choices.find((choice) => choice.value.toLowerCase() === name.toLowerCase())) {
+        if (props.field.choices.find(c => c.value.toLowerCase() === name.toLowerCase())) {
             error = `Choice with name "${name}" already exists`
+        }
+
+        if (name.length < 1) {
+            error = 'Minimum 1 character'
         }
 
         return {
@@ -38,29 +40,21 @@ const AddChoice = (props: Props) => {
         }
     }
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value
+        const { valid, error } = validateInput(input)
+        if (!valid) {
+            setInputError(error!)
+        } else {
+            setInputError('')
+        }
+    }
+
     const clearError = () => {
         dispatch(CLEAR_ADD_CHOICE_ERROR({
             catalogueId: props.field.catalogueId,
             fieldId: props.field.id,
         }))
-    }
-
-    const handleConfirm = (name: string) => {
-        const { valid, error } = validateInput(name)
-
-        if (!valid) {
-            dispatch(ADD_CHOICE_ERROR({
-                catalogueId: props.field.catalogueId,
-                fieldId: props.field.id,
-                error: {
-                    title: 'Choice name error',
-                    message: error!,
-                }
-            }))
-            return
-        }
-
-        handleAddChoice(name)
     }
 
     const handleAddChoice = (name: string) => {
@@ -73,14 +67,25 @@ const AddChoice = (props: Props) => {
 
     const error = props.field.addChoiceError
 
+    const inputProps = {
+        placeholder: "New choice name",
+        onChange: handleChange
+    }
+
+    const buttonProps = {
+        disabled: inputError.length !== 0
+    }
+
     return (
         <>
             {isAddChoiceActive
                 ? (
                     <InputWithConfirmButton
-                        inputProps={{ placeholder: "New choice name" }}
+                        inputProps={inputProps}
+                        buttonProps={buttonProps}
                         clearOnConfirm={true}
-                        onConfirm={handleConfirm}
+                        invalidInputMessage={inputError}
+                        onConfirm={handleAddChoice}
                     />
                 )
                 : (
