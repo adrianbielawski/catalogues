@@ -8,7 +8,7 @@ import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/catalogue
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
-import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
+import EditableField from 'components/global-components/editable-field/editableField'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
@@ -52,6 +52,7 @@ const FieldForm = (props: Props) => {
     const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')
     const [formError, setFormError] = useState('')
+    const [nameError, setNameError] = useState('')
     const delayCompleated = useDelay(catalogue.isSubmittingNewField)
 
     const handleEditName = () => {
@@ -60,13 +61,13 @@ const FieldForm = (props: Props) => {
 
     const validateName = (name: string) => {
         let error = null
-        
-        if(fields.find(field => field.name === name)) {
-            error = `Field ${name} already exist`
+
+        if (fields.find(field => field.name === name)) {
+            error = `Field with name "${name}" already exists`
         }
 
-        if(!name.length) {
-            error = `Please add field name`
+        if (name.length < 2) {
+            error = 'Minimum 2 characters'
         }
 
         return {
@@ -75,32 +76,34 @@ const FieldForm = (props: Props) => {
         }
     }
 
-    const handleNameChange = (input: string[]) => {
-        const { valid, error } = validateName(input[0])
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const input = e.target.value
+        const { valid, error } = validateName(input)
         if (!valid) {
-            setFormError(error!)
-            return
+            setNameError(error!)
+        } else {
+            setNameError('')
         }
-        setIsNameEditing(false)
-        setFieldName(input[0])
+        setFieldName(input)
     }
 
     const handleTypeChange = (choice: FieldType) => {
         setFieldType(choice.id)
     }
 
-    const validateInput = () => {
+    const validateForm = () => {
         let error = null
-        if (isNameEditing) {
-            error = 'Please confirm field name'
-        }
 
-        if (fieldName.length === 0) {
+        if (fieldName.length < 2) {
             error = 'Please add field name'
         }
 
-        if(fieldType.length === 0) {
+        if (fieldType.length === 0) {
             error = "Please select field type"
+        }
+
+        if (fields.find(f => f.name === fieldName)) {
+            error = `Field with name "${fieldName}" already exists`
         }
 
         return {
@@ -110,7 +113,7 @@ const FieldForm = (props: Props) => {
     }
 
     const handleConfirm = () => {
-        const { valid, error } = validateInput()
+        const { valid, error } = validateForm()
         if (!valid) {
             setFormError(error!)
             return
@@ -122,7 +125,7 @@ const FieldForm = (props: Props) => {
             position: fields.length
         }))
     }
-    
+
     const clearFormError = () => {
         setFormError('')
     }
@@ -142,15 +145,15 @@ const FieldForm = (props: Props) => {
         <div className={formClass}>
             <p className={styles.title}>New field form</p>
             <div className={styles.wrapper}>
-                <EditableFieldWithConfirm
-                    id={`addField`}
-                    title="New field name"
-                    content={[fieldName]}
+                <EditableField
+                    title="Field name"
+                    content={fieldName}
                     isEditing={isNameEditing}
-                    isSubmitting={false}
-                    inputProps={{ minLength: 1, autoFocus: true }}
+                    invalidInputMessage={nameError}
+                    minLength={2}
+                    autoFocus
                     onEditClick={handleEditName}
-                    onConfirm={handleNameChange}
+                    onChange={handleNameChange}
                 />
                 <p className={styles.type}>Type:</p>
                 <SingleChoiceList
