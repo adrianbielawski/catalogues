@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styles from './editableField.scss'
+import styles from './editableFieldWithConfirm.scss'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
@@ -19,7 +19,7 @@ interface Props {
     onConfirm: (input: string[]) => void,
 }
 
-const EditableField = (props: Props) => {
+const EditableFieldWithConfirm = (props: Props) => {
     const delayCompleated = useDelay(props.isSubmitting)
     const [inputCount, setInputCount] = useState(0)
     const [currentInput, setCurrentInput] = useState('')
@@ -96,4 +96,4 @@ const EditableField = (props: Props) => {
     )
 }
 
-export default EditableField
+export default EditableFieldWithConfirm

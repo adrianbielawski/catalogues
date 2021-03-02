@@ -6,7 +6,7 @@ import {
     CHANGE_PASSWORD, CHANGE_USERNAME, TOGGLE_PASSWORD_EDIT, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
 //Custom components
-import EditableField from 'components/global-components/editable-field/editableField'
+import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 const MyAccount = () => {
@@ -94,7 +94,7 @@ const MyAccount = () => {
         <div className={styles.myAccount}>
             <ul>
                 <li key={'username'}>
-                    <EditableField
+                    <EditableFieldWithConfirm
                         id={0}
                         isEditing={myAccount.isEditingUsername}
                         isSubmitting={myAccount.isSubmittingUsername}
@@ -105,7 +105,7 @@ const MyAccount = () => {
                     />
                 </li>
                 <li key="password">
-                    <EditableField
+                    <EditableFieldWithConfirm
                         id={1}
                         isEditing={myAccount.isEditingPassword}
                         isSubmitting={myAccount.isSubmittingPassword}

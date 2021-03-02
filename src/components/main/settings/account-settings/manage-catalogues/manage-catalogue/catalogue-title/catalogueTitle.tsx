@@ -7,7 +7,7 @@ import {
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom components
-import EditableField from 'components/global-components/editable-field/editableField'
+import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
@@ -22,7 +22,7 @@ const CatalogueTitle = (props: Props) => {
 
     const validateName = (name: string) => {
         let error = null
-        if(!name.length) {
+        if (!name.length) {
             error = `Please set catalogue name`
         }
         return {
@@ -42,7 +42,7 @@ const CatalogueTitle = (props: Props) => {
             name: input[0]
         }))
     }
-    
+
     const clearError = () => {
         setError('')
     }
@@ -53,7 +53,7 @@ const CatalogueTitle = (props: Props) => {
 
     return (
         <div className={styles.catalogueTitle}>
-            <EditableField
+            <EditableFieldWithConfirm
                 id={`Catalogue title ${props.id}`}
                 title="Name"
                 content={[`${props.name}`]}

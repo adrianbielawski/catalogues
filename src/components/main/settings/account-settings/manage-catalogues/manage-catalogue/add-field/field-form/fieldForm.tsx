@@ -8,7 +8,7 @@ import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/catalogue
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
-import EditableField from 'components/global-components/editable-field/editableField'
+import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
@@ -142,7 +142,7 @@ const FieldForm = (props: Props) => {
         <div className={formClass}>
             <p className={styles.title}>New field form</p>
             <div className={styles.wrapper}>
-                <EditableField
+                <EditableFieldWithConfirm
                     id={`addField`}
                     title="New field name"
                     content={[fieldName]}
