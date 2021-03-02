@@ -4,18 +4,20 @@ import styles from './inputWithConfirmButton.scss'
 import { confirmOnEnter } from 'src/utils'
 //Custom components
 import ConfirmButton from '../confirm-button/confirmButton'
+import DialogCloud from '../dialog-cloud/dialogCloud'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     loading?: boolean,
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>,
     clearOnConfirm?: boolean,
+    invalidInputMessage?: string,
     onConfirm: (input: string) => void,
 }
 
 const InputWithConfirmButton = (props: Props) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const { loading, inputProps, buttonProps, onConfirm } = props
+    const { loading, inputProps, buttonProps, invalidInputMessage, onConfirm } = props
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
@@ -27,10 +29,10 @@ const InputWithConfirmButton = (props: Props) => {
 
     return (
         <div className={styles.inputWrapper}>
+            <DialogCloud message={invalidInputMessage || ''} />
             <input
                 ref={inputRef}
                 {...inputProps}
-                onChange={props.onChange}
                 autoFocus
             />
             <ConfirmButton
