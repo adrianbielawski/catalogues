@@ -66,8 +66,8 @@ const FieldForm = (props: Props) => {
             error = `Field with name "${name}" already exists`
         }
 
-        if (name.length < 2) {
-            error = 'Minimum 2 characters'
+        if (name.length < 1) {
+            error = 'Minimum 1 characters'
         }
 
         return {
@@ -150,7 +150,7 @@ const FieldForm = (props: Props) => {
                     content={fieldName}
                     isEditing={isNameEditing}
                     invalidInputMessage={nameError}
-                    minLength={2}
+                    minLength={1}
                     autoFocus
                     onEditClick={handleEditName}
                     onChange={handleNameChange}

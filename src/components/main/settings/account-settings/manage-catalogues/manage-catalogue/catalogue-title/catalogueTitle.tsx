@@ -25,8 +25,8 @@ const CatalogueTitle = (props: Props) => {
     const validateName = (name: string) => {
         let message = ''
         
-        if (name.length < 2) {
-            message = 'Minimum 2 characters'
+        if (name.length < 1) {
+            message = 'Minimum 1 characters'
         }
         if (catalogues.find(c => c.name.toLowerCase() === name.toLowerCase() && c.id !== catalogue.id)) {
             message = `Catalogue with name "${name}" already exists`

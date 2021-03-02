@@ -38,8 +38,8 @@ const TextField = (props: Props) => {
     const validateInput = (input: string) => {
         let message = ''
 
-        if (input.length < 2) {
-            message = 'Minimum 2 characters'
+        if (input.length < 1) {
+            message = 'Minimum 1 characters'
         }
         if (fields.find(f => f.name.toLowerCase() === input.toLowerCase() && f.id !== field.id)) {
             console.log(field.name)
@@ -90,7 +90,7 @@ const TextField = (props: Props) => {
                     <Input
                         defaultValue={props.field.name}
                         className={styles.nameInput}
-                        minLength={2}
+                        minLength={1}
                         invalidInputMessage={inputError}
                         ref={nameInputRef}
                     />
