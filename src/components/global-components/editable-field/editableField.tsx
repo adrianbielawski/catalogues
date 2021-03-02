@@ -4,7 +4,7 @@ import styles from './editableField.scss'
 import Input from 'components/global-components/input/input'
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
 
-interface Props {
+interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
     title: string,
     content: string,
     isEditing: boolean,
