@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -8,7 +8,7 @@ import {
     CHANGE_FIELD_NAME, CLEAR_CHANGE_FIELD_NAME_ERROR, TOGGLE_FIELD_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { fieldSelector } from 'store/selectors'
+import { fieldSelector, fieldsSelector } from 'store/selectors'
 //Types
 import { DeserializedTextField } from 'src/globalTypes'
 //Custom hooks
@@ -26,7 +26,9 @@ const cx = classNames.bind(styles)
 
 const TextField = (props: Props) => {
     const dispatch = useAppDispatch()
+    const fields = useTypedSelector(fieldsSelector(props.field.catalogueId))
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
+    const [inputError, setInputError] = useState('')
 
     const catalogueAndFieldId = {
         fieldId: props.field.id,
@@ -34,11 +36,18 @@ const TextField = (props: Props) => {
     }
 
     const validateInput = (input: string) => {
+        let message = ''
+
         if (input.length < 2) {
-            return false
-        } else {
-            return true
+            message = 'Minimum 2 characters'
         }
+        if (fields.find(f => f.name.toLowerCase() === input.toLowerCase() && f.id !== field.id)) {
+            console.log(field.name)
+            message = `Field with name "${input}" already exists`
+        }
+
+        setInputError(message)
+        return message.length === 0
     }
 
     const nameInputRef = useDebouncedDispatch(
@@ -82,6 +91,7 @@ const TextField = (props: Props) => {
                         defaultValue={props.field.name}
                         className={styles.nameInput}
                         minLength={2}
+                        invalidInputMessage={inputError}
                         ref={nameInputRef}
                     />
                 )
