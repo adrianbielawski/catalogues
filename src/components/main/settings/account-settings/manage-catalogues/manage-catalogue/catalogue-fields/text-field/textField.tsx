@@ -33,12 +33,21 @@ const TextField = (props: Props) => {
         catalogueId: props.field.catalogueId
     }
 
+    const validateInput = (input: string) => {
+        if (input.length < 2) {
+            return false
+        } else {
+            return true
+        }
+    }
+
     const nameInputRef = useDebouncedDispatch(
         name => CHANGE_FIELD_NAME({
             ...catalogueAndFieldId,
             name,
         }),
         500,
+        validateInput,
     )
 
     const handleEdit = () => {
