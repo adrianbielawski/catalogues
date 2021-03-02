@@ -32,6 +32,7 @@ const SearchBar = (props: Props) => {
             </TransparentButton>
             <Input
                 defaultValue={props.defaultSearchValue}
+                placeholder="Search"
                 onChange={handleSearch}
             />
         </div>
