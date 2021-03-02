@@ -1,21 +1,24 @@
 @import "global-styles/variables_and_mixins";
 
-input {
-    padding-left: 5px;
-    width: 100%;
-    height: 30px;
-    font-size: 20px;
-    box-sizing: border-box;
-    outline: none;
-    box-shadow: inset 0 100px #fff;
-    border: 1px solid $grey;
-    color: $darkGrey;
-    &:invalid {
-        color: $red;
+.wrapper {
+    position: relative;
+    input {
+        padding-left: 5px;
+        width: 100%;
+        height: 30px;
+        font-size: 20px;
+        box-sizing: border-box;
+        outline: none;
+        box-shadow: inset 0 100px #fff;
+        border-bottom: 1px solid $midLightGrey;
+        color: $darkGrey;
+        &:invalid {
+            color: $red;
+        }
+        &::placeholder {
+            opacity: 0.5;
+            color: $grey;
+        }
+        -moz-appearance: textfield;
     }
-    &::placeholder {
-        opacity: 0.5;
-        color: $grey;
-    }
-    -moz-appearance: textfield;
 }
