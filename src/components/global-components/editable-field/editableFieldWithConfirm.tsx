@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import styles from './editableFieldWithConfirm.scss'
+import styles from './editableField.scss'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
