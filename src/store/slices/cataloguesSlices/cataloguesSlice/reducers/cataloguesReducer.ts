@@ -62,10 +62,20 @@ export const changeCatalogueNameReducers = {
         catalogue.name = action.payload.name
         catalogue.slug = action.payload.slug
         catalogue.isSubmittingCatalogueName = false
-        catalogue.isEditingCatalogueName = false
     },
     CHANGE_CATALOGUE_NAME_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isSubmittingCatalogueName = false
+        catalogue.changeNameError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+    CLEAR_NAME_CHANGE_ERROR(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.changeNameError = {
+            title: '',
+            message: '',
+        }
     },
 }

@@ -89,6 +89,7 @@ export interface DeserializedCatalogue {
     fetchingFieldsChoices: boolean,
     isEditingCatalogueName: boolean,
     isSubmittingCatalogueName: boolean,
+    changeNameError: ErrorMessage,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
 }

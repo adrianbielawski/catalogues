@@ -28,16 +28,13 @@ export const createCatalogueEpic = (action$: Observable<Action>) => action$.pipe
 
 export const changeCatalogueNameEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CHANGE_CATALOGUE_NAME.match),
-    switchMap((action) => concat(
+    switchMap(action => concat(
         of(actions.CHANGE_CATALOGUE_NAME_START(action.payload.catalogueId)),
-        forkJoin([concat(
-            axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
-                name: action.payload.name
-            }),
-            axiosInstance$.get(`/catalogues/${action.payload.catalogueId}`))
-        ]).pipe(
+        axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
+            name: action.payload.name
+        }).pipe(
             map(response =>
-                actions.CHANGE_CATALOGUE_NAME_SUCCESS(response[0].data)
+                actions.CHANGE_CATALOGUE_NAME_SUCCESS(response.data)
             ),
             catchError(() => of(actions.CHANGE_CATALOGUE_NAME_FAILURE(action.payload.catalogueId)))
         )
@@ -51,20 +48,20 @@ export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
             catalogueId: action.payload.catalogueId,
             fieldId: action.payload.fieldId,
         })),
-            defer(() => axiosInstance$.post(`/choices/`, {
-                field_id: action.payload.fieldId,
-                value: action.payload.name,
-            })).pipe(
-                map(response => actions.POST_CHOICE_SUCCESS({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                    choice: response.data,
-                })),
-                catchError(() => of(actions.POST_CHOICE_FAILURE({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                })))
-            )
+        defer(() => axiosInstance$.post(`/choices/`, {
+            field_id: action.payload.fieldId,
+            value: action.payload.name,
+        })).pipe(
+            map(response => actions.POST_CHOICE_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+                choice: response.data,
+            })),
+            catchError(() => of(actions.POST_CHOICE_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
     ))
 )
 
@@ -75,19 +72,19 @@ export const changeFieldNameEpic = (action$: Observable<Action>) => action$.pipe
             catalogueId: action.payload.catalogueId,
             fieldId: action.payload.fieldId,
         })),
-            defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
-                name: action.payload.name,
-            })).pipe(
-                map(response => actions.CHANGE_FIELD_NAME_SUCCESS({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                    field: response.data,
-                })),
-                catchError(() => of(actions.CHANGE_FIELD_NAME_FAILURE({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                })))
-            )
+        defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
+            name: action.payload.name,
+        })).pipe(
+            map(response => actions.CHANGE_FIELD_NAME_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+                field: response.data,
+            })),
+            catchError(() => of(actions.CHANGE_FIELD_NAME_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
     ))
 )
 
@@ -98,17 +95,17 @@ export const removeChoiceEpic = (action$: Observable<Action>) => action$.pipe(
             catalogueId: action.payload.catalogueId,
             fieldId: action.payload.fieldId,
         })),
-            defer(() => axiosInstance$.delete(`/choices/${action.payload.choiceId}/`)).pipe(
-                map(() => actions.REMOVE_CHOICE_SUCCESS({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                    choiceId: action.payload.choiceId,
-                })),
-                catchError(() => of(actions.REMOVE_CHOICE_FAILURE({
-                    catalogueId: action.payload.catalogueId,
-                    fieldId: action.payload.fieldId,
-                })))
-            )
+        defer(() => axiosInstance$.delete(`/choices/${action.payload.choiceId}/`)).pipe(
+            map(() => actions.REMOVE_CHOICE_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+                choiceId: action.payload.choiceId,
+            })),
+            catchError(() => of(actions.REMOVE_CHOICE_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
     ))
 )
 
@@ -132,7 +129,7 @@ export const refreshCatalogueEpic = (action$: Observable<Action>) => action$.pip
     filter(actions.REFRESH_CATALOGUE.match),
     switchMap(action => concat(
         of(actions.REFRESH_CATALOGUE_START()),
-        axiosInstance$.get(`/catalogues/${action.payload}`).pipe(
+        axiosInstance$.get(`/catalogues/${action.payload}/`).pipe(
             map(response => actions.REFRESH_CATALOGUE_SUCCESS(response.data)),
             catchError(() => of(actions.REFRESH_CATALOGUE_FAILURE()))
         )

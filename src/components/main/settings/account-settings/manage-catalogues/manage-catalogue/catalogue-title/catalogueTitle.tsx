@@ -1,14 +1,15 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styles from './catalogueTitle.scss'
 //Redux
 import {
-    CHANGE_CATALOGUE_NAME, TOGGLE_CATALOGUE_NAME_EDIT
+    CHANGE_CATALOGUE_NAME, CLEAR_NAME_CHANGE_ERROR, TOGGLE_CATALOGUE_NAME_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom components
-import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
+import EditableField from 'components/global-components/editable-field/editableField'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import { useDebouncedDispatch } from 'src/customHooks'
 
 type Props = {
     id: number,
@@ -17,55 +18,57 @@ type Props = {
 
 const CatalogueTitle = (props: Props) => {
     const dispatch = useAppDispatch()
-    const [error, setError] = useState('')
+    const [inputError, setInputError] = useState('')
+    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const catalogue = useTypedSelector(catalogueSelector(props.id))
 
     const validateName = (name: string) => {
-        let error = null
-        if (!name.length) {
-            error = `Please set catalogue name`
+        let message = ''
+        
+        if (name.length < 2) {
+            message = 'Minimum 2 characters'
         }
-        return {
-            valid: error === null,
-            error,
+        if (catalogues.find(c => c.name.toLowerCase() === name.toLowerCase() && c.id !== catalogue.id)) {
+            message = `Catalogue with name "${name}" already exists`
         }
-    }
 
-    const handleNameChange = (input: string[]) => {
-        const { valid, error } = validateName(input[0])
-        if (!valid) {
-            setError(error!)
-            return
-        }
-        dispatch(CHANGE_CATALOGUE_NAME({
-            catalogueId: props.id,
-            name: input[0]
-        }))
-    }
-
-    const clearError = () => {
-        setError('')
+        setInputError(message)
+        return message.length === 0
     }
 
     const handleEditName = () => {
         dispatch(TOGGLE_CATALOGUE_NAME_EDIT(props.id))
     }
 
+    const nameInputRef = useDebouncedDispatch(
+        name => CHANGE_CATALOGUE_NAME({
+            catalogueId: props.id,
+            name
+        }),
+        500,
+        validateName,
+    )
+
+    const clearError = () => {
+        dispatch(CLEAR_NAME_CHANGE_ERROR(catalogue.id))
+    }
+    
+    const error = catalogue.changeNameError
+
     return (
         <div className={styles.catalogueTitle}>
-            <EditableFieldWithConfirm
-                id={`Catalogue title ${props.id}`}
+            <EditableField
                 title="Name"
-                content={[`${props.name}`]}
+                content={props.name}
                 isEditing={catalogue.isEditingCatalogueName}
-                isSubmitting={catalogue.isSubmittingCatalogueName}
+                invalidInputMessage={inputError}
                 onEditClick={handleEditName}
-                onConfirm={handleNameChange}
+                ref={nameInputRef}
             />
             <MessageModal
-                show={error.length !== 0}
+                show={error.message.length !== 0}
                 title={'Catalogue name error'}
-                message={error}
+                message={error.message}
                 onConfirm={clearError}
             />
         </div>
