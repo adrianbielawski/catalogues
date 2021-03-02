@@ -34,11 +34,11 @@ const TextField = (props: Props) => {
     }
 
     const nameInputRef = useDebouncedDispatch(
-        500,
-        nameInput => CHANGE_FIELD_NAME({
+        name => CHANGE_FIELD_NAME({
             ...catalogueAndFieldId,
-            name: nameInput.value,
-        })
+            name,
+        }),
+        500,
     )
 
     const handleEdit = () => {

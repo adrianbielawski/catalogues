@@ -42,8 +42,8 @@ export const useFirstRender = () => {
 }
 
 export const useDebouncedDispatch = (
-    debounceDuration: number,
-    actionCreator: (input: HTMLInputElement) => Action
+    actionCreator: (value: string) => Action,
+    debounceDuration: number = 500,
 ) => {
     const dispatch = useAppDispatch()
     const [input, setInput] = useState<HTMLInputElement | null>()
@@ -60,8 +60,8 @@ export const useDebouncedDispatch = (
             map(e => e.target!.value),
             debounceTime(debounceDuration),
             distinctUntilChanged(),
-        ).subscribe(() =>
-            dispatch(actionCreator(input))
+        ).subscribe(value => 
+            dispatch(actionCreator(value))
         )
 
         return () => {
