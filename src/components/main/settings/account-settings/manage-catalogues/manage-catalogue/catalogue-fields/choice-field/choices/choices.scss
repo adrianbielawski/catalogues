@@ -2,7 +2,8 @@
 
 .choices {
     .choicesList {
-        max-height: 200px;
+        margin: 5px 0;
+        max-height: 210px;
         overflow-y: scroll;
         @include scrollBar;
         &::-webkit-scrollbar-track {
