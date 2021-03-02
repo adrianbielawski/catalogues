@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -12,6 +12,8 @@ import { useAppDispatch } from 'store/storeConfig'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import SearchBar from 'components/global-components/search-bar/searchBar'
+import { orderBy } from 'lodash'
 
 type Props = {
     field: DeserializedChoiceField,
@@ -22,6 +24,8 @@ const cx = classNames.bind(styles)
 
 const Choices = (props: Props) => {
     const dispatch = useAppDispatch()
+    const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
+    const [searchChoiceValue, setSearchChoiceValue] = useState('')
 
     const clearError = () => {
         dispatch(CLEAR_REMOVE_CHOICE_ERROR({
@@ -30,8 +34,33 @@ const Choices = (props: Props) => {
         }))
     }
 
+    const handleSort = () => {
+        let sort: 'asc' | 'desc' = 'asc'
+
+        if (choicesSortDir === 'asc') {
+            sort = 'desc'
+        } else {
+            sort = 'asc'
+        }
+        setChoicesSortDir(sort)
+    }
+
+    const handleSearch = (input: string) => {
+        setSearchChoiceValue(input)
+    }
+
+    const filteredChoices = props.field.choices.filter(choice =>
+        choice.value.toLowerCase().includes(searchChoiceValue.toLowerCase())
+    )
+
+    const sortedChoices = orderBy(
+        filteredChoices,
+        (c) => c.value.toLowerCase(),
+        choicesSortDir
+    )
+
     const choices = (
-        props.field.choices.map(choice => {
+        sortedChoices.map(choice => {
 
             const handleRemove = () => {
                 dispatch(REMOVE_CHOICE({
@@ -61,6 +90,12 @@ const Choices = (props: Props) => {
 
     return (
         <div className={styles.choices}>
+            <SearchBar
+                sortDir={choicesSortDir}
+                defaultSearchValue={searchChoiceValue}
+                onSort={handleSort}
+                onSearch={handleSearch}
+            />
             <ul className={choicesClass}>
                 {choices}
             </ul>
