@@ -75,7 +75,7 @@ const FilterChoices = (props: Props) => {
     })
 
     return (
-        <>
+        <div className={styles.wrapper}>
             <SearchBar
                 sortDir={props.filter.choicesSortDir}
                 defaultSearchValue={props.filter.searchValue}
@@ -85,7 +85,7 @@ const FilterChoices = (props: Props) => {
             <ul className={styles.filterChoices}>
                 {choices()}
             </ul>
-        </>
+        </div>
     )
 }
 
