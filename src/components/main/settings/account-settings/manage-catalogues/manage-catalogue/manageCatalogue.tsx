@@ -52,7 +52,7 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.manageItem}>
-                {!catalogue.fetchingFieldsChoices && fields}
+                {!catalogue.fetchingFieldsChoices || catalogue.isInitialized ? fields : null}
                 <AddField catalogueId={props.catalogue.id} />
             </div>
         </div>

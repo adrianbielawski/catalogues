@@ -65,6 +65,7 @@ export const fetchFieldsChoicesReducers = {
     FETCH_FIELDS_CHOICES_SUCCESS(state: State, action: PayloadAction<T.FetchFieldsChoicesPayload>) {
         const catalogue = getCatalogueById(state, action.payload.catalogueId)
         catalogue.fetchingFieldsChoices = false
+        catalogue.isInitialized = true
         const data = action.payload.data
 
         for (const id in data) {

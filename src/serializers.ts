@@ -42,6 +42,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     },
     isAddFieldFormActive: false,
     isSubmittingNewField: false,
+    isInitialized: false,
 })
 
 export const itemsDataDeserializer = (

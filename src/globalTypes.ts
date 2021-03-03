@@ -92,6 +92,7 @@ export interface DeserializedCatalogue {
     catalogueError: ErrorMessage,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
+    isInitialized: boolean,
 }
 
 export interface ItemsData extends ListData {
