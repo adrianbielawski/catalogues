@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
+import moment from 'moment'
 import styles from './catalogueItem.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -21,6 +22,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import Loader from 'components/global-components/loader/loader'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import ImagesPreview from './images-preview/imagesPreview'
+import ExtraFields from './extra-fields/extraFields'
 
 type Props = {
     item: DeserializedItem
@@ -91,6 +93,17 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const isImagesPreviesAllowed = item.images.length && screenWidth > 800
     const showImagesCounter = item.images.length > 1
 
+    const extraFields = [
+        {
+            name: 'Id',
+            value: item.id.toString(),
+        },
+        {
+            name: 'Date',
+            value: moment(item.createdAt).format('DD MMMM YYYY'),
+        }
+    ]
+
     return (
         <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
             {item.isEditing
@@ -115,11 +128,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     </div>
                     <div className={styles.itemContent}>
                         <div className={styles.wrapper}>
-                            {!isNewItem &&
-                                <p className={styles.itemId}>
-                                    Id:<span> {props.item.id}</span>
-                                </p>
-                            }
+                            <ExtraFields fields={extraFields} />
                             <TransparentButton className={styles.editButton} onClick={handleEdit}>
                                 <FontAwesomeIcon icon={faEdit} />
                             </TransparentButton>
