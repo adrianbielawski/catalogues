@@ -6,7 +6,7 @@ import styles from './choices.scss'
 //Types
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
-import { CLEAR_REMOVE_CHOICE_ERROR, REMOVE_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CLEAR_FIELD_ERROR, REMOVE_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch } from 'store/storeConfig'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
@@ -28,7 +28,7 @@ const Choices = (props: Props) => {
     const [searchChoiceValue, setSearchChoiceValue] = useState('')
 
     const clearError = () => {
-        dispatch(CLEAR_REMOVE_CHOICE_ERROR({
+        dispatch(CLEAR_FIELD_ERROR({
             catalogueId: props.field.catalogueId,
             fieldId: props.field.id,
         }))
@@ -81,7 +81,7 @@ const Choices = (props: Props) => {
         })
     )
 
-    const error = props.field.removeChoiceError
+    const error = props.field.fieldError
 
     const choicesClass = cx(
         'choicesList',

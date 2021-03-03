@@ -109,16 +109,9 @@ export const addChoiceReducers = {
     POST_CHOICE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.postingChoice = false
-        field.addChoiceError = {
+        field.fieldError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
-        }
-    },
-    CLEAR_ADD_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.addChoiceError = {
-            title: '',
-            message: '',
         }
     },
 }
@@ -138,16 +131,9 @@ export const changeFieldNameReducers = {
     CHANGE_FIELD_NAME_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.changingName = false
-        field.changeNameError = {
+        field.fieldError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
-        }
-    },
-    CLEAR_CHANGE_FIELD_NAME_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.changeNameError = {
-            title: '',
-            message: '',
         }
     },
 }
@@ -166,16 +152,9 @@ export const removeChoiceReducers = {
     REMOVE_CHOICE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
         field.removingChoice = false
-        field.removeChoiceError = {
+        field.fieldError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
-        }
-    },
-    CLEAR_REMOVE_CHOICE_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
-        field.removeChoiceError = {
-            title: '',
-            message: '',
         }
     },
 }
@@ -184,6 +163,13 @@ export const editFieldReducers = {
     TOGGLE_FIELD_EDIT(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.isEditing = !field.isEditing
+    },
+    CLEAR_FIELD_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        field.fieldError = {
+            title: '',
+            message: '',
+        }
     },
 }
 
@@ -197,16 +183,9 @@ export const deleteFieldReducers = {
     DELETE_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.isDeleting = false
-        field.deleteFieldError = {
+        field.fieldError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
-        }
-    },
-    CLEAR_DELETE_CATALOGUE_FIELD_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
-        field.deleteFieldError = {
-            title: '',
-            message: '',
         }
     },
 }

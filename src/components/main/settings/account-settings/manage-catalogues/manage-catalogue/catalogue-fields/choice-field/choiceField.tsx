@@ -6,7 +6,7 @@ import styles from './choiceField.scss'
 //Types
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
-import { CLEAR_CHANGE_FIELD_NAME_ERROR, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 //Custom components
@@ -34,7 +34,7 @@ const ChoiceField = (props: Props) => {
     }
 
     const clearError = () => {
-        dispatch(CLEAR_CHANGE_FIELD_NAME_ERROR(catalogueAndFieldId))
+        dispatch(CLEAR_FIELD_ERROR(catalogueAndFieldId))
     }
 
     const fieldClass = cx(
@@ -51,7 +51,7 @@ const ChoiceField = (props: Props) => {
         }
     )
 
-    const error = field.changeNameError
+    const error = field.fieldError
 
     if (field.fetchingChoices) {
         return null

@@ -4,9 +4,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Redux
-import {
-    CLEAR_CHANGE_FIELD_NAME_ERROR, TOGGLE_FIELD_EDIT
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, } from 'store/selectors'
 //Types
@@ -36,10 +34,10 @@ const TextField = (props: Props) => {
     }
 
     const clearError = () => {
-        dispatch(CLEAR_CHANGE_FIELD_NAME_ERROR(catalogueAndFieldId))
+        dispatch(CLEAR_FIELD_ERROR(catalogueAndFieldId))
     }
 
-    const error = field.changeNameError
+    const error = field.fieldError
 
     const fieldClass = cx(
         'field',

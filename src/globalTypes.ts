@@ -205,13 +205,10 @@ export interface DeserializedChoiceField {
     choices: DeserializedChoice[],
     fetchingChoices: boolean,
     postingChoice: boolean,
-    addChoiceError: ErrorMessage,
+    fieldError: ErrorMessage,
     removingChoice: boolean,
-    removeChoiceError: ErrorMessage,
     changingName: boolean,
-    changeNameError: ErrorMessage,
     isDeleting: boolean,
-    deleteFieldError: ErrorMessage
     isEditing: boolean,
     isSubmitting: boolean,
 }
@@ -224,9 +221,8 @@ export interface DeserializedTextField {
     filterName: string,
     position: number,
     changingName: boolean,
-    changeNameError: ErrorMessage,
+    fieldError: ErrorMessage,
     isDeleting: boolean,
-    deleteFieldError: ErrorMessage
     isEditing: boolean,
     isSubmitting: boolean,
 }

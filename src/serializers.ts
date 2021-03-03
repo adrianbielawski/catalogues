@@ -105,15 +105,11 @@ export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
     filterName: field.filter_name,
     position: field.position,
     changingName: false,
-    changeNameError: {
+    fieldError: {
         title: '',
         message: '',
     },
     isDeleting: false,
-    deleteFieldError: {
-        title: '',
-        message: '',
-    },
     isEditing: false,
     isSubmitting: false,
 })
@@ -128,25 +124,13 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     choices: field.choices ? choicesDeserializer(field.choices) : [],
     fetchingChoices: false,
     postingChoice: false,
-    addChoiceError: {
+    fieldError: {
         title: '',
         message: '',
     },
     removingChoice: false,
-    removeChoiceError: {
-        title: '',
-        message: '',
-    },
     changingName: false,
-    changeNameError: {
-        title: '',
-        message: '',
-    },
     isDeleting: false,
-    deleteFieldError: {
-        title: '',
-        message: '',
-    },
     isEditing: false,
     isSubmitting: false,
 })
