@@ -66,14 +66,17 @@ export const changeCatalogueNameReducers = {
     CHANGE_CATALOGUE_NAME_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isSubmittingCatalogueName = false
-        catalogue.changeNameError = {
+        catalogue.catalogueError = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
         }
     },
-    CLEAR_NAME_CHANGE_ERROR(state: State, action: PayloadAction<number>) {
+}
+
+export const catalogueReducer = {
+    CLEAR_CATALOGUE_ERROR(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
-        catalogue.changeNameError = {
+        catalogue.catalogueError = {
             title: '',
             message: '',
         }

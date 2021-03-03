@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './catalogueTitle.scss'
 //Redux
 import {
-    CHANGE_CATALOGUE_NAME, CLEAR_NAME_CHANGE_ERROR, TOGGLE_CATALOGUE_NAME_EDIT
+    CHANGE_CATALOGUE_NAME, CLEAR_CATALOGUE_ERROR, TOGGLE_CATALOGUE_NAME_EDIT
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
@@ -50,10 +50,10 @@ const CatalogueTitle = (props: Props) => {
     )
 
     const clearError = () => {
-        dispatch(CLEAR_NAME_CHANGE_ERROR(catalogue.id))
+        dispatch(CLEAR_CATALOGUE_ERROR(catalogue.id))
     }
     
-    const error = catalogue.changeNameError
+    const error = catalogue.catalogueError
 
     return (
         <div className={styles.catalogueTitle}>

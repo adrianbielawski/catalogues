@@ -36,7 +36,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     fetchingFieldsChoices: true,
     isEditingCatalogueName: false,
     isSubmittingCatalogueName: false,
-    changeNameError: {
+    catalogueError: {
         title: '',
         message: '',
     },
