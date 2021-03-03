@@ -3,23 +3,29 @@ import styles from './editChoiceField.scss'
 //Types
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
-import { CHANGE_FIELD_NAME } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { useTypedSelector } from 'store/storeConfig'
+import {
+    CHANGE_FIELD_NAME, DELETE_CATALOGUE_FIELD
+} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldsSelector } from 'store/selectors'
 //Custom hooks
 import { useDebouncedDispatch } from 'src/customHooks'
 //Custom components
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
+import Button from 'components/global-components/button/button'
+import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
 
 type Props = {
     field: DeserializedChoiceField,
 }
 
 const EditChoiceField = (props: Props) => {
+    const dispatch = useAppDispatch()
     const fields = useTypedSelector(fieldsSelector(props.field.catalogueId))
     const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
     const [inputError, setInputError] = useState('')
+    const [message, setMessage] = useState({ title: '', value: '' })
 
     const catalogueAndFieldId = {
         fieldId: props.field.id,
@@ -49,6 +55,24 @@ const EditChoiceField = (props: Props) => {
         validateInput,
     )
 
+    const handleDeleteField = () => {
+        setMessage({
+            title: 'Confirm delete',
+            value: `Are you sure you want to delete ${field.name} field?`,
+        })
+    }
+
+    const deleteField = () => {
+        dispatch(DELETE_CATALOGUE_FIELD(catalogueAndFieldId))
+    }
+
+    const clearMessage = () => {
+        setMessage({
+            title: '',
+            value: '',
+        })
+    }
+
     return (
         <div className={styles.wrapper}>
             <Input
@@ -61,6 +85,20 @@ const EditChoiceField = (props: Props) => {
             <Choices
                 field={field}
                 className={styles.choices}
+            />
+            <Button
+                className={styles.deleteButton}
+                disabled={field.isDeleting}
+                onClick={handleDeleteField}
+            >
+                Delete field
+            </Button>
+            <ConfirmMessageModal
+                show={message.value.length !== 0}
+                title={message.title}
+                message={message.value}
+                onConfirm={deleteField}
+                onCancel={clearMessage}
             />
         </div>
     )

@@ -9,4 +9,11 @@
     .choices {
         margin: 10px 0 0 0;
     }
+    .deleteButton {
+        margin: 5px 0;
+        &:hover {
+            background: $red;
+            color: #000;
+        }
+    }
 }
