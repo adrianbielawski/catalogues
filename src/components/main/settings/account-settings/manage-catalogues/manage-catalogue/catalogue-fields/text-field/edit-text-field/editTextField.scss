@@ -1,0 +1,17 @@
+@import "global-styles/variables_and_mixins";
+
+.wrapper {
+    .nameInput {
+        border: none;
+        font-size: 18px;
+        margin-left: 3px;
+        max-width: 250px;
+    }
+    .deleteButton {
+        margin: 5px 0;
+        &:hover {
+            background: $red;
+            color: #000;
+        }
+    }
+}
