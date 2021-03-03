@@ -109,6 +109,11 @@ export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
         title: '',
         message: '',
     },
+    isDeleting: false,
+    deleteFieldError: {
+        title: '',
+        message: '',
+    },
     isEditing: false,
     isSubmitting: false,
 })
@@ -134,6 +139,11 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     },
     changingName: false,
     changeNameError: {
+        title: '',
+        message: '',
+    },
+    isDeleting: false,
+    deleteFieldError: {
         title: '',
         message: '',
     },

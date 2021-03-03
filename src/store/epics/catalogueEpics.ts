@@ -109,6 +109,23 @@ export const removeChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
+export const deleteCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.DELETE_CATALOGUE_FIELD.match),
+    mergeMap(action => concat(
+        of(actions.DELETE_CATALOGUE_FIELD_START({
+            catalogueId: action.payload.catalogueId,
+            fieldId: action.payload.fieldId,
+        })),
+        defer(() => axiosInstance$.delete(`/fields/${action.payload.fieldId}/`)).pipe(
+            map(() => actions.DELETE_CATALOGUE_FIELD_SUCCESS(action.payload.catalogueId)),
+            catchError(() => of(actions.DELETE_CATALOGUE_FIELD_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
+    ))
+)
+
 export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CREATE_CATALOGUE_FIELD.match),
     switchMap(action => concat(
@@ -153,6 +170,7 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
 export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELDS.match)),
     action$.pipe(filter(actions.CREATE_CATALOGUE_FIELD_SUCCESS.match)),
+    action$.pipe(filter(actions.DELETE_CATALOGUE_FIELD_SUCCESS.match)),
 ).pipe(
     map(action => actions.FETCH_CATALOGUE_FIELDS(action.payload))
 )
@@ -268,6 +286,7 @@ export const cataloguesEpics = combineEpics(
     changeCatalogueNameEpic,
     postChoiceEpic,
     removeChoiceEpic,
+    deleteCatalogueFieldEpic,
     changeFieldNameEpic,
     createCatalogueFieldEpic,
     refreshCatalogueEpic,

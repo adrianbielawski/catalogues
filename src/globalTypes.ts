@@ -210,6 +210,8 @@ export interface DeserializedChoiceField {
     removeChoiceError: ErrorMessage,
     changingName: boolean,
     changeNameError: ErrorMessage,
+    isDeleting: boolean,
+    deleteFieldError: ErrorMessage
     isEditing: boolean,
     isSubmitting: boolean,
 }
@@ -223,6 +225,8 @@ export interface DeserializedTextField {
     position: number,
     changingName: boolean,
     changeNameError: ErrorMessage,
+    isDeleting: boolean,
+    deleteFieldError: ErrorMessage
     isEditing: boolean,
     isSubmitting: boolean,
 }

@@ -1,8 +1,8 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { DeserializedChoiceField, ErrorMessage } from 'src/globalTypes'
+import { DeserializedChoiceField } from 'src/globalTypes'
 import * as T from '../cataloguesTypes'
 import { choiceDeserializer, choicesDeserializer, fieldDeserializer, fieldsDeserializer } from 'src/serializers'
-import { getCatalogueById, getChoiceById, getFieldById } from '../cataloguesSlectors'
+import { getCatalogueById, getFieldById } from '../cataloguesSlectors'
 
 type State = T.CataloguesState
 
@@ -182,7 +182,31 @@ export const removeChoiceReducers = {
 
 export const editFieldReducers = {
     TOGGLE_FIELD_EDIT(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
-        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId) as DeserializedChoiceField
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.isEditing = !field.isEditing
+    },
+}
+
+export const deleteFieldReducers = {
+    DELETE_CATALOGUE_FIELD(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
+    DELETE_CATALOGUE_FIELD_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.isDeleting = !field.isDeleting
+    },
+    DELETE_CATALOGUE_FIELD_SUCCESS(state: State, action: PayloadAction<number>) {},
+    DELETE_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.isDeleting = false
+        field.deleteFieldError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+    CLEAR_DELETE_CATALOGUE_FIELD_ERROR(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
+        field.deleteFieldError = {
+            title: '',
+            message: '',
+        }
     },
 }
