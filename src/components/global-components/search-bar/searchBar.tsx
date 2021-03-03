@@ -18,7 +18,7 @@ const SearchBar = (props: Props) => {
         props.onSearch(e.target.value)
     }
     return (
-        <div className={styles.serchBar}>
+        <div className={styles.searchBar}>
             <TransparentButton
                 className={styles.sortButton}
                 onClick={props.onSort}
