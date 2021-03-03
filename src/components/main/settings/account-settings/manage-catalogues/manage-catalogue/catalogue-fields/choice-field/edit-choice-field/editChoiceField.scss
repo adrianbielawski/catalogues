@@ -1,0 +1,12 @@
+@import "global-styles/variables_and_mixins";
+
+.wrapper {
+    .nameInput {
+        border: none;
+        font-size: 18px;
+        margin-left: 3px;
+    }
+    .choices {
+        margin: 10px 0 0 0;
+    }
+}
