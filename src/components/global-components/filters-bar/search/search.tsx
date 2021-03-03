@@ -1,43 +1,48 @@
-import React, { useContext } from 'react'
-import classNames from 'classnames/bind'
+import React, { useContext, useRef } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import styles from './search.scss'
+//Custom hooks and utils
+import { useDebouncedCallback } from 'src/customHooks'
+import { mergeRefs } from 'src/utils'
 //Contexts
 import { SearchContext } from './searchStore'
 //Custom components
-import SearchInput from 'components/global-components/search-input/searchInput'
+import Input from 'components/global-components/input/input'
+import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
-type Props = {
-    className?: string,
-}
-
-const cx = classNames.bind(styles)
-
-const Search = (props: Props) => {
+const Search = () => {
     const { search, setSearchValue } = useContext(SearchContext)
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const inputDebounceRef = useDebouncedCallback(
+        value => handleChange(value)
+    )
     
-    const handleSearch = (input: string) => {
-        setSearchValue(input)
+    const handleChange = (value: string) => {
+        setSearchValue(value)
     }
 
     const handleClear = () => {
+        inputRef.current!.value = ''
         setSearchValue('')
     }
 
-    const searchClass = cx(
-        'search',
-        props.className,
-    )
-
     return (
-        <SearchInput
-            className={searchClass}
-            value={search}
-            placeholder="search catalogue"
-            minLength={1}
-            maxLength={50}
-            onSearch={handleSearch}
-            onClear={handleClear}
-        />
+        <div className={styles.searchInput}>
+            <Input
+                defaultValue={search}
+                placeholder="search catalogue"
+                ref={mergeRefs([inputDebounceRef, inputRef])}
+            />
+            <TransparentButton
+                className={styles.clearButton}
+                disabled={search.length <= 0}
+                onClick={handleClear}
+            >
+                <FontAwesomeIcon icon={faTimes} className={styles.plus} />
+            </TransparentButton>
+        </div>
     )
 }
 
