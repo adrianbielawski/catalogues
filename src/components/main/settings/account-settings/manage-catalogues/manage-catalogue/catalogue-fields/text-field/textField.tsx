@@ -42,7 +42,6 @@ const TextField = (props: Props) => {
             message = 'Minimum 1 characters'
         }
         if (fields.find(f => f.name.toLowerCase() === input.toLowerCase() && f.id !== field.id)) {
-            console.log(field.name)
             message = `Field with name "${input}" already exists`
         }
 

@@ -143,7 +143,7 @@ export const deleteItemEpic = (action$: Observable<Action>) => action$.pipe(
     switchMap(action => concat(
         of(actions.DELETE_ITEM_START(action.payload)),
         defer(() => axiosInstance$.delete(`/items/${action.payload}/`)).pipe(
-            map(() =>actions.DELETE_ITEM_SUCCESS(action.payload)),
+            map(() => actions.DELETE_ITEM_SUCCESS(action.payload)),
             catchError(() => of(actions.DELETE_ITEM_FAILURE(action.payload)))
         )
     ))
