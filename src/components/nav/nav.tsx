@@ -90,32 +90,25 @@ const Nav = (props: Props) => {
     }
 
     const toggleActive = () => {
-        if (showList.show) {
-            setShowList({ show: false, index: null })
-        }
+        setShowList({ show: false, index: null })
         setActive(!active)
     }
 
     const handleListClick = (index: number) => {
-        if (showList.show === false) {
+        if (!showList.show) {
             setShowList({ show: true, index })
-        } else {
-            setShowList({ show: false, index: null })
+            setActive(!active)
         }
     }
 
     const handleListHover = (index: number) => {
-        if (showList.show === false) {
-            return
-        } else {
+        if (showList.show) {
             setShowList({ show: true, index })
         }
     }
 
     const handleLinkHover = () => {
-        if (showList.show === false) {
-            return
-        } else {
+        if (showList.show) {
             setShowList({ show: true, index: null })
         }
     }
@@ -127,7 +120,6 @@ const Nav = (props: Props) => {
                     <NavLink
                         item={item}
                         onHover={handleLinkHover}
-                        onClick={toggleActive}
                         key={index}
                     />
                 )
@@ -140,7 +132,6 @@ const Nav = (props: Props) => {
                         index={index}
                         show={showList.show === true && showList.index === index}
                         onClick={handleListClick}
-                        onLinkClick={toggleActive}
                         onHover={handleListHover}
                         key={index}
                     />
