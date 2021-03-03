@@ -94,7 +94,7 @@ const FieldForm = (props: Props) => {
     const validateForm = () => {
         let error = null
 
-        if (fieldName.length < 2) {
+        if (fieldName.length < 1) {
             error = 'Please add field name'
         }
 
