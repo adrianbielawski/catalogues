@@ -38,7 +38,7 @@ const NavLink = (props: Props) => {
   const navLinkClass = cx(
       'navItem',
       {
-        active: location.pathname === props.item.url,
+        active: location.pathname.startsWith(props.item.url),
       }
   )
 
