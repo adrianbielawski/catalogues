@@ -6,7 +6,7 @@ import styles from './settings.scss'
 import { LocationState } from 'src/globalTypes'
 import { NavItemType } from 'components/nav/nav'
 //Contexts
-import SideMenuContextProvider from '../side-menu/sideMenuContextProvider'
+import SideMenuContextProvider from 'components/global-components/side-menu/sideMenuContextProvider'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
@@ -14,7 +14,7 @@ import Nav from 'components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
-import SideMenuButton from '../side-menu/side-menu-button/sideMenuButton'
+import SideMenuButton from 'components/global-components/side-menu/side-menu-button/sideMenuButton'
 
 const sideMenuContextValue = {
     active: false,

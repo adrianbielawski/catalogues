@@ -7,7 +7,7 @@ import { LocationState } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
-import SideMenu from 'components/main/side-menu/sideMenu'
+import SideMenu from 'components/global-components/side-menu/sideMenu'
 import Loader from 'components/global-components/loader/loader'
 import MyAccount from './my-account/myAccount'
 import ManageCatalogues from './manage-catalogues/manageCatalogues'
