@@ -10,7 +10,7 @@
         box-sizing: border-box;
         outline: none;
         box-shadow: inset 0 100px #fff;
-        border-bottom: 1px solid $midLightGrey;
+        border: none;
         color: $darkGrey;
         &:invalid {
             color: $red;

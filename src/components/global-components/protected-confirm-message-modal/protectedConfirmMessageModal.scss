@@ -1,3 +1,5 @@
+@import "global-styles/variables_and_mixins";
+
 .modal {
     display: flex;
     justify-content: center;
@@ -23,6 +25,9 @@
             span {
                 font-weight: 700;
             }
+        }
+        input {
+            border-bottom: 1px solid $midLightGrey;
         }
         .buttons {
             display: flex;
