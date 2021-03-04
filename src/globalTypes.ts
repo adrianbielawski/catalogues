@@ -94,6 +94,7 @@ export interface DeserializedCatalogue {
     catalogueError: ErrorMessage,
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
+    deletingCatalogue: boolean,
     isInitialized: boolean,
 }
 

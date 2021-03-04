@@ -59,6 +59,17 @@ export const changeDefaultCatalogueEpic = (action$: Observable<Action>) => actio
     ))
 )
 
+export const deleteCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.DELETE_CATALOGUE.match),
+    mergeMap(action => concat(
+        of(actions.DELETE_CATALOGUE_START(action.payload)),
+        defer(() => axiosInstance$.delete(`/catalogues/${action.payload}/`)).pipe(
+            map(() => actions.DELETE_CATALOGUE_SUCCESS(action.payload)),
+            catchError(() => of(actions.DELETE_CATALOGUE_FAILURE(action.payload)))
+        )
+    ))
+)
+
 export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.POST_CHOICE.match),
     mergeMap(action => concat(
@@ -303,6 +314,7 @@ export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
     changeDefaultCatalogueEpic,
+    deleteCatalogueEpic,
     postChoiceEpic,
     removeChoiceEpic,
     deleteCatalogueFieldEpic,

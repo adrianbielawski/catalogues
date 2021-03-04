@@ -104,3 +104,23 @@ export const changeDefaultCatalogueReducers = {
         }
     },
 }
+
+export const deleteCatalogueReducers = {
+    DELETE_CATALOGUE(state: State, action: PayloadAction<number>) { },
+    DELETE_CATALOGUE_START(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.deletingCatalogue = true
+    },
+    DELETE_CATALOGUE_SUCCESS(state: State, action: PayloadAction<number>) {
+        const catalogueIndex = state.catalogues.findIndex(c => c.id === action.payload)
+        state.catalogues.splice(catalogueIndex, 1)
+    },
+    DELETE_CATALOGUE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.deletingCatalogue = false
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
