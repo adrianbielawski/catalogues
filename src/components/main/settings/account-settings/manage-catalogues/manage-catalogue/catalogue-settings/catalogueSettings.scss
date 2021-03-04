@@ -1,0 +1,11 @@
+@import "global-styles/variables_and_mixins";
+
+.catalogueSettings {
+    .deleteCatalogueButton {
+        margin: 20px 5px 10px 5px;
+        &:hover {
+            background: $red;
+            color: #000;
+        }
+    }
+}
