@@ -8,7 +8,7 @@ import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/catalogues
 //Custom components
 import TextField from '../catalogue-fields/text-field/textField'
 import ChoiceField from '../catalogue-fields/choice-field/choiceField'
-import AddField from '../add-field/addField'
+import AddField from './add-field/addField'
 import CatalogueSettingsCategory from '../catalogueSettingsCategory/catalogueSettingsCategory'
 
 type Props = {
