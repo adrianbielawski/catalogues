@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
+import { clamp } from 'lodash'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
@@ -33,6 +34,17 @@ const Catalogues = () => {
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
+    const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
+
+    useEffect(() => {
+        if (fetchingCatalogues || firstRender) {
+            return
+        }
+
+        const defaultCatalogueIndex = catalogues.findIndex(c => c.default === true)
+        
+        setDefaultCatalogue(clamp(defaultCatalogueIndex, 0, catalogues.length - 1))
+    }, [fetchingCatalogues])
 
     useEffect(() => {
         dispatch(FETCH_CATALOGUES())
@@ -112,39 +124,42 @@ const Catalogues = () => {
             filtersBarValue={filtersBarValue}
             onChange={() => { }}
         >
-            {fetchingCatalogues || firstRender ? <Loader className={styles.loader} /> :
-                <div
-                    className={styles.catalogues}
-                    style={{ minHeight: `${minHeight}px` }}
-                    ref={cataloguesRef}
-                >
-                    <Nav
-                        content={NAV_CONTENT}
-                        extraItems={extraNavItems}
-                        className={styles.nav}
-                    />
-                    {catalogues.length === 0
-                        ? getNoCatalogueMessage()
-                        : (
-                            <Suspense fallback={<Loader />}>
-                                <Switch>
-                                    <Redirect
-                                        exact
-                                        from="/:userId/catalogues"
-                                        to={{
-                                            pathname: `/:userId/catalogues/${catalogues[0].slug}`,
-                                            state: location.state,
-                                        }}
-                                    />
-                                    <RouteWithContext
-                                        path="/:userId/catalogues/:slug"
-                                        component={Catalogue}
-                                    />
-                                </Switch>
-                            </Suspense>
-                        )
-                    }
-                </div>
+            {fetchingCatalogues || firstRender || defaultCatalogue === null
+                ? <Loader className={styles.loader} />
+                : (
+                    <div
+                        className={styles.catalogues}
+                        style={{ minHeight: `${minHeight}px` }}
+                        ref={cataloguesRef}
+                    >
+                        <Nav
+                            content={NAV_CONTENT}
+                            extraItems={extraNavItems}
+                            className={styles.nav}
+                        />
+                        {catalogues.length === 0
+                            ? getNoCatalogueMessage()
+                            : (
+                                <Suspense fallback={<Loader />}>
+                                    <Switch>
+                                        <Redirect
+                                            exact
+                                            from="/:userId/catalogues"
+                                            to={{
+                                                pathname: `/:userId/catalogues/${catalogues[defaultCatalogue].slug}`,
+                                                state: location.state,
+                                            }}
+                                        />
+                                        <RouteWithContext
+                                            path="/:userId/catalogues/:slug"
+                                            component={Catalogue}
+                                        />
+                                    </Switch>
+                                </Suspense>
+                            )
+                        }
+                    </div>
+                )
             }
         </FiltersBarBulkContextProvider>
     )
