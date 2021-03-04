@@ -8,6 +8,7 @@ import { catalogueSelector } from 'store/selectors'
 //Custom components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
 import CatalogueFields from './catalogue-fields/catalogueFields'
+import CatalogueSettings from './catalogue-settings/catalogueSettings'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -23,11 +24,11 @@ const ManageCatalogue = (props: Props) => {
                 name={props.catalogue.name}
             />
             <div className={styles.content}>
-                <CatalogueFields
-                    catalogue={catalogue}
-                />
+                <CatalogueSettings catalogue={catalogue} />
+                <CatalogueFields catalogue={catalogue} />
             </div>
         </div>
     )
 }
+
 export default ManageCatalogue
