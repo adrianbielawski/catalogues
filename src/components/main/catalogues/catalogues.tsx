@@ -4,7 +4,7 @@ import { clamp } from 'lodash'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-import { NavItemType } from 'components/nav/nav'
+import { NavItemType } from 'components/global-components/nav/nav'
 //Context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filtersBarBulkContextProvider'
 //Redux
@@ -17,7 +17,7 @@ import { useFirstRender } from 'src/customHooks'
 //Filter bar utils
 import { searchValue, sortValue, filtersValue, filtersBarValue } from './filter-bar-utils/contextInitialValues'
 //Custom components
-import Nav from 'components/nav/nav'
+import Nav from 'components/global-components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'

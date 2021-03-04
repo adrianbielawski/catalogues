@@ -4,13 +4,13 @@ import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-import { NavItemType } from 'components/nav/nav'
+import { NavItemType } from 'components/global-components/nav/nav'
 //Contexts
 import SideMenuContextProvider from 'components/global-components/side-menu/sideMenuContextProvider'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
-import Nav from 'components/nav/nav'
+import Nav from 'components/global-components/nav/nav'
 import Logout from 'components/auth/logout/logout'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
