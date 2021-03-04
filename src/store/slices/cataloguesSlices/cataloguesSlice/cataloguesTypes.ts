@@ -105,3 +105,8 @@ export interface ChangeFieldNameSuccessPayload {
     fieldId: number,
     field: Field,
 }
+
+export interface ChangeDefaultCataloguePayload {
+    catalogueId: number,
+    default: boolean,
+}

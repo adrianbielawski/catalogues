@@ -7,7 +7,7 @@ import { getCatalogueById } from '../cataloguesSlectors'
 type State = T.CataloguesState
 
 export const createCatalogueReducers = {
-    CREATE_CATALOGUE(state: State) {},
+    CREATE_CATALOGUE(state: State) { },
     CREATE_CATALOGUE_START(state: State) {
         state.creatingNewCatalogue = true
     },
@@ -21,8 +21,8 @@ export const createCatalogueReducers = {
 }
 
 export const refreshCatalogueReducers = {
-    REFRESH_CATALOGUE(state: State, action: PayloadAction<number>) {},
-    REFRESH_CATALOGUE_START(state: State) {},
+    REFRESH_CATALOGUE(state: State, action: PayloadAction<number>) { },
+    REFRESH_CATALOGUE_START(state: State) { },
     REFRESH_CATALOGUE_SUCCESS(state: State, action: PayloadAction<Catalogue>) {
         const refreshedCatalogue = catalogueDeserializer(action.payload)
         const catalogue = getCatalogueById(state, action.payload.id)
@@ -30,11 +30,11 @@ export const refreshCatalogueReducers = {
         catalogue.name = refreshedCatalogue.name
         catalogue.slug = refreshedCatalogue.slug
     },
-    REFRESH_CATALOGUE_FAILURE(state: State) {},
+    REFRESH_CATALOGUE_FAILURE(state: State) { },
 }
 
 export const fetchCataloguesReducers = {
-    FETCH_CATALOGUES(state: State) {},
+    FETCH_CATALOGUES(state: State) { },
     FETCH_CATALOGUES_START(state: State) {
         state.fetchingCatalogues = true
     },
@@ -48,7 +48,7 @@ export const fetchCataloguesReducers = {
 }
 
 export const changeCatalogueNameReducers = {
-    CHANGE_CATALOGUE_NAME(state: State, action: PayloadAction<T.ChangeCatalogueNamePayload>) {},
+    CHANGE_CATALOGUE_NAME(state: State, action: PayloadAction<T.ChangeCatalogueNamePayload>) { },
     TOGGLE_CATALOGUE_NAME_EDIT(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isEditingCatalogueName = !catalogue.isEditingCatalogueName
@@ -79,6 +79,28 @@ export const catalogueReducer = {
         catalogue.catalogueError = {
             title: '',
             message: '',
+        }
+    },
+}
+
+export const changeDefaultCatalogueReducers = {
+    CHANGE_DEFAULT_CATALOGUE(state: State, action: PayloadAction<T.ChangeDefaultCataloguePayload>) { },
+    CHANGE_DEFAULT_CATALOGUE_START(state: State) { },
+    CHANGE_DEFAULT_CATALOGUE_SUCCESS(state: State, action: PayloadAction<T.ChangeDefaultCataloguePayload>) {
+        const catalogue = getCatalogueById(state, action.payload.catalogueId)
+        if (action.payload.default) {
+            const prevDefaultCatalogue = state.catalogues.find(c => c.default === true)
+            if (prevDefaultCatalogue) {
+                prevDefaultCatalogue.default = false
+            }
+        }
+        catalogue.default = action.payload.default
+    },
+    CHANGE_DEFAULT_CATALOGUE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
         }
     },
 }

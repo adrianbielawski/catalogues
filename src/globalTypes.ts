@@ -73,6 +73,7 @@ export interface DeserializedItemsRanges {
 export interface Catalogue {
     id: number,
     created_by: number,
+    default: boolean,
     name: string,
     slug: string,
     items_ranges: ItemsRanges
@@ -81,6 +82,7 @@ export interface Catalogue {
 export interface DeserializedCatalogue {
     id: number,
     createdBy: number,
+    default: boolean,
     name: string,
     slug: string,
     itemsRanges: DeserializedItemsRanges,

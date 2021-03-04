@@ -28,6 +28,7 @@ export const itemsRangeDeserializer = (itemsRanges: ItemsRanges): DeserializedIt
 export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalogue => ({
     id: catalogue.id,
     createdBy: catalogue.created_by,
+    default: catalogue.default,
     name: catalogue.name,
     slug: catalogue.slug,
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),

@@ -41,6 +41,24 @@ export const changeCatalogueNameEpic = (action$: Observable<Action>) => action$.
     ))
 )
 
+export const changeDefaultCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_DEFAULT_CATALOGUE.match),
+    switchMap(action => concat(
+        of(actions.CHANGE_DEFAULT_CATALOGUE_START()),
+        defer(() => axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
+            default: action.payload.default,
+        })).pipe(
+            map(response => actions.CHANGE_DEFAULT_CATALOGUE_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                default: action.payload.default,
+            })),
+            catchError(() => of(actions.CHANGE_DEFAULT_CATALOGUE_FAILURE(
+                action.payload.catalogueId,
+            )))
+        )
+    ))
+)
+
 export const postChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.POST_CHOICE.match),
     mergeMap(action => concat(
@@ -284,6 +302,7 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => merge(
 export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
+    changeDefaultCatalogueEpic,
     postChoiceEpic,
     removeChoiceEpic,
     deleteCatalogueFieldEpic,
