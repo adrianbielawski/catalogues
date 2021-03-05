@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './editItemFields.scss'
+import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
 import { DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
 //Redux
@@ -10,6 +10,7 @@ import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
 import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
+import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 
 type Props = {
     item: DeserializedItem,
@@ -18,7 +19,6 @@ type Props = {
 const EditItemFields = (props: Props) => {
     const catalogueFields = useTypedSelector(fieldsSelector(props.item.catalogueId))
     const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.id))
-    const isNewItem = props.item.id.toString().startsWith('newItem')
 
     const fields = catalogueFields.map(field => {
         const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]
@@ -68,16 +68,14 @@ const EditItemFields = (props: Props) => {
     })
 
     return (
-        <ul className={styles.fields}>
-            <li key={`itemId${props.item.id}`}>
-                {!isNewItem &&
-                    <p className={styles.itemId}>
-                        Item id: {props.item.id}
-                    </p>
-                }
-            </li>
-            {fields}
-        </ul>
+        <IconWithTitle
+            title={'Item fields'}
+            icon={faListAlt}
+        >
+            <ul>
+                {fields}
+            </ul>
+        </IconWithTitle>
     )
 }
 

@@ -111,6 +111,11 @@ const EditItem = (props: Props) => {
                 className={styles.addImageButton}
                 onConfirm={handleAddImage}
             />
+            {!isNewItem &&
+                <p className={styles.itemId}>
+                    Item id: {props.item.id}
+                </p>
+            }
             <EditItemFields item={props.item} />
             <div className={styles.buttons}>
                 <div>
@@ -119,13 +124,13 @@ const EditItem = (props: Props) => {
                         loading={delayCompleated}
                         onClick={props.onEditConfirm}
                     >
-                        Save
+                        Save changes
                     </Button>
                     <Button
                         disabled={item.isSubmitting}
                         onClick={props.onCancel}
                     >
-                        Cancel
+                        Cancel changes
                     </Button>
                 </div>
                 {!isNewItem && (
