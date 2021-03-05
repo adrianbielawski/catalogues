@@ -179,3 +179,12 @@ export const deleteItem = {
         item.isDeleting = false
     },
 }
+
+export const itemsData = {
+    CLEAR_ITEMS_DATA_ERROR(state: State, action: PayloadAction<number>) {
+        state.itemsDataError = {
+            title: '',
+            message: '',
+        }
+    },
+}
