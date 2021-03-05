@@ -7,12 +7,12 @@ import { DeserializedCatalogue } from 'src/globalTypes'
 import { useAppDispatch } from 'store/storeConfig'
 import { CHANGE_DEFAULT_CATALOGUE, DELETE_CATALOGUE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
-import CatalogueSettingsCategory from '../catalogueSettingsCategory/catalogueSettingsCategory'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import Button from 'components/global-components/button/button'
 import
     ProtectedConfirmMessageModal, { ProtectedMessage }
 from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
+import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -48,7 +48,7 @@ const CatalogueSettings = (props: Props) => {
 
     return (
         <div className={styles.catalogueSettings}>
-            <CatalogueSettingsCategory
+            <IconWithTitle
                 title={'Catalogue settings'}
                 icon={faCogs}
             >
@@ -67,7 +67,7 @@ const CatalogueSettings = (props: Props) => {
                         Delete catalogue
                     </Button>
                 </>
-            </CatalogueSettingsCategory>
+            </IconWithTitle>
             <ProtectedConfirmMessageModal
                 show={message !== null}
                 message={message}

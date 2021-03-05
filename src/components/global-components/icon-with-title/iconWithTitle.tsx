@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './catalogueSettingsCategory.scss'
+import styles from './iconWithTitle.scss'
 //Types
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 //Redux
@@ -14,7 +14,7 @@ type Props = {
 
 const cx = classNames.bind(styles)
 
-const CatalogueSettingsCategory = (props: Props) => {
+const IconWithTitle = (props: Props) => {
     const [active, setActive] = useState(false)
 
     const toggleShowContent = () => {
@@ -31,7 +31,7 @@ const CatalogueSettingsCategory = (props: Props) => {
     )
 
     return (
-        <div className={styles.catalogueSettingsCategory}>
+        <div className={styles.iconWithTitle}>
             <div
                 className={titleClass}
                 onClick={toggleShowContent}
@@ -49,4 +49,4 @@ const CatalogueSettingsCategory = (props: Props) => {
     )
 }
 
-export default CatalogueSettingsCategory
+export default IconWithTitle

@@ -9,7 +9,7 @@ import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/catalogues
 import TextField from '../catalogue-fields/text-field/textField'
 import ChoiceField from '../catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
-import CatalogueSettingsCategory from '../catalogueSettingsCategory/catalogueSettingsCategory'
+import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -48,7 +48,7 @@ const CatalogueFields = (props: Props) => {
     }
 
     return (
-        <CatalogueSettingsCategory
+        <IconWithTitle
             title={'Catalogue fields'}
             icon={faListAlt}
         >
@@ -56,7 +56,7 @@ const CatalogueFields = (props: Props) => {
                 {fields}
                 <AddField catalogueId={props.catalogue.id} />
             </>
-        </CatalogueSettingsCategory>
+        </IconWithTitle>
     )
 }
 
