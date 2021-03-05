@@ -15,7 +15,7 @@ export const fetchItemReducers = {
         const item = getItemById(state, action.payload.itemId)
         Object.assign(item, itemDeserializer(action.payload.data))
     },
-    FETCH_ITEM_FAILURE(state: State, action: PayloadAction<number | string>) {
+    FETCH_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = false
     },
@@ -66,7 +66,7 @@ export const addItemReducers = {
 }
 
 export const editItemReducers = {
-    TOGGLE_EDIT_ITEM(state: State, action: PayloadAction<number | string>) {
+    TOGGLE_EDIT_ITEM(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.isEditing = !item.isEditing
     },
@@ -130,12 +130,11 @@ export const itemImageReducers = {
 
 export const saveItem = {
     SAVE_ITEM(state: State, action: PayloadAction<DeserializedItem>) { },
-    SAVE_ITEM_START(state: State, action: PayloadAction<number | string>) {
+    SAVE_ITEM_START(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = true
     },
-    SAVE_ITEM_SUCCESS(state: State, action: PayloadAction<T.SaveItemSuccessPayload>) {},
-    SAVE_ITEM_FAILURE(state: State, action: PayloadAction<number | string>) {
+    SAVE_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = false
     },

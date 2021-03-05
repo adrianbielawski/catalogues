@@ -18,10 +18,10 @@ export const fieldsSelector = (catalogueId: number): Selector<RootState, Deseria
     return state => state.catalogues.catalogues.filter(c => c.id == catalogueId)[0].fields
 }
 
-export const itemSelector = (itemId: number | string): Selector<RootState, DeserializedItem> => {
+export const itemSelector = (itemId: number): Selector<RootState, DeserializedItem> => {
     return state => state.itemsData.results.filter(i => i.id == itemId)[0]
 }
 
-export const itemFieldsSelector = (itemId: number | string): Selector<RootState, DeserializedItemField[]> => {
+export const itemFieldsSelector = (itemId: number): Selector<RootState, DeserializedItemField[]> => {
     return state => state.itemsData.results.filter(i => i.id == itemId)[0].fieldsValues
 }

@@ -10,7 +10,7 @@ import TextareaWithConfirmButton from 'components/global-components/textarea-wit
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 
 interface Props {
-    itemId: number | string,
+    itemId: number,
     field: DeserializedField,
     fieldValue?: DeserializedItemField,
 }

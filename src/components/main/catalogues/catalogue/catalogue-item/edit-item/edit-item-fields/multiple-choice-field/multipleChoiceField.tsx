@@ -15,7 +15,7 @@ import SearchBar from 'components/global-components/search-bar/searchBar'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 
 interface Props {
-    itemId: number | string,
+    itemId: number,
     field: DeserializedChoiceField,
     fieldValue: DeserializedItemField,
 }

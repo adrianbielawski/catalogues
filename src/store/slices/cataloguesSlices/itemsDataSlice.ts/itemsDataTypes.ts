@@ -23,7 +23,7 @@ export interface FetchItemPayload {
 
 export interface FetchItemSuccessPayload {
     data: Item,
-    itemId: number | string,
+    itemId: number,
 }
 
 export interface Filter {
@@ -44,18 +44,18 @@ export interface FetchItemsSuccessPayload {
 }
 
 export interface ItemAndFieldIdPayload {
-    itemId: number | string,
+    itemId: number,
     fieldId: number,
     value: string | string[],
 }
 
 export interface AddImageToStatePayload {
-    itemId: number | string,
+    itemId: number,
     image: string,
 }
 
 export interface ImagePayload {
-    itemId: number | string,
+    itemId: number,
     index: number,
 }
 

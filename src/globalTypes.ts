@@ -152,7 +152,7 @@ export interface Item {
 }
 
 export interface DeserializedItem {
-    id: number | string,
+    id: number,
     createdBy: number | null,
     createdAt: string,
     modifiedAt: string,
@@ -177,7 +177,7 @@ export interface SerializedItemField {
 }
 
 export interface DeserializedItemField {
-    itemId: number | string,
+    itemId: number,
     fieldId: number,
     value: string | string[],
 }
@@ -243,7 +243,7 @@ export type Image = {
     image: string,
     image_thumbnail: string,
     is_primary: boolean,
-    item_id: number | string,
+    item_id: number,
 }
 
 export type SerializedImage = {
@@ -257,5 +257,5 @@ export type DeserializedImage = {
     image: string,
     imageThumbnail: string,
     isPrimary: boolean,
-    itemId: number | string,
+    itemId: number,
 }
