@@ -13,6 +13,12 @@ const cx = classNames.bind(styles)
 const SideBar = (props: Props) => {
     const screenWidth = window.innerWidth
 
+    const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (screenWidth <= 640) {
+            e.stopPropagation()
+        }
+    }
+
     const sideBarWrapperClass = cx(
         'sideBarWrapper',
         {
@@ -27,7 +33,7 @@ const SideBar = (props: Props) => {
 
     return (
         <div className={sideBarWrapperClass}>
-            <div className={sideBarClass}>
+            <div className={sideBarClass} onClick={stopPropagation}>
                 {props.children}
             </div>
             {screenWidth <= 640 &&
