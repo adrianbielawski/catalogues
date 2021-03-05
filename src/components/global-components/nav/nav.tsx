@@ -232,6 +232,12 @@ const Nav = (props: Props) => {
         )
     }
 
+    const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (screenWidth <= 640) {
+            e.stopPropagation()
+        }
+    }
+
     const extraItems = props.extraItems!.map((item, index) => {
         if (!item.inNavBarOnMobile) {
             return <li key={`extraItem${index}`}>{item.component}</li>
@@ -263,7 +269,7 @@ const Nav = (props: Props) => {
                     '--position': `${heightData.position}px`
                 } as React.CSSProperties}
             >
-                <div className={styles.contentWrapper}>
+                <div className={styles.contentWrapper} onClick={stopPropagation}>
                     <ul className={styles.navContent}>
                         {getItems()}
                     </ul>
