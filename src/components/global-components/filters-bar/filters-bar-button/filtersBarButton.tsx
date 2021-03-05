@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -16,7 +16,18 @@ const cx = classNames.bind(styles)
 const FiltersBarButton = (props: Props) => {
     const filtersBarContext = useFiltersBarContext()
 
-    const handleClick = () => {
+    useEffect(() => {
+        if (filtersBarContext.filtersBar.show) {
+            setTimeout(() => window.addEventListener('click', toggleFiltersBar), 1)
+        } else {
+            window.removeEventListener('click', toggleFiltersBar)
+        }
+        return () => {
+            window.removeEventListener('click', toggleFiltersBar)
+        }
+    }, [filtersBarContext.filtersBar])
+
+    const toggleFiltersBar = () => {
         filtersBarContext.filtersBar.toggleFiltersBar()
     }
 
@@ -26,7 +37,7 @@ const FiltersBarButton = (props: Props) => {
     )
 
     return (
-        <TransparentButton className={buttonClass} onClick={handleClick}>
+        <TransparentButton className={buttonClass} onClick={toggleFiltersBar}>
             <FontAwesomeIcon icon={faFilter} className={styles.leftArrow} />
         </TransparentButton>
     )
