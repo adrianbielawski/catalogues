@@ -167,12 +167,14 @@ const CatalogueItems = (props: Props) => {
         },
     )
 
+    const showAddItemButton = catalogue.itemsRanges.date.min && !itemsData.newItemId && !itemsData.creatingNewItem
+
     return (
         itemsData.fetchingItems && !itemsData.results.length
             ? <Loader className={styles.loader} />
             : (
                 <div className={itemsClass}>
-                    {catalogue.itemsRanges.date.min
+                    {showAddItemButton
                         ? getAddItemButton()
                         : getNoItemsMessage()
                     }
