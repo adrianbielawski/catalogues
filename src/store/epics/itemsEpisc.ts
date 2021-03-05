@@ -69,6 +69,22 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
+export const addItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+    filter(actions.ADD_ITEM.match),
+    switchMap(action => concat(
+        of(actions.ADD_ITEM_START()),
+        defer(() => axiosInstance$.post('/items/', {
+            catalogue_id: action.payload,
+        })).pipe(
+            retryWhen(err => retry$(err)),
+            map(response =>
+                actions.ADD_ITEM_SUCCESS(response.data)
+            ),
+            catchError(() => of(actions.ADD_ITEM_FAILURE()))
+        )
+    ))
+)
+
 export const saveItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
     filter(actions.SAVE_ITEM.match),
     switchMap(action => {
@@ -153,6 +169,7 @@ export const itemsEpics = combineEpics(
     refreshItemEpic,
     fetchItemEpic,
     fetchItemsEpic,
+    addItemEpic,
     saveItemEpic,
     deleteItemEpic,
 )

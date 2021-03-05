@@ -1,9 +1,11 @@
-import { DeserializedItem, Item, ListData } from "src/globalTypes";
+import { DeserializedItem, ErrorMessage, Item, ListData } from "src/globalTypes";
 
 export interface ItemsDataState {
     catalogueId: number | null,
     fetchingItems: boolean,
     creatingNewItem: boolean,
+    newItemId: number | null,
+    itemsDataError: ErrorMessage,
     count: number | null,
     pageSize: number | null,
     startIndex: number | null,
@@ -11,7 +13,7 @@ export interface ItemsDataState {
     current: number | null,
     next: number | null,
     previous: number | null,
-    results: DeserializedItem[]
+    results: DeserializedItem[],
 }
 
 export interface FetchItemPayload {

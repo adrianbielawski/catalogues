@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { mod } from 'src/utils'
 import { itemDeserializer, listDeserializer } from 'src/serializers'
-import { DeserializedItem } from 'src/globalTypes'
+import { DeserializedItem, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
 import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
 
@@ -33,6 +33,7 @@ export const fetchItemsReducers = {
         }
         const prevResults = list.current === 1 ? [] : state.results
         return {
+            ...state,
             ...list,
             results: prevResults.concat(list.results),
             catalogueId: action.payload.catalogueId,
@@ -45,7 +46,26 @@ export const fetchItemsReducers = {
     },
 }
 
-export const EditItemReducers = {
+export const addItemReducers = {
+    ADD_ITEM(state: State, action: PayloadAction<number>) {},
+    ADD_ITEM_START(state: State) {
+        state.creatingNewItem = true
+    },
+    ADD_ITEM_SUCCESS(state: State, action: PayloadAction<Item>) {
+        state.results.unshift(itemDeserializer(action.payload))
+        state.newItemId = action.payload.id
+        state.creatingNewItem = false
+    },
+    ADD_ITEM_FAILURE(state: State) {
+        state.creatingNewItem = false
+        state.itemsDataError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
+
+export const editItemReducers = {
     TOGGLE_EDIT_ITEM(state: State, action: PayloadAction<number | string>) {
         const item = getItemById(state, action.payload)
         item.isEditing = !item.isEditing

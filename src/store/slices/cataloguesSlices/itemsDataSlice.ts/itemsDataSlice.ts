@@ -1,12 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
-import * as T from './itemsDataTypes'
+import { ItemsDataState } from './itemsDataTypes'
 import * as itemReducers from './itemDataReducers'
 
-const initialState: T.ItemsDataState = {
+const initialState: ItemsDataState = {
     catalogueId: null,
     fetchingItems: false,
     creatingNewItem: false,
+    newItemId: null,
+    itemsDataError: {
+        title: '',
+        message: '',
+    },
     count: null,
     pageSize: null,
     startIndex: null,
@@ -23,7 +28,8 @@ export const itemsDataSlice = createSlice({
     reducers: {
         ...itemReducers.fetchItemReducers,
         ...itemReducers.fetchItemsReducers,
-        ...itemReducers.EditItemReducers,
+        ...itemReducers.addItemReducers,
+        ...itemReducers.editItemReducers,
         ...itemReducers.itemImageReducers,
         ...itemReducers.saveItem,
         ...itemReducers.deleteItem,
@@ -40,6 +46,7 @@ export const {
     REFRESH_ITEM, FETCH_ITEM, FETCH_ITEM_SUCCESS, FETCH_ITEM_START, FETCH_ITEM_FAILURE,
     FETCH_ITEMS, FETCH_ITEMS_START, FETCH_ITEMS_SUCCESS, FETCH_ITEMS_FAILURE,
     TOGGLE_EDIT_ITEM,
+    ADD_ITEM, ADD_ITEM_START, ADD_ITEM_SUCCESS, ADD_ITEM_FAILURE,
     ADD_ITEM_TO_STATE,
     REMOVE_ITEM_FROM_STATE,
     CHANGE_ITEM_FIELD_VALUE,

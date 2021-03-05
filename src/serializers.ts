@@ -51,6 +51,14 @@ export const itemsDataDeserializer = (
     data: ListData,
     itemDeserializer: ItemDeserializer
 ): DeserializedItemsData => ({
+    catalogueId: null,
+    fetchingItems: false,
+    creatingNewItem: false,
+    newItem: null,
+    itemsError: {
+        title: '',
+        message: '',
+    },
     count: data.count,
     pageSize: data.page_size,
     startIndex: data.start_index,
@@ -58,7 +66,7 @@ export const itemsDataDeserializer = (
     current: data.current,
     next: data.next,
     previous: data.previous,
-    results: data.results.map(itemDeserializer)
+    results: data.results.map(itemDeserializer),
 })
 
 export const listDeserializer = (

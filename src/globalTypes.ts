@@ -104,6 +104,11 @@ export interface ItemsData extends ListData {
 
 export interface DeserializedItemsData extends DeserializedListData {
     results: DeserializedItem[],
+    catalogueId: number | null,
+    fetchingItems: boolean,
+    creatingNewItem: boolean,
+    newItem: DeserializedItem | null,
+    itemsError: ErrorMessage,
 }
 
 export type ListDataResults = Item[]
