@@ -30,7 +30,6 @@ const EditItem = (props: Props) => {
     const delayCompleated = useDelay(item.isSubmitting)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
-    const isNewItem = item.id.toString().startsWith('newItem')
 
     useEffect(() => {
         if (editItemRef.current && props.show) {

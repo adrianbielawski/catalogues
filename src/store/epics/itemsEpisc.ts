@@ -21,25 +21,22 @@ export const refreshItemEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_ITEM.match)),
     action$.pipe(filter(actions.SAVE_ITEM_SUCCESS.match)),
 ).pipe(
-    map(action => actions.FETCH_ITEM({
-        itemId: action.payload.itemId,
-        prevId: action.payload.prevId
-    }))
+    map(action => actions.FETCH_ITEM(action.payload))
 )
 
 export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEM.match),
     mergeMap(action => concat(
-        of(actions.FETCH_ITEM_START(action.payload.itemId)),
-        defer(() => axiosInstance$.get(`/items/${action.payload.itemId}/`)).pipe(
+        of(actions.FETCH_ITEM_START(action.payload)),
+        defer(() => axiosInstance$.get(`/items/${action.payload}/`)).pipe(
             retryWhen(err => retry$(err)),
             map(response =>
                 actions.FETCH_ITEM_SUCCESS({
                     data: response.data,
-                    itemId: action.payload.prevId,
+                    itemId: action.payload,
                 })
             ),
-            catchError(() => of(actions.FETCH_ITEM_FAILURE(action.payload.prevId)))
+            catchError(() => of(actions.FETCH_ITEM_FAILURE(action.payload)))
         )
     ))
 )
@@ -91,18 +88,9 @@ export const saveItemEpic = (action$: Observable<Action>, state$: Observable<Roo
         const filteredValues = action.payload.fieldsValues.filter(v => v.value.length > 0)
         const values = filteredValues.map(itemFieldSerializer)
 
-        let request$
-
-        if (action.payload.id.toString().startsWith('newItem')) {
-            request$ = axiosInstance$.post('/items/', {
-                catalogue_id: action.payload.catalogueId,
+        const request$ = axiosInstance$.patch(`/items/${action.payload.id}/`, {
                 values,
             })
-        } else {
-            request$ = axiosInstance$.patch(`/items/${action.payload.id}/`, {
-                values,
-            })
-        }
 
         const imagesRequests$ = (itemId: number) => {
             const isNew = (img: DeserializedImage) => img.id.toString().startsWith('newImage')
@@ -142,10 +130,7 @@ export const saveItemEpic = (action$: Observable<Action>, state$: Observable<Roo
                         iif(() => getCatalogueById(state, action.payload.catalogueId).itemsRanges.date.min === null,
                             of(catalogueActions.REFRESH_CATALOGUE(action.payload.catalogueId))
                         ),
-                        of(actions.SAVE_ITEM_SUCCESS({
-                            itemId: response.data.id,
-                            prevId: action.payload.id,
-                        })),
+                        of(actions.SAVE_ITEM_SUCCESS(response.data.id)),
                     )),
                     catchError(() => of(actions.SAVE_ITEM_FAILURE(action.payload.id)))
                 ))

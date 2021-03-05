@@ -16,11 +16,6 @@ export interface ItemsDataState {
     results: DeserializedItem[],
 }
 
-export interface FetchItemPayload {
-    itemId: number,
-    prevId: number | string,
-}
-
 export interface FetchItemSuccessPayload {
     data: Item,
     itemId: number,
@@ -61,5 +56,4 @@ export interface ImagePayload {
 
 export interface SaveItemSuccessPayload {
     itemId: number,
-    prevId: number | string,
 }

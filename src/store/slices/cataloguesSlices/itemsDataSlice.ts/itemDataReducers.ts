@@ -8,8 +8,8 @@ import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsData
 type State = T.ItemsDataState
 
 export const fetchItemReducers = {
-    REFRESH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) { },
-    FETCH_ITEM(state: State, action: PayloadAction<T.FetchItemPayload>) { },
+    REFRESH_ITEM(state: State, action: PayloadAction<number>) { },
+    FETCH_ITEM(state: State, action: PayloadAction<number>) { },
     FETCH_ITEM_START(state: State, action: PayloadAction<number>) { },
     FETCH_ITEM_SUCCESS(state: State, action: PayloadAction<T.FetchItemSuccessPayload>) {
         const item = getItemById(state, action.payload.itemId)
@@ -134,6 +134,9 @@ export const saveItem = {
         const item = getItemById(state, action.payload)
         item.isSubmitting = true
     },
+    SAVE_ITEM_SUCCESS(state: State, action: PayloadAction<number>) {
+        state.newItemId = null
+    },
     SAVE_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.isSubmitting = false
@@ -149,7 +152,7 @@ export const deleteItem = {
     DELETE_ITEM_SUCCESS(state: State, action: PayloadAction<number>) {
         const itemIndex = state.results.findIndex(item => item.id === action.payload)
         state.results.splice(itemIndex, 1)
-
+        state.newItemId = null
     },
     DELETE_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)

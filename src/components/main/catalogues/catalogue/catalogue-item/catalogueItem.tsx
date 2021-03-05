@@ -40,7 +40,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
-    const isNewItem = item.id.toString().startsWith('newItem')
     const screenWidth = window.innerWidth
 
     useEffect(() => {
