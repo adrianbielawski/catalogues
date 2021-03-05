@@ -70,28 +70,6 @@ export const editItemReducers = {
         const item = getItemById(state, action.payload)
         item.isEditing = !item.isEditing
     },
-    ADD_ITEM_TO_STATE(state: State, action: PayloadAction<number>) {
-        const item = {
-            id: `newItem_${Date.now()}`,
-            createdBy: null,
-            createdAt: '',
-            modifiedAt: '',
-            catalogueId: action.payload,
-            fieldsValues: [],
-            images: [],
-            removedImages: [],
-            isEditing: true,
-            isSubmitting: false,
-            isDeleting: false,
-        }
-
-        state.results.unshift(item)
-        state.creatingNewItem = true
-    },
-    REMOVE_ITEM_FROM_STATE(state: State, action: PayloadAction<number | string>) {
-        state.creatingNewItem = false
-        state.results = state.results.filter(i => i.id !== action.payload)
-    },
     CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<T.ItemAndFieldIdPayload>) {
         const fieldsValues = getFieldsValuesById(state, action.payload.itemId)
         const fieldValue = fieldsValues.filter(f => f.fieldId === action.payload.fieldId)[0]

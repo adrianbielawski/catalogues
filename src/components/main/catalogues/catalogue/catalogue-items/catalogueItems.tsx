@@ -142,8 +142,7 @@ const CatalogueItems = (props: Props) => {
     }
 
     const handleAddItem = () => {
-        scrollTop()
-        dispatch(ADD_ITEM_TO_STATE(catalogue.id))
+        dispatch(ADD_ITEM(catalogue.id))
     }
 
     const getAddItemButton = () => {
