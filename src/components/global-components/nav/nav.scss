@@ -89,10 +89,10 @@
             top: var(--top);
             left: -100%;
             width: 100%;
-            height: calc(var(--bodyHeight) - var(--top));
+            min-height: calc(100vh - var(--top) - var(--position));
             background: none;
             box-shadow: none;
-            transition: all 0.2s ease-out;
+            transition: left 0.2s ease-out;
             &.active {
                 left: 0;
             }

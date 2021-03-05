@@ -45,7 +45,7 @@ interface Props {
     className?: string,
 }
 
-interface HeightData { bodyHeight: number, top: number }
+interface HeightData { top: number, position: number }
 
 const cx = classNames.bind(styles)
 
@@ -54,15 +54,15 @@ const Nav = (props: Props) => {
     const location = useLocation<LocationState>()
     const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
-    const [showList, setShowList] = useState<ShowList>({ show: false, index: null })
-    const [active, setActive] = useState(false)
-    const [heightData, setHeightData] = useState<HeightData>({ bodyHeight: 0, top: 0 })
+    const [heightData, setHeightData] = useState<HeightData>({ top: 0, position: 0 })
     const screenWidth = window.innerWidth
 
     useEffect(() => {
+        window.addEventListener('scroll', inspectHeight)
         window.addEventListener('resize', inspectHeight)
 
         return () => {
+            window.removeEventListener('scroll', inspectHeight)
             window.removeEventListener('resize', inspectHeight)
         }
     }, [])
@@ -84,8 +84,8 @@ const Nav = (props: Props) => {
 
     const inspectHeight = () => {
         setHeightData({
-            bodyHeight: document.body.getBoundingClientRect().height,
-            top: navRef.current!.getBoundingClientRect().height
+            top: navRef.current!.getBoundingClientRect().height,
+            position: navRef.current!.getBoundingClientRect().top,
         })
     }
 
@@ -212,8 +212,8 @@ const Nav = (props: Props) => {
             <nav
                 className={navClass}
                 style={{
-                    '--bodyHeight': `${heightData.bodyHeight}px`,
                     '--top': `${heightData.top}px`,
+                    '--position': `${heightData.position}px`
                 } as React.CSSProperties}
             >
                 <div className={styles.contentWrapper}>
