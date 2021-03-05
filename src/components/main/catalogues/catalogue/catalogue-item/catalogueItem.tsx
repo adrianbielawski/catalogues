@@ -6,14 +6,11 @@ import styles from './catalogueItem.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
-import {
-    REFRESH_ITEM,
-    REMOVE_ITEM_FROM_STATE, SAVE_ITEM, TOGGLE_EDIT_ITEM
-} from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { TOGGLE_EDIT_ITEM } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Custom hooks and utils
-import { mergeRefs, scrollTop } from 'src/utils'
+import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/customHooks'
 //Custom components
 import ItemFields from './item-fields/itemFields'
@@ -70,19 +67,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         dispatch(TOGGLE_EDIT_ITEM(item.id))
     }
 
-    const handleEditConfirm = () => {
-        dispatch(SAVE_ITEM(item))
-    }
-
-    const handleCancel = () => {
-        if (isNewItem) {
-            dispatch(REMOVE_ITEM_FROM_STATE(item.id))
-            scrollTop()
-        } else {
-            dispatch(REFRESH_ITEM({ itemId: item.id as number, prevId: item.id }))
-        }
-    }
-
     const toggleImagesPreview = () => {
         setShowImagesPreview(!showImagesPreview)
     }
@@ -109,9 +93,9 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 ? (
                     <EditItem
                         show={item.isEditing}
-                        item={props.item}
-                        onEditConfirm={handleEditConfirm}
-                        onCancel={handleCancel}
+                        itemId={props.item.id}
+                        isItemNew={false}
+                        className={styles.editItem}
                     />
                 )
                 : <>
