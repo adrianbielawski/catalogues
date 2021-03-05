@@ -4,14 +4,13 @@ import { size } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Redux
-import { ADD_ITEM_TO_STATE, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 //Utils
-import { scrollTop } from 'src/utils'
 import parsedQueryBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
@@ -20,6 +19,8 @@ import Button from 'components/global-components/button/button'
 import queryBuilder from 'components/main/catalogues/filter-bar-utils/queryBuilder'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
+import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
+import EditItem from '../catalogue-item/edit-item/editItem'
 
 type Props = {
     catalogueId: number,
@@ -178,8 +179,8 @@ const CatalogueItems = (props: Props) => {
                     <ul>
                         {getItems()}
                     </ul>
-                    {delayCompleted ?
-                        <Loader className={styles.loader} />
+                    {delayCompleted
+                        ? <Loader className={styles.loader} />
                         : (itemsData.next && itemsData.next <= 2) &&
                         <Button
                             className={styles.seeMoreButton}
@@ -189,6 +190,18 @@ const CatalogueItems = (props: Props) => {
                             See more
                         </Button>
                     }
+                    <AnimatedModal
+                        show={itemsData.newItemId !== null}
+                        className={styles.newItemModal}
+                    >
+                        <div className={styles.editItem}>
+                            <EditItem
+                                show={itemsData.newItemId !== null}
+                                itemId={itemsData.newItemId!}
+                                isItemNew={true}
+                            />
+                        </div>
+                    </AnimatedModal>
                 </div>
             )
     )
