@@ -8,14 +8,14 @@ import { DeserializedItem } from 'src/globalTypes'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'
 import {
-    ADD_IMAGE_TO_STATE, CHANGE_PRIMARY_IMAGE, DELETE_ITEM, REMOVE_IMAGE_FROM_STATE
+    ADD_IMAGE_TO_STATE, CHANGE_PRIMARY_IMAGE, REMOVE_IMAGE_FROM_STATE
 } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import AddImage from './add-image/addImage'
 import Button from 'components/global-components/button/button'
 import EditItemFields from './edit-item-fields/editItemFields'
-import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
+import ItemSettings from './item-settings/itemSettings'
 
 type Props = {
     show: boolean,
@@ -30,7 +30,6 @@ const EditItem = (props: Props) => {
     const delayCompleated = useDelay(item.isSubmitting)
     const editItemRef = useRef<HTMLDivElement>(null)
     const [width, setWidth] = useState(0)
-    const [message, setMessage] = useState({ title: '', value: '' })
     const isNewItem = item.id.toString().startsWith('newItem')
 
     useEffect(() => {
@@ -51,12 +50,6 @@ const EditItem = (props: Props) => {
         }
     }
 
-    useEffect(() => {
-        if (!item.isDeleting) {
-            setMessage({ title: '', value: '' })
-        }
-    }, [item.isDeleting])
-
     const handleImageRemove = (i: number) => {
         dispatch(REMOVE_IMAGE_FROM_STATE({
             itemId: item.id,
@@ -76,21 +69,6 @@ const EditItem = (props: Props) => {
             itemId: item.id,
             image
         }))
-    }
-
-    const handleDeleteItem = () => {
-        setMessage({
-            title: 'Confirm delete',
-            value: `Are you sure you want to delete item with id: ${item.id}?`
-        })
-    }
-
-    const deleteItem = () => {
-        dispatch(DELETE_ITEM(item.id as number))
-    }
-
-    const clearMessage = () => {
-        setMessage({ title: '', value: '' })
     }
 
     return (
@@ -117,39 +95,22 @@ const EditItem = (props: Props) => {
                 </p>
             }
             <EditItemFields item={props.item} />
+            <ItemSettings item={props.item} />
             <div className={styles.buttons}>
-                <div>
-                    <Button
-                        disabled={item.isSubmitting}
-                        loading={delayCompleated}
-                        onClick={props.onEditConfirm}
-                    >
-                        Save changes
-                    </Button>
-                    <Button
-                        disabled={item.isSubmitting}
-                        onClick={props.onCancel}
-                    >
-                        Cancel changes
-                    </Button>
-                </div>
-                {!isNewItem && (
-                    <Button
-                        className={styles.deleteButton}
-                        disabled={item.isSubmitting}
-                        onClick={handleDeleteItem}
-                    >
-                        Delete item
-                    </Button>
-                )}
+                <Button
+                    disabled={item.isSubmitting}
+                    loading={delayCompleated}
+                    onClick={props.onEditConfirm}
+                >
+                    Save changes
+                </Button>
+                <Button
+                    disabled={item.isSubmitting}
+                    onClick={props.onCancel}
+                >
+                    Cancel changes
+                </Button>
             </div>
-            <ConfirmMessageModal
-                show={message.value.length !== 0}
-                title={message.title}
-                message={message.value}
-                onConfirm={deleteItem}
-                onCancel={clearMessage}
-            />
         </div>
     )
 }

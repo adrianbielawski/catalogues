@@ -19,16 +19,9 @@
     }
     .buttons {
         display: flex;
-        justify-content: space-between;
-        div {
-            display: flex;
-        }
+        justify-content: center;
         button {
             margin: 5px 10px;
-        }
-        .deleteButton:hover {
-            background: $red;
-            color: #000;
         }
     }
 }
