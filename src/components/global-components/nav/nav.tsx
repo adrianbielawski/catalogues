@@ -33,9 +33,10 @@ export type ExtraItem = {
     inNavBarOnMobile: boolean,
 }
 
-interface ShowList {
-    show: boolean,
-    index: number | null,
+interface NavView {
+    active: boolean,
+    showList: boolean,
+    listIndex: number | null,
 }
 
 interface Props {
@@ -54,6 +55,7 @@ const Nav = (props: Props) => {
     const location = useLocation<LocationState>()
     const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
+    const [navView, setNavView] = useState<NavView>({ active: false, showList: false, listIndex: null })
     const [heightData, setHeightData] = useState<HeightData>({ top: 0, position: 0 })
     const screenWidth = window.innerWidth
 
@@ -68,19 +70,19 @@ const Nav = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        if (showList.show) {
-            document.body.addEventListener('click', toggleActive)
-        } else {
-            document.body.removeEventListener('click', toggleActive)
-        }
-        return () => {
-            document.body.removeEventListener('click', toggleActive)
-        }
-    }, [showList])
+        inspectHeight()
+    }, [navView.active])
 
     useEffect(() => {
-        inspectHeight()
-    }, [active])
+        if (navView.showList || navView.active) {
+            document.body.addEventListener('click', cloceNav)
+        } else {
+            document.body.removeEventListener('click', cloceNav)
+        }
+        return () => {
+            document.body.removeEventListener('click', cloceNav)
+        }
+    }, [navView])
 
     const inspectHeight = () => {
         setHeightData({
@@ -89,27 +91,71 @@ const Nav = (props: Props) => {
         })
     }
 
-    const toggleActive = () => {
-        setShowList({ show: false, index: null })
-        setActive(!active)
+    const cloceNav = () => {
+        setNavView({
+            active: false,
+            showList: false,
+            listIndex: null,
+        })
     }
 
-    const handleListClick = (index: number) => {
-        if (!showList.show) {
-            setShowList({ show: true, index })
-            setActive(!active)
+    const toggleActive = () => {
+        setNavView({
+            active: !navView.active,
+            showList: false,
+            listIndex: null,
+        })
+    }
+
+    const handleListClick = (listIndex: number) => {
+        if (!navView.showList) {
+            setNavView({
+                active: navView.active,
+                showList: true,
+                listIndex,
+            })
+        } else {
+            setNavView({
+                active: navView.active,
+                showList: false,
+                listIndex: null,
+            })
         }
     }
 
-    const handleListHover = (index: number) => {
-        if (showList.show) {
-            setShowList({ show: true, index })
+    const handleLinkClick = () => {
+        if (screenWidth <= 640) {
+            setNavView({
+                active: !navView.active,
+                showList: false,
+                listIndex: null,
+            })
+        } else {
+            setNavView({
+                active: navView.active,
+                showList: false,
+                listIndex: null,
+            })
+        }
+    }
+
+    const handleListHover = (listIndex: number) => {
+        if (navView.showList) {
+            setNavView({
+                active: navView.active,
+                showList: true,
+                listIndex,
+            })
         }
     }
 
     const handleLinkHover = () => {
-        if (showList.show) {
-            setShowList({ show: true, index: null })
+        if (navView.showList) {
+            setNavView({
+                active: navView.active,
+                showList: true,
+                listIndex: null,
+            })
         }
     }
 
@@ -130,9 +176,10 @@ const Nav = (props: Props) => {
                         location={item.location}
                         children={item.children}
                         index={index}
-                        show={showList.show === true && showList.index === index}
+                        show={navView.showList === true && navView.listIndex === index}
                         onClick={handleListClick}
                         onHover={handleListHover}
+                        onLinkClick={handleLinkClick}
                         key={index}
                     />
                 )
@@ -195,7 +242,7 @@ const Nav = (props: Props) => {
         'nav',
         props.className,
         {
-            active,
+            active: navView.active,
         }
     )
 
