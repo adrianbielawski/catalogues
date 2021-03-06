@@ -9,9 +9,9 @@ const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
 
     const searchValue = parsedQuery.search || ''
 
-    const orderingValue = {
+    const orderingValue = parsedQuery.ordering ? {
         [trimStart(parsedQuery.ordering, '-')]: parsedQuery.ordering,
-    }
+    } : {}
 
     const filtersValue: SelectedFilter = {}
 
