@@ -41,7 +41,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 
     useEffect(() => {
         if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
-            itemRef.current!.scrollIntoView({ behavior: 'smooth' })
+            itemRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
     }, [item.isSubmitting, item.isEditing])
 
