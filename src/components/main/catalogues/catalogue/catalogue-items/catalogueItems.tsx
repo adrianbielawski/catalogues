@@ -19,8 +19,7 @@ import Button from 'components/global-components/button/button'
 import queryBuilder from 'components/main/catalogues/filter-bar-utils/queryBuilder'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
-import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
-import EditItem from '../catalogue-item/edit-item/editItem'
+import NewItemModal from './new-item-modal/newItemModal'
 
 type Props = {
     catalogueId: number,
@@ -192,18 +191,7 @@ const CatalogueItems = (props: Props) => {
                             See more
                         </Button>
                     }
-                    <AnimatedModal
-                        show={itemsData.newItemId !== null}
-                        className={styles.newItemModal}
-                    >
-                        <div className={styles.editItem}>
-                            <EditItem
-                                show={itemsData.newItemId !== null}
-                                itemId={itemsData.newItemId!}
-                                isItemNew={true}
-                            />
-                        </div>
-                    </AnimatedModal>
+                    <NewItemModal />
                 </div>
             )
     )

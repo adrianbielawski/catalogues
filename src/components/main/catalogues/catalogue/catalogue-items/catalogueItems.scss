@@ -23,18 +23,6 @@
         margin: 30px auto;
     }
 }
-.newItemModal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .editItem {
-        width: 90vw;
-        height: 90vh;
-        background: #fff;
-        padding: 5px;
-        @include scroll
-    }
-}
 
 .loader {
     margin: 0 auto;
@@ -44,13 +32,6 @@
     .items {
         &.showingAll {
             margin: 0 auto 90px auto;
-        }
-    }
-    .newItemModal {
-        .editItem {
-            width: 100vw;
-            height: 100vh;
-            padding: 10px;
         }
     }
 }
