@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './filtersBarButton.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import useFiltersBarContext from '../useFiltersBarContext'
@@ -14,6 +17,7 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const FiltersBarButton = (props: Props) => {
+    const location = useLocation<LocationState>()
     const filtersBarContext = useFiltersBarContext()
 
     useEffect(() => {
@@ -34,6 +38,9 @@ const FiltersBarButton = (props: Props) => {
     const buttonClass = cx(
         'filtersBarButton',
         props.className,
+        {
+            filtersApplied: location.search,
+        },
     )
 
     return (
