@@ -11,7 +11,7 @@ import { catalogueSelector } from 'store/selectors'
 import { useDelay } from 'src/customHooks'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 //Utils
-import parsedQueryBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
+import filtersBarValuesBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
@@ -40,7 +40,7 @@ const CatalogueItems = (props: Props) => {
     const delayCompleted = useDelay(itemsData.fetchingItems)
 
     useEffect(() => {
-        const parsedQuery = parsedQueryBuilder(filtersBarContext)
+        const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
 
         if (parsedQuery.searchValue) {
             filtersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)
