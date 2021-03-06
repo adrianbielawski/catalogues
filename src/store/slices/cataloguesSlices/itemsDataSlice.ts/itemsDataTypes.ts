@@ -38,12 +38,6 @@ export interface FetchItemsSuccessPayload {
     catalogueId: number,
 }
 
-export interface ItemAndFieldIdPayload {
-    itemId: number,
-    fieldId: number,
-    value: string | string[],
-}
-
 export interface AddImageToStatePayload {
     itemId: number,
     image: string,

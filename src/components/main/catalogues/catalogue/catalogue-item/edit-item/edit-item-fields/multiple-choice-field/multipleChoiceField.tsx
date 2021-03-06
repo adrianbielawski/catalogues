@@ -34,7 +34,7 @@ const MultipleChoiceField = (props: Props) => {
     }
 
     const handleChange = (selected: DeserializedChoice[]) => {
-        const selectedChoices = selected.map(s => s.value)
+        const selectedChoices = selected.map(s => s.id)
 
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
@@ -43,20 +43,14 @@ const MultipleChoiceField = (props: Props) => {
         }))
     }
 
-    const getSelectedIds = () => {
-        const selectedValues = props.fieldValue?.value as string[] || []
-
-        return props.field.choices.filter(ch =>
-            selectedValues.includes(ch.value)
-        ).map(s => s.id)
-    }
-
     const getChoices = () => {
-        if (props.fieldValue?.value.length) {
-            return (props.fieldValue?.value as string[]).join(', ')
-        } else {
-            return ''
+        if (!props.fieldValue?.value) {
+            return
         }
+        const values = (props.fieldValue.value as number[]).map(id =>
+            props.field.choices.find(c => c.id === id)?.value
+        )
+        return values.join(', ')
     }
 
     const handleSort = () => {
@@ -119,7 +113,7 @@ const MultipleChoiceField = (props: Props) => {
                                 <MultipleChoiceList
                                     choices={field.choices}
                                     filteredChoices={sortedChoices}
-                                    selected={getSelectedIds()}
+                                    selected={props.fieldValue?.value as number[]}
                                     onChange={handleChange}
                                 />
                                 <AddChoice

@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { mod } from 'src/utils'
 import { itemDeserializer, listDeserializer } from 'src/serializers'
-import { DeserializedItem, Item } from 'src/globalTypes'
+import { DeserializedItem, DeserializedItemField, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
 import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
 
@@ -70,7 +70,7 @@ export const editItemReducers = {
         const item = getItemById(state, action.payload)
         item.isEditing = !item.isEditing
     },
-    CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<T.ItemAndFieldIdPayload>) {
+    CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<DeserializedItemField>) {
         const fieldsValues = getFieldsValuesById(state, action.payload.itemId)
         const fieldValue = fieldsValues.filter(f => f.fieldId === action.payload.fieldId)[0]
 

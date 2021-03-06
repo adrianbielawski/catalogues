@@ -85,12 +85,12 @@ export const addItemEpic = (action$: Observable<Action>, state$: Observable<Root
 export const saveItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
     filter(actions.SAVE_ITEM.match),
     switchMap(action => {
-        const filteredValues = action.payload.fieldsValues.filter(v => v.value.length > 0)
+        const filteredValues = action.payload.fieldsValues.filter(v => v.value !== null)
         const values = filteredValues.map(itemFieldSerializer)
 
         const request$ = axiosInstance$.patch(`/items/${action.payload.id}/`, {
-                values,
-            })
+            values,
+        })
 
         const imagesRequests$ = (itemId: number) => {
             const isNew = (img: DeserializedImage) => img.id.toString().startsWith('newImage')

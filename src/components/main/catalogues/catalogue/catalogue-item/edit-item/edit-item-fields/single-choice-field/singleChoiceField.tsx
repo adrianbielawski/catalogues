@@ -37,7 +37,7 @@ const SingleChoiceField = (props: Props) => {
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
             fieldId: props.field.id,
-            value: choice.value,
+            value: choice.id,
         }))
     }
 
@@ -80,42 +80,43 @@ const SingleChoiceField = (props: Props) => {
         },
     )
 
-    const selected = props.field.choices.filter(f => f.value === props.fieldValue?.value)[0]
+    const selected = props.field.choices.filter(f => f.id === props.fieldValue?.value)[0]
+
+    if (!field.fetchingChoices) {
+        return null
+    }
 
     return (
-        !field.fetchingChoices ? (
-            <li className={fieldClass}>
-                <EditableFieldTitle
-                    title={props.field.name}
-                    isEditing={isEditing}
-                    onEdit={handleEdit}
-                />
-                <div className={contentClass}>
-                    {isEditing
-                        ? (
-                            <>
-                                <SearchBar
-                                    sortDir={choicesSortDir}
-                                    defaultSearchValue={searchChoiceValue}
-                                    onSort={handleSort}
-                                    onSearch={handleSearch}
-                                />
-                                <SingleChoiceList
-                                    choices={sortedChoices}
-                                    selected={selected?.id}
-                                    onChange={handleChange}
-                                />
-                                <AddChoice
-                                    field={props.field}
-                                />
-                            </>
-                        )
-                        : props.fieldValue?.value || ''
-                    }
-                </div>
-            </li>
-        )
-            : null
+        <li className={fieldClass}>
+            <EditableFieldTitle
+                title={props.field.name}
+                isEditing={isEditing}
+                onEdit={handleEdit}
+            />
+            <div className={contentClass}>
+                {isEditing
+                    ? (
+                        <>
+                            <SearchBar
+                                sortDir={choicesSortDir}
+                                defaultSearchValue={searchChoiceValue}
+                                onSort={handleSort}
+                                onSearch={handleSearch}
+                            />
+                            <SingleChoiceList
+                                choices={sortedChoices}
+                                selected={selected?.id}
+                                onChange={handleChange}
+                            />
+                            <AddChoice
+                                field={props.field}
+                            />
+                        </>
+                    )
+                    : selected?.value || null
+                }
+            </div>
+        </li>
     )
 }
 

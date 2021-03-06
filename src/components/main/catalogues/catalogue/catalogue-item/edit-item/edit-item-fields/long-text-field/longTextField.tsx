@@ -43,7 +43,7 @@ const LongTextField = (props: Props) => {
                 {isEditing
                     ? (
                         <TextareaWithConfirmButton
-                            defaultValue={props.fieldValue?.value}
+                            defaultValue={props.fieldValue?.value as string}
                             rows={4}
                             onConfirm={handleConfirm}
                         />

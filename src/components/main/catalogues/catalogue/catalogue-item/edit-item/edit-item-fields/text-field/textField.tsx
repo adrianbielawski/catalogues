@@ -33,7 +33,7 @@ const TextField = (props: Props) => {
     }
     
     const inputProps = {
-        defaultValue: props.fieldValue?.value || ''
+        defaultValue: props.fieldValue?.value as string || ''
     }
 
     return (

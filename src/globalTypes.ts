@@ -165,21 +165,23 @@ export interface DeserializedItem {
     isDeleting: boolean,
 }
 
+export type ItemFieldValue = string | number | number[]
+
 export interface ItemField {
     item_id: number,
     field_id: number,
-    value: string | string[],
+    value: ItemFieldValue,
 }
 
 export interface SerializedItemField {
     field_id: number,
-    value: string | string[],
+    value: ItemFieldValue,
 }
 
 export interface DeserializedItemField {
     itemId: number,
     fieldId: number,
-    value: string | string[],
+    value: ItemFieldValue,
 }
 
 export interface Field {
