@@ -22,7 +22,7 @@ const Modal = (props: Props) => {
         e.stopPropagation()
     }
 
-    const handleClose = () => {
+    const handleClose = (e: React.MouseEvent) => {
         if (props.onClose) {
             props.onClose()
         }
@@ -34,7 +34,8 @@ const Modal = (props: Props) => {
                 <div onClick={handleWrapperClick}>
                     {props.children}
                 </div>
-            </div>, document.body
+            </div>,
+            document.getElementById('portal')!
         ) : null
     )
 }
