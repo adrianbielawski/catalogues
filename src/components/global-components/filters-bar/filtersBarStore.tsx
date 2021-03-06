@@ -2,14 +2,14 @@ import { createContext } from 'react'
 import { Draft } from 'immer'
 //Types
 import {
-    FiltersBarInitialState, Action, TOGGLE_FILTERS_BAR, FiltersBarContextInterface, INITIALIZED
+    FiltersBarInitialState, Action, CHANGE_SHOW_FILTERS_BAR, FiltersBarContextInterface, INITIALIZED
 } from './filtersBarTypes'
 
 export const FiltersBarContext = createContext<FiltersBarContextInterface>({
     show: false,
     isInitialized: false,
     initialized: () => {},
-    toggleFiltersBar: () => {},
+    changeShowFiltersBar: () => {},
 })
 
 export const reducer = (state: Draft<FiltersBarInitialState>, action: Action) => {
@@ -18,8 +18,8 @@ export const reducer = (state: Draft<FiltersBarInitialState>, action: Action) =>
             state.isInitialized = true
             break
 
-        case TOGGLE_FILTERS_BAR:
-            state.show = !state.show
+        case CHANGE_SHOW_FILTERS_BAR:
+            state.show = action.show
             break
 
         default:

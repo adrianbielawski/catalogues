@@ -2,11 +2,12 @@ import { FiltersContextInterface } from "./filters/filtersTypes"
 import { SearchContextInterface } from "./search/searchTypes"
 import { SortContextInterface } from "./sort/sortTypes"
 
-export const TOGGLE_FILTERS_BAR = 'TOGGLE_FILTERS_BAR'
+export const CHANGE_SHOW_FILTERS_BAR = 'CHANGE_SHOW_FILTERS_BAR'
 export const INITIALIZED = 'INITIALIZED'
 
 interface ToggleFiltersBar {
-    type: typeof TOGGLE_FILTERS_BAR,
+    type: typeof CHANGE_SHOW_FILTERS_BAR,
+    show: boolean,
 }
 
 interface Initialized {
@@ -22,7 +23,7 @@ export interface FiltersBarInitialState {
 
 export interface FiltersBarContextInterface extends FiltersBarInitialState {
     initialized: () => void,
-    toggleFiltersBar: () => void,
+    changeShowFiltersBar: (show: boolean) => void,
 }
 
 export interface UseFiltersBarContextInterface {
