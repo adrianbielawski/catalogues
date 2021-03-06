@@ -1,6 +1,9 @@
 @import "global-styles/variables_and_mixins";
 
 .editItem {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     .currentImage {
         font-size: 2em;
         font-weight: 700;
