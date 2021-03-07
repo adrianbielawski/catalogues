@@ -113,7 +113,7 @@ const MultipleChoiceField = (props: Props) => {
                                 <MultipleChoiceList
                                     choices={field.choices}
                                     filteredChoices={sortedChoices}
-                                    selected={props.fieldValue?.value as number[]}
+                                    selected={props.fieldValue?.value as number[] || []}
                                     onChange={handleChange}
                                 />
                                 <AddChoice

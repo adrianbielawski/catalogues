@@ -31,7 +31,7 @@ const MultipleChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceT
             }
 
             const selectedChoices = props.choices.filter(obj => {
-                if (selectedIds.includes(obj.id)) {
+                if (selectedIds?.includes(obj.id)) {
                     return obj
                 }
             })
@@ -39,7 +39,7 @@ const MultipleChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceT
             props.onChange(selectedChoices)
         }
 
-        const isSelected = props.selected.includes(choice.id)
+        const isSelected = props.selected?.includes(choice.id)
 
         return (
             <li key={choice.id}>
