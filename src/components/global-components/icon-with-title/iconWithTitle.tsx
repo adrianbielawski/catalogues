@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './iconWithTitle.scss'
-//Types
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-//Redux
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type Props = {
     title: string,
