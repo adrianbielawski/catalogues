@@ -82,7 +82,7 @@ const SingleChoiceField = (props: Props) => {
 
     const selected = props.field.choices.filter(f => f.id === props.fieldValue?.value)[0]
 
-    if (!field.fetchingChoices) {
+    if (field.fetchingChoices) {
         return null
     }
 
