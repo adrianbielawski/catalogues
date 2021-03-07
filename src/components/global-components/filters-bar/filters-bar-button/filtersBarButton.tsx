@@ -32,7 +32,7 @@ const FiltersBarButton = (props: Props) => {
     }, [filtersBarContext.filtersBar])
 
     const toggleFiltersBar = () => {
-        filtersBarContext.filtersBar.toggleFiltersBar()
+        filtersBarContext.filtersBar.changeShowFiltersBar(!filtersBarContext.filtersBar.show)
     }
 
     const buttonClass = cx(
