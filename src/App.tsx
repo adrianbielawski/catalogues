@@ -43,7 +43,7 @@ const App = () => {
       <Suspense fallback={<Loader />}>
         <Switch>
           <Route exact path={["/", "/signup"]} component={Auth} />
-          <PrivateRoute path="/:userId" component={Main} />
+          <PrivateRoute path="/:username" component={Main} />
         </Switch>
       </Suspense>
     </div>

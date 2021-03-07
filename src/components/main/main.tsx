@@ -21,11 +21,11 @@ const Main = () => {
                 <Switch>
                     <Redirect
                         exact
-                        from="/:userId"
-                        to="/:userId/catalogues"
+                        from="/:username"
+                        to="/:username/catalogues"
                     />
-                    <RouteWithContext path={"/:userId/catalogues/:slug?"} component={Catalogues} />
-                    <RouteWithContext path={"/:userId/settings"} component={Settings} />
+                    <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
+                    <RouteWithContext path={"/:username/settings"} component={Settings} />
                 </Switch>
             </Suspense>
         </div>

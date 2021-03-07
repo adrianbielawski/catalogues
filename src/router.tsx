@@ -8,12 +8,12 @@ import { StaticContext } from 'react-router'
 import * as H from 'history'
 
 export type DehydratedParams = {
-    userId?: number,
+    username?: string,
     slug?: string,
 }
 
 export interface HydratedParams {
-    userId?: number,
+    username?: string,
     slug?: string,
     catalogue?: DeserializedCatalogue,
 }
@@ -51,8 +51,8 @@ const useParamHydrator = () => {
 
     const hydrate = (params: DehydratedParams): HydratedParams => {
         const hydrated: HydratedParams = {}
-        if (params.userId !== undefined) {
-            hydrated.userId = state.auth.user?.id
+        if (params.username !== undefined) {
+            hydrated.username = state.auth.user?.username
         }
         if (params.slug !== undefined) {
             hydrated.catalogue = catalogueSelectorBySlug(params.slug)(state)
@@ -62,8 +62,8 @@ const useParamHydrator = () => {
 
     const dehydrate = (params: HydratedParams): DehydratedParams => {
         const dehydrated: DehydratedParams = {}
-        if (params.userId !== undefined) {
-            dehydrated.userId = state.auth.user?.id
+        if (params.username !== undefined) {
+            dehydrated.username = state.auth.user?.username
         }
         if (params.catalogue !== undefined) {
             dehydrated.slug = catalogueSelector(params.catalogue.id)(state)?.slug

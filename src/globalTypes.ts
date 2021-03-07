@@ -34,7 +34,7 @@ export interface DeserializedUser {
 export interface Referrer {
     pathname: string,
     params: {
-        userId?: number,
+        username?: string,
         slug?: string,
         catalogue?: DeserializedCatalogue,
     },

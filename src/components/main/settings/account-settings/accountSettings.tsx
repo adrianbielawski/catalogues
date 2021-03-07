@@ -19,11 +19,11 @@ const AccountSettings = () => {
     const SIDE_MENU_CONTENT = [
         {
             title: 'Manage catalogues',
-            url: `/${user!.id}/settings/account/manage-catalogues`,
+            url: `/${user!.username}/settings/account/manage-catalogues`,
         },
         {
             title: 'My account',
-            url: `/${user!.id}/settings/account/my-account`
+            url: `/${user!.username}/settings/account/my-account`
         },
     ]
 
@@ -34,18 +34,18 @@ const AccountSettings = () => {
                 <Switch>
                     <Redirect
                         exact
-                        from="/:userId/settings/account"
+                        from="/:username/settings/account"
                         to={{
-                            pathname: "/:userId/settings/account/manage-catalogues",
+                            pathname: "/:username/settings/account/manage-catalogues",
                             state: location.state,
                         }}
                     />
                     <Route
-                        path="/:userId/settings/account/manage-catalogues"
+                        path="/:username/settings/account/manage-catalogues"
                         component={ManageCatalogues}
                     />
                     <Route
-                        path="/:userId/settings/account/my-account"
+                        path="/:username/settings/account/my-account"
                         component={MyAccount}
                     />
                 </Switch>

@@ -18,7 +18,7 @@ export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
                 of(actions.GET_USER_SUCCESS(response.data)),
                 defer(() => {
                     if (action.payload.location.pathname === '/') {
-                        action.payload.history.push(`/${response.data.id}/catalogues`)
+                        action.payload.history.push(`/${response.data.username}/catalogues`)
                     }
                 })
             )),
@@ -37,7 +37,7 @@ export const checkUsernameEpic = (action$: Observable<Action>) => action$.pipe(
         axiosInstance$.post('/registration/validate-username/', {
             username: action.payload,
         }).pipe(
-            map(response => actions.CHECK_USER_AVAILABILITY_SUCCESS()),
+            map(() => actions.CHECK_USER_AVAILABILITY_SUCCESS()),
             catchError(error => of(actions.CHECK_USER_AVAILABILITY_FAILURE(getErrorMessage(error))))
         )
     ))
@@ -57,7 +57,7 @@ export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
                 of(actions.SIGN_UP_SUCCESS(response.data.user)),
                 defer(() => {
                     localStorage.setItem('token', response.data.key)
-                    action.payload.history.push(`/${response.data.user.id}/catalogues`)
+                    action.payload.history.push(`/${response.data.user.username}/catalogues`)
                 })
             )),
             catchError(error => {
@@ -83,7 +83,7 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                 of(actions.LOG_IN_SUCCESS(response.data.user)),
                 defer(() => {
                     const { pathname } = action.payload.location.state?.referrer || {
-                        pathname: `/${response.data.user.id}/catalogues`
+                        pathname: `/${response.data.user.username}/catalogues`
                     }
 
                     action.payload.history.push(pathname)

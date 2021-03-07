@@ -65,7 +65,7 @@ const Catalogues = () => {
     }
 
     const handleRedirectToSettings = () => {
-        history.push(`/${user!.id}/settings/account/manage-catalogues`)
+        history.push(`/${user!.username}/settings/account/manage-catalogues`)
     }
 
     const getNoCatalogueMessage = () => {
@@ -85,19 +85,19 @@ const Catalogues = () => {
     const NAV_CONTENT: NavItemType[] = [
         {
             title: 'Catalogues',
-            location: `/${user!.id}/catalogues`,
+            location: `/${user!.username}/catalogues`,
             children: catalogues.map(catalogue => {
                 return {
                     id: catalogue.id.toString(),
                     title: catalogue.name,
-                    url: `/${user!.id}/catalogues/${catalogue.slug}`,
+                    url: `/${user!.username}/catalogues/${catalogue.slug}`,
                 }
             }),
         },
         {
             id: 'Settings',
             title: 'Settings',
-            url: `/${user!.id}/settings`,
+            url: `/${user!.username}/settings`,
         }
     ]
 
@@ -140,14 +140,14 @@ const Catalogues = () => {
                                     <Switch>
                                         <Redirect
                                             exact
-                                            from="/:userId/catalogues"
+                                            from="/:username/catalogues"
                                             to={{
-                                                pathname: `/:userId/catalogues/${catalogues[defaultCatalogue].slug}`,
+                                                pathname: `/:username/catalogues/${catalogues[defaultCatalogue].slug}`,
                                                 state: location.state,
                                             }}
                                         />
                                         <RouteWithContext
-                                            path="/:userId/catalogues/:slug"
+                                            path="/:username/catalogues/:slug"
                                             component={Catalogue}
                                         />
                                     </Switch>

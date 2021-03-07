@@ -31,7 +31,7 @@ const Settings = () => {
         {
             id: 'AccountSettings',
             title: 'Account settings',
-            url: `/${user!.id}/settings/account`,
+            url: `/${user!.username}/settings/account`,
         }
     ]
 
@@ -75,8 +75,8 @@ const Settings = () => {
                 content={NAV_CONTENT}
                 goBack={{
                     title: 'Catalogues',
-                    url: `/${user!.id}/catalogues`,
-                    location: `/${user!.id}/settings`,
+                    url: `/${user!.username}/catalogues`,
+                    location: `/${user!.username}/settings`,
                 }}
                 extraItems={navBarExtraItems}
             />
@@ -84,14 +84,14 @@ const Settings = () => {
                 <Switch>
                     <Redirect
                         exact
-                        from="/:userId/settings"
+                        from="/:username/settings"
                         to={{
-                            pathname: "/:userId/settings/account",
+                            pathname: "/:username/settings/account",
                             state: location.state,
                         }}
                     />
                     <Route
-                        path="/:userId/settings/account"
+                        path="/:username/settings/account"
                         component={AccountSettings}
                     />
                 </Switch>
