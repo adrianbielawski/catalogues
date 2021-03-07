@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
-import { faExpand } from '@fortawesome/free-solid-svg-icons'
+import { faExpand, faCamera, faSlash } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
@@ -112,13 +112,13 @@ const ImagesCarousel = (props: Props) => {
         if (Date.now() < touchStartTime! + 300) {
             const slideX = e.changedTouches[0].clientX - touchStart!.x
             if (slideX > 50) {
-                newCurrent-= 1
+                newCurrent -= 1
             }
             if (slideX < -50) {
-                newCurrent+= 1
+                newCurrent += 1
             }
         } else {
-            newCurrent-= Math.round(slideX)
+            newCurrent -= Math.round(slideX)
         }
         setTouchStart(null)
         setSlideX(0)
@@ -240,31 +240,37 @@ const ImagesCarousel = (props: Props) => {
             ref={carouselRef}
             style={count ? CSSConstants : undefined}
         >
-            {count > 0 ? (
-                <>
-                    {displayButtons && (
-                        <ArrowButton
-                            className={styles.prev}
-                            leftArrow={true}
-                            onClick={handlePreviousImage}
-                        />
-                    )}
-                    <ul>
-                        {getItems()}
-                    </ul>
-                    {displayButtons && (
-                        <ArrowButton
-                            className={styles.next}
-                            leftArrow={false}
-                            onClick={handleNextImage}
-                        />
-                    )}
-                    {props.showCounter && (
-                        <ImagesCounter current={mod(current, count) + 1} total={count} />
-                    )}
-                </>
-            )
-                : <p className={styles.noContent}>No images yet</p>
+            {count > 0
+                ? (
+                    <>
+                        {displayButtons && (
+                            <ArrowButton
+                                className={styles.prev}
+                                leftArrow={true}
+                                onClick={handlePreviousImage}
+                            />
+                        )}
+                        <ul>
+                            {getItems()}
+                        </ul>
+                        {displayButtons && (
+                            <ArrowButton
+                                className={styles.next}
+                                leftArrow={false}
+                                onClick={handleNextImage}
+                            />
+                        )}
+                        {props.showCounter && (
+                            <ImagesCounter current={mod(current, count) + 1} total={count} />
+                        )}
+                    </>
+                )
+                : (
+                <div className={`fa-layers fa-fw ${styles.cameraIcon}`}>
+                    <FontAwesomeIcon icon={faCamera} />
+                    <FontAwesomeIcon icon={faSlash} className={styles.slash} />
+                </div>
+                )
             }
             {props.onFullScreenView &&
                 <TransparentButton

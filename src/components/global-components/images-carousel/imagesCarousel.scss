@@ -2,7 +2,10 @@
 
 .carousel {
     width: calc(var(--width) * var(--minScale) * var(--scaledImagesQty) + var(--width));
+    min-width: 100px;
     max-height: var(--height);
+    min-height: 100px;
+    height: 100%;
     padding: 10px;
     margin: 0 auto;
     box-sizing: border-box;
@@ -18,8 +21,14 @@
         background: $lightGrey;
     }
 
-    .noContent {
-        font-size: 1.5em;
+    .cameraIcon {
+        font-size: 60px;
+        color: $lightGrey;
+        width: 100%;
+        margin: 0 auto;
+        .slash {
+            font-size: 70px;
+        }
     }
     .prev,
     .next,
