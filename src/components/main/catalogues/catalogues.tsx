@@ -54,17 +54,13 @@ const Catalogues = () => {
         if (cataloguesRef.current === null) {
             return
         }
-        window.addEventListener('resize', getMinHeight)
+        
         getMinHeight()
-
-        return () => {
-            window.removeEventListener('resize', getMinHeight)
-        }
     }, [cataloguesRef.current, screenHeight])
 
     const getMinHeight = () => {
-        const top = cataloguesRef.current?.getBoundingClientRect().top
-        const minHeight = screenHeight - top!
+        const top = cataloguesRef.current!.getBoundingClientRect().top
+        const minHeight = screenHeight - top! - window.pageYOffset
         setMinHeight(minHeight)
     }
 
