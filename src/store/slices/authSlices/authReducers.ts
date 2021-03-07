@@ -39,6 +39,21 @@ export const loginReducers = {
     },
 }
 
+export const userAvalabilityReducer = {
+    CHECK_USER_AVAILABILITY(state: State, action: PayloadAction<string>) {},
+    CHECK_USER_AVAILABILITY_START(state: State) {
+        state.isCheckingUsername = true
+    },
+    CHECK_USER_AVAILABILITY_SUCCESS(state: State) {
+        state.invalidUsernameMessage = ''
+        state.isCheckingUsername = false
+    },
+    CHECK_USER_AVAILABILITY_FAILURE(state: State, action: PayloadAction<string>) {
+        state.invalidUsernameMessage = action.payload
+        state.isCheckingUsername = false
+    },
+}
+
 export const signupReducers = {
     SIGN_UP(state: State, action: PayloadAction<T.SignUpDetails>) {},
     SIGN_UP_START(state: State) {

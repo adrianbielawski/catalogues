@@ -1,17 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import * as T from './authTypes'
+import { AuthState } from './authTypes'
 import { User } from 'src/globalTypes'
 import { CLEAR_APP_STATE } from '../appSlices/appSlice'
 import { CHANGE_USERNAME_SUCCESS } from '../settingsSlices/myAccountSlice/myAccountSlice'
-import { initializeReducers, loginReducers, logoutReducers, signupReducers } from './authReducers'
+import * as reducers from './authReducers'
 
-export const initialState: T.AuthState = {
+export const initialState: AuthState = {
     user: null,
     isInitialized: false,
     isLoggingIn: false,
     loginError: '',
     isLoggingOut: false,
     logOutError: '',
+    isCheckingUsername: false,
+    invalidUsernameMessage: '',
     isSigningUp: false,
     signUpError: '',
 }
@@ -20,10 +22,11 @@ export const authSlice = createSlice({
     name: 'AUTH',
     initialState,
     reducers: {
-        ...initializeReducers,
-        ...loginReducers,
-        ...signupReducers,
-        ...logoutReducers,
+        ...reducers.initializeReducers,
+        ...reducers.loginReducers,
+        ...reducers.userAvalabilityReducer,
+        ...reducers.signupReducers,
+        ...reducers.logoutReducers,
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -36,6 +39,7 @@ export const authSlice = createSlice({
 export const {
     INITIALIZED, GET_USER, GET_USER_SUCCESS, GET_USER_FAILURE,
     LOG_IN, LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAILURE, CLEAR_LOGIN_ERROR,
+    CHECK_USER_AVAILABILITY, CHECK_USER_AVAILABILITY_START, CHECK_USER_AVAILABILITY_SUCCESS, CHECK_USER_AVAILABILITY_FAILURE,
     SIGN_UP, SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, CLEAR_SIGNUP_ERROR,
     LOG_OUT, LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE, CLEAR_LOGOUT_ERROR,
 } = authSlice.actions

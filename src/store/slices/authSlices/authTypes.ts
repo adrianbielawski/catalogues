@@ -8,6 +8,8 @@ export interface AuthState {
     loginError: string,
     isLoggingOut: boolean,
     logOutError: string,
+    isCheckingUsername: boolean,
+    invalidUsernameMessage: string,
     isSigningUp: boolean,
     signUpError: string,
 }

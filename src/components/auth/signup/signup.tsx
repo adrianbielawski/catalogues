@@ -1,11 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import styles from './signup.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { SIGN_UP, CLEAR_SIGNUP_ERROR } from 'store/slices/authSlices/authSlices'
+import { SIGN_UP, CLEAR_SIGNUP_ERROR, CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
+//Custom hooks and utils
+import { useDebouncedDispatch } from 'src/customHooks'
+import { mergeRefs } from 'src/utils'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
@@ -15,22 +18,40 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 const Signup = () => {
     const history = useHistory<LocationState>()
     const dispatch = useAppDispatch()
-    const userNameInput = useRef<HTMLInputElement>(null)
+    const usernameInput = useRef<HTMLInputElement>(null)
     const emailInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
     const repeatPasswordInput = useRef<HTMLInputElement>(null)
     const auth = useTypedSelector(state => state.auth)
     const [isValid, setIsValid] = useState(false)
 
+    useEffect(() => {
+        validateUserInput()
+    }, [auth.invalidUsernameMessage])
+
+    const validateUsername = () => {
+        return usernameInput.current!.checkValidity()
+    }
+
+    const usernameDebounceRef = useDebouncedDispatch(
+        username => CHECK_USER_AVAILABILITY(username),
+        300,
+        validateUsername,
+    )
+
     const validateUserInput = () => {
-        const isUserNameValid = userNameInput.current!.checkValidity()
+        const isUserNameValid = usernameInput.current!.checkValidity()
         const isEmailValid = emailInput.current!.checkValidity()
         const isPasswordValid = passwordInput.current!.checkValidity()
         const isRepeatPasswordValid = passwordInput.current!.checkValidity()
 
-        if (!isUserNameValid || !isEmailValid || !isPasswordValid || !isRepeatPasswordValid) {
+        if (!isUserNameValid
+            || !isEmailValid
+            || !isPasswordValid
+            || !isRepeatPasswordValid
+            || auth.invalidUsernameMessage.length !== 0
+        ) {
             setIsValid(false)
-            return
         } else {
             setIsValid(true)
         }
@@ -41,7 +62,7 @@ const Signup = () => {
 
         const password = passwordInput.current!.value
         const repeatedPassword = repeatPasswordInput.current!.value
-        const userName = userNameInput.current!.value
+        const userName = usernameInput.current!.value
         const email = emailInput.current!.value
 
         dispatch(SIGN_UP({
@@ -62,9 +83,10 @@ const Signup = () => {
             <form onSubmit={handleSubmit} onChange={validateUserInput}>
                 <Input
                     placeholder="user name"
-                    ref={userNameInput}
+                    ref={mergeRefs([usernameDebounceRef, usernameInput])}
                     minLength={2}
                     required
+                    invalidInputMessage={auth.invalidUsernameMessage}
                 />
                 <Input
                     type="email"

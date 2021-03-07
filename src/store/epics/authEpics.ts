@@ -1,13 +1,14 @@
 import { combineEpics } from "redux-observable"
 import { axiosInstance$ } from "src/axiosInstance"
 import { concat, of, defer, Observable } from 'rxjs'
-import { catchError, filter, mergeMap, retryWhen } from 'rxjs/operators'
+import { catchError, filter, map, mergeMap, retryWhen, switchMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
+//Utils
+import { getErrorMessage } from 'src/utils'
 //Store observables
 import { retry$ } from "store/storeObservables"
 //Slices
 import * as actions from "store/slices/authSlices/authSlices"
-import { getErrorMessage } from "src/utils"
 
 export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.GET_USER.match),
@@ -25,6 +26,19 @@ export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
                 localStorage.removeItem('token')
                 return of(actions.GET_USER_FAILURE())
             })
+        )
+    ))
+)
+
+export const checkUsernameEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHECK_USER_AVAILABILITY.match),
+    switchMap(action => concat(
+        of(actions.CHECK_USER_AVAILABILITY_START()),
+        axiosInstance$.post('/registration/validate-username/', {
+            username: action.payload,
+        }).pipe(
+            map(response => actions.CHECK_USER_AVAILABILITY_SUCCESS()),
+            catchError(error => of(actions.CHECK_USER_AVAILABILITY_FAILURE(getErrorMessage(error))))
         )
     ))
 )
@@ -106,6 +120,7 @@ export const logOutEpic = (action$: Observable<Action>) => action$.pipe(
 
 export const authEpics = combineEpics(
     getUserEpic,
+    checkUsernameEpic,
     signUpEpic,
     logInEpic,
     logOutEpic,
