@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { size } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Redux
 import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -29,7 +31,8 @@ const cx = classNames.bind(styles)
 
 const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
-    const history = useHistory()
+    const history = useHistory<LocationState>()
+    const location = useLocation<LocationState>()
     const [lastItem, setLastItem] = useState<HTMLLIElement | null>()
     const lastItemRef = useCallback(setLastItem, [])
     const observer = useRef<IntersectionObserver | null>()
@@ -141,6 +144,15 @@ const CatalogueItems = (props: Props) => {
         )
     }
 
+    const getNoItemsFoundMessage = () => {
+        if (itemsData.creatingNewItem) return
+        return (
+            <div className={styles.noItemsFound}>
+                <p>No items found</p>
+            </div>
+        )
+    }
+
     const handleAddItem = () => {
         dispatch(ADD_ITEM(catalogue.id))
     }
@@ -166,34 +178,35 @@ const CatalogueItems = (props: Props) => {
         },
     )
 
-    const showAddItemButton = catalogue.itemsRanges.date.min && !itemsData.newItemId && !itemsData.creatingNewItem
+    if (itemsData.fetchingItems && !itemsData.results?.length) {
+        return <Loader className={styles.loader} />
+    }
+
+    const isItemInCatalogue = catalogue.itemsRanges.date.min
+    const isSearchResult = isItemInCatalogue && location.search.length !== 0 && itemsData.results.length === 0
+    const showAddItemButton = isItemInCatalogue && !itemsData.newItemId && !itemsData.creatingNewItem
 
     return (
-        itemsData.fetchingItems && !itemsData.results.length
-            ? <Loader className={styles.loader} />
-            : (
-                <div className={itemsClass}>
-                    {showAddItemButton
-                        ? getAddItemButton()
-                        : getNoItemsMessage()
-                    }
-                    <ul>
-                        {getItems()}
-                    </ul>
-                    {delayCompleted
-                        ? <Loader className={styles.loader} />
-                        : (itemsData.next && itemsData.next <= 2) &&
-                        <Button
-                            className={styles.seeMoreButton}
-                            loading={delayCompleted}
-                            onClick={handleMoreItemsClick}
-                        >
-                            See more
-                        </Button>
-                    }
-                    <NewItemModal />
-                </div>
-            )
+        <div className={itemsClass}>
+            {showAddItemButton && getAddItemButton()}
+            {!isItemInCatalogue && getNoItemsMessage()}
+            {isSearchResult && getNoItemsFoundMessage()}
+            <ul>
+                {getItems()}
+            </ul>
+            {delayCompleted
+                ? <Loader className={styles.loader} />
+                : (itemsData.next && itemsData.next <= 2) &&
+                <Button
+                    className={styles.seeMoreButton}
+                    loading={delayCompleted}
+                    onClick={handleMoreItemsClick}
+                >
+                    See more
+                </Button>
+            }
+            <NewItemModal />
+        </div>
     )
 }
 
