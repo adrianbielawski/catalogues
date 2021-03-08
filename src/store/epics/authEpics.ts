@@ -30,15 +30,15 @@ export const getUserEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
-export const checkUsernameEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.CHECK_USER_AVAILABILITY.match),
+export const validateUsernameEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.VALIDATE_USERNAME.match),
     switchMap(action => concat(
-        of(actions.CHECK_USER_AVAILABILITY_START()),
+        of(actions.VALIDATE_USERNAME_START()),
         axiosInstance$.post('/registration/validate-username/', {
             username: action.payload,
         }).pipe(
-            map(() => actions.CHECK_USER_AVAILABILITY_SUCCESS()),
-            catchError(error => of(actions.CHECK_USER_AVAILABILITY_FAILURE(getErrorMessage(error))))
+            map(() => actions.VALIDATE_USERNAME_SUCCESS()),
+            catchError(error => of(actions.VALIDATE_USERNAME_FAILURE(getErrorMessage(error))))
         )
     ))
 )
@@ -120,7 +120,7 @@ export const logOutEpic = (action$: Observable<Action>) => action$.pipe(
 
 export const authEpics = combineEpics(
     getUserEpic,
-    checkUsernameEpic,
+    validateUsernameEpic,
     signUpEpic,
     logInEpic,
     logOutEpic,

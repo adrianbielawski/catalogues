@@ -5,7 +5,7 @@ import styles from './signup.scss'
 import { LocationState } from 'src/globalTypes'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { SIGN_UP, CLEAR_SIGNUP_ERROR, CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
+import { SIGN_UP, CLEAR_SIGNUP_ERROR, VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom hooks and utils
 import { useDebouncedDispatch } from 'src/customHooks'
 import { mergeRefs } from 'src/utils'
@@ -34,7 +34,7 @@ const Signup = () => {
     }
 
     const usernameDebounceRef = useDebouncedDispatch(
-        username => CHECK_USER_AVAILABILITY(username),
+        username => VALIDATE_USERNAME(username),
         300,
         validateUsername,
     )

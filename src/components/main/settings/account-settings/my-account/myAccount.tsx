@@ -6,7 +6,7 @@ import { useDebouncedDispatch } from 'src/customHooks'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { CHANGE_USERNAME, CLEAR_MY_ACCOUNT_ERROR, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
-import { CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
+import { VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom components
 import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
@@ -29,7 +29,7 @@ const MyAccount = () => {
     }
 
     const usernameInputRef = useDebouncedDispatch(
-        username => CHECK_USER_AVAILABILITY(username),
+        username => VALIDATE_USERNAME(username),
         200,
         validateUsername,
     )
