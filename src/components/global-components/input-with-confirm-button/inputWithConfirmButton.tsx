@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import styles from './inputWithConfirmButton.scss'
 //Utils
-import { confirmOnEnter } from 'src/utils'
+import { confirmOnEnter, mergeRefs } from 'src/utils'
 //Custom components
 import ConfirmButton from '../confirm-button/confirmButton'
 import DialogCloud from '../dialog-cloud/dialogCloud'
@@ -15,7 +15,10 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     onConfirm: (input: string) => void,
 }
 
-const InputWithConfirmButton = (props: Props) => {
+const InputWithConfirmButton: React.ForwardRefRenderFunction<
+HTMLInputElement,
+Props
+> = (props, ref) => {
     const inputRef = useRef<HTMLInputElement>(null)
     const { loading, inputProps, buttonProps, invalidInputMessage, onConfirm } = props
 
@@ -31,7 +34,7 @@ const InputWithConfirmButton = (props: Props) => {
         <div className={styles.inputWrapper}>
             <DialogCloud message={invalidInputMessage || ''} />
             <input
-                ref={inputRef}
+                ref={mergeRefs([inputRef, ref])}
                 {...inputProps}
                 autoFocus
             />
@@ -46,4 +49,4 @@ const InputWithConfirmButton = (props: Props) => {
     )
 }
 
-export default InputWithConfirmButton
+export default React.forwardRef(InputWithConfirmButton)

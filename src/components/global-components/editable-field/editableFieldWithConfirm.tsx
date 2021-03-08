@@ -15,11 +15,15 @@ interface Props {
     hiddenContent?: boolean,
     inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     reset?: boolean,
+    invalidInputMessage?: string,
     onEditClick: (id: number | string) => void,
     onConfirm: (input: string[]) => void,
 }
 
-const EditableFieldWithConfirm = (props: Props) => {
+const EditableFieldWithConfirm: React.ForwardRefRenderFunction<
+HTMLInputElement,
+Props
+> = (props, ref) => {
     const delayCompleated = useDelay(props.isSubmitting)
     const [inputCount, setInputCount] = useState(0)
     const [currentInput, setCurrentInput] = useState('')
@@ -55,8 +59,6 @@ const EditableFieldWithConfirm = (props: Props) => {
         setCurrentInput('')
     }
 
-    const disabledButton = props.content.length > 1 && currentInput.length === 0
-
     const getField = () => {
         if (props.isEditing && props.onConfirm !== undefined) {
             const value = !props.hiddenContent ? props.content[inputCount] : ''
@@ -64,9 +66,11 @@ const EditableFieldWithConfirm = (props: Props) => {
                 <InputWithConfirmButton
                     loading={delayCompleated}
                     inputProps={{ ...props.inputProps, defaultValue: value }}
-                    buttonProps={{ disabled: disabledButton }}
+                    buttonProps={{ disabled: props.invalidInputMessage?.length !== 0 }}
                     onChange={handleChange}
+                    invalidInputMessage={props.invalidInputMessage}
                     onConfirm={handleConfirm}
+                    ref={ref}
                     key={inputCount}
                 />
             )
@@ -96,4 +100,4 @@ const EditableFieldWithConfirm = (props: Props) => {
     )
 }
 
-export default EditableFieldWithConfirm
+export default React.forwardRef(EditableFieldWithConfirm)
