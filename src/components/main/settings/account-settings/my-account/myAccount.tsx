@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import styles from './myAccount.scss'
+//Types
+import { LocationState } from 'src/globalTypes'
 //Custom hooks and utils
-import { useDebouncedDispatch } from 'src/customHooks'
+import { useDebouncedDispatch, useFirstRender } from 'src/customHooks'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { CHANGE_USERNAME, CLEAR_MY_ACCOUNT_ERROR, TOGGLE_USERNAME_EDIT
+import {
+    CHANGE_USERNAME, CLEAR_MY_ACCOUNT_ERROR, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
 import { VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom components
@@ -16,6 +20,22 @@ const MyAccount = () => {
     const dispatch = useAppDispatch()
     const auth = useTypedSelector(state => state.auth)
     const myAccount = useTypedSelector(state => state.settings.myAccount)
+    const firstRender = useFirstRender()
+    const history = useHistory<LocationState>()
+    const location = useLocation<LocationState>()
+
+    useEffect(() => {
+        if (firstRender) {
+            return
+        }
+        const username = auth.user?.username
+        const referrer = location.state?.referrer
+
+        const pathname = `/${username}/settings/account/my-account`
+        referrer.params.username = username
+        
+        history.push(pathname, { referrer })
+    }, [auth.user?.username])
 
     const handleEditUsername = () => {
         dispatch(TOGGLE_USERNAME_EDIT(!myAccount.isEditingUsername))
