@@ -8,7 +8,7 @@ import { LocationState } from 'src/globalTypes'
 type Props = {
     title: string,
     url: string,
-    onClick: () => void,
+    onClick: (e: React.MouseEvent) => void,
 }
 
 const cx = classNames.bind(styles)
@@ -17,9 +17,9 @@ const SideMenuItem = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
     
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
         history.push(props.url!, location.state)
-        props.onClick()
+        props.onClick(e)
     }
 
     const itemClass = cx(

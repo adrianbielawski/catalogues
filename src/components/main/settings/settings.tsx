@@ -17,7 +17,7 @@ import AccountSettings from './account-settings/accountSettings'
 import SideMenuButton from 'components/global-components/side-menu/side-menu-button/sideMenuButton'
 
 const sideMenuContextValue = {
-    active: false,
+    show: false,
 }
 
 const Settings = () => {
@@ -26,6 +26,35 @@ const Settings = () => {
     const user = useTypedSelector(state => state.auth.user)
     const [minHeight, setMinHeight] = useState(0)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
+    const [showNav, setShowNav] = useState(false)
+    const [showSideMenu, setShowSideMenu] = useState(false)
+
+    const toggleNav = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowNav(!showNav)
+        setShowSideMenu(false)
+    }
+
+    const toggleSideMenu = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowNav(false)
+        setShowSideMenu(!showSideMenu)
+    }
+
+    useEffect(() => {
+        const close = () => {
+            setShowNav(false)
+            setShowSideMenu(false)
+        }
+
+        if (showNav || showSideMenu) {
+            window.addEventListener('click', close)
+        }
+        return () => {
+            window.removeEventListener('click', close)
+        }
+    }, [showNav, showSideMenu])
+
 
     const NAV_CONTENT: NavItemType[] = [
         {
@@ -59,44 +88,54 @@ const Settings = () => {
             inNavBarOnMobile: false,
         },
         {
-            component: <SideMenuButton /> ,
+            component: <SideMenuButton onToggle={toggleSideMenu} />,
             inNavBarOnMobile: true,
         }
     ]
 
     return (
-        <SideMenuContextProvider value={sideMenuContextValue} onChange={() => {}}>
-        <div
-            className={styles.settings}
-            style={{ minHeight: `${minHeight}px` }}
-            ref={settingsRef}
+        <SideMenuContextProvider
+            value={sideMenuContextValue}
+            show={showSideMenu}
+            onChange={() => { }}
         >
-            <Nav
-                content={NAV_CONTENT}
-                goBack={{
-                    title: 'Catalogues',
-                    url: `/${user!.username}/catalogues`,
-                    location: `/${user!.username}/settings`,
-                }}
-                extraItems={navBarExtraItems}
-            />
-            <Suspense fallback={<Loader />}>
-                <Switch>
-                    <Redirect
-                        exact
-                        from="/:username/settings"
-                        to={{
-                            pathname: "/:username/settings/account",
-                            state: location.state,
-                        }}
-                    />
-                    <Route
-                        path="/:username/settings/account"
-                        component={AccountSettings}
-                    />
-                </Switch>
-            </Suspense>
-        </div>
+            <div
+                className={styles.settings}
+                style={{ minHeight: `${minHeight}px` }}
+                ref={settingsRef}
+            >
+                <Nav
+                    show={showNav}
+                    content={NAV_CONTENT}
+                    goBack={{
+                        title: 'Catalogues',
+                        url: `/${user!.username}/catalogues`,
+                        location: `/${user!.username}/settings`,
+                    }}
+                    extraItems={navBarExtraItems}
+                    onToggleNav={toggleNav}
+                />
+                <Suspense fallback={<Loader />}>
+                    <Switch>
+                        <Redirect
+                            exact
+                            from="/:username/settings"
+                            to={{
+                                pathname: "/:username/settings/account",
+                                state: location.state,
+                            }}
+                        />
+                        <Route
+                            path="/:username/settings/account"
+                            render={() => (
+                                <AccountSettings
+                                    onToggleSideMenu={toggleSideMenu}
+                                />
+                            )}
+                        />
+                    </Switch>
+                </Suspense>
+            </div>
         </SideMenuContextProvider>
     )
 }

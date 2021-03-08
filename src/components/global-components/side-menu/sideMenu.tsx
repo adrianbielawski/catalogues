@@ -1,7 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import styles from './sideMenu.scss'
-//Context
-import { SideMenuContext } from './sideMenuStore'
 //Custom components
 import SideMenuItem from './side-menu-item/sideMenuItem'
 import SideBar from 'components/global-components/side-bar/sideBar'
@@ -14,17 +12,17 @@ type ItemType = {
 
 interface Props {
     content: ItemType[],
+    show: boolean,
+    onToggle: (e: React.MouseEvent) => void
 }
 
 const SideMenu = (props: Props) => {
-    const sideMenuContext = useContext(SideMenuContext)
-
     const getItems = (): React.ReactNode => {
         return props.content.map((item, index) => (
             <SideMenuItem
                 title={item.title}
                 url={item.url}
-                onClick={sideMenuContext.toggleSideMenu}
+                onClick={props.onToggle}
                 key={index}
             />
         ))
@@ -33,8 +31,8 @@ const SideMenu = (props: Props) => {
     return (
         <SideBar
             className={styles.sideMenu}
-            active={sideMenuContext.active}
-            onBackgroundClick={sideMenuContext.toggleSideMenu}>
+            active={props.show}
+        >
             <ul>
                 {getItems()}
             </ul>
