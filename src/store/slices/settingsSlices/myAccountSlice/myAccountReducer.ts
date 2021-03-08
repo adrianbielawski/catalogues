@@ -4,6 +4,15 @@ import * as T from './myAccountTypes'
 
 type State = T.MyAccountState
 
+export const myAccountReducers = {
+    CLEAR_MY_ACCOUNT_ERROR(state: State) {
+        state.myAccountError = {
+            title: '',
+            message: '',
+        }
+    },
+}
+
 export const editUsername = {
     CHANGE_USERNAME(state: State, action: PayloadAction<string>) {},
     TOGGLE_USERNAME_EDIT(state: State, action: PayloadAction<boolean>) {

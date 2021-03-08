@@ -4,8 +4,7 @@ import styles from './myAccount.scss'
 import { useDebouncedDispatch } from 'src/customHooks'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import {
-    CHANGE_PASSWORD, CHANGE_USERNAME, TOGGLE_PASSWORD_EDIT, TOGGLE_USERNAME_EDIT
+import { CHANGE_USERNAME, CLEAR_MY_ACCOUNT_ERROR, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
 import { CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
 //Custom components
@@ -39,38 +38,8 @@ const MyAccount = () => {
         dispatch(CHANGE_USERNAME(username))
     }
 
-    const handleEditPassword = () => {
-        dispatch(TOGGLE_PASSWORD_EDIT(!myAccount.isEditingPassword))
-    }
-
-    const validatePassword = (passwords: string[]) => {
-        const error = {
-            field: 'password',
-            title: '',
-            message: ''
-        }
-
-        if (passwords[0] !== passwords[1]) {
-            error.title = `Passwords error`
-            error.message = `Passwords don't match`
-        }
-
-        return {
-            valid: error === null,
-            error,
-        }
-    }
-
-    const handlePasswordChange = (input: string[]) => {
-        const { valid, error } = validatePassword(input)
-        if (!valid) {
-            setError(error!)
-            return
-        }
-        dispatch(CHANGE_PASSWORD({
-            password1: input[0],
-            password2: input[1],
-        }))
+    const clearMyAccountError = () => {
+        dispatch(CLEAR_MY_ACCOUNT_ERROR())
     }
     
     const clearFormError = () => {
