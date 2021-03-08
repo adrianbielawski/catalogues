@@ -4,7 +4,7 @@ import { Choice, FilterType } from "components/global-components/filters-bar/fil
 
 const buildFilterChoice = (choice: DeserializedChoice): Choice => ({
     id: choice.value,
-    title: choice.value,
+    value: choice.value,
 })
 
 const buildFilter = (field: DeserializedChoiceField): FilterType => ({

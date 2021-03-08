@@ -26,9 +26,7 @@ const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
         }
         else {
             if (filter.id in parsedQuery) {
-                filtersValue[filter.id] = Object.fromEntries<boolean>(
-                    parsedQuery[filter.id].split(',').map((k: string) => [k, true])
-                )
+                parsedQuery[filter.id].split(',')
             }
         }
     }

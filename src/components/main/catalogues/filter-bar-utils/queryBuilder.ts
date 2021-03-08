@@ -27,8 +27,8 @@ const queryBuilder = (context: UseFiltersBarContextInterface) => {
                     filters[`${id}__lte`] = (values as Range).lte!
                 }
             } else {
-                queryObj[id] = Object.keys(values)
-                filters[`${id}__in`] = Object.keys(values).join('__')
+                queryObj[id] = values
+                filters[`${id}__in`] = values.join('__')
             }
         })
     }
