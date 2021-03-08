@@ -31,12 +31,12 @@ const MyAccount = () => {
 
     const usernameInputRef = useDebouncedDispatch(
         username => CHECK_USER_AVAILABILITY(username),
-        300,
+        200,
         validateUsername,
     )
 
-    const handleUsernameConfirm = (input: string[]) => {
-        dispatch(CHANGE_USERNAME(input[0]))
+    const handleUsernameConfirm = (username: string) => {
+        dispatch(CHANGE_USERNAME(username))
     }
 
     const handleEditPassword = () => {
@@ -92,15 +92,15 @@ const MyAccount = () => {
                         isEditing={myAccount.isEditingUsername}
                         isSubmitting={myAccount.isSubmittingUsername}
                         title="User name"
-                        content={[auth.user!.username]}
+                        value={auth.user!.username}
                         invalidInputMessage={auth.invalidUsernameMessage}
                         ref={usernameInputRef}
-                        onEditClick={handleEditUsername}
+                        onEdit={handleEditUsername}
                         onConfirm={handleUsernameConfirm}
                     />
                 </li>
                 <li key="password">
-                    <EditableFieldWithConfirm
+                    {/* <EditableFieldWithConfirm
                         id={1}
                         isEditing={myAccount.isEditingPassword}
                         isSubmitting={myAccount.isSubmittingPassword}
@@ -111,7 +111,7 @@ const MyAccount = () => {
                         reset={isPasswordValid}
                         onEditClick={handleEditPassword}
                         onConfirm={handlePasswordChange}
-                    />
+                    /> */}
                 </li>
             </ul>
             <MessageModal
