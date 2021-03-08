@@ -43,8 +43,11 @@ export const changePasswordReducers = {
         state.isSubmittingPassword = false
         state.isEditingPassword = false
     },
-    CHANGE_PASSWORD_FAILURE(state: State) {
+    CHANGE_PASSWORD_FAILURE(state: State, action: PayloadAction<string>) {
         state.isSubmittingPassword = false
-        state.isEditingPassword = false
+        state.myAccountError = {
+            title: 'Network error',
+            message: action.payload,
+        }
     }
 }

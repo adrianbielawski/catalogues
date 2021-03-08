@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styles from './myAccount.scss'
 //Custom hooks and utils
 import { useDebouncedDispatch } from 'src/customHooks'
@@ -10,12 +10,12 @@ import { CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
 //Custom components
 import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import ChangePassword from './change-password/changePassword'
 
 const MyAccount = () => {
     const dispatch = useAppDispatch()
     const auth = useTypedSelector(state => state.auth)
     const myAccount = useTypedSelector(state => state.settings.myAccount)
-    const [error, setError] = useState({ field: '', title: '', message: '' })
 
     const handleEditUsername = () => {
         dispatch(TOGGLE_USERNAME_EDIT(!myAccount.isEditingUsername))
@@ -41,16 +41,6 @@ const MyAccount = () => {
     const clearMyAccountError = () => {
         dispatch(CLEAR_MY_ACCOUNT_ERROR())
     }
-    
-    const clearFormError = () => {
-        setError({
-            field: '',
-            title: '',
-            message: '',
-        })
-    }
-    
-    const isPasswordValid = error.field.length === 0 || error.field !== 'password'
 
     return (
         <div className={styles.myAccount}>
@@ -69,25 +59,14 @@ const MyAccount = () => {
                     />
                 </li>
                 <li key="password">
-                    {/* <EditableFieldWithConfirm
-                        id={1}
-                        isEditing={myAccount.isEditingPassword}
-                        isSubmitting={myAccount.isSubmittingPassword}
-                        title="Password"
-                        content={['password', 'confirm password']}
-                        hiddenContent={true}
-                        inputProps={{ type: "password" }}
-                        reset={isPasswordValid}
-                        onEditClick={handleEditPassword}
-                        onConfirm={handlePasswordChange}
-                    /> */}
+                    <ChangePassword />
                 </li>
             </ul>
             <MessageModal
-                show={error.message.length !== 0}
-                title={error.title}
-                message={error.message}
-                onConfirm={clearFormError}
+                show={myAccount.myAccountError.message.length !== 0}
+                title={myAccount.myAccountError.title}
+                message={myAccount.myAccountError.message}
+                onConfirm={clearMyAccountError}
             />
         </div>
     )
