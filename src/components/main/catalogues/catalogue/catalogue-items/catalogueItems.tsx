@@ -56,7 +56,7 @@ const CatalogueItems = (props: Props) => {
             filtersBarContext.filtersContext.setSelectedFilters(parsedQuery.filtersValue)
         }
 
-        filtersBarContext.filtersBar.initialized()
+        filtersBarContext.filtersBar.initialize()
     }, [])
 
     useEffect(() => {

@@ -12,21 +12,14 @@ import FiltersBarButton from './filters-bar-button/filtersBarButton'
 const FiltersBar = () => {
     const filtersBarContext = useFiltersBarContext()
 
-    const closeFiltersBar = () => {
-        filtersBarContext.filtersBar.changeShowFiltersBar(false)
-    }
-
     return (
         <SideBar
             className={styles.filtersBar}
             active={filtersBarContext.filtersBar.show}
-            onBackgroundClick={closeFiltersBar}
         >
-            <>
-                <Search />
-                <Sort />
-                <Filters />
-            </>
+            <Search />
+            <Sort />
+            <Filters />
         </SideBar>
     )
 }

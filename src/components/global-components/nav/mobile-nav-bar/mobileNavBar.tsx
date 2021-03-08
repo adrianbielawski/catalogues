@@ -9,7 +9,7 @@ import NavButton from '../nav-button/navButton'
 interface Props {
     extraItems?: ExtraItem[],
     goBackButton?: JSX.Element | undefined,
-    toggleActive: () => void,
+    onToggleNav: (e: React.MouseEvent) => void,
     handleGoBack: () => void
     className?: string,
 }
@@ -40,7 +40,7 @@ const MobileNavBar = (props: Props) => {
             <ul>
                 {extraNavBarItems}
                 <li key={'navButton'}>
-                    <NavButton onClick={props.toggleActive} />
+                    <NavButton onToggleNav={props.onToggleNav} />
                 </li>
             </ul>
         </div>

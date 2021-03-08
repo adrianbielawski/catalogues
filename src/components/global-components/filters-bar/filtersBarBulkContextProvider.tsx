@@ -12,6 +12,7 @@ import { SearchInitialState } from './search/searchTypes'
 type Props = {
     children: JSX.Element,
     onChange: () => void,
+    showFilters: boolean,
     filtersBarValue: FiltersBarInitialState,
     filtersValue: FiltersInitialState,
     sortValue: SortInitialState,
@@ -20,7 +21,7 @@ type Props = {
 
 const FiltersBarBulkContextProvider = (props: Props) => {
     return (
-        <FiltersBarContextProvider value={props.filtersBarValue} onChange={() => { }}>
+        <FiltersBarContextProvider value={props.filtersBarValue} show={props.showFilters} onChange={() => { }}>
             <SearchContextProvider value={props.searchValue} onChange={() => { }}>
                 <SortContextProvider value={props.sortValue} onChange={() => { }}>
                     <FiltersContextProvider value={props.filtersValue} onChange={() => { }}>

@@ -8,32 +8,16 @@ import styles from './filtersBarButton.scss'
 import { LocationState } from 'src/globalTypes'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import useFiltersBarContext from '../useFiltersBarContext'
 
 type Props = {
     className?: string,
+    onToggleFiltersBar: (e: React.MouseEvent) => void
 }
 
 const cx = classNames.bind(styles)
 
 const FiltersBarButton = (props: Props) => {
     const location = useLocation<LocationState>()
-    const filtersBarContext = useFiltersBarContext()
-
-    useEffect(() => {
-        if (filtersBarContext.filtersBar.show) {
-            setTimeout(() => window.addEventListener('click', toggleFiltersBar), 1)
-        } else {
-            window.removeEventListener('click', toggleFiltersBar)
-        }
-        return () => {
-            window.removeEventListener('click', toggleFiltersBar)
-        }
-    }, [filtersBarContext.filtersBar])
-
-    const toggleFiltersBar = () => {
-        filtersBarContext.filtersBar.changeShowFiltersBar(!filtersBarContext.filtersBar.show)
-    }
 
     const buttonClass = cx(
         'filtersBarButton',
@@ -44,7 +28,7 @@ const FiltersBarButton = (props: Props) => {
     )
 
     return (
-        <TransparentButton className={buttonClass} onClick={toggleFiltersBar}>
+        <TransparentButton className={buttonClass} onClick={props.onToggleFiltersBar}>
             <FontAwesomeIcon icon={faFilter} className={styles.leftArrow} />
         </TransparentButton>
     )

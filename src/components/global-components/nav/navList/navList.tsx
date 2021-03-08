@@ -18,7 +18,7 @@ interface Props {
     show: boolean,
     index: number,
     onClick: (index: number) => void
-    onLinkClick?: () => void
+    onLinkClick?: (e: React.MouseEvent) => void
     onHover: (index: number) => void
 }
 const cx = classNames.bind(styles)

@@ -3,10 +3,10 @@ import classNames from 'classnames/bind'
 import styles from './sideBar.scss'
 
 type Props = {
-    children: JSX.Element,
+    children: React.ReactNode,
     active: boolean,
     className?: string,
-    onBackgroundClick: () => void,
+    onBackgroundClick?: () => void,
 }
 const cx = classNames.bind(styles)
 

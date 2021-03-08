@@ -7,7 +7,7 @@ import styles from './navButton.scss'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 interface Props {
-    onClick: () => void,
+    onToggleNav: (e: React.MouseEvent) => void,
     className?: string,
 }
 
@@ -20,7 +20,7 @@ const NavButton = (props: Props) => {
     )
 
     return (
-        <TransparentButton className={buttonClass} onClick={props.onClick}>
+        <TransparentButton className={buttonClass} onClick={props.onToggleNav}>
             <FontAwesomeIcon icon={faBars} className={styles.leftArrow} />
         </TransparentButton>
     )

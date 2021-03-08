@@ -10,7 +10,7 @@ import { RouterContext } from 'src/router'
 
 interface Props {
   item: NavItemWithUrl,
-  onClick?: () => void,
+  onClick?: (e: React.MouseEvent) => void,
   onHover?: () => void,
 }
 const cx = classNames.bind(styles)
@@ -21,7 +21,7 @@ const NavLink = (props: Props) => {
   const params = useParams()
   const routerContext = useContext(RouterContext)
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
     if (props.item.url !== undefined) {
       history.push(props.item.url!, {
         referrer: {
@@ -31,7 +31,7 @@ const NavLink = (props: Props) => {
       })
     }
     if (props.onClick !== undefined) {
-      props.onClick()
+      props.onClick(e)
     }
   }
 

@@ -35,6 +35,8 @@ const Catalogues = () => {
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
     const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
+    const [showNav, setShowNav] = useState(false)
+    const [showFilters, setShowFilters] = useState(false)
 
     useEffect(() => {
         if (fetchingCatalogues || firstRender) {
@@ -57,6 +59,33 @@ const Catalogues = () => {
         
         getMinHeight()
     }, [cataloguesRef.current, screenHeight])
+
+    useEffect(() => {
+        const close = () => {
+            setShowNav(false)
+            setShowFilters(false)
+        }
+
+        if (showNav || showFilters) {
+            window.addEventListener('click', close)
+        }
+        return () => {
+            window.removeEventListener('click', close)
+        }
+    }, [showNav])
+
+    const toggleFiltersBar = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowFilters(!showFilters)
+        setShowNav(false)
+    }
+
+    const toggleNav = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowNav(!showNav)
+        setShowFilters(false)
+    }
+
 
     const getMinHeight = () => {
         const top = cataloguesRef.current!.getBoundingClientRect().top
@@ -107,7 +136,12 @@ const Catalogues = () => {
             inNavBarOnMobile: false,
         },
         {
-            component: <FiltersBar.FiltersBarButton className={styles.filterButton} />,
+            component: (
+                <FiltersBar.FiltersBarButton
+                    onToggleFiltersBar={toggleFiltersBar}
+                    className={styles.filterButton}
+                />
+            ),
             inNavBarOnMobile: true,
         }
     ]
@@ -119,6 +153,7 @@ const Catalogues = () => {
             filtersValue={filtersValue}
             filtersBarValue={filtersBarValue}
             onChange={() => { }}
+            showFilters={showFilters}
         >
             {fetchingCatalogues || firstRender || defaultCatalogue === null
                 ? <Loader className={styles.loader} />
@@ -132,6 +167,8 @@ const Catalogues = () => {
                             content={NAV_CONTENT}
                             extraItems={extraNavItems}
                             className={styles.nav}
+                            show={showNav}
+                            onToggleNav={toggleNav}
                         />
                         {catalogues.length === 0
                             ? getNoCatalogueMessage()

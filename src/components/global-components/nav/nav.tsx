@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.scss'
@@ -34,16 +34,17 @@ export type ExtraItem = {
 }
 
 interface NavView {
-    active: boolean,
     showList: boolean,
     listIndex: number | null,
 }
 
 interface Props {
     content: NavItemType[],
+    show: boolean,
     goBack?: { title: string, url: string, location: string },
     extraItems?: ExtraItem[],
     className?: string,
+    onToggleNav: (e: React.MouseEvent) => void,
 }
 
 interface HeightData { top: number, position: number }
@@ -55,7 +56,7 @@ const Nav = (props: Props) => {
     const location = useLocation<LocationState>()
     const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
-    const [navView, setNavView] = useState<NavView>({ active: false, showList: false, listIndex: null })
+    const [navView, setNavView] = useState<NavView>({ showList: false, listIndex: null })
     const [heightData, setHeightData] = useState<HeightData>({ top: 0, position: 0 })
     const screenWidth = window.innerWidth
 
@@ -71,18 +72,24 @@ const Nav = (props: Props) => {
 
     useEffect(() => {
         inspectHeight()
-    }, [navView.active])
+    }, [props.show])
+
+    const close = useCallback(() => {
+        setNavView({
+            showList: false,
+            listIndex: null,
+        })
+    }, [])
 
     useEffect(() => {
-        if (navView.showList || navView.active) {
-            document.body.addEventListener('click', cloceNav)
-        } else {
-            document.body.removeEventListener('click', cloceNav)
+        if (navView.showList || props.show) {
+            document.body.addEventListener('click', close)
         }
+
         return () => {
-            document.body.removeEventListener('click', cloceNav)
+            document.body.removeEventListener('click', close)
         }
-    }, [navView])
+    }, [navView, close])
 
     const inspectHeight = () => {
         setHeightData({
@@ -91,48 +98,29 @@ const Nav = (props: Props) => {
         })
     }
 
-    const cloceNav = () => {
-        setNavView({
-            active: false,
-            showList: false,
-            listIndex: null,
-        })
-    }
-
-    const toggleActive = () => {
-        setNavView({
-            active: !navView.active,
-            showList: false,
-            listIndex: null,
-        })
-    }
-
     const handleListClick = (listIndex: number) => {
         if (!navView.showList) {
             setNavView({
-                active: navView.active,
                 showList: true,
                 listIndex,
             })
         } else {
             setNavView({
-                active: navView.active,
                 showList: false,
                 listIndex: null,
             })
         }
     }
 
-    const handleLinkClick = () => {
+    const handleLinkClick = (e: React.MouseEvent) => {
         if (screenWidth <= 640) {
+            props.onToggleNav(e)
             setNavView({
-                active: !navView.active,
                 showList: false,
                 listIndex: null,
             })
         } else {
             setNavView({
-                active: navView.active,
                 showList: false,
                 listIndex: null,
             })
@@ -142,7 +130,6 @@ const Nav = (props: Props) => {
     const handleListHover = (listIndex: number) => {
         if (navView.showList) {
             setNavView({
-                active: navView.active,
                 showList: true,
                 listIndex,
             })
@@ -152,7 +139,6 @@ const Nav = (props: Props) => {
     const handleLinkHover = () => {
         if (navView.showList) {
             setNavView({
-                active: navView.active,
                 showList: true,
                 listIndex: null,
             })
@@ -248,7 +234,7 @@ const Nav = (props: Props) => {
         'nav',
         props.className,
         {
-            active: navView.active,
+            active: props.show,
         }
     )
 
@@ -258,7 +244,7 @@ const Nav = (props: Props) => {
                 <MobileNavBar
                     extraItems={props.extraItems}
                     goBackButton={props.goBack !== undefined ? getGoBackButton() : undefined}
-                    toggleActive={toggleActive}
+                    onToggleNav={props.onToggleNav}
                     handleGoBack={handleGoBack}
                 />
             )}
@@ -279,7 +265,7 @@ const Nav = (props: Props) => {
                         </ul>
                     )}
                 </div>
-                <div className={styles.background} onClick={toggleActive}></div>
+                <div className={styles.background}></div>
             </nav>
         </div>
     )

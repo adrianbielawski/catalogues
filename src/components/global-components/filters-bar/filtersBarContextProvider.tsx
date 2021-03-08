@@ -2,11 +2,12 @@ import React from 'react'
 import { useImmerReducer } from 'use-immer'
 //Contexts
 import { FiltersBarContext, reducer } from './filtersBarStore'
-import { FiltersBarInitialState, INITIALIZED, CHANGE_SHOW_FILTERS_BAR } from './filtersBarTypes'
+import { FiltersBarInitialState, INITIALIZED } from './filtersBarTypes'
 
 type Props = {
     children: JSX.Element,
     value: FiltersBarInitialState,
+    show: boolean,
     onChange: () => void,
 }
 
@@ -17,23 +18,16 @@ const FiltersBarContextProvider = (props: Props) => {
 
     const [state, dispatch] = useImmerReducer(reducer, initialState)
 
-    const initialized = () => {
+    const initialize = () => {
         dispatch({
             type: INITIALIZED,
         })
     }
 
-    const changeShowFiltersBar = (show: boolean) => {
-        dispatch({
-            type: CHANGE_SHOW_FILTERS_BAR,
-            show,
-        })
-    }
-
     const context = {
         ...state,
-        initialized,
-        changeShowFiltersBar,
+        show: props.show,
+        initialize,
     }
 
     return (
