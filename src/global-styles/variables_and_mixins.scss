@@ -22,7 +22,7 @@ $lightOrange: #d19c39;
         height: 8px;
     }
     &::-webkit-scrollbar-track {
-        background: $lightGrey;
+        background: transparent;
     }
     &::-webkit-scrollbar-thumb {
         background: $midLightGrey;

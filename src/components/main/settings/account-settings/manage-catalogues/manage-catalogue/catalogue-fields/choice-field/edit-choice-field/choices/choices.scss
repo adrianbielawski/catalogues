@@ -7,9 +7,6 @@
         max-height: 210px;
         overflow-y: scroll;
         @include scrollBar;
-        &::-webkit-scrollbar-track {
-            background: #fff;
-        }
         .choice {
             display: flex;
             align-items: center;

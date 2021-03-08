@@ -7,9 +7,6 @@
         outline: none;
         padding: 5px 25px 5px 5px;
         @include scrollBar;
-        &::-webkit-scrollbar-track {
-            background: #fff;
-        }
     }
     .confirmButton {
         position: absolute;

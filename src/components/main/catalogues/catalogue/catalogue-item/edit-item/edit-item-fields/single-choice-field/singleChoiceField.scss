@@ -22,9 +22,6 @@
             padding-right: 20px;
             overflow-y: scroll;
             @include scrollBar;
-            &::-webkit-scrollbar-track {
-                background: #fff;
-            }
         }
     }
 }
