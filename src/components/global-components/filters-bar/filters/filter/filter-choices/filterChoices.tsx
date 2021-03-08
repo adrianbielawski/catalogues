@@ -1,5 +1,5 @@
-import React, { useContext } from 'react'
-import { upperFirst, includes, orderBy } from 'lodash'
+import React, { useContext, useEffect, useState } from 'react'
+import { upperFirst, includes, orderBy, size } from 'lodash'
 import styles from './filterChoices.scss'
 //Types
 import { FilterWithChoices, SelectedChoiceFilterValue, SelectedFilterValue } from '../../filtersTypes'
@@ -15,6 +15,7 @@ type Props = {
 }
 
 const FilterChoices = (props: Props) => {
+    const [allChoicesSelected, setAllChoicesSelected] = useState(false)
     const {
         selectedFilters,
         changeSelectedFilters,
@@ -41,6 +42,26 @@ const FilterChoices = (props: Props) => {
         (c) => c.title.toLowerCase(),
         props.filter.choicesSortDir
     )
+
+    useEffect(() => {
+        if (size(selectedChoices) === sortedChoices.length) {
+            setAllChoicesSelected(true)
+            return
+        }
+        setAllChoicesSelected(false)
+    }, [selectedChoices])
+
+    const handleSelectAllChange = () => {
+        if (allChoicesSelected) {
+            changeSelectedFilters(props.filter.id, {})
+        } else {
+            const allChoices: SelectedFilterValue = {}
+            sortedChoices.map(choice => {
+                allChoices[choice.id] = true
+            })
+            changeSelectedFilters(props.filter.id, allChoices)
+        }
+    }
 
     const choices = () => sortedChoices.map(choice => {
         const handleChange = (choiceId: number | string, selected: boolean) => {
@@ -81,6 +102,13 @@ const FilterChoices = (props: Props) => {
                 defaultSearchValue={props.filter.searchValue}
                 onSort={handleSort}
                 onSearch={handleSearch}
+            />
+            <CheckBoxWithTitle
+                id={'selectAll'}
+                title={'Select all'}
+                selected={allChoicesSelected}
+                className={styles.selectAll}
+                onChange={handleSelectAllChange}
             />
             <ul className={styles.filterChoices}>
                 {choices()}
