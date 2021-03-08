@@ -1,48 +1,41 @@
 import React, { useState } from 'react'
 import styles from './myAccount.scss'
+//Custom hooks and utils
+import { useDebouncedDispatch } from 'src/customHooks'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import {
     CHANGE_PASSWORD, CHANGE_USERNAME, TOGGLE_PASSWORD_EDIT, TOGGLE_USERNAME_EDIT
 } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
+import { CHECK_USER_AVAILABILITY } from 'store/slices/authSlices/authSlices'
 //Custom components
 import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 const MyAccount = () => {
     const dispatch = useAppDispatch()
-    const [error, setError] = useState({ field: '', title: '', message: '' })
-    const user = useTypedSelector(state => state.auth.user)
+    const auth = useTypedSelector(state => state.auth)
     const myAccount = useTypedSelector(state => state.settings.myAccount)
+    const [error, setError] = useState({ field: '', title: '', message: '' })
 
     const handleEditUsername = () => {
         dispatch(TOGGLE_USERNAME_EDIT(!myAccount.isEditingUsername))
     }
 
     const validateUsername = (username: string) => {
-        let error = {
-            field: 'userName',
-            title: '',
-            message: ''
+        if (username.toLowerCase() === auth.user?.username.toLowerCase()) {
+            return false
         }
-
-        if (username.length === 0) {
-            error.title = 'User name error'
-            error.message = 'Please add user name'
-        }
-
-        return {
-            valid: error === null,
-            error,
-        }
+        return true
     }
 
-    const handleUsernameChange = (input: string[]) => {
-        const { valid, error } = validateUsername(input[0])
-        if (!valid) {
-            setError(error!)
-            return
-        }
+    const usernameInputRef = useDebouncedDispatch(
+        username => CHECK_USER_AVAILABILITY(username),
+        300,
+        validateUsername,
+    )
+
+    const handleUsernameConfirm = (input: string[]) => {
         dispatch(CHANGE_USERNAME(input[0]))
     }
 
@@ -88,7 +81,7 @@ const MyAccount = () => {
         })
     }
     
-    const isPasswordValid = error.field.length === 0 || error.field !== 'password' 
+    const isPasswordValid = error.field.length === 0 || error.field !== 'password'
 
     return (
         <div className={styles.myAccount}>
@@ -99,9 +92,11 @@ const MyAccount = () => {
                         isEditing={myAccount.isEditingUsername}
                         isSubmitting={myAccount.isSubmittingUsername}
                         title="User name"
-                        content={[user!.username]}
+                        content={[auth.user!.username]}
+                        invalidInputMessage={auth.invalidUsernameMessage}
+                        ref={usernameInputRef}
                         onEditClick={handleEditUsername}
-                        onConfirm={handleUsernameChange}
+                        onConfirm={handleUsernameConfirm}
                     />
                 </li>
                 <li key="password">
