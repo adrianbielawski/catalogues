@@ -19,7 +19,6 @@ export const createCatalogueFieldReducers = {
     CREATE_CATALOGUE_FIELD_SUCCESS(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.isSubmittingNewField = false
-        catalogue.isAddFieldFormActive = false
     },
     CREATE_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)

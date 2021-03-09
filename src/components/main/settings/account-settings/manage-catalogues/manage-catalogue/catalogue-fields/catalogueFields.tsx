@@ -43,7 +43,7 @@ const CatalogueFields = (props: Props) => {
         }
     })
 
-    if (props.catalogue.fetchingFieldsChoices || !props.catalogue.isInitialized) {
+    if (props.catalogue.fetchingFieldsChoices && !props.catalogue.isInitialized) {
         return null
     }
 

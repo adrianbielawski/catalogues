@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
 //Redux
@@ -48,6 +48,7 @@ const FieldForm = (props: Props) => {
     const dispatch = useAppDispatch()
     const fields = useTypedSelector(fieldsSelector(props.catalogueId))
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const nameInputRef = useRef<HTMLInputElement>(null)
     const [isNameEditing, setIsNameEditing] = useState(true)
     const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')
@@ -118,6 +119,11 @@ const FieldForm = (props: Props) => {
             setFormError(error!)
             return
         }
+        
+        setFieldType('')
+        setFieldName('')
+        nameInputRef.current!.value = ''
+
         dispatch(CREATE_CATALOGUE_FIELD({
             catalogueId: props.catalogueId,
             name: fieldName,
@@ -152,6 +158,7 @@ const FieldForm = (props: Props) => {
                     invalidInputMessage={nameError}
                     minLength={1}
                     autoFocus
+                    ref={nameInputRef}
                     onEditClick={handleEditName}
                     onChange={handleNameChange}
                 />
