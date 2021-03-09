@@ -81,7 +81,7 @@
     &:hover .prev,
     &:hover .next,
     &:hover .fullScreenButton {
-        opacity: 0.75;
+        opacity: .75;
     }
 
     ul {
@@ -107,6 +107,9 @@
                 &:hover .trashButton {
                     opacity: 0.6;
                 }
+                &:hover .primaryImageStar {
+                    opacity: 1;
+                }
                 
                 img {
                     max-width: 100%;
@@ -120,6 +123,10 @@
                     padding: 20px;
                     font-size: 20px;
                     border-radius: 50%;
+                }
+
+                .primaryImageStar {
+                    opacity: 0;
                 }
             }
         }

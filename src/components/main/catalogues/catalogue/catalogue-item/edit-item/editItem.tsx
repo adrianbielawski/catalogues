@@ -54,7 +54,7 @@ const EditItem = (props: Props) => {
         }))
     }
 
-    const handleImageChange = (i: number) => {
+    const handlePrimaryImageChange = (i: number) => {
         dispatch(CHANGE_PRIMARY_IMAGE({
             itemId: item.id,
             index: i
@@ -82,17 +82,14 @@ const EditItem = (props: Props) => {
 
     return (
         <div className={styles.editItem} ref={editItemRef} >
-            {item.images.length > 0
-                ? <p className={styles.currentImage}>Main image</p>
-                : null
-            }
             <ImagesCarousel
                 width={width}
                 height={400}
                 images={item.images}
                 showCounter={true}
+                primaryImageStar={true}
                 onRemove={handleImageRemove}
-                onChange={handleImageChange}
+                onPrimaryChange={handlePrimaryImageChange}
             />
             <AddImage
                 className={styles.addImageButton}

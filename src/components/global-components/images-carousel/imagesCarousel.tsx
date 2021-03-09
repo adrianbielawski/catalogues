@@ -14,6 +14,7 @@ import { DeserializedImage } from 'src/globalTypes'
 import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
 import ImagesCounter from './images-counter/imagesCounter'
+import PrimaryImageStar from './primary-image-star/primaryImageStar'
 
 const BASE_URL = process.env.API_URL
 
@@ -25,9 +26,11 @@ type Props = {
     fullSizeImages?: boolean,
     background?: string,
     showCounter?: boolean,
+    primaryImageStar?: true,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
+    onPrimaryChange?: (i: number) => void,
     onFullScreenView?: () => void,
 }
 
@@ -182,6 +185,12 @@ const ImagesCarousel = (props: Props) => {
                 props.onRemove(mod(i, count))
             }
 
+            const onPrimaryImageChange = () => {
+                if (props.onPrimaryChange !== undefined && count > 0 && !firstRender) {
+                    props.onPrimaryChange(mod(i, count))
+                }
+            }
+
             const dynamicStyles = getDynamicStyles(i)
 
             const IMG = props.images[mod(i, count)]
@@ -208,6 +217,13 @@ const ImagesCarousel = (props: Props) => {
                             >
                                 <FontAwesomeIcon icon={faTrashAlt} />
                             </TransparentButton>
+                        }
+                        {props.primaryImageStar &&
+                            <PrimaryImageStar
+                                className={styles.primaryImageStar}
+                                solid={IMG.isPrimary}
+                                onClick={onPrimaryImageChange}
+                            />
                         }
                     </div>
                 </li>
