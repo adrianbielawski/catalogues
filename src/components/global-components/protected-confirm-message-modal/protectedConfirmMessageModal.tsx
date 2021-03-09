@@ -42,7 +42,7 @@ const ProtectedConfirmMessageModal = (props: Props) => {
                 }
                 <p className={styles.message}>{props.message.value}</p>
                 <p className={styles.inputMessage}>
-                    If so, please tap
+                    If so, please type
                     <span>{` "${props.message.expectedInput}" `}</span>
                     below
                 </p>
