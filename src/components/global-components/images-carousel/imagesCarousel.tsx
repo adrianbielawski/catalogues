@@ -73,7 +73,7 @@ const ImagesCarousel = (props: Props) => {
                 carouselRef.current.removeEventListener('touchstart', handleTouchStart)
             }
         }
-    }, [touchStart])
+    }, [touchStart, count])
 
     useEffect(() => {
         if (carouselRef.current !== null && touchStart !== null) {
