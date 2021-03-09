@@ -10,6 +10,7 @@ import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
 import Loader from 'components/global-components/loader/loader'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
+import NewCatalogueModal from './new-catalogue-modal/newCatalogueModal'
 
 const ManageCatalogues = () => {
     const dispatch = useAppDispatch()
@@ -90,6 +91,11 @@ const ManageCatalogues = () => {
                 ? <Loader size={50} className={styles.loader} />
                 : items
             }
+            {catalogues.newCatalogueId && (
+                <NewCatalogueModal
+                    newCatalogueId={catalogues.newCatalogueId}
+                />
+            )}
         </div>
     )
 }

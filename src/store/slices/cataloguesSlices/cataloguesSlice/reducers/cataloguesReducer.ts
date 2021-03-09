@@ -18,6 +18,10 @@ export const createCatalogueReducers = {
     CREATE_CATALOGUE_FAILURE(state: State) {
         state.creatingNewCatalogue = false
     },
+    NEW_CATALOGUE_CREATED(state: State) {
+        state.creatingNewCatalogue = false
+        state.newCatalogueId = null
+    },
 }
 
 export const refreshCatalogueReducers = {
