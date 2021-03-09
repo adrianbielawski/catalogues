@@ -61,10 +61,10 @@ const EditItem = (props: Props) => {
         }))
     }
 
-    const handleAddImage = (image: string) => {
+    const handleAddImage = (images: string[]) => {
         dispatch(ADD_IMAGE_TO_STATE({
             itemId: item.id,
-            image
+            images
         }))
     }
 
@@ -96,7 +96,7 @@ const EditItem = (props: Props) => {
             />
             <AddImage
                 className={styles.addImageButton}
-                onConfirm={handleAddImage}
+                onAdd={handleAddImage}
             />
             {!props.isItemNew &&
                 <p className={styles.itemId}>

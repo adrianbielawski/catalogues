@@ -40,7 +40,7 @@ export interface FetchItemsSuccessPayload {
 
 export interface AddImageToStatePayload {
     itemId: number,
-    image: string,
+    images: string[],
 }
 
 export interface ImagePayload {

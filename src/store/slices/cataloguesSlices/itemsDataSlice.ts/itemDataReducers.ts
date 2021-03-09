@@ -47,7 +47,7 @@ export const fetchItemsReducers = {
 }
 
 export const addItemReducers = {
-    ADD_ITEM(state: State, action: PayloadAction<number>) {},
+    ADD_ITEM(state: State, action: PayloadAction<number>) { },
     ADD_ITEM_START(state: State) {
         state.creatingNewItem = true
     },
@@ -97,14 +97,15 @@ export const itemImageReducers = {
     ADD_IMAGE_TO_STATE(state: State, action: PayloadAction<T.AddImageToStatePayload>) {
         const item = getItemById(state, action.payload.itemId)
 
-        const image = {
-            id: `newImage${Date.now()}`,
-            image: action.payload.image,
-            imageThumbnail: '',
-            isPrimary: item.images.length === 0,
-            itemId: item.id,
-        }
-        item.images.push(image)
+        action.payload.images.forEach((image, i) => {
+            item.images.push({
+                id: `newImage_${i}_${Date.now()}`,
+                image,
+                imageThumbnail: '',
+                isPrimary: item.images.length === 0,
+                itemId: item.id,
+            })
+        })
     },
     REMOVE_IMAGE_FROM_STATE(state: State, action: PayloadAction<T.ImagePayload>) {
         const item = getItemById(state, action.payload.itemId)
