@@ -33,7 +33,7 @@ export const confirmOnEnter = (element: React.RefObject<any>, callback: Function
         return () => {
             element.current?.removeEventListener('keyup', handleKeyUp)
         }
-    }, [])
+    }, [callback])
 
     const handleKeyUp = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
