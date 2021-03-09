@@ -1,11 +1,11 @@
 import React, { useContext } from 'react'
 import styles from './filterChoices.scss'
 //Types
-import { Choice, FilterWithChoices, SelectedChoiceFilterValue } from '../../filtersTypes'
+import { FilterWithChoices, SelectedChoiceFilterValue } from '../../filtersTypes'
 //Context
 import { FiltersContext } from '../../filtersStore'
 //Custom components
-import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
+import ChoiceList from 'components/global-components/choice-list/choiceList'
 
 type Props = {
     active: boolean,
@@ -20,18 +20,18 @@ const FilterChoices = (props: Props) => {
 
     const selectedChoices = selectedFilters![props.filter.id] as SelectedChoiceFilterValue[]
 
-    const handleChange = (selected: Choice[]) => {
-        const selectedValues = selected.map(c => c.value)
-        changeSelectedFilters(props.filter!.id, selectedValues)
+    const handleChange = (selected: (number | string)[]) => {
+        changeSelectedFilters(props.filter!.id, selected as string[])
     }
 
     return (
         <div className={styles.wrapper}>
-            <MultipleChoiceList
+            <ChoiceList
                 choices={props.filter.choices}
                 defaultSortDir="asc"
                 defaultSearchValue=""
                 selected={selectedChoices || []}
+                multiple={true}
                 onChange={handleChange}
             />
         </div>

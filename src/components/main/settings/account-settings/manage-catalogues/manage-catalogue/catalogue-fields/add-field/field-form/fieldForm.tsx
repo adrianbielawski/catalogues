@@ -9,7 +9,7 @@ import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/catalogue
 import { useDelay } from 'src/customHooks'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
-import SingleChoiceList from 'components/global-components/single-choice-list/singleChoiceList'
+import ChoiceList from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
@@ -87,8 +87,8 @@ const FieldForm = (props: Props) => {
         setFieldName(input)
     }
 
-    const handleTypeChange = (choice: FieldType) => {
-        setFieldType(choice.id)
+    const handleTypeChange = (choiceId: string | number) => {
+        setFieldType(choiceId as string)
     }
 
     const validateForm = () => {
@@ -156,7 +156,7 @@ const FieldForm = (props: Props) => {
                     onChange={handleNameChange}
                 />
                 <p className={styles.type}>Type:</p>
-                <SingleChoiceList
+                <ChoiceList
                     className={styles.typeList}
                     choices={FIELD_TYPES}
                     selected={fieldType}

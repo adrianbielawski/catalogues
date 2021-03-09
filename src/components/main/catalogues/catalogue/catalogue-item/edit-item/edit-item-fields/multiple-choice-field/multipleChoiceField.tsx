@@ -9,7 +9,7 @@ import { fieldSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
-import MultipleChoiceList from 'components/global-components/multiple-choice-list/multipleChoiceList'
+import ChoiceList from 'components/global-components/choice-list/choiceList'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 
 interface Props {
@@ -71,11 +71,12 @@ const MultipleChoiceField = (props: Props) => {
                 {isEditing
                     ? (
                         <>
-                            <MultipleChoiceList
+                            <ChoiceList
                                 choices={field.choices}
                                 defaultSortDir="asc"
                                 defaultSearchValue=""
                                 selected={props.fieldValue?.value as number[] || []}
+                                multiple={true}
                                 onChange={handleChange}
                             />
                             <AddChoice
