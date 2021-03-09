@@ -15,10 +15,10 @@ import * as actions from "store/slices/cataloguesSlices/cataloguesSlice/catalogu
 
 export const createCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CREATE_CATALOGUE.match),
-    switchMap(() => concat(
+    switchMap(action => concat(
         of(actions.CREATE_CATALOGUE_START()),
         axiosInstance$.post('/catalogues/', {
-            name: 'New catalogue'
+            name: action.payload,
         }).pipe(
             map(response => actions.CREATE_CATALOGUE_SUCCESS(response.data)),
             catchError(() => of(actions.CREATE_CATALOGUE_FAILURE()))

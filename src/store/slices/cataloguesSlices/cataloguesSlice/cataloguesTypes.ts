@@ -4,6 +4,7 @@ export interface CataloguesState {
     catalogues: DeserializedCatalogue[],
     fetchingCatalogues: boolean,
     creatingNewCatalogue: boolean,
+    newCatalogueId: number | null,
 }
 
 export interface ChangeCatalogueNamePayload {

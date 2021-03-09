@@ -8,6 +8,7 @@ const initialState: CataloguesState = {
     catalogues: [],
     fetchingCatalogues: true,
     creatingNewCatalogue: false,
+    newCatalogueId: null,
 }
 
 export const cataloguesSlice = createSlice({

@@ -7,15 +7,15 @@ import { getCatalogueById } from '../cataloguesSlectors'
 type State = T.CataloguesState
 
 export const createCatalogueReducers = {
-    CREATE_CATALOGUE(state: State) { },
+    CREATE_CATALOGUE(state: State, action: PayloadAction<string>) { },
     CREATE_CATALOGUE_START(state: State) {
         state.creatingNewCatalogue = true
     },
-    CREATE_CATALOGUE_FAILURE(state: State) {
-        state.creatingNewCatalogue = false
-    },
     CREATE_CATALOGUE_SUCCESS(state: State, action: PayloadAction<Catalogue>) {
         state.catalogues.unshift(catalogueDeserializer(action.payload))
+        state.newCatalogueId = action.payload.id
+    },
+    CREATE_CATALOGUE_FAILURE(state: State) {
         state.creatingNewCatalogue = false
     },
 }
@@ -114,6 +114,8 @@ export const deleteCatalogueReducers = {
     DELETE_CATALOGUE_SUCCESS(state: State, action: PayloadAction<number>) {
         const catalogueIndex = state.catalogues.findIndex(c => c.id === action.payload)
         state.catalogues.splice(catalogueIndex, 1)
+        state.newCatalogueId = null
+        state.creatingNewCatalogue = false
     },
     DELETE_CATALOGUE_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
