@@ -4,6 +4,7 @@
     display: inline-flex;
     align-items: center;
     max-width: 100%;
+    @include resetTapHighlight;
     span {
         margin-left: 5px;
         white-space: break-spaces;
