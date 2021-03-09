@@ -23,6 +23,9 @@ Props
     const { loading, inputProps, buttonProps, invalidInputMessage, onConfirm } = props
 
     const handleConfirm = () => {
+        if (invalidInputMessage?.length !== 0) {
+            return
+        }
         onConfirm(inputRef.current!.value)
         if (props.clearOnConfirm) {
             inputRef.current!.value = ''
@@ -42,6 +45,7 @@ Props
                 className={styles.confirmButton}
                 size={25}
                 loading={loading}
+                disabled={invalidInputMessage?.length !== 0}
                 {...buttonProps}
                 onClick={handleConfirm}
             />
