@@ -18,8 +18,8 @@ const ManageCatalogue = (props: Props) => (
             name={props.catalogue.name}
         />
         <div className={styles.content}>
-            <CatalogueSettings catalogue={props.catalogue} />
             <CatalogueFields catalogue={props.catalogue} />
+            <CatalogueSettings catalogue={props.catalogue} />
         </div>
     </div>
 )
