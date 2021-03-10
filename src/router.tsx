@@ -52,7 +52,7 @@ const useParamHydrator = () => {
     const hydrate = (params: DehydratedParams): HydratedParams => {
         const hydrated: HydratedParams = {}
         if (params.username !== undefined) {
-            hydrated.username = state.auth.user?.username
+            hydrated.username = state.currentUser?.user?.username
         }
         if (params.slug !== undefined) {
             hydrated.catalogue = catalogueSelectorBySlug(params.slug)(state)
@@ -63,7 +63,7 @@ const useParamHydrator = () => {
     const dehydrate = (params: HydratedParams): DehydratedParams => {
         const dehydrated: DehydratedParams = {}
         if (params.username !== undefined) {
-            dehydrated.username = state.auth.user?.username
+            dehydrated.username = state.currentUser.user?.username
         }
         if (params.catalogue !== undefined) {
             dehydrated.slug = catalogueSelector(params.catalogue.id)(state)?.slug

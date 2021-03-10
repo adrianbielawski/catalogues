@@ -29,7 +29,7 @@ const Catalogues = () => {
     const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
-    const user = useTypedSelector(state => state.auth.user)
+    const currentUser = useTypedSelector(state => state.currentUser.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
@@ -94,7 +94,7 @@ const Catalogues = () => {
     }
 
     const handleRedirectToSettings = () => {
-        history.push(`/${user!.username}/settings/account/manage-catalogues`)
+        history.push(`/${currentUser!.username}/settings/account/manage-catalogues`)
     }
 
     const getNoCatalogueMessage = () => {
@@ -114,19 +114,19 @@ const Catalogues = () => {
     const NAV_CONTENT: NavItemType[] = [
         {
             title: 'Catalogues',
-            location: `/${user!.username}/catalogues`,
+            location: `/${currentUser!.username}/catalogues`,
             children: catalogues.map(catalogue => {
                 return {
                     id: catalogue.id.toString(),
                     title: catalogue.name,
-                    url: `/${user!.username}/catalogues/${catalogue.slug}`,
+                    url: `/${currentUser!.username}/catalogues/${catalogue.slug}`,
                 }
             }),
         },
         {
             id: 'Settings',
             title: 'Settings',
-            url: `/${user!.username}/settings`,
+            url: `/${currentUser!.username}/settings`,
         }
     ]
 
