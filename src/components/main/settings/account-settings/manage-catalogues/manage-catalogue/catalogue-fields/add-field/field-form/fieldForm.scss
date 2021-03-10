@@ -1,3 +1,5 @@
+@import "global-styles/variables_and_mixins";
+
 .fieldForm {
     margin: 20px 0 0 0px;
     max-height: 0;
@@ -15,6 +17,10 @@
     }
     .wrapper {
         margin-left: 20px;
+        input {
+            border-bottom: 1px solid $midLightGrey;
+            max-width: 250px;
+        }
         p {
             white-space: nowrap;
         }

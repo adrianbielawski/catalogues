@@ -8,15 +8,10 @@ import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/catalogue
 //Custom hooks
 import { useDelay } from 'src/customHooks'
 //Custom components
-import EditableField from 'components/global-components/editable-field/editableField'
+import Input from 'components/global-components/input/input'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-
-interface FieldType {
-    id: string,
-    value: string,
-}
 
 const FIELD_TYPES = [
     {
@@ -49,16 +44,11 @@ const FieldForm = (props: Props) => {
     const fields = useTypedSelector(fieldsSelector(props.catalogueId))
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
     const nameInputRef = useRef<HTMLInputElement>(null)
-    const [isNameEditing, setIsNameEditing] = useState(true)
     const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')
     const [formError, setFormError] = useState('')
     const [nameError, setNameError] = useState('')
     const delayCompleated = useDelay(catalogue.isSubmittingNewField)
-
-    const handleEditName = () => {
-        setIsNameEditing(!isNameEditing)
-    }
 
     const validateName = (name: string) => {
         let error = null
@@ -140,6 +130,11 @@ const FieldForm = (props: Props) => {
         dispatch(TOGGLE_ADD_FIELD(catalogue.id))
     }
 
+    const disabled = catalogue.isSubmittingNewField
+        || nameError.length > 0
+        || fieldName.length === 0
+        || fieldType.length === 0
+
     const formClass = cx(
         'fieldForm',
         {
@@ -151,15 +146,12 @@ const FieldForm = (props: Props) => {
         <div className={formClass}>
             <p className={styles.title}>New field form</p>
             <div className={styles.wrapper}>
-                <EditableField
-                    title="Field name"
-                    content={fieldName}
-                    isEditing={isNameEditing}
-                    invalidInputMessage={nameError}
+                <Input
+                    placeholder="field name"
                     minLength={1}
+                    invalidInputMessage={nameError}
                     autoFocus
                     ref={nameInputRef}
-                    onEditClick={handleEditName}
                     onChange={handleNameChange}
                 />
                 <p className={styles.type}>Type:</p>
@@ -172,7 +164,7 @@ const FieldForm = (props: Props) => {
                 <div className={styles.buttons}>
                     <Button
                         loading={delayCompleated}
-                        disabled={catalogue.isSubmittingNewField}
+                        disabled={disabled}
                         onClick={handleConfirm}
                     >
                         Add field
