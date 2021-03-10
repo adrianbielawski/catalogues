@@ -32,6 +32,8 @@ Props
         }
     }
     confirmOnEnter(inputRef, handleConfirm)
+    
+    const disabled = invalidInputMessage !== undefined && invalidInputMessage?.length !== 0
 
     return (
         <div className={styles.inputWrapper}>
@@ -45,7 +47,7 @@ Props
                 className={styles.confirmButton}
                 size={25}
                 loading={loading}
-                disabled={invalidInputMessage?.length !== 0}
+                disabled={disabled}
                 {...buttonProps}
                 onClick={handleConfirm}
             />
