@@ -73,7 +73,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 
     const imagesCarouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
     const imagesCarouselHeight = screenWidth > 800 ? 200 : undefined
-    const isImagesPreviesAllowed = item.images.length && screenWidth > 800
+    const isImagesPreviewAllowed = item.images.length && screenWidth > 800
     const showImagesCounter = item.images.length > 1
 
     const extraFields = [
@@ -105,7 +105,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             height={imagesCarouselHeight}
                             images={item.images}
                             singleView={true}
-                            onFullScreenView={isImagesPreviesAllowed ? toggleImagesPreview : undefined}
+                            onFullScreenView={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
                             showCounter={showImagesCounter}
                         />
                     </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
-import { faExpand, faCamera, faSlash } from '@fortawesome/free-solid-svg-icons'
+import { faCamera, faSlash } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
@@ -174,6 +174,13 @@ const ImagesCarousel = (props: Props) => {
         return styles
     }
 
+    const handleFullImageViev = () => {
+        if (props.onFullScreenView === undefined) {
+            return
+        }
+        props.onFullScreenView()
+    }
+
     const getItems = () => {
         let items = []
 
@@ -199,6 +206,12 @@ const ImagesCarousel = (props: Props) => {
                 : !props.fullSizeImages ? `${BASE_URL}${IMG.imageThumbnail}`
                     : `${BASE_URL}${IMG.image}`
 
+
+            const imgClass = cx(
+                {
+                    imgHover: props.onFullScreenView !== undefined,
+                }
+            )
             items.push(
                 <li key={i}>
                     <div
@@ -209,7 +222,7 @@ const ImagesCarousel = (props: Props) => {
                             '--height': `${IMAGE_HEIGHT}px`,
                         } as React.CSSProperties}
                     >
-                        <img src={IMAGE_URL} />
+                        <img src={IMAGE_URL} className={imgClass} onClick={handleFullImageViev} />
                         {props.onRemove &&
                             <TransparentButton
                                 className={styles.trashButton}
@@ -282,19 +295,11 @@ const ImagesCarousel = (props: Props) => {
                     </>
                 )
                 : (
-                <div className={`fa-layers fa-fw ${styles.cameraIcon}`}>
-                    <FontAwesomeIcon icon={faCamera} />
-                    <FontAwesomeIcon icon={faSlash} className={styles.slash} />
-                </div>
+                    <div className={`fa-layers fa-fw ${styles.cameraIcon}`}>
+                        <FontAwesomeIcon icon={faCamera} />
+                        <FontAwesomeIcon icon={faSlash} className={styles.slash} />
+                    </div>
                 )
-            }
-            {props.onFullScreenView &&
-                <TransparentButton
-                    className={styles.fullScreenButton}
-                    onClick={props.onFullScreenView}
-                >
-                    <FontAwesomeIcon icon={faExpand} />
-                </TransparentButton>
             }
         </div>
     )
