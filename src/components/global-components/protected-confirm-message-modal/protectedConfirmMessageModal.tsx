@@ -9,6 +9,7 @@ export interface ProtectedMessage {
     title?: string,
     value: string,
     expectedInput: string,
+    callbackParams?: { [key: string]: any }
 }
 
 type Props = {

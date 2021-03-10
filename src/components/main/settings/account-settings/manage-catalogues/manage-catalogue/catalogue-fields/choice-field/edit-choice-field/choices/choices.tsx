@@ -14,6 +14,9 @@ import AddChoice from 'components/global-components/add-choice/addChoice'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import SearchBar from 'components/global-components/search-bar/searchBar'
 import { orderBy } from 'lodash'
+import
+    ProtectedConfirmMessageModal, { ProtectedMessage }
+from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
 
 type Props = {
     field: DeserializedChoiceField,
@@ -26,12 +29,35 @@ const Choices = (props: Props) => {
     const dispatch = useAppDispatch()
     const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
     const [searchChoiceValue, setSearchChoiceValue] = useState('')
+    const [protectedMessage, setProtectedMessage] = useState<ProtectedMessage | null>(null)
 
     const clearError = () => {
         dispatch(CLEAR_FIELD_ERROR({
             catalogueId: props.field.catalogueId,
             fieldId: props.field.id,
         }))
+    }
+
+    const displayMessage = (choiceId: number, expected: string) => {
+        setProtectedMessage({
+            title: 'Delete item',
+            value: `Are you sure you want to delete choice with name: ${expected}?`,
+            expectedInput: expected,
+            callbackParams: { choiceId },
+        })
+    }
+
+    const clearProtectedMessage = () => {
+        setProtectedMessage(null)
+    }
+
+    const deleteChoice = () => {
+        dispatch(REMOVE_CHOICE({
+            catalogueId: props.field.catalogueId,
+            fieldId: props.field.id,
+            choiceId: protectedMessage!.callbackParams!.choiceId,
+        }))
+        clearProtectedMessage()
     }
 
     const handleSort = () => {
@@ -61,18 +87,13 @@ const Choices = (props: Props) => {
 
     const choices = (
         sortedChoices.map(choice => {
-
-            const handleRemove = () => {
-                dispatch(REMOVE_CHOICE({
-                    catalogueId: props.field.catalogueId,
-                    fieldId: props.field.id,
-                    choiceId: choice.id,
-                }))
+            const handleDelete = () => {
+                displayMessage(choice.id, choice.value)
             }
 
             return (
                 <li className={styles.choice} key={choice.value}>
-                    <TransparentButton className={styles.removeButton} onClick={handleRemove}>
+                    <TransparentButton className={styles.removeButton} onClick={handleDelete}>
                         <FontAwesomeIcon icon={faTimes} />
                     </TransparentButton>
                     <span>{choice.value}</span>
@@ -107,6 +128,12 @@ const Choices = (props: Props) => {
                 title={error.title}
                 message={error.message}
                 onConfirm={clearError}
+            />
+            <ProtectedConfirmMessageModal
+                show={protectedMessage !== null}
+                message={protectedMessage}
+                onConfirm={deleteChoice}
+                onCancel={clearProtectedMessage}
             />
         </div>
     )
