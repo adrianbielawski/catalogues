@@ -184,7 +184,7 @@ export const refreshCatalogueEpic = (action$: Observable<Action>) => action$.pip
 
 export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
     filter(actions.FETCH_CATALOGUES.match),
-    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
+    withLatestFrom(state$.pipe(pluck('currentUser', 'user', 'id'))),
     switchMap(([_, id]) => concat(
         of(actions.FETCH_CATALOGUES_START()),
         axiosInstance$.get('/catalogues/', {

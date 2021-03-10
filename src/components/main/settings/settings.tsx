@@ -23,7 +23,7 @@ const sideMenuContextValue = {
 const Settings = () => {
     const location = useLocation<LocationState>()
     const settingsRef = useRef<HTMLDivElement>(null)
-    const user = useTypedSelector(state => state.auth.user)
+    const currentUser = useTypedSelector(state => state.currentUser.user)
     const [minHeight, setMinHeight] = useState(0)
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
     const [showNav, setShowNav] = useState(false)
@@ -60,7 +60,7 @@ const Settings = () => {
         {
             id: 'AccountSettings',
             title: 'Account settings',
-            url: `/${user!.username}/settings/account`,
+            url: `/${currentUser!.username}/settings/account`,
         }
     ]
 
@@ -109,8 +109,8 @@ const Settings = () => {
                     content={NAV_CONTENT}
                     goBack={{
                         title: 'Catalogues',
-                        url: `/${user!.username}/catalogues`,
-                        location: `/${user!.username}/settings`,
+                        url: `/${currentUser!.username}/catalogues`,
+                        location: `/${currentUser!.username}/settings`,
                     }}
                     extraItems={navBarExtraItems}
                     onToggleNav={toggleNav}
