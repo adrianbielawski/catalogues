@@ -3,7 +3,7 @@ import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './main.scss'
 //Router context
-import { PrivateRouteWithContext, RouteWithContext } from 'src/router'
+import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
@@ -14,7 +14,7 @@ import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
-const Main = (props: any) => {
+const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
     const history = useHistory()
     const screenHeight = useTypedSelector(state => state.app.screenHeight)
@@ -35,6 +35,10 @@ const Main = (props: any) => {
     }
 
     const currentUserError = currentUser.currentUserError
+
+    if (username !== currentUser.user?.username) {
+        return null
+    }
 
     return (
         <div className={styles.main} style={{ minHeight: screenHeight }}>
