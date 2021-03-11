@@ -6,6 +6,7 @@ import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
 import { DeserializedCatalogue } from './globalTypes'
 import { StaticContext } from 'react-router'
 import * as H from 'history'
+import PrivateRoute from './hoc/PrivateRoute'
 
 export type DehydratedParams = {
     username?: string,
@@ -93,7 +94,23 @@ export const RouteWithContext = (props: RouteWithContextProps) => {
     const { hydrate } = useParamHydrator()
 
     return <Route path={path} render={(props) => {
-        const { match } = props;
+        const { match } = props
+        match.params = hydrate(match.params)
+
+        return (
+            <RouterContext.Provider value={{ match }}>
+                <Component {...props} />
+            </RouterContext.Provider>
+        )
+    }} />
+}
+
+export const PrivateRouteWithContext = (props: RouteWithContextProps) => {
+    const { path, component: Component } = props
+    const { hydrate } = useParamHydrator()
+
+    return <PrivateRoute path={path} render={(props) => {
+        const { match } = props
         match.params = hydrate(match.params)
 
         return (
