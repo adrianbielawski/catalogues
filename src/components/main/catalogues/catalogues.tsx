@@ -50,7 +50,7 @@ const Catalogues = () => {
 
     useEffect(() => {
         dispatch(FETCH_CATALOGUES())
-    }, [])
+    }, [currentUser?.username])
 
     useEffect(() => {
         if (cataloguesRef.current === null) {
