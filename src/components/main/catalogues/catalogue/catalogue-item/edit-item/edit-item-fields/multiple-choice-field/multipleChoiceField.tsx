@@ -29,8 +29,8 @@ const MultipleChoiceField = (props: Props) => {
         setIsEditing(!isEditing)
     }
 
-    const handleChange = (selected: any[]) => {
-        const selectedChoices = selected.map(s => s.id)
+    const handleChange = (selected: (number | string)[]) => {
+        const selectedChoices = selected.map(s => s as number)
 
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
