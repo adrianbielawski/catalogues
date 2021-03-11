@@ -29,6 +29,7 @@ const Catalogues = () => {
     const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
+    const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
@@ -44,7 +45,7 @@ const Catalogues = () => {
         }
 
         const defaultCatalogueIndex = catalogues.findIndex(c => c.default === true)
-        
+
         setDefaultCatalogue(clamp(defaultCatalogueIndex, 0, catalogues.length - 1))
     }, [fetchingCatalogues])
 
@@ -56,7 +57,7 @@ const Catalogues = () => {
         if (cataloguesRef.current === null) {
             return
         }
-        
+
         getMinHeight()
     }, [cataloguesRef.current, screenHeight])
 
@@ -123,12 +124,17 @@ const Catalogues = () => {
                 }
             }),
         },
-        {
-            id: 'Settings',
-            title: 'Settings',
-            url: `/${currentUser!.username}/settings`,
-        }
     ]
+
+    if (user) {
+        NAV_CONTENT.push(
+            {
+                id: 'Settings',
+                title: 'Settings',
+                url: `/${user!.username}/settings`,
+            }
+        )
+    }
 
     const extraNavItems = [
         {
