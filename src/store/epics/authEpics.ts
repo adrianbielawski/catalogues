@@ -1,8 +1,10 @@
 import { combineEpics } from "redux-observable"
 import { axiosInstance$ } from "src/axiosInstance"
 import { concat, of, defer, Observable } from 'rxjs'
-import { catchError, filter, map, mergeMap, retryWhen, switchMap } from 'rxjs/operators'
+import { catchError, filter, map, mergeMap, pluck, retryWhen, switchMap, withLatestFrom } from 'rxjs/operators'
+//Types
 import { Action } from "@reduxjs/toolkit"
+import { RootState } from "store/storeConfig"
 //Utils
 import { getErrorMessage } from 'src/utils'
 //Store observables
@@ -97,17 +99,18 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
-export const logOutEpic = (action$: Observable<Action>) => action$.pipe(
+export const logOutEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
     filter(actions.LOG_OUT.match),
     mergeMap(action => concat(
         of(actions.LOG_OUT_START()),
         axiosInstance$.post('/logout/').pipe(
             retryWhen(err => retry$(err)),
-            mergeMap(() => concat(
+            withLatestFrom(state$.pipe(pluck('currentUser', 'user', 'username'))),
+            mergeMap(([_, username]) => concat(
                 of(actions.LOG_OUT_SUCCESS()),
                 defer(() => {
                     localStorage.removeItem('token')
-                    action.payload.history.push('/')
+                    action.payload.history.push(`/${username || ''}`)
                 })
             )),
             catchError(error => {
