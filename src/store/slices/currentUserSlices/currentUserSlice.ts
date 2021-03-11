@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { CurrentUserState } from './currentUserTypes'
 import * as reducers from './currentUserReducers'
 import { CLEAR_APP_STATE } from '../appSlices/appSlice'
+import { LOG_IN } from '../authSlices/authSlices'
 
 export const initialState: CurrentUserState = {
     user: null,
@@ -20,6 +21,7 @@ export const currentUserSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
+        builder.addCase(LOG_IN, () => initialState)
     },
 })
 

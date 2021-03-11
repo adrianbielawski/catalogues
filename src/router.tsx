@@ -1,11 +1,25 @@
 import React from 'react'
 import { ComponentType, createContext } from 'react'
-import { generatePath, Route, RouteProps } from 'react-router-dom'
+import { generatePath, Redirect, Route, RouteComponentProps, RouteProps, useLocation } from 'react-router-dom'
 import { useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
 import { DeserializedCatalogue } from './globalTypes'
 import { StaticContext } from 'react-router'
 import * as H from 'history'
+
+type RenderProps = RouteComponentProps<any, StaticContext, unknown>
+
+interface PrivateRoutePropsWithComponent extends RouteProps {
+    component: React.ComponentType<any>,
+    render?: never,
+}
+
+interface PrivateRoutePropsWithRender extends RouteProps {
+    render: (props: RenderProps) => React.ReactNode,
+    component?: never,
+}
+
+type PrivateRouteProps = PrivateRoutePropsWithComponent | PrivateRoutePropsWithRender
 
 export type DehydratedParams = {
     username?: string,
@@ -93,7 +107,7 @@ export const RouteWithContext = (props: RouteWithContextProps) => {
     const { hydrate } = useParamHydrator()
 
     return <Route path={path} render={(props) => {
-        const { match } = props;
+        const { match } = props
         match.params = hydrate(match.params)
 
         return (
@@ -102,4 +116,68 @@ export const RouteWithContext = (props: RouteWithContextProps) => {
             </RouterContext.Provider>
         )
     }} />
+}
+
+export const PrivateRouteWithContext = (props: RouteWithContextProps) => {
+    const { path, component: Component } = props
+    const { hydrate } = useParamHydrator()
+
+    return <PrivateRoute path={path} render={(props) => {
+        const { match } = props
+        match.params = hydrate(match.params)
+
+        return (
+            <RouterContext.Provider value={{ match }}>
+                <Component {...props} />
+            </RouterContext.Provider>
+        )
+    }} />
+}
+
+export const PrivateRoute = (props: PrivateRouteProps) => {
+    const { component: Component, render, ...rest } = props
+    const isInitialized = useTypedSelector(state => state.auth.isInitialized)
+    const user = useTypedSelector(state => state.auth.user)
+    const currentUser = useTypedSelector(state => state.currentUser)
+    const location = useLocation()
+
+    if (!isInitialized) {
+        return <div>Loading...</div>
+    }
+
+    if (!user) {
+        return (
+            <Redirect to={{
+                pathname: `/`,
+                state: {
+                    referrer: {
+                        pathname: location.pathname
+                    }
+                }
+            }} />
+        )
+    }
+
+    if (user?.id !== currentUser.user?.id) {
+        return (
+            <Redirect to={{
+                pathname: `/${user.username || currentUser.user?.username || ''}`,
+                state: {
+                    referrer: {
+                        pathname: location.pathname
+                    }
+                }
+            }} />
+        )
+    }
+
+    if (Component !== undefined) {
+        return (
+            <Route {...rest} render={props => <Component {...props} />} />
+        )
+    }
+
+    return (
+        <Route {...rest} render={render} />
+    )
 }

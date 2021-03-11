@@ -18,18 +18,18 @@ type Props = {
 }
 
 const AccountSettings = (props: Props) => {
-    const currentUser = useTypedSelector(state => state.currentUser.user)
+    const user = useTypedSelector(state => state.auth.user)
     const location = useLocation<LocationState>()
     const sideMenuContext = useContext(SideMenuContext)
 
     const SIDE_MENU_CONTENT = [
         {
             title: 'Manage catalogues',
-            url: `/${currentUser!.username}/settings/account/manage-catalogues`,
+            url: `/${user!.username}/settings/account/manage-catalogues`,
         },
         {
             title: 'My account',
-            url: `/${currentUser!.username}/settings/account/my-account`
+            url: `/${user!.username}/settings/account/my-account`
         },
     ]
 

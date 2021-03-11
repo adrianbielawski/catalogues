@@ -29,7 +29,11 @@ export const authSlice = createSlice({
         ...reducers.logoutReducers,
     },
     extraReducers: (builder) => {
-        builder.addCase(CLEAR_APP_STATE, () => initialState)
+        builder.addCase(CLEAR_APP_STATE, () => {
+            let clearedState = { ...initialState }
+            clearedState.isInitialized = true
+            return clearedState
+        })
         builder.addCase(CHANGE_USERNAME_SUCCESS, (state, action: PayloadAction<User>) => {
             state.user!.username = action.payload.username
         })

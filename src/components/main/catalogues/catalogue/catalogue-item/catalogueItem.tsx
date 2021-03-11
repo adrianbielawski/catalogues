@@ -112,9 +112,14 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     <div className={styles.itemContent}>
                         <div className={styles.wrapper}>
                             <ExtraFields fields={extraFields} />
-                            <TransparentButton className={styles.editButton} onClick={handleEdit}>
-                                <FontAwesomeIcon icon={faEdit} />
-                            </TransparentButton>
+                            {item.permissions.canEdit
+                                ? (
+                                    <TransparentButton className={styles.editButton} onClick={handleEdit}>
+                                        <FontAwesomeIcon icon={faEdit} />
+                                    </TransparentButton>
+                                )
+                                : null
+                            }
                         </div>
                         {catalogue.fetchingFields
                             ? <Loader />

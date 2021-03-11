@@ -2,7 +2,8 @@ import {
     User, DeserializedUser, Catalogue, DeserializedCatalogue, ItemDeserializer, ListData, DeserializedListData,
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
     DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
-    Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges,
+    Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges, ItemPermisions,
+    DeserializedItemPermisions, CataloguePermisions, DeserializedCataloguePermisions,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -25,6 +26,10 @@ export const itemsRangeDeserializer = (itemsRanges: ItemsRanges): DeserializedIt
     },
 })
 
+export const cataloguePermissionsDeserializer = (permissions: CataloguePermisions): DeserializedCataloguePermisions => ({
+    canCreateItems: permissions.can_create_items,
+})
+
 export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalogue => ({
     id: catalogue.id,
     createdBy: catalogue.created_by,
@@ -32,6 +37,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     name: catalogue.name,
     slug: catalogue.slug,
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),
+    permissions: cataloguePermissionsDeserializer(catalogue.permissions),
     fields: [],
     fetchingFields: true,
     fetchingFieldsChoices: true,
@@ -94,12 +100,18 @@ export const itemFieldSerializer = (field: DeserializedItemField): SerializedIte
     value: field.value,
 })
 
+export const itemPermissionsDeserializer = (permissions: ItemPermisions): DeserializedItemPermisions => ({
+    canEdit: permissions.can_edit,
+    canComment: permissions.can_comment,
+})
+
 export const itemDeserializer = (item: Item): DeserializedItem => ({
     id: item.id,
     createdBy: item.created_by,
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,
+    permissions: itemPermissionsDeserializer(item.permissions),
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],
