@@ -3,7 +3,7 @@ import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './main.scss'
 //Router context
-import { RouteWithContext } from 'src/router'
+import { PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
@@ -48,7 +48,7 @@ const Main = (props: any) => {
                             to="/:username/catalogues"
                         />
                         <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
-                        <RouteWithContext path={"/:username/settings"} component={Settings} />
+                        <PrivateRouteWithContext path={"/:username/settings"} component={Settings} />
                     </Switch>
                 </Suspense>
             ) : null}
