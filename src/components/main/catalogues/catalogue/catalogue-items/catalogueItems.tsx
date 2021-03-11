@@ -188,7 +188,10 @@ const CatalogueItems = (props: Props) => {
 
     return (
         <div className={itemsClass}>
-            {showAddItemButton && getAddItemButton()}
+            {showAddItemButton && catalogue.permissions.canCreateItems
+                ? getAddItemButton()
+                : null
+            }
             {!isItemInCatalogue && getNoItemsMessage()}
             {isSearchResult && getNoItemsFoundMessage()}
             <ul>
