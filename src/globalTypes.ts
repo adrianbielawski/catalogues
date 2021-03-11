@@ -76,7 +76,18 @@ export interface Catalogue {
     default: boolean,
     name: string,
     slug: string,
-    items_ranges: ItemsRanges
+    items_ranges: ItemsRanges,
+    permissions: {
+        can_create_items: boolean,
+    },
+}
+
+export interface CataloguePermisions {
+    can_create_items: boolean,
+}
+
+export interface DeserializedCataloguePermisions {
+    canCreateItems: boolean,
 }
 
 export interface DeserializedCatalogue {
@@ -86,6 +97,7 @@ export interface DeserializedCatalogue {
     name: string,
     slug: string,
     itemsRanges: DeserializedItemsRanges,
+    permissions: DeserializedCataloguePermisions,
     fields: DeserializedField[],
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,
@@ -124,7 +136,7 @@ export interface ListData {
     results: ListDataResults,
 }
 
-export type DeserializedListDataResults = DeserializedItem[] 
+export type DeserializedListDataResults = DeserializedItem[]
 
 export interface DeserializedListData {
     count: number | null,
@@ -141,12 +153,23 @@ export type ListResultsDeserializer = ItemDeserializer
 
 export type ItemDeserializer = (item: Item) => DeserializedItem
 
+export interface ItemPermisions {
+    can_edit: boolean,
+    can_comment: boolean,
+}
+
+export interface DeserializedItemPermisions {
+    canEdit: boolean,
+    canComment: boolean,
+}
+
 export interface Item {
     id: number,
     created_by: number,
     created_at: string,
     modified_at: string,
     catalogue_id: number,
+    permissions: ItemPermisions,
     values: ItemField[],
     images: Image[],
 }
@@ -157,6 +180,7 @@ export interface DeserializedItem {
     createdAt: string,
     modifiedAt: string,
     catalogueId: number,
+    permissions: DeserializedItemPermisions,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],

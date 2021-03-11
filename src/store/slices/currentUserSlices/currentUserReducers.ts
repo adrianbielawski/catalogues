@@ -6,7 +6,7 @@ import { ErrorMessage, User } from 'src/globalTypes'
 type State = T.CurrentUserState
 
 export const getCurrentUserReducers = {
-    GET_CURRENT_USER(state: State, action: PayloadAction<string>) {},
+    GET_CURRENT_USER(state: State, action: PayloadAction<string>) { },
     GET_CURRENT_USER_SUCCESS(state: State, action: PayloadAction<User>) {
         state.user = userDeserializer(action.payload)
     },
