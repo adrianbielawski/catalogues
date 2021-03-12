@@ -36,7 +36,7 @@ const Main = (props: HydratedRouteComponentProps) => {
 
     const currentUserError = currentUser.currentUserError
 
-    if (username !== currentUser.user?.username) {
+    if (!currentUser.user?.username) {
         return null
     }
 
