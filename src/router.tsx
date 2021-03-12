@@ -1,10 +1,9 @@
-import React from 'react'
-import { ComponentType, createContext } from 'react'
+import React, { ReactNode, useEffect, ComponentType, createContext } from 'react'
 import { generatePath, Redirect, Route, RouteComponentProps, RouteProps, useLocation } from 'react-router-dom'
 import { useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
 import { DeserializedCatalogue } from './globalTypes'
-import { StaticContext } from 'react-router'
+import { StaticContext, useHistory } from 'react-router'
 import * as H from 'history'
 
 type RenderProps = RouteComponentProps<any, StaticContext, unknown>
@@ -41,13 +40,14 @@ interface Match {
 
 interface RouteWithContextProps extends RouteProps {
     path: string,
-    component: ComponentType<any>
+    component: ComponentType<any>,
+    canonical?: boolean
 }
 
 export interface HydratedRouteComponentProps<
     C extends StaticContext = StaticContext,
     S = H.LocationState
-> {
+    > {
     history: H.History<S>;
     location: H.Location<S>;
     match: Match;
@@ -102,35 +102,73 @@ export const useUrlBuilder = () => {
     }
 }
 
+const CanonicalUrlWrapper = ({ children, match }: { children: ReactNode, match: Match }) => {
+    const history = useHistory()
+    const urlBuilder = useUrlBuilder()
+
+    useEffect(() => {
+        const canonicalUrl = urlBuilder({
+            pathname: match.path,
+            params: match.params,
+        })
+
+        if (match.url != canonicalUrl) {
+            history.replace(canonicalUrl)
+        }
+    }, [])
+
+    return <>{ children }</>
+}
+
 export const RouteWithContext = (props: RouteWithContextProps) => {
-    const { path, component: Component } = props
+    const { path, component: Component, canonical } = props
     const { hydrate } = useParamHydrator()
 
     return <Route path={path} render={(props) => {
         const { match } = props
         match.params = hydrate(match.params)
 
-        return (
+        let component = (
             <RouterContext.Provider value={{ match }}>
                 <Component {...props} />
             </RouterContext.Provider>
         )
+
+        if (canonical) {
+            component = (
+                <CanonicalUrlWrapper match={match}>
+                    {component}
+                </CanonicalUrlWrapper>
+            )
+        }
+
+        return component
     }} />
 }
 
 export const PrivateRouteWithContext = (props: RouteWithContextProps) => {
-    const { path, component: Component } = props
+    const { path, component: Component, canonical } = props
     const { hydrate } = useParamHydrator()
 
     return <PrivateRoute path={path} render={(props) => {
         const { match } = props
         match.params = hydrate(match.params)
 
-        return (
+        let component = (
             <RouterContext.Provider value={{ match }}>
                 <Component {...props} />
             </RouterContext.Provider>
         )
+
+        if (canonical) {
+            component = (
+                <CanonicalUrlWrapper match={match}>
+                    {component}
+                </CanonicalUrlWrapper>
+            )
+        }
+
+        return component
     }} />
 }
 
