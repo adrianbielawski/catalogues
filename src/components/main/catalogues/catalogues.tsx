@@ -192,6 +192,7 @@ const Catalogues = () => {
                                         <RouteWithContext
                                             path="/:username/catalogues/:slug"
                                             component={Catalogue}
+                                            canonical={true}
                                         />
                                     </Switch>
                                 </Suspense>

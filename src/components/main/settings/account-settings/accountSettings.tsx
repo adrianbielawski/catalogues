@@ -1,9 +1,11 @@
 import React, { Suspense, useContext } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import styles from './accountSettings.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
+//Router
+import { RouteWithContext } from 'src/router'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
@@ -50,13 +52,15 @@ const AccountSettings = (props: Props) => {
                             state: location.state,
                         }}
                     />
-                    <Route
+                    <RouteWithContext
                         path="/:username/settings/account/manage-catalogues"
                         component={ManageCatalogues}
+                        canonical={true}
                     />
-                    <Route
+                    <RouteWithContext
                         path="/:username/settings/account/my-account"
                         component={MyAccount}
+                        canonical={true}
                     />
                 </Switch>
             </Suspense>
