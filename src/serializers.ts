@@ -34,6 +34,7 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
     id: catalogue.id,
     createdBy: catalogue.created_by,
     default: catalogue.default,
+    public: catalogue.public,
     name: catalogue.name,
     slug: catalogue.slug,
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),

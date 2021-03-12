@@ -48,11 +48,29 @@ export const changeDefaultCatalogueEpic = (action$: Observable<Action>) => actio
         defer(() => axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
             default: action.payload.default,
         })).pipe(
-            map(response => actions.CHANGE_DEFAULT_CATALOGUE_SUCCESS({
+            map(() => actions.CHANGE_DEFAULT_CATALOGUE_SUCCESS({
                 catalogueId: action.payload.catalogueId,
                 default: action.payload.default,
             })),
             catchError(() => of(actions.CHANGE_DEFAULT_CATALOGUE_FAILURE(
+                action.payload.catalogueId,
+            )))
+        )
+    ))
+)
+
+export const changePublicCatalogueEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_PUBLIC_CATALOGUE.match),
+    switchMap(action => concat(
+        of(actions.CHANGE_PUBLIC_CATALOGUE_START()),
+        defer(() => axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
+            public: action.payload.public,
+        })).pipe(
+            map(() => actions.CHANGE_PUBLIC_CATALOGUE_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                public: action.payload.public,
+            })),
+            catchError(() => of(actions.CHANGE_PUBLIC_CATALOGUE_FAILURE(
                 action.payload.catalogueId,
             )))
         )
@@ -314,6 +332,7 @@ export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
     changeDefaultCatalogueEpic,
+    changePublicCatalogueEpic,
     deleteCatalogueEpic,
     postChoiceEpic,
     removeChoiceEpic,

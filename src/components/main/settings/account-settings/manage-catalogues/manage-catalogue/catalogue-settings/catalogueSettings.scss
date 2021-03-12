@@ -1,6 +1,10 @@
 @import "global-styles/variables_and_mixins";
 
 .catalogueSettings {
+    .options {
+        display: flex;
+        flex-direction: column;
+    }
     .deleteCatalogueButton {
         margin: 20px 5px 10px 5px;
         &:hover {

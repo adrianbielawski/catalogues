@@ -7,18 +7,23 @@ import { LocationState } from 'src/globalTypes'
 import { CLEAR_LOGOUT_ERROR, LOG_OUT } from 'store/slices/authSlices/authSlices'
 //Components
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 interface Props {
     className?: string,
 }
 
-const Logout = (props: Props) => {
+const AuthButton = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const auth = useTypedSelector(state => state.auth)
 
-    const handleLogout = () => {
-        dispatch(LOG_OUT({ history }))
+    const handleClick = () => {
+        if (auth.user === null) {
+            history.push('/')
+        } else {
+            dispatch(LOG_OUT({ history }))
+        }
     }
 
     const clearError = () => {
@@ -27,12 +32,12 @@ const Logout = (props: Props) => {
 
     return (
         <>
-            <p className={props.className} onClick={handleLogout}>
-                Logout
-            </p>
+            <TransparentButton className={props.className} onClick={handleClick}>
+                {auth.user === null ? 'Login' : 'Logout'}
+            </TransparentButton>
             <MessageModal
                 show={auth.logOutError.length !== 0}
-                title="Login error"
+                title="Logout error"
                 message={auth.logOutError}
                 onConfirm={clearError}
             />
@@ -40,4 +45,4 @@ const Logout = (props: Props) => {
     )
 }
 
-export default Logout
+export default AuthButton
