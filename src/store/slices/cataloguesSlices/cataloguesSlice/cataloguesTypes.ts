@@ -111,3 +111,8 @@ export interface ChangeDefaultCataloguePayload {
     catalogueId: number,
     default: boolean,
 }
+
+export interface ChangePublicCataloguePayload {
+    catalogueId: number,
+    public: boolean,
+}
