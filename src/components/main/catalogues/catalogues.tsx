@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
-import { clamp } from 'lodash'
+import { clamp, upperFirst } from 'lodash'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
@@ -99,17 +99,25 @@ const Catalogues = () => {
     }
 
     const getNoCatalogueMessage = () => {
-        return (
-            <div className={styles.noContent}>
-                <p>You have no catalogues yet,</p>
-                <p
-                    className={styles.anchor}
-                    onClick={handleRedirectToSettings}
-                >
-                    click here to create your first catalogue
+        if (user?.username !== currentUser?.username) {
+            return (
+                <p className={styles.noPublicCatalogues}>
+                    {`${upperFirst(currentUser?.username)} has no public catalogues`}
                 </p>
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div className={styles.noCatalogues}>
+                    <p>You have no catalogues yet,</p>
+                    <p
+                        className={styles.anchor}
+                        onClick={handleRedirectToSettings}
+                    >
+                        click here to create your first catalogue
+                    </p>
+                </div>
+            )
+        }
     }
 
     const NAV_CONTENT: NavItemType[] = [

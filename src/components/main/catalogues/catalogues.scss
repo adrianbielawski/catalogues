@@ -14,7 +14,7 @@
             color: $lightOrange;
         }
     }
-    .noContent {
+    .noCatalogues {
         margin: 30px auto 0 auto;
         text-align: center;
         .anchor {
@@ -24,6 +24,11 @@
                 cursor: pointer;
             }
         }
+    }
+    .noPublicCatalogues {
+        margin: 30px auto 0 auto;
+        text-align: center;
+        font-weight: 700;
     }
 }
 
