@@ -11,7 +11,7 @@ import SideMenuContextProvider from 'components/global-components/side-menu/side
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
 import Nav from 'components/global-components/nav/nav'
-import Logout from 'components/auth/logout/logout'
+import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
 import SideMenuButton from 'components/global-components/side-menu/side-menu-button/sideMenuButton'
@@ -84,7 +84,7 @@ const Settings = () => {
 
     const navBarExtraItems = [
         {
-            component: <Logout className={styles.logout} />,
+            component: <AuthButton className={styles.logout} />,
             inNavBarOnMobile: false,
         },
         {

@@ -18,7 +18,7 @@ import { useFirstRender } from 'src/customHooks'
 import { searchValue, sortValue, filtersValue, filtersBarValue } from './filter-bar-utils/contextInitialValues'
 //Custom components
 import Nav from 'components/global-components/nav/nav'
-import Logout from 'components/auth/logout/logout'
+import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
@@ -138,7 +138,7 @@ const Catalogues = () => {
 
     const extraNavItems = [
         {
-            component: <Logout className={styles.logout} />,
+            component: <AuthButton className={styles.logout} />,
             inNavBarOnMobile: false,
         },
         {
