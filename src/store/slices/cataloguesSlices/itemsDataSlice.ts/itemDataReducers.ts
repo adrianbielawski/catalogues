@@ -24,7 +24,7 @@ export const fetchItemReducers = {
 export const fetchItemsReducers = {
     FETCH_ITEMS(state: State, action: PayloadAction<T.FetchItemsPayload>) { },
     FETCH_ITEMS_START(state: State) {
-        state.fetchingItems = false
+        state.fetchingItems = true
     },
     FETCH_ITEMS_SUCCESS(state: State, action: PayloadAction<T.FetchItemsSuccessPayload>) {
         const list = listDeserializer(action.payload.data, itemDeserializer)
