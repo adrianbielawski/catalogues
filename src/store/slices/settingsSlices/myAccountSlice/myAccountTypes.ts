@@ -5,6 +5,7 @@ export interface MyAccountState {
     isSubmittingUsername: boolean,
     isEditingPassword: boolean,
     isSubmittingPassword: boolean,
+    isPostingUserImage: boolean,
     myAccountError: ErrorMessage,
 }
 

@@ -8,6 +8,7 @@ const initialState: T.MyAccountState = {
     isSubmittingUsername: false,
     isEditingPassword: false,
     isSubmittingPassword: false,
+    isPostingUserImage: false,
     myAccountError: {
         title: '',
         message: '',
@@ -21,6 +22,7 @@ export const myAccountSlice = createSlice({
         ...reducers.myAccountReducers,
         ...reducers.editUsername,
         ...reducers.changePasswordReducers,
+        ...reducers.postUserImageReducers,
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -31,5 +33,6 @@ export const {
     CLEAR_MY_ACCOUNT_ERROR,
     TOGGLE_USERNAME_EDIT, CHANGE_USERNAME, CHANGE_USERNAME_START, CHANGE_USERNAME_SUCCESS, CHANGE_USERNAME_FAILURE,
     TOGGLE_PASSWORD_EDIT, CHANGE_PASSWORD, CHANGE_PASSWORD_START, CHANGE_PASSWORD_SUCCESS, CHANGE_PASSWORD_FAILURE,
+    POST_USER_IMAGE, POST_USER_IMAGE_START, POST_USER_IMAGE_SUCCESS, POST_USER_IMAGE_FAILURE,
 
 } = myAccountSlice.actions

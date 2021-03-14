@@ -2,8 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AuthState } from './authTypes'
 import { User } from 'src/globalTypes'
 import { CLEAR_APP_STATE } from '../appSlices/appSlice'
-import { CHANGE_USERNAME_SUCCESS } from '../settingsSlices/myAccountSlice/myAccountSlice'
+import { CHANGE_USERNAME_SUCCESS, POST_USER_IMAGE_SUCCESS } from '../settingsSlices/myAccountSlice/myAccountSlice'
 import * as reducers from './authReducers'
+import { userDeserializer } from 'src/serializers'
 
 export const initialState: AuthState = {
     user: null,
@@ -36,6 +37,9 @@ export const authSlice = createSlice({
         })
         builder.addCase(CHANGE_USERNAME_SUCCESS, (state, action: PayloadAction<User>) => {
             state.user!.username = action.payload.username
+        })
+        builder.addCase(POST_USER_IMAGE_SUCCESS, (state, action: PayloadAction<User>) => {
+            state.user = userDeserializer(action.payload)
         })
     },
 })
