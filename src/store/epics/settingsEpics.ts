@@ -1,8 +1,9 @@
 import { combineEpics } from "redux-observable"
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-import { of, concat, Observable } from 'rxjs'
-import { catchError, filter, map, switchMap } from 'rxjs/operators'
+import { of, concat, Observable, from } from 'rxjs'
+import { catchError, filter, map, mergeMap, switchMap } from 'rxjs/operators'
+import mime from 'mime-types'
 import * as actions from "store/slices/settingsSlices/myAccountSlice/myAccountSlice"
 import { getErrorMessage } from "src/utils"
 
@@ -33,7 +34,27 @@ export const changePasswordEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
+export const postUserImageEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.POST_USER_IMAGE.match),
+    switchMap(action => concat(
+        of(actions.POST_USER_IMAGE_START()),
+        from(fetch(action.payload)).pipe(
+            mergeMap(r => r.blob()),
+            mergeMap(imageBlob => {
+                const data = new FormData()
+                data.append('image', imageBlob, `image.${mime.extension(imageBlob.type)}`)
+                return axiosInstance$.patch('/user/', data)
+            })
+        ).pipe(
+            map(response => actions.POST_USER_IMAGE_SUCCESS(response.data)),
+            catchError(err => of(actions.POST_USER_IMAGE_FAILURE(getErrorMessage(err))))
+        )
+    )
+    )
+)
+
 export const settingsEpics = combineEpics(
     changeUsernameEpic,
     changePasswordEpic,
+    postUserImageEpic,
 )

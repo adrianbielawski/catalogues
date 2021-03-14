@@ -15,6 +15,7 @@ import { VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import ChangePassword from './change-password/changePassword'
+import ChangeUserImage from './change-password/change-image/changeUserImage'
 
 const MyAccount = () => {
     const dispatch = useAppDispatch()
@@ -33,7 +34,7 @@ const MyAccount = () => {
 
         const pathname = `/${username}/settings/account/my-account`
         referrer.params.username = username
-        
+
         history.push(pathname, { referrer })
     }, [auth.user?.username])
 
@@ -65,6 +66,9 @@ const MyAccount = () => {
     return (
         <div className={styles.myAccount}>
             <ul>
+                <li key="userImage">
+                    <ChangeUserImage />
+                </li>
                 <li key={'username'}>
                     <EditableFieldWithConfirm
                         id={0}

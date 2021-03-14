@@ -51,3 +51,20 @@ export const changePasswordReducers = {
         }
     }
 }
+
+export const postUserImageReducers = {
+    POST_USER_IMAGE(state: State, action: PayloadAction<string>) {},
+    POST_USER_IMAGE_START(state: State) {
+        state.isPostingUserImage = true
+    },
+    POST_USER_IMAGE_SUCCESS(state: State, action: PayloadAction<User>) {
+        state.isPostingUserImage = false
+    },
+    POST_USER_IMAGE_FAILURE(state: State, action: PayloadAction<string>) {
+        state.isPostingUserImage = false
+        state.myAccountError = {
+            title: 'Network error',
+            message: action.payload,
+        }
+    }
+}

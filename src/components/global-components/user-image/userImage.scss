@@ -1,0 +1,14 @@
+@import "global-styles/variables_and_mixins";
+
+.userImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    .image {
+        width: 100%;
+        height: 100%;
+        color: $midLightGrey;
+    }
+}
