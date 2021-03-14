@@ -1,12 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEdit } from '@fortawesome/free-solid-svg-icons'
-import moment from 'moment'
 import styles from './catalogueItem.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
-import { TOGGLE_EDIT_ITEM } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Custom hooks and utils
@@ -15,11 +11,10 @@ import { useFirstRender } from 'src/customHooks'
 //Custom components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from 'components/global-components/loader/loader'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import ImagesPreview from './images-preview/imagesPreview'
-import ExtraFields from './extra-fields/extraFields'
+import ItemData from './item-data/itemData'
 
 type Props = {
     item: DeserializedItem
@@ -29,7 +24,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
     Props
 > = (props, ref) => {
-    const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
     const item = useTypedSelector(itemSelector(props.item.id))
@@ -63,10 +57,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const handleEdit = () => {
-        dispatch(TOGGLE_EDIT_ITEM(item.id))
-    }
-
     const toggleImagesPreview = () => {
         setShowImagesPreview(!showImagesPreview)
     }
@@ -75,17 +65,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const imagesCarouselHeight = screenWidth > 800 ? 200 : undefined
     const isImagesPreviewAllowed = item.images.length && screenWidth > 800
     const showImagesCounter = item.images.length > 1
-
-    const extraFields = [
-        {
-            name: 'Id',
-            value: item.id.toString(),
-        },
-        {
-            name: 'Date',
-            value: moment(item.createdAt).format('DD MMMM YYYY'),
-        }
-    ]
 
     return (
         <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
@@ -110,17 +89,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         />
                     </div>
                     <div className={styles.itemContent}>
-                        <div className={styles.wrapper}>
-                            <ExtraFields fields={extraFields} />
-                            {item.permissions.canEdit
-                                ? (
-                                    <TransparentButton className={styles.editButton} onClick={handleEdit}>
-                                        <FontAwesomeIcon icon={faEdit} />
-                                    </TransparentButton>
-                                )
-                                : null
-                            }
-                        </div>
+                        <ItemData item={item} />
                         {catalogue.fetchingFields
                             ? <Loader />
                             : <ItemFields item={item} />
