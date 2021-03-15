@@ -15,6 +15,7 @@ import Loader from 'components/global-components/loader/loader'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import ImagesPreview from './images-preview/imagesPreview'
 import ItemData from './item-data/itemData'
+import ItemRating from './item-rating/itemRating'
 
 type Props = {
     item: DeserializedItem
@@ -89,6 +90,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         />
                     </div>
                     <div className={styles.itemContent}>
+                        <ItemRating item={item} />
                         <ItemData item={item} />
                         {catalogue.fetchingFields
                             ? <Loader />
