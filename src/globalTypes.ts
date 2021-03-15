@@ -165,6 +165,18 @@ export interface DeserializedItemPermisions {
     canComment: boolean,
 }
 
+export interface ItemRating {
+    average: number,
+    count: number,
+    current_user: number,
+}
+
+export interface DesrializedItemRating {
+    average: number,
+    count: number,
+    currentUser: number,
+}
+
 export interface Item {
     id: number,
     created_by: number,
@@ -174,6 +186,7 @@ export interface Item {
     permissions: ItemPermisions,
     values: ItemField[],
     images: Image[],
+    rating: ItemRating
 }
 
 export interface DeserializedItem {
@@ -183,6 +196,7 @@ export interface DeserializedItem {
     modifiedAt: string,
     catalogueId: number,
     permissions: DeserializedItemPermisions,
+    rating: DesrializedItemRating,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
