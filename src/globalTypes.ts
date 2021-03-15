@@ -166,6 +166,57 @@ export interface DesrializedItemRating {
     currentUser: number,
 }
 
+export interface ItemCommentCreatedBy {
+    id: number,
+    username: string,
+    image: string,
+    image_thumbnail: string,
+}
+
+export interface DeserializedItemCommentCreatedBy {
+    id: number,
+    username: string,
+    image: string,
+    imageThumbnail: string,
+}
+
+export interface ItemCommentChildren {
+    id: number,
+    item_id: number,
+    created_by: ItemCommentCreatedBy,
+    created_at: string,
+    text: string,
+}
+
+export interface DeserializedItemCommentChildren {
+    id: number,
+    itemId: number,
+    createdBy: DeserializedItemCommentCreatedBy,
+    createdAt: string,
+    text: string,
+}
+
+export interface ItemComment {
+    id: number,
+    item_id: number,
+    created_by: ItemCommentCreatedBy,
+    created_at: string,
+    text: string,
+    children: ItemCommentChildren[],
+}
+
+export interface DeserializedItemComment {
+    id: number,
+    itemId: number,
+    createdBy: DeserializedItemCommentCreatedBy,
+    createdAt: string,
+    text: string,
+    children: DeserializedItemCommentChildren[],
+}
+
+export interface CommentsData extends ListData<ItemComment[]> { }
+export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment[]> { }
+
 export interface Item {
     id: number,
     created_by: number,
@@ -189,6 +240,7 @@ export interface DeserializedItem {
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
+    commentsData: DeserializedCommentsData | null,
     isEditing: boolean,
     isSubmitting: boolean,
     isDeleting: boolean,

@@ -4,6 +4,8 @@ import {
     DeserializedChoice, ItemField, DeserializedItemField,
     Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges, ItemPermisions,
     DeserializedItemPermisions, CataloguePermisions, DeserializedCataloguePermisions, ItemRating,
+    ItemCommentChildren,
+    ItemComment, ItemCommentCreatedBy,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -90,6 +92,30 @@ export const itemRatingDeserializer = (rating: ItemRating) => ({
     currentUser: rating.current_user,
 })
 
+export const itemCommentCreatedByDeserializer = (createdBy: ItemCommentCreatedBy) => ({
+    id: createdBy.id,
+    username: createdBy.username,
+    image: createdBy.image,
+    imageThumbnail: createdBy.image_thumbnail,
+})
+
+export const itemCommentChildrenDeserializer = (comment: ItemCommentChildren) => ({
+    id: comment.id,
+    itemId: comment.item_id,
+    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdAt: comment.created_at,
+    text: comment.text,
+})
+
+export const itemCommentDeserializer = (comment: ItemComment) => ({
+    id: comment.id,
+    itemId: comment.item_id,
+    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdAt: comment.created_at,
+    text: comment.text,
+    children: comment.children.map(itemCommentChildrenDeserializer),
+})
+
 export const itemDeserializer = (item: Item): DeserializedItem => ({
     id: item.id,
     createdBy: item.created_by,
@@ -101,6 +127,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],
+    commentsData: null,
     isEditing: false,
     isSubmitting: false,
     isDeleting: false,
