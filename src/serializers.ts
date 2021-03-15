@@ -3,7 +3,7 @@ import {
     Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
     DeserializedChoice, DeserializedItemsData, ListResultsDeserializer, ItemField, DeserializedItemField,
     Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges, ItemPermisions,
-    DeserializedItemPermisions, CataloguePermisions, DeserializedCataloguePermisions,
+    DeserializedItemPermisions, CataloguePermisions, DeserializedCataloguePermisions, ItemRating,
 } from 'src/globalTypes'
 
 export const userDeserializer = (user: User): DeserializedUser => ({
@@ -106,6 +106,12 @@ export const itemPermissionsDeserializer = (permissions: ItemPermisions): Deseri
     canComment: permissions.can_comment,
 })
 
+export const itemRatingDeserializer = (rating: ItemRating) => ({
+    average: rating.average,
+    count: rating.count,
+    currentUser: rating.current_user,
+})
+
 export const itemDeserializer = (item: Item): DeserializedItem => ({
     id: item.id,
     createdBy: item.created_by,
@@ -113,6 +119,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,
     permissions: itemPermissionsDeserializer(item.permissions),
+    rating: itemRatingDeserializer(item.rating),
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],

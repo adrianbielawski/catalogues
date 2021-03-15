@@ -1,0 +1,21 @@
+@import "global-styles/variables_and_mixins";
+
+.userRating {
+    display: flex;
+    height: 1em;
+    .star {
+        padding: 0 1px;
+        color: $midLightGrey;
+        &.rated {
+            color: $orange;
+        }
+    }
+
+    &:hover .star {
+        color: $orange;
+    }
+
+    &:hover .star:hover ~ .star {
+        color: $midLightGrey;
+    }
+}
