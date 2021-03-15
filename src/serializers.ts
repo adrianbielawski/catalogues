@@ -1,14 +1,6 @@
-import {
-    User, DeserializedUser, Catalogue, DeserializedCatalogue, ListData, DeserializedListData,
-    Item, DeserializedItem, Field, DeserializedField, DeserializedChoiceField, DeserializedTextField, Choice,
-    DeserializedChoice, ItemField, DeserializedItemField,
-    Image, DeserializedImage, SerializedItemField, DeserializedItemsRanges, ItemsRanges, ItemPermisions,
-    DeserializedItemPermisions, CataloguePermisions, DeserializedCataloguePermisions, ItemRating,
-    ItemCommentChildren,
-    ItemComment, ItemCommentCreatedBy,
-} from 'src/globalTypes'
+import * as T from 'src/globalTypes'
 
-export const userDeserializer = (user: User): DeserializedUser => ({
+export const userDeserializer = (user: T.User): T.DeserializedUser => ({
     id: user.id,
     username: user.username,
     email: user.email,
@@ -17,7 +9,7 @@ export const userDeserializer = (user: User): DeserializedUser => ({
     isAnonymous: user.is_anonymous,
 })
 
-export const itemsRangeDeserializer = (itemsRanges: ItemsRanges): DeserializedItemsRanges => ({
+export const itemsRangeDeserializer = (itemsRanges: T.ItemsRanges): T.DeserializedItemsRanges => ({
     id: {
         min: itemsRanges.id.min,
         max: itemsRanges.id.max,
@@ -28,11 +20,11 @@ export const itemsRangeDeserializer = (itemsRanges: ItemsRanges): DeserializedIt
     },
 })
 
-export const cataloguePermissionsDeserializer = (permissions: CataloguePermisions): DeserializedCataloguePermisions => ({
+export const cataloguePermissionsDeserializer = (permissions: T.CataloguePermisions): T.DeserializedCataloguePermisions => ({
     canCreateItems: permissions.can_create_items,
 })
 
-export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalogue => ({
+export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCatalogue => ({
     id: catalogue.id,
     createdBy: catalogue.created_by,
     default: catalogue.default,
@@ -57,9 +49,9 @@ export const catalogueDeserializer = (catalogue: Catalogue): DeserializedCatalog
 })
 
 export const listDeserializer = <S, D>(
-    data: ListData<S>,
+    data: T.ListData<S>,
     resultsDeserializer: (results: S) => D
-): DeserializedListData<D[]> => ({
+): T.DeserializedListData<D[]> => ({
     count: data.count,
     pageSize: data.page_size,
     startIndex: data.start_index,
@@ -70,36 +62,36 @@ export const listDeserializer = <S, D>(
     results: data.results.map(resultsDeserializer),
 })
 
-export const itemFieldDeserializer = (field: ItemField): DeserializedItemField => ({
+export const itemFieldDeserializer = (field: T.ItemField): T.DeserializedItemField => ({
     itemId: field.item_id,
     fieldId: field.field_id,
     value: field.value,
 })
 
-export const itemFieldSerializer = (field: DeserializedItemField): SerializedItemField => ({
+export const itemFieldSerializer = (field: T.DeserializedItemField): T.SerializedItemField => ({
     field_id: field.fieldId,
     value: field.value,
 })
 
-export const itemPermissionsDeserializer = (permissions: ItemPermisions): DeserializedItemPermisions => ({
+export const itemPermissionsDeserializer = (permissions: T.ItemPermisions): T.DeserializedItemPermisions => ({
     canEdit: permissions.can_edit,
     canComment: permissions.can_comment,
 })
 
-export const itemRatingDeserializer = (rating: ItemRating) => ({
+export const itemRatingDeserializer = (rating: T.ItemRating) => ({
     average: rating.average,
     count: rating.count,
     currentUser: rating.current_user,
 })
 
-export const itemCommentCreatedByDeserializer = (createdBy: ItemCommentCreatedBy) => ({
+export const itemCommentCreatedByDeserializer = (createdBy: T.ItemCommentCreatedBy) => ({
     id: createdBy.id,
     username: createdBy.username,
     image: createdBy.image,
     imageThumbnail: createdBy.image_thumbnail,
 })
 
-export const itemCommentChildrenDeserializer = (comment: ItemCommentChildren) => ({
+export const itemCommentChildrenDeserializer = (comment: T.ItemCommentChildren) => ({
     id: comment.id,
     itemId: comment.item_id,
     createdBy: itemCommentCreatedByDeserializer(comment.created_by),
@@ -107,7 +99,7 @@ export const itemCommentChildrenDeserializer = (comment: ItemCommentChildren) =>
     text: comment.text,
 })
 
-export const itemCommentDeserializer = (comment: ItemComment) => ({
+export const itemCommentDeserializer = (comment: T.ItemComment) => ({
     id: comment.id,
     itemId: comment.item_id,
     createdBy: itemCommentCreatedByDeserializer(comment.created_by),
@@ -116,7 +108,7 @@ export const itemCommentDeserializer = (comment: ItemComment) => ({
     children: comment.children.map(itemCommentChildrenDeserializer),
 })
 
-export const itemDeserializer = (item: Item): DeserializedItem => ({
+export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     id: item.id,
     createdBy: item.created_by,
     createdAt: item.created_at,
@@ -133,7 +125,7 @@ export const itemDeserializer = (item: Item): DeserializedItem => ({
     isDeleting: false,
 })
 
-export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
+export const textFieldDeserializer = (field: T.Field): T.DeserializedTextField => ({
     id: field.id,
     catalogueId: field.catalogue_id,
     type: field.type,
@@ -150,7 +142,7 @@ export const textFieldDeserializer = (field: Field): DeserializedTextField => ({
     isSubmitting: false,
 })
 
-export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField => ({
+export const choiceFieldDeserializer = (field: T.Field): T.DeserializedChoiceField => ({
     id: field.id,
     catalogueId: field.catalogue_id,
     type: field.type,
@@ -171,17 +163,17 @@ export const choiceFieldDeserializer = (field: Field): DeserializedChoiceField =
     isSubmitting: false,
 })
 
-export const choiceDeserializer = (choice: Choice): DeserializedChoice => ({
+export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
     id: choice.id,
     fieldId: choice.field_id,
     value: choice.value,
 })
 
-export const choicesDeserializer = (choices: Choice[]): DeserializedChoice[] => (
+export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[] => (
     choices.map(choiceDeserializer)
 )
 
-export const fieldDeserializer = (field: Field): DeserializedField => {
+export const fieldDeserializer = (field: T.Field): T.DeserializedField => {
     switch (field.type) {
         case 'short_text':
         case 'long_text':
@@ -196,11 +188,11 @@ export const fieldDeserializer = (field: Field): DeserializedField => {
     }
 }
 
-export const fieldsDeserializer = (fields: Field[]): DeserializedField[] => (
+export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] => (
     fields.map(fieldDeserializer)
 )
 
-export const imageDeserializer = (image: Image): DeserializedImage => ({
+export const imageDeserializer = (image: T.Image): T.DeserializedImage => ({
     id: image.id as number,
     image: image.image,
     imageThumbnail: image.image_thumbnail,
@@ -208,6 +200,6 @@ export const imageDeserializer = (image: Image): DeserializedImage => ({
     itemId: image.item_id,
 })
 
-export const imagesDeserializer = (images: Image[]): DeserializedImage[] => (
+export const imagesDeserializer = (images: T.Image[]): T.DeserializedImage[] => (
     images.map(imageDeserializer)
 )
