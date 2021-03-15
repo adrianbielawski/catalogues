@@ -112,22 +112,7 @@ export interface DeserializedCatalogue {
     isInitialized: boolean,
 }
 
-export interface ItemsData extends ListData {
-    results: Item[],
-}
-
-export interface DeserializedItemsData extends DeserializedListData {
-    results: DeserializedItem[],
-    catalogueId: number | null,
-    fetchingItems: boolean,
-    creatingNewItem: boolean,
-    newItem: DeserializedItem | null,
-    itemsError: ErrorMessage,
-}
-
-export type ListDataResults = Item[]
-
-export interface ListData {
+export interface ListData<R> {
     count: number,
     page_size: number,
     start_index: number,
@@ -135,12 +120,10 @@ export interface ListData {
     current: number,
     next: number,
     previous: number,
-    results: ListDataResults,
+    results: R[],
 }
 
-export type DeserializedListDataResults = DeserializedItem[]
-
-export interface DeserializedListData {
+export interface DeserializedListData<R> {
     count: number | null,
     pageSize: number | null,
     startIndex: number | null,
@@ -148,12 +131,18 @@ export interface DeserializedListData {
     current: number | null,
     next: number | null,
     previous: number | null,
-    results: DeserializedListDataResults,
+    results: R,
 }
 
-export type ListResultsDeserializer = ItemDeserializer
+export interface ItemsData extends ListData<Item> { }
 
-export type ItemDeserializer = (item: Item) => DeserializedItem
+export interface DeserializedItemsData extends DeserializedListData<DeserializedItem[]> {
+    catalogueId: number | null,
+    fetchingItems: boolean,
+    creatingNewItem: boolean,
+    newItem: DeserializedItem | null,
+    itemsError: ErrorMessage,
+}
 
 export interface ItemPermisions {
     can_edit: boolean,

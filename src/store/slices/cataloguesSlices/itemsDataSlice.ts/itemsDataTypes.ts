@@ -34,7 +34,7 @@ export interface FetchItemsPayload {
 }
 
 export interface FetchItemsSuccessPayload {
-    data: ListData,
+    data: ListData<Item>,
     catalogueId: number,
 }
 
