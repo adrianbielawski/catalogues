@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { mod } from 'src/utils'
-import { itemDeserializer, listDeserializer } from 'src/serializers'
+import { itemDeserializer, itemRatingDeserializer, listDeserializer } from 'src/serializers'
 import { DeserializedItem, DeserializedItemField, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
 import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
@@ -168,4 +168,16 @@ export const itemsData = {
             message: '',
         }
     },
+}
+
+export const changeItemRating = {
+    CHANGE_ITEM_RATING(state: State, action: PayloadAction<T.ChangeItemRatingPayload>) {
+        const item = getItemById(state, action.payload.itemId)
+        item.rating.currentUser = action.payload.rating
+    },
+    CHANGE_ITEM_RATING_SUCCESS(state: State, action: PayloadAction<T.ChangeItemRatingSuccessPayload>) {
+        const item = getItemById(state, action.payload.itemId)
+        item.rating = itemRatingDeserializer(action.payload.rating)
+    },
+    CHANGE_ITEM_RATING_FAILURE(state: State) { },
 }

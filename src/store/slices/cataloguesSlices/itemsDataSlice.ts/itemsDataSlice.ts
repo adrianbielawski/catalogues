@@ -34,6 +34,7 @@ export const itemsDataSlice = createSlice({
         ...itemReducers.saveItem,
         ...itemReducers.deleteItem,
         ...itemReducers.itemsData,
+        ...itemReducers.changeItemRating,
         CLEAR_ITEMS_DATA() {
             return initialState
         },
@@ -55,4 +56,5 @@ export const {
     SAVE_ITEM, SAVE_ITEM_START, SAVE_ITEM_SUCCESS, SAVE_ITEM_FAILURE,
     DELETE_ITEM, DELETE_ITEM_START, DELETE_ITEM_SUCCESS, DELETE_ITEM_FAILURE,
     CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR,
+    CHANGE_ITEM_RATING, CHANGE_ITEM_RATING_SUCCESS, CHANGE_ITEM_RATING_FAILURE,
 } = itemsDataSlice.actions
