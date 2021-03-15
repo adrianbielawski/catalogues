@@ -16,6 +16,7 @@ import ImagesCarousel from 'components/global-components/images-carousel/imagesC
 import ImagesPreview from './images-preview/imagesPreview'
 import ItemData from './item-data/itemData'
 import ItemRating from './item-rating/itemRating'
+import EditItemButton from './edit-item/edit-item-button/editItemButton'
 
 type Props = {
     item: DeserializedItem
@@ -90,7 +91,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         />
                     </div>
                     <div className={styles.itemContent}>
-                        <ItemRating item={item} />
+                        <div className={styles.wrapper}>
+                            <ItemRating item={item} />
+                            {item.permissions.canEdit &&
+                                <EditItemButton itemId={item.id} />
+                            }
+                        </div>
                         <ItemData item={item} />
                         {catalogue.fetchingFields
                             ? <Loader />
