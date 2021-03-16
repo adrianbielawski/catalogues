@@ -17,6 +17,7 @@ import ImagesPreview from './images-preview/imagesPreview'
 import ItemData from './item-data/itemData'
 import ItemRating from './item-rating/itemRating'
 import EditItemButton from './edit-item/edit-item-button/editItemButton'
+import ItemComments from './item-comments/itemComments'
 
 type Props = {
     item: DeserializedItem
@@ -101,6 +102,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         {catalogue.fetchingFields
                             ? <Loader />
                             : <ItemFields item={item} />
+                        }
+                        {item.commentsData &&
+                            <ItemComments
+                                itemId={item.id}
+                                commentsData={item.commentsData}
+                            />
                         }
                     </div>
                 </>
