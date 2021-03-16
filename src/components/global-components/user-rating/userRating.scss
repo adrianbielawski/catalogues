@@ -1,21 +1,37 @@
 @import "global-styles/variables_and_mixins";
 
-.userRating {
-    display: flex;
-    height: 1em;
-    .star {
-        padding: 0 1px;
-        color: $midLightGrey;
-        &.rated {
-            color: $orange;
-        }
-    }
-
-    &:hover .star {
-        color: $orange;
-    }
-
-    &:hover .star:hover ~ .star {
-        color: $midLightGrey;
-    }
+.stars {
+	line-height: .8em;
+	path {
+		stroke: $midLightGrey;
+		stroke-width: 10%;
+		fill: transparent;
+	}
+	&:hover {
+		path {
+			stroke: $orange;
+			fill: $orange;
+		}
+	}
+	.star {
+		padding: 0 2px;
+		color: $midLightGrey;
+		&.active
+			path {
+				stroke: $orange;
+				fill: $orange;
+			}
+		&:hover ~ .star {
+			path {
+				stroke: $midLightGrey;
+				fill: transparent;
+			}
+		}
+	}
+	:first-child {
+		padding-left: 0;
+	}
+	:last-child {
+		padding-right: 0;
+	}
 }

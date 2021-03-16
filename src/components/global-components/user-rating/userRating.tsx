@@ -1,5 +1,5 @@
 import React from 'react'
-import { faStar as regStar } from '@fortawesome/free-regular-svg-icons'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './userRating.scss'
@@ -23,22 +23,22 @@ const UserRating = (props: Props) => {
         const starClass = cx(
             'star',
             {
-                rated: props.rating >= i + 1
+                active: props.rating >= i + 1
             },
         )
 
         stars.push(
             <FontAwesomeIcon
-                icon={regStar}
                 className={starClass}
-                onClick={handleClick}
+                icon={faStar}
                 key={i}
+                onClick={handleClick}
             />
         )
     }
 
     return (
-        <div className={styles.userRating}>
+        <div className={styles.stars}>
             {stars}
         </div>
     )
