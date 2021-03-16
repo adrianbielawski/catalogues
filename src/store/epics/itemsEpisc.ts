@@ -158,7 +158,7 @@ export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pip
         }).pipe(
             map(response => actions.CHANGE_ITEM_RATING_SUCCESS({
                 itemId: action.payload.itemId,
-                rating: response.data
+                rating: response.data.rating,
             })),
             catchError(() => of(actions.CHANGE_ITEM_RATING_FAILURE()))
         )
