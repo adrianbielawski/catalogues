@@ -81,35 +81,37 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     />
                 )
                 : <>
-                    <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
-                        <ImagesCarousel
-                            width={imagesCarouselWidth}
-                            height={imagesCarouselHeight}
-                            images={item.images}
-                            singleView={true}
-                            onFullScreenView={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
-                            showCounter={showImagesCounter}
-                        />
-                    </div>
-                    <div className={styles.itemContent}>
-                        <div className={styles.wrapper}>
-                            <ItemRating item={item} />
-                            {item.permissions.canEdit &&
-                                <EditItemButton itemId={item.id} />
+                    <div className={styles.wrapper}>
+                        <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
+                            <ImagesCarousel
+                                width={imagesCarouselWidth}
+                                height={imagesCarouselHeight}
+                                images={item.images}
+                                singleView={true}
+                                onFullScreenView={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
+                                showCounter={showImagesCounter}
+                            />
+                        </div>
+                        <div className={styles.itemContent}>
+                            <div className={styles.ratingWrapper}>
+                                <ItemRating item={item} />
+                                {item.permissions.canEdit &&
+                                    <EditItemButton itemId={item.id} />
+                                }
+                            </div>
+                            <ItemData item={item} />
+                            {catalogue.fetchingFields
+                                ? <Loader />
+                                : <ItemFields item={item} />
                             }
                         </div>
-                        <ItemData item={item} />
-                        {catalogue.fetchingFields
-                            ? <Loader />
-                            : <ItemFields item={item} />
-                        }
-                        {item.commentsData &&
-                            <ItemComments
-                                itemId={item.id}
-                                commentsData={item.commentsData}
-                            />
-                        }
                     </div>
+                    {item.commentsData &&
+                        <ItemComments
+                            itemId={item.id}
+                            commentsData={item.commentsData}
+                        />
+                    }
                 </>
             }
             <ImagesPreview

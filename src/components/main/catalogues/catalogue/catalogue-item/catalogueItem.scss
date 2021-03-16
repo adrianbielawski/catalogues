@@ -7,17 +7,21 @@
     margin: 10px 0;
     padding: 10px;
     display: flex;
+    flex-direction: column;
     overflow: hidden;
-    .carouselWrapper {
-        min-width: 200px;
-    }
-    .itemContent {
-        margin-left: 10px;
-        width: 100%;
-        .wrapper {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
+    .wrapper {
+        display: flex;
+        .carouselWrapper {
+            min-width: 200px;
+        }
+        .itemContent {
+            margin-left: 10px;
+            width: 100%;
+            .ratingWrapper {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+            }
         }
     }
     .editItem {
