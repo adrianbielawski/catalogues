@@ -1,4 +1,4 @@
-import { DeserializedItem, DeserializedItemField } from "src/globalTypes"
+import { DeserializedItem, DeserializedItemComment, DeserializedItemField } from "src/globalTypes"
 import { ItemsDataState } from "./itemsDataTypes"
 
 export const getItemById = (
@@ -21,4 +21,12 @@ export const getFieldsValuesById = (
     itemId: number,
 ): DeserializedItemField[] => (
     getItemById(state, itemId).fieldsValues
+)
+
+export const getCommentById = (
+    state: ItemsDataState,
+    itemId: number,
+    id: number,
+): DeserializedItemComment => (
+    getItemById(state, itemId).commentsData!.results.filter(c => c.id === id)[0]
 )

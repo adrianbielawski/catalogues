@@ -121,6 +121,7 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     removedImages: [],
     commentsData: null,
     fetchingComments: false,
+    postingComment: false,
     isEditing: false,
     isSubmitting: false,
     isDeleting: false,

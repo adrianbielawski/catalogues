@@ -1,5 +1,5 @@
 import {
-    DeserializedItem, ErrorMessage, Item, ItemComment, ItemRating, ListData
+    DeserializedItem, ErrorMessage, Item, ItemComment, ItemCommentChildren, ItemRating, ListData
 } from "src/globalTypes"
 
 export interface ItemsDataState {
@@ -72,4 +72,14 @@ export interface FetchItemCommentsPayload {
 export interface FetchItemCommentsSuccessPayload {
     itemId: number,
     data: ListData<ItemComment>,
+}
+
+export interface PostItemCommentSuccessPayload extends ItemCommentChildren {
+    parent_id: number,
+}
+
+export interface PostItemCommentPayload {
+    itemId: number,
+    parentId?: number,
+    text: string,
 }
