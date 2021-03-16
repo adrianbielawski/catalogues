@@ -32,9 +32,13 @@
 @media only screen and (max-width: 800px) {
     .item {
         flex-direction: column;
-        .itemContent {
-            width: 100%;
-            margin: 10px 0 0 0;
+        .wrapper {
+            flex-direction: column;
+            margin-bottom: 10px;
+            .itemContent {
+                width: 100%;
+                margin: 10px 0 0 0;
+            }
         }
     }
 }
