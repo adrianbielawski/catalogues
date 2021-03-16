@@ -1,0 +1,23 @@
+@import "global-styles/variables_and_mixins";
+
+.comment {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    .wrapper {
+        display: flex;
+        width: 100%;
+        @include clipText;
+        .username {
+            font-size: 1em;
+            font-weight: 700;
+            margin-right: 5px;
+        }
+    }
+    .createdAt {
+        margin-left: 20px;
+        font-size: .7em;
+        color: $midLightGrey;
+        white-space: nowrap;
+    }
+}
