@@ -36,6 +36,7 @@ export const itemsDataSlice = createSlice({
         ...itemReducers.itemsData,
         ...itemReducers.changeItemRating,
         ...itemReducers.fetchItemComments,
+        ...itemReducers.postItemComment,
         CLEAR_ITEMS_DATA() {
             return initialState
         },
@@ -59,4 +60,5 @@ export const {
     CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR,
     CHANGE_ITEM_RATING, CHANGE_ITEM_RATING_SUCCESS, CHANGE_ITEM_RATING_FAILURE,
     FETCH_ITEM_COMMENTS, FETCH_ITEM_COMMENTS_START, FETCH_ITEM_COMMENTS_SUCCESS, FETCH_ITEM_COMMENTS_FAILURE,
+    POST_ITEM_COMMENT, POST_ITEM_COMMENT_START, POST_ITEM_COMMENT_SUCCESS, POST_ITEM_COMMENT_FAILURE,
 } = itemsDataSlice.actions

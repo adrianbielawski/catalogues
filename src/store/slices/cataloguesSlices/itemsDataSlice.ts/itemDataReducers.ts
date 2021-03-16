@@ -1,9 +1,11 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { mod } from 'src/utils'
-import { itemCommentDeserializer, itemDeserializer, itemRatingDeserializer, listDeserializer } from 'src/serializers'
+import {
+    itemCommentChildrenDeserializer, itemCommentDeserializer, itemDeserializer, itemRatingDeserializer, listDeserializer
+} from 'src/serializers'
 import { DeserializedItem, DeserializedItemField, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
-import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
+import { getCommentById, getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
 
 type State = T.ItemsDataState
 
@@ -202,6 +204,35 @@ export const fetchItemComments = {
         }
     },
     FETCH_ITEM_COMMENTS_FAILURE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.fetchingComments = false
+    },
+}
+
+export const postItemComment = {
+    POST_ITEM_COMMENT(state: State, action: PayloadAction<T.PostItemCommentPayload>) { },
+    POST_ITEM_COMMENT_START(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.postingComment = true
+    },
+    POST_ITEM_COMMENT_SUCCESS(state: State, action: PayloadAction<T.PostItemCommentSuccessPayload>) {
+        const newComment = itemCommentChildrenDeserializer(action.payload)
+        const item = getItemById(state, newComment.itemId)
+        const parent = action.payload.parent_id
+
+        if (parent) {
+            const comment = getCommentById(state, newComment.itemId, parent)
+            comment.children.unshift(newComment)
+        } else {
+            item.commentsData?.results.unshift({
+                ...newComment,
+                children: []
+            })
+        }
+
+        item.postingComment = false
+    },
+    POST_ITEM_COMMENT_FAILURE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
         item.fetchingComments = false
     },

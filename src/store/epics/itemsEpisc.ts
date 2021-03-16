@@ -193,6 +193,21 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pi
     )
 )
 
+export const postItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.POST_ITEM_COMMENT.match),
+    mergeMap(action => concat(
+        of(actions.POST_ITEM_COMMENT_START(action.payload.itemId)),
+        defer(() => axiosInstance$.post(`/comments/`, {
+            item_id: action.payload.itemId,
+            parent_id: action.payload.parentId,
+            text: action.payload.text,
+        }).pipe(
+            map(response => actions.POST_ITEM_COMMENT_SUCCESS(response.data)),
+            catchError(() => of(actions.POST_ITEM_COMMENT_FAILURE(action.payload.itemId)))
+        ))
+    ))
+)
+
 export const itemsEpics = combineEpics(
     refreshItemEpic,
     fetchItemEpic,
@@ -203,4 +218,5 @@ export const itemsEpics = combineEpics(
     changeItemRatingEpic,
     fetchItemCommentsEpic,
     fetchItemsCommentsEpic,
+    postItemCommentsEpic,
 )

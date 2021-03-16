@@ -242,6 +242,7 @@ export interface DeserializedItem {
     removedImages: DeserializedImage[],
     commentsData: DeserializedCommentsData | null,
     fetchingComments: boolean,
+    postingComment: boolean,
     isEditing: boolean,
     isSubmitting: boolean,
     isDeleting: boolean,
