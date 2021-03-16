@@ -120,6 +120,7 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     images: item.images.map(imageDeserializer),
     removedImages: [],
     commentsData: null,
+    fetchingComments: false,
     isEditing: false,
     isSubmitting: false,
     isDeleting: false,

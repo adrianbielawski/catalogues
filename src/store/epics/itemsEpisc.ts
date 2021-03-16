@@ -152,7 +152,7 @@ export const deleteItemEpic = (action$: Observable<Action>) => action$.pipe(
 
 export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CHANGE_ITEM_RATING.match),
-    switchMap(action => 
+    switchMap(action =>
         axiosInstance$.put(`/items/${action.payload.itemId}/rating/`, {
             rating: action.payload.rating
         }).pipe(
@@ -165,6 +165,34 @@ export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pip
     )
 )
 
+export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_ITEMS_SUCCESS.match),
+    mergeMap(action => from(action.payload.data.results.map(i => i.id)).pipe(
+        mergeMap(id => of(actions.FETCH_ITEM_COMMENTS({
+            itemId: id,
+            page: 1,
+        })))
+    )),
+)
+
+export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_ITEM_COMMENTS.match),
+    mergeMap(action =>
+        axiosInstance$.get(`/comments/`, {
+            params: {
+                item_id: action.payload.itemId,
+                page: action.payload.page,
+            }
+        }).pipe(
+            map(response => actions.FETCH_ITEM_COMMENTS_SUCCESS({
+                itemId: action.payload.itemId,
+                data: response.data
+            })),
+            catchError(() => of(actions.FETCH_ITEM_COMMENTS_FAILURE(action.payload.itemId)))
+        )
+    )
+)
+
 export const itemsEpics = combineEpics(
     refreshItemEpic,
     fetchItemEpic,
@@ -173,4 +201,6 @@ export const itemsEpics = combineEpics(
     saveItemEpic,
     deleteItemEpic,
     changeItemRatingEpic,
+    fetchItemCommentsEpic,
+    fetchItemsCommentsEpic,
 )
