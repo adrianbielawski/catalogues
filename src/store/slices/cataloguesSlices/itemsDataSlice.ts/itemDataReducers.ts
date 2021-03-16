@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { mod } from 'src/utils'
-import { itemDeserializer, itemRatingDeserializer, listDeserializer } from 'src/serializers'
+import { itemCommentDeserializer, itemDeserializer, itemRatingDeserializer, listDeserializer } from 'src/serializers'
 import { DeserializedItem, DeserializedItemField, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
 import { getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
@@ -180,4 +180,29 @@ export const changeItemRating = {
         item.rating = itemRatingDeserializer(action.payload.rating)
     },
     CHANGE_ITEM_RATING_FAILURE(state: State) { },
+}
+
+export const fetchItemComments = {
+    FETCH_ITEM_COMMENTS(state: State, action: PayloadAction<T.FetchItemCommentsPayload>) { },
+    FETCH_ITEM_COMMENTS_START(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.fetchingComments = true
+    },
+    FETCH_ITEM_COMMENTS_SUCCESS(state: State, action: PayloadAction<T.FetchItemCommentsSuccessPayload>) {
+        const item = getItemById(state, action.payload.itemId)
+
+        const list = listDeserializer(action.payload.data, itemCommentDeserializer)
+        list.startIndex = 1
+        const prevResults = list.current === 1 ? [] : item.commentsData!.results
+
+        item.fetchingComments = false
+        item.commentsData = {
+            ...list,
+            results: prevResults.concat(list.results),
+        }
+    },
+    FETCH_ITEM_COMMENTS_FAILURE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.fetchingComments = false
+    },
 }

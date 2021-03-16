@@ -1,4 +1,6 @@
-import { DeserializedItem, ErrorMessage, Item, ItemRating, ListData } from "src/globalTypes";
+import {
+    DeserializedItem, ErrorMessage, Item, ItemComment, ItemRating, ListData
+} from "src/globalTypes"
 
 export interface ItemsDataState {
     catalogueId: number | null,
@@ -60,4 +62,14 @@ export interface ChangeItemRatingPayload {
 export interface ChangeItemRatingSuccessPayload {
     itemId: number,
     rating: ItemRating,
+}
+
+export interface FetchItemCommentsPayload {
+    itemId: number,
+    page: number,
+}
+
+export interface FetchItemCommentsSuccessPayload {
+    itemId: number,
+    data: ListData<ItemComment>,
 }
