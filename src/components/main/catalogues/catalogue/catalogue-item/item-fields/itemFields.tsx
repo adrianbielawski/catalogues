@@ -14,7 +14,7 @@ type Props = {
 
 const ItemFields = (props: Props) => {
     const itemFields = useTypedSelector(itemFieldsSelector(props.item.id))
-    const maxHeight = window.innerWidth <= 800 ? 55 : 146
+    const maxHeight = 55
     const itemsProps = { catalogueId: props.item.catalogueId }
 
     return (
