@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { size } from 'lodash'
 import classNames from 'classnames/bind'
@@ -10,7 +10,7 @@ import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/catalogues
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay, useElementInView } from 'src/customHooks'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 //Utils
 import filtersBarValuesBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
@@ -33,13 +33,18 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const [lastItem, setLastItem] = useState<HTMLLIElement | null>()
-    const lastItemRef = useCallback(setLastItem, [])
-    const observer = useRef<IntersectionObserver | null>()
     const itemsData = useTypedSelector(state => state.itemsData)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
     const filtersBarContext = useFiltersBarContext()
     const delayCompleted = useDelay(itemsData.fetchingItems)
+
+    const handleIntersecting = (isIntersecting: boolean) => {
+        if (isIntersecting && itemsData.next && itemsData.next > 2) {
+            fetchItems()
+        }
+    }
+
+    const lastItemRef = useElementInView(handleIntersecting)
 
     useEffect(() => {
         const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
@@ -74,31 +79,6 @@ const CatalogueItems = (props: Props) => {
         filtersBarContext.filtersContext.selectedFilters,
         filtersBarContext.filtersBar.isInitialized,
     ])
-
-    useEffect(() => {
-        if (lastItem) {
-            createObserver(lastItem)
-        }
-        return () => {
-            if (observer.current) {
-                observer.current.disconnect()
-            }
-        }
-    }, [lastItem])
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-        if (entries[0].isIntersecting && itemsData.next && itemsData.next > 2) {
-            fetchItems()
-        }
-    }
-
-    const createObserver = (element: Element) => {
-        if (observer.current) {
-            observer.current.disconnect()
-        }
-        observer.current = new IntersectionObserver(handleIntersect)
-        observer.current.observe(element)
-    }
 
     const fetchItems = (pageNum?: number) => {
         let page = 1
