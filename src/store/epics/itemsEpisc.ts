@@ -175,6 +175,15 @@ export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.p
     )),
 )
 
+export const refreshItemCommentsEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.FETCH_ITEM_SUCCESS.match)),
+).pipe(
+    map(action => actions.FETCH_ITEM_COMMENTS({
+        itemId: action.payload.itemId,
+        page: 1,
+    }))
+)
+
 export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEM_COMMENTS.match),
     mergeMap(action => concat (
@@ -217,6 +226,7 @@ export const itemsEpics = combineEpics(
     saveItemEpic,
     deleteItemEpic,
     changeItemRatingEpic,
+    refreshItemCommentsEpic,
     fetchItemCommentsEpic,
     fetchItemsCommentsEpic,
     postItemCommentsEpic,
