@@ -4,6 +4,8 @@ import styles from './userImage.scss'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+const BASE_URL = process.env.API_URL
+
 type Props = {
     url?: string,
     className: string,
@@ -19,10 +21,10 @@ const UserImage = (props: Props) => {
 
     return (
         <div className={userImageClass}>
-            {props.url !== undefined
+            {props.url?.length
                 ? (
                     <img
-                        src={props.url}
+                        src={`${BASE_URL}${props.url}`}
                         className={styles.image}
                     />
                 )

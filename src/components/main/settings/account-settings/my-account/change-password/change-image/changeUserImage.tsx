@@ -8,8 +8,6 @@ import EditableFieldTitle from 'components/global-components/editable-field/edit
 import UserImage from 'components/global-components/user-image/userImage'
 import Loader from 'components/global-components/loader/loader'
 
-const BASE_URL = process.env.API_URL
-
 const ChangeUserImage = () => {
     const dispatch = useAppDispatch()
     const inputRef = useRef<HTMLInputElement>(null)
@@ -37,7 +35,7 @@ const ChangeUserImage = () => {
                         <Loader size={35} />
                     ) : (
                         <UserImage
-                            url={`${BASE_URL}${auth.user!.imageThumbnail}`}
+                            url={auth.user!.imageThumbnail}
                             className={styles.image}
                         />
                     )
