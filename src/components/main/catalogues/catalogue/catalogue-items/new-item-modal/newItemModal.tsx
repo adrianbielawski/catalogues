@@ -14,11 +14,13 @@ const NewItemModal = () => {
             className={styles.newItemModal}
         >
             <div className={styles.editItem}>
-                <EditItem
-                    show={itemsData.newItemId !== null}
-                    itemId={itemsData.newItemId!}
-                    isItemNew={true}
-                />
+                {itemsData.newItemId && (
+                    <EditItem
+                        show={itemsData.newItemId !== null}
+                        itemId={itemsData.newItemId!}
+                        isItemNew={true}
+                    />
+                )}
             </div>
         </AnimatedModal>
     )
