@@ -15,7 +15,10 @@ type Props = {
 
 const cx = classNames.bind(styles)
 
-const Comment = (props: Props) => {
+const Comment: React.ForwardRefRenderFunction<
+    HTMLLIElement,
+    Props
+> = (props, ref) => {
     const history = useHistory<LocationState>()
 
     const handleUsernameClick = () => {
@@ -34,13 +37,16 @@ const Comment = (props: Props) => {
         },
     )
     moment.updateLocale('en', {
-        relativeTime : {
+        relativeTime: {
             future: "%s ago",
         }
     })
 
     return (
-        <li className={commentClass}>
+        <li
+            className={commentClass}
+            ref={ref}
+        >
             <UserImage
                 url={props.comment.createdBy.imageThumbnail}
                 className={styles.userImage}
@@ -61,4 +67,4 @@ const Comment = (props: Props) => {
     )
 }
 
-export default Comment
+export default React.forwardRef(Comment)
