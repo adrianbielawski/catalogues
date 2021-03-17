@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
+import classNames from 'classnames/bind'
 import styles from './addComment.scss'
 //Custom components
 import Input from 'components/global-components/input/input'
@@ -11,8 +12,11 @@ import { itemSelector } from 'store/selectors'
 
 type Props = {
     itemId: number,
+    className?: string,
     onAdd: (comment: string) => void
 }
+
+const cx = classNames.bind(styles)
 
 const AddComment = (props: Props) => {
     const posting = useTypedSelector(itemSelector(props.itemId)).postingComment
@@ -39,8 +43,13 @@ const AddComment = (props: Props) => {
 
     confirmOnEnter(inputRef, handleConfirm)
 
+    const addCommentClass = cx(
+        'addComment',
+        props.className,
+    )
+
     return (
-        <div className={styles.addComment}>
+        <div className={addCommentClass}>
             <TransparentButton
                 disabled={comment.length === 0}
                 onClick={handleConfirm}

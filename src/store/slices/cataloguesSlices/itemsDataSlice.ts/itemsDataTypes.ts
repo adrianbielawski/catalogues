@@ -66,7 +66,7 @@ export interface ChangeItemRatingSuccessPayload {
 
 export interface FetchItemCommentsPayload {
     itemId: number,
-    page: number,
+    page: number | null,
 }
 
 export interface FetchItemCommentsSuccessPayload {

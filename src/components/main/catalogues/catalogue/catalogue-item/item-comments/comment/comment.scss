@@ -3,11 +3,22 @@
 .comment {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
+    padding-bottom: 5px;
+    .userImage {
+        min-width: 35px;
+        min-height: 35px;
+        width: 35px;
+        height: 35px;
+    }
     .wrapper {
         display: flex;
-        width: 100%;
-        @include clipText;
+        flex-grow: 1;
+        margin-left: 5px;
+        &.clipText {
+            @include clipText;
+        }
         .username {
             font-size: 1em;
             font-weight: 700;
@@ -15,8 +26,8 @@
         }
     }
     .createdAt {
-        margin-left: 20px;
-        font-size: .7em;
+        margin-left: 5px;
+        font-size: 0.7em;
         color: $midLightGrey;
         white-space: nowrap;
     }
