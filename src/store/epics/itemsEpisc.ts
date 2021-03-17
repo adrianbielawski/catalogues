@@ -177,7 +177,8 @@ export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.p
 
 export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEM_COMMENTS.match),
-    mergeMap(action =>
+    mergeMap(action => concat (
+        of(actions.FETCH_ITEM_COMMENTS_START(action.payload.itemId)),
         axiosInstance$.get(`/comments/`, {
             params: {
                 item_id: action.payload.itemId,
@@ -190,7 +191,7 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pi
             })),
             catchError(() => of(actions.FETCH_ITEM_COMMENTS_FAILURE(action.payload.itemId)))
         )
-    )
+    ))
 )
 
 export const postItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
