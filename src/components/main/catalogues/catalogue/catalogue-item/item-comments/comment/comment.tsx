@@ -33,6 +33,11 @@ const Comment = (props: Props) => {
             clipText: props.clipText,
         },
     )
+    moment.updateLocale('en', {
+        relativeTime : {
+            future: "%s ago",
+        }
+    })
 
     return (
         <li className={commentClass}>
@@ -50,7 +55,7 @@ const Comment = (props: Props) => {
                 {props.comment.text}
             </p>
             <p className={styles.createdAt}>
-                {moment.max((props.comment.createdAt, moment())).fromNow()}
+                {moment(props.comment.createdAt).fromNow()}
             </p>
         </li>
     )
