@@ -7,6 +7,7 @@ type Props = {
     show: boolean,
     children: JSX.Element,
     className?: string,
+    onMounted?: () => void
     onClose?: () => void
 }
 
@@ -20,6 +21,12 @@ const AnimatedModal = (props: Props) => {
             setShow(true)
         }
     }, [props.show])
+
+    const handleMounted = () => {
+        if (props.onMounted) {
+            props.onMounted()
+        }
+    }
 
     const close = () => {
         if (props.onClose) {
@@ -43,6 +50,7 @@ const AnimatedModal = (props: Props) => {
             classNames={{ ...styles }}
             mountOnEnter
             unmountOnExit
+            onEntered={handleMounted}
             onExited={handleClose}
         >
             <Modal
