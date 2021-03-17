@@ -12,9 +12,13 @@ type Props = {
 
 const AnimatedModal = (props: Props) => {
     const [active, setActive] = useState(props.show)
+    const [show, setShow] = useState(props.show)
 
     useEffect(() => {
         setActive(props.show)
+        if (props.show) {
+            setShow(true)
+        }
     }, [props.show])
 
     const close = () => {
@@ -26,6 +30,9 @@ const AnimatedModal = (props: Props) => {
     const handleClose = () => {
         if (props.onClose) {
             props.onClose()
+        }
+        if (!show) {
+            setShow(false)
         }
     }
 
@@ -39,7 +46,7 @@ const AnimatedModal = (props: Props) => {
             onExited={handleClose}
         >
             <Modal
-                show={props.show}
+                show={show}
                 className={props.className}
                 onClose={close}
             >
