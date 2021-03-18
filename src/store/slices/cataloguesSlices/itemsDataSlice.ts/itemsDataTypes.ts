@@ -76,6 +76,9 @@ export interface FetchItemCommentsSuccessPayload {
 
 export interface PostItemCommentSuccessPayload extends ItemCommentChildren {
     parent_id: number,
+    meta: {
+        count: number
+    }
 }
 
 export interface PostItemCommentPayload {
