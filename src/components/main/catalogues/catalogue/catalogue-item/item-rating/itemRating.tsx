@@ -3,7 +3,7 @@ import styles from './itemRating.scss'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { useAppDispatch } from 'store/storeConfig'
 import { CHANGE_ITEM_RATING } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import AverageRating from 'components/global-components/average-rating/averageRating'
@@ -15,7 +15,6 @@ type Props = {
 
 const ItemRating = (props: Props) => {
     const dispatch = useAppDispatch()
-    const user = useTypedSelector(state => state.auth.user)
 
     const handleRatingChange = (rating: number) => {
         dispatch(CHANGE_ITEM_RATING({
@@ -31,7 +30,7 @@ const ItemRating = (props: Props) => {
                 count={props.item.rating.count}
             />
 
-            {!props.item.permissions.canEdit && user !== null
+            {props.item.permissions.canRate
                 ? (
                     <UserRating
                         rating={props.item.rating.currentUser}

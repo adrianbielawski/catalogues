@@ -148,12 +148,14 @@ export interface ItemPermisions {
     can_edit: boolean,
     can_comment: boolean,
     can_add_to_favourites: boolean,
+    can_rate: boolean,
 }
 
 export interface DeserializedItemPermisions {
     canEdit: boolean,
     canComment: boolean,
     canAddToFavourites: boolean,
+    canRate: boolean,
 }
 
 export interface ItemRating {

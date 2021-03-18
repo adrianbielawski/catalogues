@@ -77,6 +77,7 @@ export const itemPermissionsDeserializer = (permissions: T.ItemPermisions): T.De
     canEdit: permissions.can_edit,
     canComment: permissions.can_comment,
     canAddToFavourites: permissions.can_add_to_favourites,
+    canRate: permissions.can_rate,
 })
 
 export const itemRatingDeserializer = (rating: T.ItemRating) => ({
