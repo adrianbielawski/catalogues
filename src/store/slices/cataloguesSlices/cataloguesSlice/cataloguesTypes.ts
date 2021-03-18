@@ -87,6 +87,7 @@ export interface CreateCatalogueFieldPayload {
     catalogueId: number,
     type: string,
     position: number,
+    public: boolean,
 }
 
 export interface RemoveChoicePayload {
@@ -114,5 +115,9 @@ export interface ChangeDefaultCataloguePayload {
 
 export interface ChangePublicCataloguePayload {
     catalogueId: number,
+    public: boolean,
+}
+
+export interface ChangePublicFieldPayload extends CatalogueAndFieldIdPayload {
     public: boolean,
 }

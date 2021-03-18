@@ -156,6 +156,25 @@ export const removeChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
+export const changePublicFieldEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_FIELD_PUBLIC.match),
+    switchMap(action =>
+        defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
+            public: action.payload.public,
+        })).pipe(
+            map(() => actions.CHANGE_FIELD_PUBLIC_SUCCESS({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+                public: action.payload.public,
+            })),
+            catchError(() => of(actions.CHANGE_FIELD_PUBLIC_FAILURE({
+                catalogueId: action.payload.catalogueId,
+                fieldId: action.payload.fieldId,
+            })))
+        )
+    )
+)
+
 export const deleteCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.DELETE_CATALOGUE_FIELD.match),
     mergeMap(action => concat(
@@ -182,6 +201,7 @@ export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$
             catalogue_id: action.payload.catalogueId,
             type: action.payload.type,
             position: action.payload.position,
+            public: action.payload.public,
         }).pipe(
             mapTo(actions.CREATE_CATALOGUE_FIELD_SUCCESS(action.payload.catalogueId)),
             catchError(() => of(actions.CREATE_CATALOGUE_FIELD_FAILURE(action.payload.catalogueId)))
@@ -336,6 +356,7 @@ export const cataloguesEpics = combineEpics(
     deleteCatalogueEpic,
     postChoiceEpic,
     removeChoiceEpic,
+    changePublicFieldEpic,
     deleteCatalogueFieldEpic,
     changeFieldNameEpic,
     createCatalogueFieldEpic,

@@ -263,6 +263,7 @@ export interface Field {
     name: string,
     filter_name: string,
     position: number,
+    public: boolean,
     choices?: Choice[],
 }
 
@@ -285,6 +286,7 @@ export interface DeserializedChoiceField {
     name: string,
     filterName: string,
     position: number,
+    public: boolean,
     choices: DeserializedChoice[],
     fetchingChoices: boolean,
     postingChoice: boolean,
@@ -303,6 +305,7 @@ export interface DeserializedTextField {
     name: string,
     filterName: string,
     position: number,
+    public: boolean,
     changingName: boolean,
     fieldError: ErrorMessage,
     isDeleting: boolean,
