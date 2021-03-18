@@ -4,7 +4,7 @@ import styles from './editChoiceField.scss'
 import { DeserializedChoiceField } from 'src/globalTypes'
 //Redux
 import {
-    CHANGE_FIELD_NAME, DELETE_CATALOGUE_FIELD
+    CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldsSelector } from 'store/selectors'
@@ -15,6 +15,7 @@ import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
 import Button from 'components/global-components/button/button'
 import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
+import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 type Props = {
     field: DeserializedChoiceField,
@@ -62,6 +63,14 @@ const EditChoiceField = (props: Props) => {
         })
     }
 
+    const handlePublicChange = () => {
+        dispatch(CHANGE_FIELD_PUBLIC({
+            catalogueId: field.catalogueId,
+            fieldId: field.id,
+            public: !field.public,
+        }))
+    }
+
     const deleteField = () => {
         dispatch(DELETE_CATALOGUE_FIELD(catalogueAndFieldId))
     }
@@ -82,6 +91,14 @@ const EditChoiceField = (props: Props) => {
                 invalidInputMessage={inputError}
                 ref={nameInputRef}
             />
+            <div className={styles.checkboxes}>
+                <CheckBoxWithTitle
+                    id="public"
+                    title="Public"
+                    selected={field.public}
+                    onChange={handlePublicChange}
+                />
+            </div>
             <Choices
                 field={field}
                 className={styles.choices}

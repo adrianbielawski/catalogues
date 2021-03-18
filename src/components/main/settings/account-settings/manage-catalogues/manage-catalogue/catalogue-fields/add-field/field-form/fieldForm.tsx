@@ -12,6 +12,7 @@ import Input from 'components/global-components/input/input'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 const FIELD_TYPES = [
     {
@@ -48,7 +49,12 @@ const FieldForm = (props: Props) => {
     const [fieldName, setFieldName] = useState('')
     const [formError, setFormError] = useState('')
     const [nameError, setNameError] = useState('')
+    const [isPublic, setIsPublic] = useState(false)
     const delayCompleated = useDelay(catalogue.isSubmittingNewField)
+
+    const handlePublicChange = () => {
+        setIsPublic(!isPublic)
+    }
 
     const validateName = (name: string) => {
         let error = null
@@ -109,7 +115,7 @@ const FieldForm = (props: Props) => {
             setFormError(error!)
             return
         }
-        
+
         setFieldType('')
         setFieldName('')
         nameInputRef.current!.value = ''
@@ -118,7 +124,8 @@ const FieldForm = (props: Props) => {
             catalogueId: props.catalogueId,
             name: fieldName,
             type: fieldType,
-            position: fields.length
+            position: fields.length,
+            public: isPublic,
         }))
     }
 
@@ -154,6 +161,14 @@ const FieldForm = (props: Props) => {
                     ref={nameInputRef}
                     onChange={handleNameChange}
                 />
+                <div className={styles.checkboxes}>
+                    <CheckBoxWithTitle
+                        id="public"
+                        title="Public"
+                        selected={isPublic}
+                        onChange={handlePublicChange}
+                    />
+                </div>
                 <p className={styles.type}>Type:</p>
                 <ChoiceList
                     className={styles.typeList}
