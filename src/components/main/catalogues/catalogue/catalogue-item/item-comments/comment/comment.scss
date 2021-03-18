@@ -1,10 +1,13 @@
 @import "global-styles/variables_and_mixins";
 
 .comment {
+    position: relative;
     width: 100%;
-    padding-bottom: 5px;
+    padding: 3px 0;
     &.replying {
         background: $lightGrey;
+        padding: 3px 10px;
+        margin: 0 -10px;
     }
     .parent {
         .commentContent {
@@ -44,6 +47,15 @@
             button {
                 font-weight: 700;
             }
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .comment {
+        &.replying {
+            padding: 3px 5px;
+            margin: 0 -5px;
         }
     }
 }
