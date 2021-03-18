@@ -1,0 +1,19 @@
+@import "global-styles/variables_and_mixins";
+
+.favouriteItemIcon {
+    font-size: 1.1em;
+    line-height: 0.8em;
+    margin-left: 10px;
+    path {
+        stroke: $grey;
+        stroke-width: 10%;
+        fill: transparent;
+    }
+    &.active,
+    &:hover {
+        path {
+            stroke: $red;
+            fill: $red;
+        }
+    }
+}
