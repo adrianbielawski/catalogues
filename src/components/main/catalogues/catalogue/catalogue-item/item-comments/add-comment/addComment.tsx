@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
+import { faReply } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './addComment.scss'
 //Custom components
@@ -43,6 +44,12 @@ const AddComment = (props: Props) => {
         setComment(inputRef.current!.value)
     }
 
+    const handleCancelReply = () => {
+        inputRef.current!.value = ''
+        setComment('')
+        clearReplyTo()
+    }
+
     const handleConfirm = () => {
         if (comment.length === 0) {
             return
@@ -67,6 +74,16 @@ const AddComment = (props: Props) => {
                     icon={faPaperPlane}
                 />
             </TransparentButton>
+            {replyTo?.id && (
+                <TransparentButton
+                    className={styles.cancelButton}
+                    onClick={handleCancelReply}
+                >
+                    <FontAwesomeIcon
+                        icon={faReply}
+                    />
+                </TransparentButton>
+            )}
             <Input
                 className={styles.input}
                 placeholder={replyTo?.id ? `Reply to ${replyTo.username}` : 'Add comment'}
