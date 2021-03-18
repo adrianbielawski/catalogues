@@ -18,6 +18,7 @@ import ItemData from './item-data/itemData'
 import ItemRating from './item-rating/itemRating'
 import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
+import FavouriteItemIcon from './favourite-item-icon/favouriteItemIcon'
 
 type Props = {
     item: DeserializedItem
@@ -95,6 +96,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         <div className={styles.itemContent}>
                             <div className={styles.ratingWrapper}>
                                 <ItemRating item={item} />
+                                {item.permissions.canAddToFavourites && (
+                                    <FavouriteItemIcon
+                                        itemId={item.id}
+                                        isFavourite={item.isFavourite}
+                                    />
+                                )}
                                 {item.permissions.canEdit &&
                                     <EditItemButton itemId={item.id} />
                                 }
