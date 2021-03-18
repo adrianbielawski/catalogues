@@ -184,6 +184,15 @@ export const changeItemRating = {
     CHANGE_ITEM_RATING_FAILURE(state: State) { },
 }
 
+export const changeFavouriteItemRating = {
+    CHANGE_FAVOURITE_ITEM(state: State, action: PayloadAction<T.ChangeFavouriteItemPayload>) {
+        const item = getItemById(state, action.payload.itemId)
+        item.isFavourite = action.payload.isFavourite
+    },
+    CHANGE_FAVOURITE_ITEM_SUCCESS(state: State) { },
+    CHANGE_FAVOURITE_ITEM_FAILURE(state: State) { },
+}
+
 export const fetchItemComments = {
     FETCH_ITEM_COMMENTS(state: State, action: PayloadAction<T.FetchItemCommentsPayload>) { },
     FETCH_ITEM_COMMENTS_START(state: State, action: PayloadAction<number>) {
