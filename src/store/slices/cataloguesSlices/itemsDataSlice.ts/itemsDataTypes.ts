@@ -64,6 +64,11 @@ export interface ChangeItemRatingSuccessPayload {
     rating: ItemRating,
 }
 
+export interface ChangeFavouriteItemPayload {
+    itemId: number,
+    isFavourite: boolean,
+}
+
 export interface FetchItemCommentsPayload {
     itemId: number,
     page: number | null,

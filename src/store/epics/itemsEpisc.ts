@@ -165,6 +165,18 @@ export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pip
     )
 )
 
+export const changeFavouriteItemEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_FAVOURITE_ITEM.match),
+    switchMap(action =>
+        axiosInstance$.put(`/items/${action.payload.itemId}/favourite/`, {
+            is_favourite: action.payload.isFavourite
+        }).pipe(
+            map(() => actions.CHANGE_FAVOURITE_ITEM_SUCCESS()),
+            catchError(() => of(actions.CHANGE_FAVOURITE_ITEM_FAILURE()))
+        )
+    )
+)
+
 export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEMS_SUCCESS.match),
     mergeMap(action => from(action.payload.data.results.map(i => i.id)).pipe(
@@ -226,6 +238,7 @@ export const itemsEpics = combineEpics(
     saveItemEpic,
     deleteItemEpic,
     changeItemRatingEpic,
+    changeFavouriteItemEpic,
     refreshItemCommentsEpic,
     fetchItemCommentsEpic,
     fetchItemsCommentsEpic,

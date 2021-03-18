@@ -76,6 +76,7 @@ export const itemFieldSerializer = (field: T.DeserializedItemField): T.Serialize
 export const itemPermissionsDeserializer = (permissions: T.ItemPermisions): T.DeserializedItemPermisions => ({
     canEdit: permissions.can_edit,
     canComment: permissions.can_comment,
+    canAddToFavourites: permissions.can_add_to_favourites,
 })
 
 export const itemRatingDeserializer = (rating: T.ItemRating) => ({
@@ -116,6 +117,7 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     catalogueId: item.catalogue_id,
     permissions: itemPermissionsDeserializer(item.permissions),
     rating: itemRatingDeserializer(item.rating),
+    isFavourite: item.is_favourite,
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],

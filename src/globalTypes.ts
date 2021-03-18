@@ -147,11 +147,13 @@ export interface DeserializedItemsData extends DeserializedListData<Deserialized
 export interface ItemPermisions {
     can_edit: boolean,
     can_comment: boolean,
+    can_add_to_favourites: boolean,
 }
 
 export interface DeserializedItemPermisions {
     canEdit: boolean,
     canComment: boolean,
+    canAddToFavourites: boolean,
 }
 
 export interface ItemRating {
@@ -215,7 +217,8 @@ export interface Item {
     permissions: ItemPermisions,
     values: ItemField[],
     images: Image[],
-    rating: ItemRating
+    rating: ItemRating,
+    is_favourite: boolean,
 }
 
 export interface DeserializedItem {
@@ -226,6 +229,7 @@ export interface DeserializedItem {
     catalogueId: number,
     permissions: DeserializedItemPermisions,
     rating: DesrializedItemRating,
+    isFavourite: boolean,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
