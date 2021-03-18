@@ -14,6 +14,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 
 type Props = {
     comment: DeserializedItemComment,
+    canComment: boolean,
     className?: string,
     clipText?: boolean,
 }
@@ -30,7 +31,7 @@ const Comment: React.ForwardRefRenderFunction<
     const handleUsernameClick = () => {
         history.push(`/${props.comment.createdBy.username}`)
     }
-    
+
     const handleReply = () => {
         changeReplyTo({
             id: props.comment.id,
@@ -40,7 +41,12 @@ const Comment: React.ForwardRefRenderFunction<
 
     const getChildren = (comment: DeserializedItemComment) => {
         if ('children' in comment && comment.children.length !== 0) {
-            return <CommentChildren children={comment.children} />
+            return (
+                <CommentChildren
+                    children={comment.children}
+                    canComment={props.canComment}
+                />
+            )
         }
     }
 
@@ -97,7 +103,7 @@ const Comment: React.ForwardRefRenderFunction<
                     </p>
                 </div>
                 <div className={styles.info}>
-                    {getReplyButton(props.comment)}
+                    {props.canComment && getReplyButton(props.comment)}
                     <p className={styles.createdAt}>
                         {moment(props.comment.createdAt).fromNow()}
                     </p>

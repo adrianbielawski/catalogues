@@ -19,6 +19,7 @@ const contextValue = {
 type Props = {
     itemId: number,
     commentsData: DeserializedCommentsData,
+    canComment: boolean,
 }
 
 const ItemComments = (props: Props) => {
@@ -33,6 +34,7 @@ const ItemComments = (props: Props) => {
         comments.push(
             <Comment
                 comment={props.commentsData.results[i]}
+                canComment={props.canComment}
                 className={styles.comment}
                 clipText={true}
                 key={i}
@@ -65,13 +67,16 @@ const ItemComments = (props: Props) => {
                 <ul>
                     {comments}
                 </ul>
-                <AddComment
-                    itemId={props.itemId}
-                    onAdd={handleAddComment}
-                />
+                {props.canComment && (
+                    <AddComment
+                        itemId={props.itemId}
+                        onAdd={handleAddComment}
+                    />
+                )}
                 <CommentsModal
                     show={showAllComments}
                     itemId={props.itemId}
+                    canComment={props.canComment}
                     onClose={toggleShowAllComments}
                 />
             </div>

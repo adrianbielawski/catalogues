@@ -10,6 +10,7 @@ import Comment from '../comment'
 
 type Props = {
     children: DeserializedItemCommentChildren[],
+    canComment: boolean,
     className?: string,
 }
 
@@ -25,6 +26,7 @@ const CommentChildren = (props: Props) => {
     const children = props.children.map(child => (
         <Comment
             comment={child}
+            canComment={props.canComment}
             key={child.id}
         />
     ))

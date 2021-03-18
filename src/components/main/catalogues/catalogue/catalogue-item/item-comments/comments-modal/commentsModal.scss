@@ -17,7 +17,7 @@
             .comments {
                 padding: 5px;
                 box-sizing: border-box;
-                max-height: calc(100% - 52px);
+                max-height: calc(100% - var(--top));
                 overflow-y: scroll;
                 @include scrollBar;
             }
@@ -36,7 +36,7 @@
             .commentsWrapper {
                 min-width: 100vw;
                 .comments {
-                    max-height: calc(100% - 94px);
+                    max-height: calc(100% - var(--top));
                     padding-bottom: 15px;
                 }
                 .buttonWrapper {

@@ -117,6 +117,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         <ItemComments
                             itemId={item.id}
                             commentsData={item.commentsData}
+                            canComment={item.permissions.canComment}
                         />
                     }
                 </>

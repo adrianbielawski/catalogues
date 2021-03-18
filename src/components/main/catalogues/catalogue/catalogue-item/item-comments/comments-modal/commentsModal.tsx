@@ -19,6 +19,7 @@ import Loader from 'components/global-components/loader/loader'
 type Props = {
     show: boolean,
     itemId: number,
+    canComment: boolean,
     onClose: () => void,
 }
 
@@ -56,11 +57,26 @@ const CommentsModal = (props: Props) => {
         return (
             <Comment
                 comment={comment}
+                canComment={props.canComment}
                 key={comment.id}
                 ref={ref}
             />
         )
     })
+
+    let commentsTop = 0
+
+    if (props.canComment) {
+        if (innerWidth > 800) {
+            commentsTop = 52
+        } else {
+            commentsTop = 94
+        }
+    } else {
+        if (innerWidth <= 800) {
+            commentsTop = 52
+        }
+    }
 
     return (
         <AnimatedModal
@@ -92,12 +108,19 @@ const CommentsModal = (props: Props) => {
                             </TransparentButton>
                         </div>
                     )}
-                    <AddComment
-                        className={styles.addComment}
-                        itemId={item.id}
-                        onAdd={handleAddComment}
-                    />
-                    <ul className={styles.comments}>
+                    {props.canComment && (
+                        <AddComment
+                            className={styles.addComment}
+                            itemId={item.id}
+                            onAdd={handleAddComment}
+                        />
+                    )}
+                    <ul
+                        className={styles.comments}
+                        style={{
+                            '--top': `${commentsTop}px`,
+                        } as React.CSSProperties}
+                    >
                         {comments}
                     </ul>
                     {fetchingCommentsDelay && <Loader className={styles.loader} />}
