@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './commentsModal.scss'
@@ -43,9 +43,10 @@ const CommentsModal = (props: Props) => {
         }))
     }
 
-    const handleAddComment = (text: string) => {
+    const handleAddComment = (text: string, parentId?: number) => {
         dispatch(POST_ITEM_COMMENT({
             itemId: item.id,
+            parentId,
             text,
         }))
     }
@@ -70,15 +71,15 @@ const CommentsModal = (props: Props) => {
             <div className={styles.wrapper}>
                 {innerWidth > 800 && (
                     <div>
-                    <ImagesCarousel
-                        width={window.innerWidth * .5}
-                        height={window.innerHeight * .9}
-                        images={item.images}
-                        singleView={true}
-                        fullSizeImages={true}
-                        showCounter={true}
-                        background={'grey'}
-                    />
+                        <ImagesCarousel
+                            width={window.innerWidth * .5}
+                            height={window.innerHeight * .9}
+                            images={item.images}
+                            singleView={true}
+                            fullSizeImages={true}
+                            showCounter={true}
+                            background={'grey'}
+                        />
                     </div>
                 )}
                 <div className={styles.commentsWrapper}>

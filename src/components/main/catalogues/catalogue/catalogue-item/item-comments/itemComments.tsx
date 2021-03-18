@@ -44,9 +44,10 @@ const ItemComments = (props: Props) => {
         setShowAllComments(!showAllComments)
     }
 
-    const handleAddComment = (text: string) => {
+    const handleAddComment = (text: string, parentId?: number) => {
         dispatch(POST_ITEM_COMMENT({
             itemId: props.itemId,
+            parentId,
             text,
         }))
     }
