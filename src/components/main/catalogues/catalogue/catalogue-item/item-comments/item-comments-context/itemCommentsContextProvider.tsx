@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 import { useImmerReducer } from 'use-immer'
 //Contexts
-import { CHANGE_REPLY_TO, ItemCommentsInitialState, ReplyToType } from './itemCommentsContextTypes'
+import { CHANGE_REPLY_TO, CLEAR_REPLY_TO, ItemCommentsInitialState, ReplyToType } from './itemCommentsContextTypes'
 import { ItemCommentsContext, reducer } from './itemCommentsStore'
 
 type Props = {
@@ -23,10 +23,17 @@ const ItemCommentsContextProvider = (props: Props) => {
         })
     }
 
+    const clearReplyTo = () => {
+        dispatch({
+            type: CLEAR_REPLY_TO,
+        })
+    }
+
     const context = {
         ...state,
         commentId: null,
         changeReplyTo,
+        clearReplyTo,
     }
 
     return (
