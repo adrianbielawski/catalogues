@@ -134,6 +134,7 @@ export const textFieldDeserializer = (field: T.Field): T.DeserializedTextField =
     name: field.name,
     filterName: field.filter_name,
     position: field.position,
+    public: field.public,
     changingName: false,
     fieldError: {
         title: '',
@@ -151,6 +152,7 @@ export const choiceFieldDeserializer = (field: T.Field): T.DeserializedChoiceFie
     name: field.name,
     filterName: field.filter_name,
     position: field.position,
+    public: field.public,
     choices: field.choices ? choicesDeserializer(field.choices) : [],
     fetchingChoices: false,
     postingChoice: false,

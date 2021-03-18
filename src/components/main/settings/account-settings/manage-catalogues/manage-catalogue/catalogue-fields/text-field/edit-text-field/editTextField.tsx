@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './editTextField.scss'
 //Redux
-import { CHANGE_FIELD_NAME, DELETE_CATALOGUE_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldsSelector } from 'store/selectors'
 //Types
@@ -12,6 +12,7 @@ import { useDebouncedDispatch } from 'src/customHooks'
 import Input from 'components/global-components/input/input'
 import Button from 'components/global-components/button/button'
 import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
+import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 type Props = {
     field: DeserializedTextField,
@@ -59,6 +60,14 @@ const EditTextField = (props: Props) => {
         })
     }
 
+    const handlePublicChange = () => {
+        dispatch(CHANGE_FIELD_PUBLIC({
+            catalogueId: field.catalogueId,
+            fieldId: field.id,
+            public: !field.public,
+        }))
+    }
+
     const deleteField = () => {
         dispatch(DELETE_CATALOGUE_FIELD(catalogueAndFieldId))
     }
@@ -79,6 +88,14 @@ const EditTextField = (props: Props) => {
                 invalidInputMessage={inputError}
                 ref={nameInputRef}
             />
+            <div className={styles.checkboxes}>
+                <CheckBoxWithTitle
+                    id="public"
+                    title="Public"
+                    selected={field.public}
+                    onChange={handlePublicChange}
+                />
+            </div>
             <Button
                 className={styles.deleteButton}
                 disabled={field.isDeleting}
