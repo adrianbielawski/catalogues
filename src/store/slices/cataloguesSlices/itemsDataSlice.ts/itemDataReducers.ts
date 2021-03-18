@@ -3,7 +3,7 @@ import { mod } from 'src/utils'
 import {
     itemCommentChildrenDeserializer, itemCommentDeserializer, itemDeserializer, itemRatingDeserializer, listDeserializer
 } from 'src/serializers'
-import { DeserializedItem, DeserializedItemField, Item } from 'src/globalTypes'
+import { DeserializedItem, DeserializedItemCommentParent, DeserializedItemField, Item } from 'src/globalTypes'
 import * as T from './itemsDataTypes'
 import { getCommentById, getFieldsValuesById, getFieldValueById, getItemById } from './ItemsDataSelectors'
 
@@ -221,7 +221,7 @@ export const postItemComment = {
         const parent = action.payload.parent_id
 
         if (parent) {
-            const comment = getCommentById(state, newComment.itemId, parent)
+            const comment = getCommentById(state, newComment.itemId, parent) as DeserializedItemCommentParent
             comment.children.unshift(newComment)
         } else {
             item.commentsData?.results.unshift({

@@ -10,6 +10,11 @@ import Comment from './comment/comment'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddComment from './add-comment/addComment'
 import CommentsModal from './comments-modal/commentsModal'
+import ItemCommentsContextProvider from './item-comments-context/itemCommentsContextProvider'
+
+const contextValue = {
+    replyTo: null,
+}
 
 type Props = {
     itemId: number,
@@ -39,35 +44,38 @@ const ItemComments = (props: Props) => {
         setShowAllComments(!showAllComments)
     }
 
-    const handleAddComment = (text: string) => {
+    const handleAddComment = (text: string, parentId?: number) => {
         dispatch(POST_ITEM_COMMENT({
             itemId: props.itemId,
+            parentId,
             text,
         }))
     }
 
     return (
-        <div className={styles.itemComments}>
-            {props.commentsData.results.length ? (
-                <TransparentButton
-                    onClick={toggleShowAllComments}
-                >
-                    {`Show all ${props.commentsData.count} comments`}
-                </TransparentButton>
-            ) : <p>No comments</p>}
-            <ul>
-                {comments}
-            </ul>
-            <AddComment
-                itemId={props.itemId}
-                onAdd={handleAddComment}
-            />
-            <CommentsModal
-                show={showAllComments}
-                itemId={props.itemId}
-                onClose={toggleShowAllComments}
-            />
-        </div>
+        <ItemCommentsContextProvider value={contextValue}>
+            <div className={styles.itemComments}>
+                {props.commentsData.results.length ? (
+                    <TransparentButton
+                        onClick={toggleShowAllComments}
+                    >
+                        {`Show all ${props.commentsData.count} comments`}
+                    </TransparentButton>
+                ) : <p>No comments</p>}
+                <ul>
+                    {comments}
+                </ul>
+                <AddComment
+                    itemId={props.itemId}
+                    onAdd={handleAddComment}
+                />
+                <CommentsModal
+                    show={showAllComments}
+                    itemId={props.itemId}
+                    onClose={toggleShowAllComments}
+                />
+            </div>
+        </ItemCommentsContextProvider>
     )
 }
 

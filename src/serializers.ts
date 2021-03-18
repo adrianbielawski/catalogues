@@ -99,7 +99,7 @@ export const itemCommentChildrenDeserializer = (comment: T.ItemCommentChildren) 
     text: comment.text,
 })
 
-export const itemCommentDeserializer = (comment: T.ItemComment) => ({
+export const itemCommentDeserializer = (comment: T.ItemCommentParent) => ({
     id: comment.id,
     itemId: comment.item_id,
     createdBy: itemCommentCreatedByDeserializer(comment.created_by),

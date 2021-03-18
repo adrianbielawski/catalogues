@@ -203,7 +203,7 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pi
     ))
 )
 
-export const postItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
+export const postItemCommentEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.POST_ITEM_COMMENT.match),
     mergeMap(action => concat(
         of(actions.POST_ITEM_COMMENT_START(action.payload.itemId)),
@@ -229,5 +229,5 @@ export const itemsEpics = combineEpics(
     refreshItemCommentsEpic,
     fetchItemCommentsEpic,
     fetchItemsCommentsEpic,
-    postItemCommentsEpic,
+    postItemCommentEpic,
 )

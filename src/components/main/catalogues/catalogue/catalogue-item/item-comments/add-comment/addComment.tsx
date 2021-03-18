@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
+import { faReply } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './addComment.scss'
 //Custom components
@@ -9,24 +10,33 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import { confirmOnEnter } from 'src/utils'
 import { useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'
+import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
 
 type Props = {
     itemId: number,
     className?: string,
-    onAdd: (comment: string) => void
+    onAdd: (text: string, parentId?: number) => void
 }
 
 const cx = classNames.bind(styles)
 
 const AddComment = (props: Props) => {
+    const { replyTo, clearReplyTo } = useContext(ItemCommentsContext)
     const posting = useTypedSelector(itemSelector(props.itemId)).postingComment
     const inputRef = useRef<HTMLInputElement>(null)
     const [comment, setComment] = useState('')
 
     useEffect(() => {
+        if (replyTo) {
+            inputRef.current?.focus()
+        }
+    }, [replyTo])
+
+    useEffect(() => {
         if (!posting && inputRef.current) {
             inputRef.current.value = ''
             setComment('')
+            clearReplyTo()
         }
     }, [posting])
 
@@ -34,11 +44,17 @@ const AddComment = (props: Props) => {
         setComment(inputRef.current!.value)
     }
 
+    const handleCancelReply = () => {
+        inputRef.current!.value = ''
+        setComment('')
+        clearReplyTo()
+    }
+
     const handleConfirm = () => {
         if (comment.length === 0) {
             return
         }
-        props.onAdd(inputRef.current!.value)
+        props.onAdd(inputRef.current!.value, replyTo?.id as number)
     }
 
     confirmOnEnter(inputRef, handleConfirm)
@@ -58,9 +74,19 @@ const AddComment = (props: Props) => {
                     icon={faPaperPlane}
                 />
             </TransparentButton>
+            {replyTo?.id && (
+                <TransparentButton
+                    className={styles.cancelButton}
+                    onClick={handleCancelReply}
+                >
+                    <FontAwesomeIcon
+                        icon={faReply}
+                    />
+                </TransparentButton>
+            )}
             <Input
                 className={styles.input}
-                placeholder={'Add comment'}
+                placeholder={replyTo?.id ? `Reply to ${replyTo.username}` : 'Add comment'}
                 ref={inputRef}
                 onChange={handleChange}
             />

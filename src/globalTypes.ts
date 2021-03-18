@@ -180,23 +180,10 @@ export interface DeserializedItemCommentCreatedBy {
     imageThumbnail: string,
 }
 
-export interface ItemCommentChildren {
-    id: number,
-    item_id: number,
-    created_by: ItemCommentCreatedBy,
-    created_at: string,
-    text: string,
-}
+export type ItemCommentChildren = Omit<ItemCommentParent, 'children'>
+export type DeserializedItemCommentChildren = Omit<DeserializedItemCommentParent, 'children'>
 
-export interface DeserializedItemCommentChildren {
-    id: number,
-    itemId: number,
-    createdBy: DeserializedItemCommentCreatedBy,
-    createdAt: string,
-    text: string,
-}
-
-export interface ItemComment {
+export interface ItemCommentParent {
     id: number,
     item_id: number,
     created_by: ItemCommentCreatedBy,
@@ -205,7 +192,7 @@ export interface ItemComment {
     children: ItemCommentChildren[],
 }
 
-export interface DeserializedItemComment {
+export interface DeserializedItemCommentParent {
     id: number,
     itemId: number,
     createdBy: DeserializedItemCommentCreatedBy,
@@ -214,7 +201,9 @@ export interface DeserializedItemComment {
     children: DeserializedItemCommentChildren[],
 }
 
-export interface CommentsData extends ListData<ItemComment[]> { }
+export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChildren
+
+export interface CommentsData extends ListData<ItemCommentParent[]> { }
 export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment[]> { }
 
 export interface Item {
