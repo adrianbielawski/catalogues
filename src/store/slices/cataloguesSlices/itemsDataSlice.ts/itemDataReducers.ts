@@ -230,6 +230,7 @@ export const postItemComment = {
             })
         }
 
+        item.commentsData!.count = action.payload.meta.count
         item.postingComment = false
     },
     POST_ITEM_COMMENT_FAILURE(state: State, action: PayloadAction<number>) {
