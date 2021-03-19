@@ -9,11 +9,16 @@
     outline: none;
     cursor: pointer;
     @include resetTapHighlight;
-    &:hover {
-        color: $lightOrange;
-    }
     &:disabled {
         color: $lightGrey;
         cursor: not-allowed;
+    }
+}
+
+@media (hover: hover) {
+    .button {
+        &:hover {
+            color: $lightOrange;
+        }
     }
 }

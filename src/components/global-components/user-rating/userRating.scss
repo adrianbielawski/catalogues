@@ -1,31 +1,18 @@
 @import "global-styles/variables_and_mixins";
 
 .stars {
-	line-height: .8em;
+	line-height: 0.8em;
 	path {
 		stroke: $midLightGrey;
 		stroke-width: 10%;
 		fill: transparent;
 	}
-	&:hover {
-		path {
-			stroke: $orange;
-			fill: $orange;
-		}
-	}
 	.star {
 		padding: 0 2px;
 		color: $midLightGrey;
-		&.active
-			path {
-				stroke: $orange;
-				fill: $orange;
-			}
-		&:hover ~ .star {
-			path {
-				stroke: $midLightGrey;
-				fill: transparent;
-			}
+		&.active path {
+			stroke: $orange;
+			fill: $orange;
 		}
 	}
 	:first-child {
@@ -33,5 +20,20 @@
 	}
 	:last-child {
 		padding-right: 0;
+	}
+}
+
+@media (hover: hover) {
+	.stars {
+		&:hover path {
+			stroke: $orange;
+			fill: $orange;
+		}
+		.star {
+			&:hover ~ .star path {
+				stroke: $midLightGrey;
+				fill: transparent;
+			}
+		}
 	}
 }

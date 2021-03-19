@@ -146,7 +146,7 @@ const Catalogues = () => {
 
     const extraNavItems = [
         {
-            component: <AuthButton className={styles.logout} />,
+            component: <AuthButton className={styles.authButton} />,
             inNavBarOnMobile: false,
         },
         {

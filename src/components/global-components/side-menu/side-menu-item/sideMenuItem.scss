@@ -7,13 +7,18 @@
         font-size: 20px;
         color: $darkGrey;
         cursor: pointer;
-        &:hover {
-            color: $lightOrange;
-        }
     }
     &.active {
         span {
             color: $orange;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .item {
+        &:hover {
+            color: $lightOrange;
         }
     }
 }

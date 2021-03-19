@@ -32,8 +32,7 @@
     }
     .prev,
     .next,
-    .trashButton,
-    .fullScreenButton {
+    .trashButton {
         position: absolute;
         display: flex;
         align-items: center;
@@ -42,10 +41,6 @@
         opacity: 0;
         z-index: 2;
         transition: opacity 0.2s ease-in-out;
-        &:hover {
-            background: $lightGrey;
-            opacity: 1;
-        }
         &:active {
             background: $grey;
         }
@@ -78,12 +73,6 @@
         right: calc(10px * var(--scaledImagesQty));
     }
 
-    &:hover .prev,
-    &:hover .next,
-    &:hover .fullScreenButton {
-        opacity: .75;
-    }
-
     ul {
         list-style: none;
         display: grid;
@@ -104,12 +93,6 @@
                 align-items: center;
                 justify-content: center;
                 z-index: 1;
-                &:hover .trashButton {
-                    opacity: 0.6;
-                }
-                &:hover .primaryImageStar {
-                    opacity: 1;
-                }
 
                 img {
                     max-width: 100%;
@@ -165,6 +148,32 @@
                     background: $grey;
                     opacity: 0.9;
                 }
+            }
+        }
+    }
+}
+
+@media (hover: hover) {
+    .carousel {
+        &:hover .prev,
+        &:hover .next,
+        &:hover .fullScreenButton {
+            opacity: .75;
+        }
+        .prev,
+        .next,
+        .trashButton {
+            &:hover {
+                background: $lightGrey;
+                opacity: 1;
+            }
+        }
+        ul li div {
+            &:hover .trashButton {
+                opacity: 0.6;
+            }
+            &:hover .primaryImageStar {
+                opacity: 1;
             }
         }
     }

@@ -10,13 +10,18 @@
     p {
         margin-left: 5px;
     }
-    &:hover p {
-        color: $lightOrange;
-    }
     &:disabled {
         opacity: .3;
         &:hover p {
             color: $darkGrey;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .addButton {
+        &:hover p {
+            color: $lightOrange;
         }
     }
 }
