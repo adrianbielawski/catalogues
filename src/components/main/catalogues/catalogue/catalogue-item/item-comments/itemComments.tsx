@@ -57,13 +57,14 @@ const ItemComments = (props: Props) => {
     return (
         <ItemCommentsContextProvider value={contextValue}>
             <div className={styles.itemComments}>
-                {props.commentsData.results.length ? (
+                {props.commentsData.results.length > 2 && (
                     <TransparentButton
                         onClick={toggleShowAllComments}
                     >
                         {`Show all ${props.commentsData.count} comments`}
                     </TransparentButton>
-                ) : <p>No comments</p>}
+                )}
+                {!props.commentsData.results.length && <p>No comments</p>}
                 <ul>
                     {comments}
                 </ul>
