@@ -9,11 +9,21 @@
         stroke-width: 10%;
         fill: transparent;
     }
-    &.active,
-    &:hover {
+    &.active {
         path {
             stroke: $red;
             fill: $red;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .favouriteItemIcon {
+        &:hover {
+            path {
+                stroke: $red;
+                fill: $red;
+            }
         }
     }
 }
