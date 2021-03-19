@@ -184,13 +184,22 @@ export const changeItemRating = {
     CHANGE_ITEM_RATING_FAILURE(state: State) { },
 }
 
-export const changeFavouriteItemRating = {
-    CHANGE_FAVOURITE_ITEM(state: State, action: PayloadAction<T.ChangeFavouriteItemPayload>) {
+export const addItemToFavourite = {
+    ADD_ITEM_TO_FAVOURITE(state: State, action: PayloadAction<T.AddItemToFavouritePayload>) {
         const item = getItemById(state, action.payload.itemId)
         item.isFavourite = action.payload.isFavourite
     },
-    CHANGE_FAVOURITE_ITEM_SUCCESS(state: State) { },
-    CHANGE_FAVOURITE_ITEM_FAILURE(state: State) { },
+    ADD_ITEM_TO_FAVOURITE_SUCCESS(state: State) { },
+    ADD_ITEM_TO_FAVOURITE_FAILURE(state: State) { },
+}
+
+export const deleteItemFromFavourite = {
+    DELETE_ITEM_FROM_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isFavourite = false
+    },
+    DELETE_ITEM_FROM_FAVOURITE_SUCCESS(state: State) { },
+    DELETE_ITEM_FROM_FAVOURITE_FAILURE(state: State) { },
 }
 
 export const fetchItemComments = {

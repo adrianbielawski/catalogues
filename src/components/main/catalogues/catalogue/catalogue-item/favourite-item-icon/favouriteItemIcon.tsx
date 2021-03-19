@@ -5,7 +5,7 @@ import classNames from 'classnames/bind'
 import styles from './favouriteItemIcon.scss'
 //Redux
 import { useAppDispatch } from 'store/storeConfig'
-import { CHANGE_FAVOURITE_ITEM } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
@@ -20,10 +20,14 @@ const FavouriteItemIcon = (props: Props) => {
     const dispatch = useAppDispatch()
 
     const handleChange = () => {
-        dispatch(CHANGE_FAVOURITE_ITEM({
-            itemId: props.itemId,
-            isFavourite: !props.isFavourite,
-        }))
+        if (!props.isFavourite) {
+            dispatch(ADD_ITEM_TO_FAVOURITE({
+                itemId: props.itemId,
+                isFavourite: true,
+            }))
+        } else {
+            dispatch(DELETE_ITEM_FROM_FAVOURITE(props.itemId))
+        }
     }
 
     const iconClass = cx(

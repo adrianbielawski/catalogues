@@ -64,7 +64,7 @@ export interface ChangeItemRatingSuccessPayload {
     rating: ItemRating,
 }
 
-export interface ChangeFavouriteItemPayload {
+export interface AddItemToFavouritePayload {
     itemId: number,
     isFavourite: boolean,
 }
