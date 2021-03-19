@@ -14,13 +14,6 @@
         &.active p {
             color: $orange;
         }
-        &:hover {
-            cursor: pointer;
-        }
-        &:hover .icon,
-        &:hover p {
-            color: $lightOrange;
-        }
         .icon {
             font-size: 1.4em;
             width: 30px;
@@ -42,6 +35,20 @@
         &.active {
             opacity: 1;
             max-height: 5000px;
+        }
+    }
+}
+
+@media (hover: hover) {
+    .iconWithTitle {
+        .title {
+            &:hover {
+                cursor: pointer;
+            }
+            &:hover .icon,
+            &:hover p {
+                color: $lightOrange;
+            }
         }
     }
 }
