@@ -63,10 +63,7 @@ export const changePublicCatalogueEpic = (action$: Observable<Action>) => action
         defer(() => axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
             public: action.payload.public,
         })).pipe(
-            map(() => actions.CHANGE_PUBLIC_CATALOGUE_SUCCESS({
-                catalogueId: action.payload.catalogueId,
-                public: action.payload.public,
-            })),
+            map(() => actions.CHANGE_PUBLIC_CATALOGUE_SUCCESS()),
             catchError(() => of(actions.CHANGE_PUBLIC_CATALOGUE_FAILURE(
                 action.payload.catalogueId,
             )))

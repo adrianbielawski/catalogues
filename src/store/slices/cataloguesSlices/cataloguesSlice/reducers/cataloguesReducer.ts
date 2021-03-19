@@ -110,12 +110,12 @@ export const changeDefaultCatalogueReducers = {
 }
 
 export const changePublicCatalogueReducers = {
-    CHANGE_PUBLIC_CATALOGUE(state: State, action: PayloadAction<T.ChangePublicCataloguePayload>) { },
-    CHANGE_PUBLIC_CATALOGUE_START(state: State) { },
-    CHANGE_PUBLIC_CATALOGUE_SUCCESS(state: State, action: PayloadAction<T.ChangePublicCataloguePayload>) {
+    CHANGE_PUBLIC_CATALOGUE(state: State, action: PayloadAction<T.ChangePublicCataloguePayload>) {
         const catalogue = getCatalogueById(state, action.payload.catalogueId)
         catalogue.public = action.payload.public
     },
+    CHANGE_PUBLIC_CATALOGUE_START(state: State) { },
+    CHANGE_PUBLIC_CATALOGUE_SUCCESS(state: State) {},
     CHANGE_PUBLIC_CATALOGUE_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.catalogueError = {
