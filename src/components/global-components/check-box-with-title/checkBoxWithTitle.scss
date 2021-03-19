@@ -9,8 +9,13 @@
         margin-left: 5px;
         white-space: break-spaces;
     }
-    &:hover {
-        color: $lightOrange;
-        cursor: pointer;
+}
+
+@media (hover: hover) {
+    .checkBoxWithTitle {
+        &:hover {
+            color: $lightOrange;
+            cursor: pointer;
+        }
     }
 }
