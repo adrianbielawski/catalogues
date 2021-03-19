@@ -162,11 +162,7 @@ export const changePublicFieldEpic = (action$: Observable<Action>) => action$.pi
         defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
             public: action.payload.public,
         })).pipe(
-            map(() => actions.CHANGE_FIELD_PUBLIC_SUCCESS({
-                catalogueId: action.payload.catalogueId,
-                fieldId: action.payload.fieldId,
-                public: action.payload.public,
-            })),
+            map(() => actions.CHANGE_FIELD_PUBLIC_SUCCESS()),
             catchError(() => of(actions.CHANGE_FIELD_PUBLIC_FAILURE({
                 catalogueId: action.payload.catalogueId,
                 fieldId: action.payload.fieldId,

@@ -160,11 +160,11 @@ export const removeChoiceReducers = {
 }
 
 export const changePublicFieldReducers = {
-    CHANGE_FIELD_PUBLIC(state: State, action: PayloadAction<T.ChangePublicFieldPayload>) { },
-    CHANGE_FIELD_PUBLIC_SUCCESS(state: State, action: PayloadAction<T.ChangePublicFieldPayload>) {
+    CHANGE_FIELD_PUBLIC(state: State, action: PayloadAction<T.ChangePublicFieldPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.public = action.payload.public
     },
+    CHANGE_FIELD_PUBLIC_SUCCESS(state: State) {},
     CHANGE_FIELD_PUBLIC_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const field = getFieldById(state, action.payload.catalogueId, action.payload.fieldId)
         field.fieldError = {
