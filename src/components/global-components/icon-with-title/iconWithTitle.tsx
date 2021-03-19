@@ -3,6 +3,7 @@ import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './iconWithTitle.scss'
+import AnimateHeight from 'react-animate-height'
 
 type Props = {
     title: string,
@@ -19,10 +20,6 @@ const IconWithTitle = (props: Props) => {
         setActive(!active)
     }
 
-    const contentClass = cx(
-        'content',
-        { active },
-    )
     const titleClass = cx(
         'title',
         { active },
@@ -40,9 +37,12 @@ const IconWithTitle = (props: Props) => {
                 />
                 <p>{props.title}</p>
             </div>
-            <div className={contentClass}>
+            <AnimateHeight
+                className={styles.content}
+                height={active ? 'auto' : 0}
+            >
                 {props.children}
-            </div>
+            </AnimateHeight>
         </div>
     )
 }
