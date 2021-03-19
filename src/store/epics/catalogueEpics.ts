@@ -48,10 +48,7 @@ export const changeDefaultCatalogueEpic = (action$: Observable<Action>) => actio
         defer(() => axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, {
             default: action.payload.default,
         })).pipe(
-            map(() => actions.CHANGE_DEFAULT_CATALOGUE_SUCCESS({
-                catalogueId: action.payload.catalogueId,
-                default: action.payload.default,
-            })),
+            map(() => actions.CHANGE_DEFAULT_CATALOGUE_SUCCESS()),
             catchError(() => of(actions.CHANGE_DEFAULT_CATALOGUE_FAILURE(
                 action.payload.catalogueId,
             )))

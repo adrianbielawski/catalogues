@@ -88,9 +88,7 @@ export const catalogueReducer = {
 }
 
 export const changeDefaultCatalogueReducers = {
-    CHANGE_DEFAULT_CATALOGUE(state: State, action: PayloadAction<T.ChangeDefaultCataloguePayload>) { },
-    CHANGE_DEFAULT_CATALOGUE_START(state: State) { },
-    CHANGE_DEFAULT_CATALOGUE_SUCCESS(state: State, action: PayloadAction<T.ChangeDefaultCataloguePayload>) {
+    CHANGE_DEFAULT_CATALOGUE(state: State, action: PayloadAction<T.ChangeDefaultCataloguePayload>) {
         const catalogue = getCatalogueById(state, action.payload.catalogueId)
         if (action.payload.default) {
             const prevDefaultCatalogue = state.catalogues.find(c => c.default === true)
@@ -100,6 +98,8 @@ export const changeDefaultCatalogueReducers = {
         }
         catalogue.default = action.payload.default
     },
+    CHANGE_DEFAULT_CATALOGUE_START(state: State) { },
+    CHANGE_DEFAULT_CATALOGUE_SUCCESS(state: State) { },
     CHANGE_DEFAULT_CATALOGUE_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueById(state, action.payload)
         catalogue.catalogueError = {
