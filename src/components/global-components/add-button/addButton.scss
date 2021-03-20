@@ -17,9 +17,8 @@
         }
     }
 }
-
-@media (hover: hover) {
-    .addButton {
+@media (hover: none) {
+.addButton {
         &:hover p {
             color: $lightOrange;
         }

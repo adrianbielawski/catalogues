@@ -152,8 +152,7 @@
         }
     }
 }
-
-@media (hover: hover) {
+@media (hover: none) {
     .carousel {
         &:hover .prev,
         &:hover .next,

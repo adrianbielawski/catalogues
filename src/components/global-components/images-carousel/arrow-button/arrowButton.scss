@@ -14,8 +14,7 @@
         cursor: not-allowed;
     }
 }
-
-@media (hover: hover) {
+@media (hover: none) {
     .button {
         &:hover {
             color: $lightOrange;

@@ -14,8 +14,7 @@
         }
     }
 }
-
-@media (hover: hover) {
+@media (hover: none) {
     .item {
         &:hover {
             color: $lightOrange;

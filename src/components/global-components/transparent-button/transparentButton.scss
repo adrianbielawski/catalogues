@@ -15,8 +15,7 @@
         cursor: not-allowed;
     }
 }
-
-@media (hover: hover) {
+@media (hover: none) {
     .transparentButton {
         &:hover {
             color: $lightOrange;

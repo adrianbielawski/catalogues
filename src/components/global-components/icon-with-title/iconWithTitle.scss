@@ -29,8 +29,7 @@
         padding: 0 10px;
     }
 }
-
-@media (hover: hover) {
+@media (hover: none) {
     .iconWithTitle {
         .title {
             &:hover {
