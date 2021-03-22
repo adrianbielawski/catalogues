@@ -8,6 +8,7 @@ import DeprecatedHeader from 'components/global-components/deprecated-header/hea
 import Login from './login/login'
 import Signup from './signup/signup'
 import { useTypedSelector } from 'store/storeConfig'
+import Header from 'components/global-components/header/header'
 
 const Auth = () => {
     const location = useLocation<LocationState>()
@@ -15,7 +16,10 @@ const Auth = () => {
     
     return (
         <div className={styles.auth}>
-            {app.switches.find(s => s === 'NAVIGATION_REDESIGN') ? null : <DeprecatedHeader />}
+            {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                ? <Header />
+                : <DeprecatedHeader />
+            }
             <div className={styles.content}>
                 {location.pathname === '/signup' ?
                     <Signup /> :

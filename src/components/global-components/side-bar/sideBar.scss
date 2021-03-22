@@ -7,12 +7,12 @@
     .sideBar {
         box-sizing: border-box;
         min-width: 250px;
-        max-height: calc(100vh - 38px);
+        max-height: calc(100vh - 50px);
         background: $lightGrey;
         overflow-y: scroll;
         @include scrollBar;
         position: sticky;
-        top: 38px;
+        top: 50px;
     }
 }
 
