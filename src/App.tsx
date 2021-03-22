@@ -2,9 +2,9 @@ import React, { useEffect, Suspense } from 'react'
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styles from 'global-styles/app.scss'
 //Redux
-import { useAppDispatch, useTypedSelector} from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { GET_USER, INITIALIZED } from 'store/slices/authSlices/authSlices'
-import { CHANGE_SCREEN_HEIGHT } from 'store/slices/appSlices/appSlice'
+import { CHANGE_SCREEN_HEIGHT, FETCH_SWITCHES } from 'store/slices/appSlices/appSlice'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
@@ -16,34 +16,35 @@ const App = () => {
   const dispatch = useAppDispatch()
   const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
-  const screenHeight = useTypedSelector(state => state.app.screenHeight)
+  const app = useTypedSelector(state => state.app)
   const isInitialized = useTypedSelector(state => state.auth.isInitialized)
 
-  const handleResize = () => {	
-    dispatch(CHANGE_SCREEN_HEIGHT(window.innerHeight))	
-  }	
+  const handleResize = () => {
+    dispatch(CHANGE_SCREEN_HEIGHT(window.innerHeight))
+  }
 
-  useEffect(() => {	
-    window.addEventListener('resize', handleResize)	
-    return () => {	
-      window.removeEventListener('resize', handleResize)	
-    }	
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   useEffect(() => {
-      if (localStorage.getItem('token')) {
-        dispatch(GET_USER({ history, location }))
-      } else {
-        dispatch(INITIALIZED())
-      }
+    if (localStorage.getItem('token')) {
+      dispatch(GET_USER({ history, location }))
+    } else {
+      dispatch(INITIALIZED())
+    }
+    dispatch(FETCH_SWITCHES())
   }, [])
 
-  if (!isInitialized) {
-    return null
+  if (!isInitialized || app.fetchingSwitches) {
+    return <Loader className={styles.loader}/>
   }
 
   return (
-    <div className={styles.app} style={{ minHeight: screenHeight }}>
+    <div className={styles.app} style={{ minHeight: app.screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
           <Route exact path={["/", "/signup"]} component={Auth} />
