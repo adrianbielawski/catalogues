@@ -51,7 +51,7 @@ interface HeightData { top: number, position: number }
 
 const cx = classNames.bind(styles)
 
-const Nav = (props: Props) => {
+const DeprecaterdNav = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
     const buildUrl = useUrlBuilder()
@@ -271,4 +271,4 @@ const Nav = (props: Props) => {
     )
 }
 
-export default Nav
+export default DeprecaterdNav

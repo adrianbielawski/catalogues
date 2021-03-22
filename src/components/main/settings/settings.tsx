@@ -4,13 +4,13 @@ import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-import { NavItemType } from 'components/global-components/nav/nav'
+import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
 //Contexts
 import SideMenuContextProvider from 'components/global-components/side-menu/sideMenuContextProvider'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
-import Nav from 'components/global-components/nav/nav'
+import DeprecatedNav from 'components/global-components/nav/deprecated-nav/nav'
 import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
@@ -25,7 +25,7 @@ const Settings = () => {
     const settingsRef = useRef<HTMLDivElement>(null)
     const currentUser = useTypedSelector(state => state.currentUser.user)
     const [minHeight, setMinHeight] = useState(0)
-    const screenHeight = useTypedSelector(state => state.app.screenHeight)
+    const app = useTypedSelector(state => state.app)
     const [showNav, setShowNav] = useState(false)
     const [showSideMenu, setShowSideMenu] = useState(false)
 
@@ -74,11 +74,11 @@ const Settings = () => {
         return () => {
             window.removeEventListener('resize', getMinHeight)
         }
-    }, [settingsRef.current, screenHeight])
+    }, [settingsRef.current, app.screenHeight])
 
     const getMinHeight = () => {
         const top = settingsRef.current?.getBoundingClientRect().top
-        const minHeight = screenHeight - top!
+        const minHeight = app.screenHeight - top!
         setMinHeight(minHeight)
     }
 
@@ -104,17 +104,19 @@ const Settings = () => {
                 style={{ minHeight: `${minHeight}px` }}
                 ref={settingsRef}
             >
-                <Nav
-                    show={showNav}
-                    content={NAV_CONTENT}
-                    goBack={{
-                        title: 'Catalogues',
-                        url: `/${currentUser!.username}/catalogues`,
-                        location: `/${currentUser!.username}/settings`,
-                    }}
-                    extraItems={navBarExtraItems}
-                    onToggleNav={toggleNav}
-                />
+                {app.switches.find(s => s === 'NAVIGATION_REDESIGN') ? null : (
+                    <DeprecatedNav
+                        show={showNav}
+                        content={NAV_CONTENT}
+                        goBack={{
+                            title: 'Catalogues',
+                            url: `/${currentUser!.username}/catalogues`,
+                            location: `/${currentUser!.username}/settings`,
+                        }}
+                        extraItems={navBarExtraItems}
+                        onToggleNav={toggleNav}
+                    />
+                )}
                 <Suspense fallback={<Loader />}>
                     <Switch>
                         <Redirect
