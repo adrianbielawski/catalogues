@@ -23,7 +23,7 @@ const Header = () => {
     const history = useHistory<LocationState>()
     const { show } = useContext(NavContext)
     const user = useTypedSelector(state => state.auth.user)
-    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
+    const catalogues = useTypedSelector(state => state.catalogues)
 
     const handleLogout = () => {
         dispatch(LOG_OUT({history}))
@@ -34,7 +34,7 @@ const Header = () => {
             id: 'My catalogues',
             title: 'My catalogues',
             faIcon: faFolderOpen,
-            children: catalogues.map(c => ({
+            children: catalogues.authUser.catalogues.map(c => ({
                 id: c.name,
                 title: c.name,
                 faIcon: faFolderOpen,
