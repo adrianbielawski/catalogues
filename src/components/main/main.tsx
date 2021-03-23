@@ -7,6 +7,7 @@ import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext 
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
+import { FETCH_AUTH_USER_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import DeprecatedHeader from 'components/global-components/deprecated-header/header'
 import Catalogues from './catalogues/catalogues'
@@ -28,6 +29,13 @@ const Main = (props: HydratedRouteComponentProps) => {
         }
         dispatch(GET_CURRENT_USER(username))
     }, [username])
+
+    useEffect(() => {
+        if (!user?.id) {
+            return
+        }
+        dispatch(FETCH_AUTH_USER_CATALOGUES())
+    }, [user])
 
     const handleCloseMessage = () => {
         dispatch(CLEAR_CURRENT_USER_MESSAGE())

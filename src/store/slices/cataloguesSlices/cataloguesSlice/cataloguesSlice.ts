@@ -5,6 +5,10 @@ import * as cataloguesReducers from './reducers/cataloguesReducer'
 import * as fieldsReducers from './reducers/fieldsReducer'
 
 const initialState: CataloguesState = {
+    authUser: {
+        catalogues: [],
+        fetchingCatalogues: true,
+    },
     catalogues: [],
     fetchingCatalogues: true,
     creatingNewCatalogue: false,
@@ -18,6 +22,7 @@ export const cataloguesSlice = createSlice({
         ...cataloguesReducers.createCatalogueReducers,
         ...cataloguesReducers.refreshCatalogueReducers,
         ...cataloguesReducers.fetchCataloguesReducers,
+        ...cataloguesReducers.fetchAuthUserCataloguesReducers,
         ...cataloguesReducers.changeCatalogueNameReducers,
         ...cataloguesReducers.changeDefaultCatalogueReducers,
         ...cataloguesReducers.changePublicCatalogueReducers,
@@ -44,6 +49,7 @@ export const {
     CREATE_CATALOGUE, CREATE_CATALOGUE_START, CREATE_CATALOGUE_SUCCESS, CREATE_CATALOGUE_FAILURE, NEW_CATALOGUE_CREATED,
     REFRESH_CATALOGUE, REFRESH_CATALOGUE_START, REFRESH_CATALOGUE_SUCCESS, REFRESH_CATALOGUE_FAILURE,
     FETCH_CATALOGUES, FETCH_CATALOGUES_START, FETCH_CATALOGUES_SUCCESS, FETCH_CATALOGUES_FAILURE,
+    FETCH_AUTH_USER_CATALOGUES, FETCH_AUTH_USER_CATALOGUES_START, FETCH_AUTH_USER_CATALOGUES_SUCCESS, FETCH_AUTH_USER_CATALOGUES_FAILURE,
     TOGGLE_CATALOGUE_NAME_EDIT,
     CHANGE_CATALOGUE_NAME, FETCH_CATALOGUE_FIELDS, CHANGE_CATALOGUE_NAME_START, CHANGE_CATALOGUE_NAME_SUCCESS, CHANGE_CATALOGUE_NAME_FAILURE,
     CHANGE_DEFAULT_CATALOGUE, CHANGE_DEFAULT_CATALOGUE_START, CHANGE_DEFAULT_CATALOGUE_SUCCESS, CHANGE_DEFAULT_CATALOGUE_FAILURE,
