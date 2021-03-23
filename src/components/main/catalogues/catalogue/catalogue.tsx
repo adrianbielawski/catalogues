@@ -23,6 +23,8 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const app = useTypedSelector(state => state.app)
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
+    const [yOffset, setYOffset] = useState(0)
+    const [scrolledUp, setScrolledUp] = useState(true)
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -40,8 +42,33 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         scrollTop()
     }, [catalogue.id])
 
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll)
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [yOffset, scrolledUp])
+
+    const handleScroll = () => {
+        const offset = window.pageYOffset
+        let up = scrolledUp
+
+        if (offset >= yOffset) {
+            up = false
+        }
+        if (offset < yOffset) {
+            up = true
+        }
+
+        setYOffset(offset)
+        setScrolledUp(up)
+    }
+
     const headerClass = cx(
         'header',
+        {
+            show: scrolledUp,
+        }
     )
 
     return (
