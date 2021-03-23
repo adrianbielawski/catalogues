@@ -3,9 +3,14 @@ import * as T from './appTypes'
 
 type State = T.AppState
 
-export const changeScreenHeight = {
-    CHANGE_SCREEN_HEIGHT(state: State, action: PayloadAction<number>) {
-        state.screenHeight = action.payload
+export const changeScreenSize = {
+    CHANGE_SCREEN_SIZE(state: State, action: PayloadAction<T.ChangeScreenSizePayload>) {
+        state.screenHeight = action.payload.height
+        state.screenWidth = {
+            width: action.payload.width,
+            is640OrLess: action.payload.width <= 640,
+            is800OrLess: action.payload.width <= 800,
+        }
     },
 }
 

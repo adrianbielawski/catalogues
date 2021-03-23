@@ -4,7 +4,7 @@ import styles from 'global-styles/app.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { GET_USER, INITIALIZED } from 'store/slices/authSlices/authSlices'
-import { CHANGE_SCREEN_HEIGHT, FETCH_SWITCHES } from 'store/slices/appSlices/appSlice'
+import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/slices/appSlices/appSlice'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
@@ -20,7 +20,10 @@ const App = () => {
   const isInitialized = useTypedSelector(state => state.auth.isInitialized)
 
   const handleResize = () => {
-    dispatch(CHANGE_SCREEN_HEIGHT(window.innerHeight))
+    dispatch(CHANGE_SCREEN_SIZE({
+      height: window.innerHeight,
+      width: window.innerWidth,
+    }))
   }
 
   useEffect(() => {
