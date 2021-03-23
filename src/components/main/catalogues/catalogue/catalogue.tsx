@@ -13,13 +13,14 @@ import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 import CatalogueHeader from './catalogue-header/catalogueHeader'
+import { useSwitch } from 'src/customHooks'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
     const { filtersContext } = useFiltersBarContext()
-    const app = useTypedSelector(state => state.app)
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
+    const isSwitchOn = useSwitch('NAVIGATION_REDESIGN')
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -39,7 +40,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.catalogue}>
-            {(app.switches.find(s => s === 'NAVIGATION_REDESIGN') && user?.id !== currentUser.user?.id) && (
+            {(isSwitchOn && user?.id !== currentUser.user?.id) && (
                 <CatalogueHeader
                     className={styles.header}
                     catalogue={catalogue}

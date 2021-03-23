@@ -2,6 +2,8 @@ import React, { Suspense, useState, useEffect, useRef } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
+//Custom hooks
+import { useSwitch } from 'src/customHooks'
 //Types
 import { LocationState } from 'src/globalTypes'
 import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
@@ -29,6 +31,7 @@ const Settings = () => {
     const app = useTypedSelector(state => state.app)
     const [showNav, setShowNav] = useState(false)
     const [showSideMenu, setShowSideMenu] = useState(false)
+    const isSwitchOn = useSwitch('NAVIGATION_REDESIGN')
 
     const toggleNav = (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -105,7 +108,7 @@ const Settings = () => {
                 style={{ minHeight: `${minHeight}px` }}
                 ref={settingsRef}
             >
-                {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                {isSwitchOn
                     ? <Header />
                     : (
                     <DeprecatedNav

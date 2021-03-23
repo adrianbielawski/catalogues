@@ -13,7 +13,7 @@ import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/
 //Router
 import { RouteWithContext } from 'src/router'
 //Custom hooks
-import { useFirstRender } from 'src/customHooks'
+import { useFirstRender, useSwitch } from 'src/customHooks'
 //Filter bar utils
 import { searchValue, sortValue, filtersValue, filtersBarValue } from './filter-bar-utils/contextInitialValues'
 //Custom components
@@ -39,6 +39,7 @@ const Catalogues = () => {
     const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
     const [showNav, setShowNav] = useState(false)
     const [showFilters, setShowFilters] = useState(false)
+    const isSwitchOn = useSwitch('NAVIGATION_REDESIGN')
 
     useEffect(() => {
         if (fetchingCatalogues || firstRender) {
@@ -178,7 +179,7 @@ const Catalogues = () => {
                         style={{ minHeight: `${minHeight}px` }}
                         ref={cataloguesRef}
                     >
-                        {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                        {isSwitchOn
                             ? <Header />
                             : (
                                 <DeprecatedNav

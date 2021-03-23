@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useAppDispatch } from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { Action } from "@reduxjs/toolkit"
 import { fromEvent } from 'rxjs'
 import { debounceTime, distinctUntilChanged, map, filter } from 'rxjs/operators'
@@ -135,4 +135,10 @@ export const useElementInView = (
     }
 
     return elementRef
+}
+
+export const useSwitch = (switchName: string) => {
+    const app = useTypedSelector(state => state.app)
+    
+    return app.switches.find(s => s === switchName)
 }
