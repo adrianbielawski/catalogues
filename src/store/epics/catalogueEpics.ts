@@ -1,9 +1,10 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, defer, forkJoin, Observable, merge } from 'rxjs'
+import { concat, of, defer, forkJoin, Observable, merge, from } from 'rxjs'
 import {
     catchError, mergeMap, pluck, switchMap, withLatestFrom, retryWhen, filter, mapTo, map,
     defaultIfEmpty,
 } from 'rxjs/operators'
+import mime from 'mime-types'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
@@ -163,6 +164,24 @@ export const changePublicFieldEpic = (action$: Observable<Action>) => action$.pi
             })))
         )
     )
+)
+
+export const postCatalogueImageEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.POST_CATALOGUE_IMAGE.match),
+    switchMap(action => concat(
+        of(actions.POST_CATALOGUE_IMAGE_START(action.payload.catalogueId)),
+        from(fetch(action.payload.image)).pipe(
+            mergeMap(r => r.blob()),
+            mergeMap(imageBlob => {
+                const data = new FormData()
+                data.append('image', imageBlob, `image.${mime.extension(imageBlob.type)}`)
+                return axiosInstance$.patch(`/catalogues/${action.payload.catalogueId}/`, data)
+            })
+        ).pipe(
+            map(response => actions.POST_CATALOGUE_IMAGE_SUCCESS(response.data)),
+            catchError(() => of(actions.POST_CATALOGUE_IMAGE_FAILURE(action.payload.catalogueId)))
+        )
+    ))
 )
 
 export const deleteCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
@@ -361,6 +380,7 @@ export const cataloguesEpics = combineEpics(
     postChoiceEpic,
     removeChoiceEpic,
     changePublicFieldEpic,
+    postCatalogueImageEpic,
     deleteCatalogueFieldEpic,
     changeFieldNameEpic,
     createCatalogueFieldEpic,

@@ -139,6 +139,28 @@ export const changePublicCatalogueReducers = {
     },
 }
 
+export const changeCatalogueImageReducers = {
+    POST_CATALOGUE_IMAGE(state: State, action: PayloadAction<T.ChangeCatalogueImagePayload>) { },
+    POST_CATALOGUE_IMAGE_START(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isSubmittingImage = true
+    },
+    POST_CATALOGUE_IMAGE_SUCCESS(state: State, action: PayloadAction<Catalogue>) {
+        const catalogue = getCatalogueById(state, action.payload.id)
+        catalogue.image = action.payload.image
+        catalogue.imageThumbnail = action.payload.image_thumbnail
+        catalogue.isSubmittingImage = false
+    },
+    POST_CATALOGUE_IMAGE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isSubmittingImage = false
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
+
 export const deleteCatalogueReducers = {
     DELETE_CATALOGUE(state: State, action: PayloadAction<number>) { },
     DELETE_CATALOGUE_START(state: State, action: PayloadAction<number>) {

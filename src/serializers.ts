@@ -34,6 +34,8 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),
     permissions: cataloguePermissionsDeserializer(catalogue.permissions),
     fields: [],
+    image: catalogue.image,
+    imageThumbnail: catalogue.image_thumbnail,
     fetchingFields: true,
     fetchingFieldsChoices: true,
     isEditingCatalogueName: false,
@@ -45,6 +47,7 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
     isAddFieldFormActive: false,
     isSubmittingNewField: false,
     deletingCatalogue: false,
+    isSubmittingImage: false,
     isInitialized: false,
 })
 
