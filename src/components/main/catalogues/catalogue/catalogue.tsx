@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import classNames from 'classnames/bind'
 import styles from './catalogue.scss'
 //Types
 import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { useAppDispatch } from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Utils
 import buildFilters from '../filter-bar-utils/filtersBuilder'
 import { scrollTop } from 'src/utils'
@@ -12,10 +13,16 @@ import { scrollTop } from 'src/utils'
 import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
+import CatalogueHeader from './catalogue-header/catalogueHeader'
+
+const cx = classNames.bind(styles)
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
     const { filtersContext } = useFiltersBarContext()
+    const app = useTypedSelector(state => state.app)
+    const currentUser = useTypedSelector(state => state.currentUser)
+    const user = useTypedSelector(state => state.auth.user)
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -33,15 +40,27 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         scrollTop()
     }, [catalogue.id])
 
+    const headerClass = cx(
+        'header',
+    )
+
     return (
         <div className={styles.catalogue}>
-            {catalogue.itemsRanges.date.min &&
-                <FiltersBar />
-            }
-            <div className={styles.mainContent}>
-                {filtersContext.filters.length > 0 &&
-                    <CatalogueItems key={catalogue.id} catalogueId={catalogue.id} />
+            {(app.switches.find(s => s === 'NAVIGATION_REDESIGN') && user?.id !== currentUser.user?.id) && (
+                <CatalogueHeader
+                    className={headerClass}
+                    catalogue={catalogue}
+                />
+            )}
+            <div className={styles.wrapper}>
+                {catalogue.itemsRanges.date.min &&
+                    <FiltersBar />
                 }
+                <div className={styles.mainContent}>
+                    {filtersContext.filters.length > 0 &&
+                        <CatalogueItems key={catalogue.id} catalogueId={catalogue.id} />
+                    }
+                </div>
             </div>
         </div>
     )
