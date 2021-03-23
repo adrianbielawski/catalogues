@@ -81,6 +81,8 @@ export interface Catalogue {
     permissions: {
         can_create_items: boolean,
     },
+    image: string,
+    image_thumbnail: string,
 }
 
 export interface CataloguePermisions {
@@ -101,6 +103,8 @@ export interface DeserializedCatalogue {
     itemsRanges: DeserializedItemsRanges,
     permissions: DeserializedCataloguePermisions,
     fields: DeserializedField[],
+    image: string,
+    imageThumbnail: string,
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,
     isEditingCatalogueName: boolean,
@@ -109,6 +113,7 @@ export interface DeserializedCatalogue {
     isAddFieldFormActive: boolean,
     isSubmittingNewField: boolean,
     deletingCatalogue: boolean,
+    isSubmittingImage: boolean,
     isInitialized: boolean,
 }
 

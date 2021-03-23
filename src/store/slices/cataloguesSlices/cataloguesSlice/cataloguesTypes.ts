@@ -127,3 +127,8 @@ export interface ChangePublicCataloguePayload {
 export interface ChangePublicFieldPayload extends CatalogueAndFieldIdPayload {
     public: boolean,
 }
+
+export interface ChangeCatalogueImagePayload {
+    catalogueId: number,
+    image: string,
+}
