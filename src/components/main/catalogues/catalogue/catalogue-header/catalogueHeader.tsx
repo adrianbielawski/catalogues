@@ -13,6 +13,8 @@ import { useTypedSelector } from 'store/storeConfig'
 import UserImage from 'components/global-components/user-image/userImage'
 import Nav from 'components/global-components/nav/nav'
 
+const BASE_URL = process.env.API_URL
+
 const contextValue = {
     show: false,
     listId: null,
@@ -80,6 +82,8 @@ const CatalogueHeader = (props: Props) => {
         },
     ]
 
+    const image = `${BASE_URL}${props.catalogue.imageThumbnail}`
+
     const headerClass = cx(
         'header',
         props.className,
@@ -97,9 +101,14 @@ const CatalogueHeader = (props: Props) => {
                     items={NAV_ITEMS}
                     listOnLeft={true}
                 />
-                <p className={styles.catalogueName}>
-                    {props.catalogue.name}
-                </p>
+                <div className={styles.catalogueName}>
+                    <div>
+                        <img src={image} />
+                    </div>
+                    <p>
+                        {props.catalogue.name}
+                    </p>
+                </div>
                 <div className={styles.social}>
 
                 </div>
