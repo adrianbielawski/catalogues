@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import classNames from 'classnames/bind'
+import React, { useEffect } from 'react'
 import styles from './catalogue.scss'
 //Types
 import { HydratedRouteComponentProps } from 'src/router'
@@ -15,16 +14,12 @@ import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 import CatalogueHeader from './catalogue-header/catalogueHeader'
 
-const cx = classNames.bind(styles)
-
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
     const { filtersContext } = useFiltersBarContext()
     const app = useTypedSelector(state => state.app)
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
-    const [yOffset, setYOffset] = useState(0)
-    const [scrolledUp, setScrolledUp] = useState(true)
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -42,40 +37,11 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         scrollTop()
     }, [catalogue.id])
 
-    useEffect(() => {
-        window.addEventListener('scroll', handleScroll)
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [yOffset, scrolledUp])
-
-    const handleScroll = () => {
-        const offset = window.pageYOffset
-        let up = scrolledUp
-
-        if (offset >= yOffset) {
-            up = false
-        }
-        if (offset < yOffset) {
-            up = true
-        }
-
-        setYOffset(offset)
-        setScrolledUp(up)
-    }
-
-    const headerClass = cx(
-        'header',
-        {
-            show: scrolledUp,
-        }
-    )
-
     return (
         <div className={styles.catalogue}>
             {(app.switches.find(s => s === 'NAVIGATION_REDESIGN') && user?.id !== currentUser.user?.id) && (
                 <CatalogueHeader
-                    className={headerClass}
+                    className={styles.header}
                     catalogue={catalogue}
                 />
             )}

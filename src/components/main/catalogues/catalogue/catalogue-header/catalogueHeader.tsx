@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueHeader.scss'
@@ -29,6 +29,30 @@ const CatalogueHeader = (props: Props) => {
     const { show } = useContext(NavContext)
     const currentUser = useTypedSelector(state => state.currentUser)
     const catalogues = useTypedSelector(state => state.catalogues)
+    const [yOffset, setYOffset] = useState(0)
+    const [scrolledUp, setScrolledUp] = useState(true)
+
+    useEffect(() => {
+        window.addEventListener('scroll', handleScroll)
+        return () => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    }, [yOffset, scrolledUp])
+
+    const handleScroll = () => {
+        const offset = window.pageYOffset
+        let up = scrolledUp
+
+        if (offset >= yOffset) {
+            up = false
+        }
+        if (offset < yOffset) {
+            up = true
+        }
+
+        setYOffset(offset)
+        setScrolledUp(up)
+    }
 
     const NAV_ITEMS = [
         {
@@ -58,6 +82,10 @@ const CatalogueHeader = (props: Props) => {
     const headerClass = cx(
         'header',
         props.className,
+        {
+            hidable: window.innerWidth <= 640,
+            show: window.innerWidth <= 640 && scrolledUp,
+        }
     )
 
     return (
