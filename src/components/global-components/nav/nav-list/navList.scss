@@ -1,0 +1,45 @@
+@import "global-styles/variables_and_mixins";
+
+.navList {
+    position: absolute;
+    right: 5px;
+    top: 55px;
+    z-index: 10000;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 2px 2px 4px $midLightGrey;
+    min-width: 300px;
+    box-sizing: border-box;
+    .listHeader {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        border-bottom: 1px solid $lightGrey;
+        padding: 5px;
+        p {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-left: 10px;
+        }
+    }
+    .listItem {
+        width: 100%;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        p {
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .navList {
+        min-width: 100vw;
+        border-radius: 0;
+        box-shadow: inset 0px 1px 0px $midLightGrey;
+        right: -5px;
+        top: 45px;
+    }
+}

@@ -7,8 +7,9 @@ import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext 
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
+import { FETCH_AUTH_USER_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
-import Header from 'components/global-components/header/header'
+import DeprecatedHeader from 'components/global-components/deprecated-header/header'
 import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
@@ -17,7 +18,7 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const screenHeight = useTypedSelector(state => state.app.screenHeight)
+    const app = useTypedSelector(state => state.app)
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
     const username = props.match.params.username
@@ -28,6 +29,13 @@ const Main = (props: HydratedRouteComponentProps) => {
         }
         dispatch(GET_CURRENT_USER(username))
     }, [username])
+
+    useEffect(() => {
+        if (!user?.id) {
+            return
+        }
+        dispatch(FETCH_AUTH_USER_CATALOGUES())
+    }, [user])
 
     const handleCloseMessage = () => {
         dispatch(CLEAR_CURRENT_USER_MESSAGE())
@@ -41,8 +49,11 @@ const Main = (props: HydratedRouteComponentProps) => {
     }
 
     return (
-        <div className={styles.main} style={{ minHeight: screenHeight }}>
-            <Header />
+        <div className={styles.main} style={{ minHeight: app.screenHeight }}>
+            {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                ? null
+                : <DeprecatedHeader />
+            }
             {currentUser.user?.username ? (
                 <Suspense fallback={<Loader />}>
                     <Switch>

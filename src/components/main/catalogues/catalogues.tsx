@@ -4,7 +4,7 @@ import { clamp, upperFirst } from 'lodash'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-import { NavItemType } from 'components/global-components/nav/nav'
+import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
 //Context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filtersBarBulkContextProvider'
 //Redux
@@ -17,11 +17,12 @@ import { useFirstRender } from 'src/customHooks'
 //Filter bar utils
 import { searchValue, sortValue, filtersValue, filtersBarValue } from './filter-bar-utils/contextInitialValues'
 //Custom components
-import Nav from 'components/global-components/nav/nav'
+import DeprecatedNav from 'components/global-components/nav/deprecated-nav/nav'
 import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
+import Header from 'components/global-components/header/header'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
@@ -33,7 +34,7 @@ const Catalogues = () => {
     const currentUser = useTypedSelector(state => state.currentUser.user)
     const catalogues = useTypedSelector(state => state.catalogues.catalogues)
     const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
-    const screenHeight = useTypedSelector(state => state.app.screenHeight)
+    const app = useTypedSelector(state => state.app)
     const [minHeight, setMinHeight] = useState(0)
     const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
     const [showNav, setShowNav] = useState(false)
@@ -59,7 +60,7 @@ const Catalogues = () => {
         }
 
         getMinHeight()
-    }, [cataloguesRef.current, screenHeight])
+    }, [cataloguesRef.current, app.screenHeight])
 
     useEffect(() => {
         const close = () => {
@@ -90,7 +91,7 @@ const Catalogues = () => {
 
     const getMinHeight = () => {
         const top = cataloguesRef.current!.getBoundingClientRect().top
-        const minHeight = screenHeight - top! - window.pageYOffset
+        const minHeight = app.screenHeight - top! - window.pageYOffset
         setMinHeight(minHeight)
     }
 
@@ -177,13 +178,18 @@ const Catalogues = () => {
                         style={{ minHeight: `${minHeight}px` }}
                         ref={cataloguesRef}
                     >
-                        <Nav
-                            content={NAV_CONTENT}
-                            extraItems={extraNavItems}
-                            className={styles.nav}
-                            show={showNav}
-                            onToggleNav={toggleNav}
-                        />
+                        {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                            ? <Header />
+                            : (
+                                <DeprecatedNav
+                                    content={NAV_CONTENT}
+                                    extraItems={extraNavItems}
+                                    className={styles.nav}
+                                    show={showNav}
+                                    onToggleNav={toggleNav}
+                                />
+                            )
+                        }
                         {catalogues.length === 0
                             ? getNoCatalogueMessage()
                             : (

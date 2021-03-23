@@ -1,273 +1,129 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import classNames from 'classnames/bind'
+import React, { ReactNode, useContext } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
 import styles from './nav.scss'
 //Types
+import { IconProp } from '@fortawesome/fontawesome-svg-core'
 import { LocationState } from 'src/globalTypes'
 //Router
-import { useUrlBuilder } from 'src/router'
+import { RouterContext, useUrlBuilder } from 'src/router'
+//Context
+import { NavContext } from './nav-store/navStore'
 //Custom components
-import NavLink from './navLink/navLink'
-import NavList from './navList/navList'
-import MobileNavBar from './mobile-nav-bar/mobileNavBar'
-import GoBackButton from './go-back-button/goBackButton'
+import NavItem from './nav-item/navItem'
+import NavList from './nav-list/navList'
 
-export type NavItemWithUrl = {
-    id: string,
+export type CommonItem = {
+    id: string | number,
     title: string,
+}
+
+export type ItemWithOnClickAndIcon = CommonItem & {
+    icon: ReactNode,
+    faIcon?: never,
+    onClick?: () => void,
+}
+
+export type ItemWithOnClickAndFaIcon = CommonItem & {
+    icon?: never,
+    faIcon: IconProp,
+    onClick?: () => void,
+}
+
+type ItemWithOnClick = ItemWithOnClickAndIcon | ItemWithOnClickAndFaIcon
+
+export type ItemWithUrlAndIcon = CommonItem & {
+    icon: ReactNode,
+    faIcon?: never,
     url: string,
     children?: never,
+    onClick?: never,
 }
 
-type ItemWithChildren = {
-    title: string,
-    location: string
+export type ItemWithUrlAndFaIcon = CommonItem & {
+    icon?: never,
+    faIcon: IconProp,
+    url: string,
+    children?: never,
+    onClick?: never,
+}
+
+export type ItemWithUrl = ItemWithUrlAndIcon | ItemWithUrlAndFaIcon
+
+type ItemWithChildrenAndIcon = CommonItem & {
+    icon: ReactNode,
+    faIcon?: never,
     url?: never,
-    children: NavItemWithUrl[],
+    children: (ItemWithUrl | ItemWithOnClick)[],
 }
 
-export type NavItemType = NavItemWithUrl | ItemWithChildren
-
-export type ExtraItem = {
-    component: JSX.Element,
-    inNavBarOnMobile: boolean,
+type ItemWithChildrenAndFaIcon = CommonItem & {
+    icon?: never,
+    faIcon: IconProp,
+    url?: never,
+    children: (ItemWithUrl | ItemWithOnClick)[],
 }
 
-interface NavView {
-    showList: boolean,
-    listIndex: number | null,
-}
+export type ItemWithChildren = ItemWithChildrenAndIcon | ItemWithChildrenAndFaIcon
+
+export type ItemType = ItemWithUrl | ItemWithChildren | ItemWithOnClick
 
 interface Props {
-    content: NavItemType[],
+    items: ItemType[],
     show: boolean,
-    goBack?: { title: string, url: string, location: string },
-    extraItems?: ExtraItem[],
     className?: string,
-    onToggleNav: (e: React.MouseEvent) => void,
 }
-
-interface HeightData { top: number, position: number }
-
-const cx = classNames.bind(styles)
 
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
-    const location = useLocation<LocationState>()
+    const params = useParams()
+    const routerContext = useContext(RouterContext)
+    const { show, listId, showList, closeList } = useContext(NavContext)
     const buildUrl = useUrlBuilder()
-    const navRef = useRef<HTMLDivElement>(null)
-    const [navView, setNavView] = useState<NavView>({ showList: false, listIndex: null })
-    const [heightData, setHeightData] = useState<HeightData>({ top: 0, position: 0 })
-    const screenWidth = window.innerWidth
 
-    useEffect(() => {
-        window.addEventListener('scroll', inspectHeight)
-        window.addEventListener('resize', inspectHeight)
+    const getItemById = props.items.filter(i => i.id === listId)[0]
 
-        return () => {
-            window.removeEventListener('scroll', inspectHeight)
-            window.removeEventListener('resize', inspectHeight)
-        }
-    }, [])
-
-    useEffect(() => {
-        inspectHeight()
-    }, [props.show])
-
-    const close = useCallback(() => {
-        setNavView({
-            showList: false,
-            listIndex: null,
-        })
-    }, [])
-
-    useEffect(() => {
-        if (navView.showList || props.show) {
-            document.body.addEventListener('click', close)
-        }
-
-        return () => {
-            document.body.removeEventListener('click', close)
-        }
-    }, [navView, close])
-
-    const inspectHeight = () => {
-        setHeightData({
-            top: navRef.current!.getBoundingClientRect().height,
-            position: navRef.current!.getBoundingClientRect().top,
-        })
-    }
-
-    const handleListClick = (listIndex: number) => {
-        if (!navView.showList) {
-            setNavView({
-                showList: true,
-                listIndex,
-            })
-        } else {
-            setNavView({
-                showList: false,
-                listIndex: null,
-            })
-        }
-    }
-
-    const handleLinkClick = (e: React.MouseEvent) => {
-        if (screenWidth <= 640) {
-            props.onToggleNav(e)
-            setNavView({
-                showList: false,
-                listIndex: null,
-            })
-        } else {
-            setNavView({
-                showList: false,
-                listIndex: null,
-            })
-        }
-    }
-
-    const handleListHover = (listIndex: number) => {
-        if (navView.showList) {
-            setNavView({
-                showList: true,
-                listIndex,
-            })
-        }
-    }
-
-    const handleLinkHover = () => {
-        if (navView.showList) {
-            setNavView({
-                showList: true,
-                listIndex: null,
-            })
-        }
-    }
-
-    const getItems = (): React.ReactNode => {
-        let items = props.content.map((item, index) => {
-            if (item.url !== undefined) {
-                return (
-                    <NavLink
-                        item={item}
-                        onHover={handleLinkHover}
-                        key={index}
-                    />
-                )
+    const items = props.items.map(item => {
+        const handleClick = () => {
+            if ('url' in item && item.url !== undefined) {
+                history.push(item.url!, {
+                    referrer: {
+                        pathname: buildUrl({
+                            pathname: routerContext.match?.path,
+                            params,
+                        }),
+                        params,
+                    },
+                })
             } else {
-                return (
-                    <NavList
-                        title={item.title}
-                        location={item.location}
-                        children={item.children}
-                        index={index}
-                        show={navView.showList === true && navView.listIndex === index}
-                        onClick={handleListClick}
-                        onHover={handleListHover}
-                        onLinkClick={handleLinkClick}
-                        key={index}
-                    />
-                )
-            }
-        })
-
-        if (props.goBack !== undefined && screenWidth > 640) {
-            items.unshift(getGoBackButton())
-        }
-
-        return items
-    }
-
-    const getPrevLocation = () => {
-        let prevLocation = props.goBack?.url
-
-        if (location.state !== undefined && props.goBack !== undefined) {
-            const referrer = buildUrl(location.state.referrer)
-            if (referrer.startsWith(props.goBack!.location)) {
-                prevLocation = props.goBack!.url
-            } else {
-                prevLocation = referrer
-            }
-        }
-        return prevLocation
-    }
-
-    const handleGoBack = () => {
-        const prevLocation = getPrevLocation()
-        history.push(prevLocation!)
-    }
-
-    const getGoBackButton = () => {
-        const prevLocation = getPrevLocation()
-        let title = 'Go back'
-        if (props.goBack !== undefined) {
-            if (prevLocation === '' || prevLocation === props.goBack.url) {
-                title = props.goBack?.title
+                if (show && listId === item.id) {
+                    closeList()
+                } else {
+                    showList(item.id)
+                }
             }
         }
 
         return (
-            <GoBackButton
-                className={styles.navItem}
-                arrowClass={styles.leftArrow}
-                title={title}
-                onClick={handleGoBack}
-                key={'goBack'}
+            <NavItem
+                className={styles.item}
+                item={item}
+                active={show && listId === item.id}
+                onClick={handleClick}
+                key={item.id}
             />
         )
-    }
-
-    const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (screenWidth <= 640) {
-            e.stopPropagation()
-        }
-    }
-
-    const extraItems = props.extraItems!.map((item, index) => {
-        if (!item.inNavBarOnMobile) {
-            return <li key={`extraItem${index}`}>{item.component}</li>
-        }
     })
 
-    const navClass = cx(
-        'nav',
-        props.className,
-        {
-            active: props.show,
-        }
-    )
-
     return (
-        <div className={styles.navWrapper} ref={navRef}>
-            {screenWidth <= 640 && (
-                <MobileNavBar
-                    extraItems={props.extraItems}
-                    goBackButton={props.goBack !== undefined ? getGoBackButton() : undefined}
-                    onToggleNav={props.onToggleNav}
-                    handleGoBack={handleGoBack}
-                />
-            )}
-            <nav
-                className={navClass}
-                style={{
-                    '--top': `${heightData.top}px`,
-                    '--position': `${heightData.position}px`
-                } as React.CSSProperties}
-            >
-                <div className={styles.contentWrapper} onClick={stopPropagation}>
-                    <ul className={styles.navContent}>
-                        {getItems()}
-                    </ul>
-                    {props.extraItems !== undefined && (
-                        <ul className={styles.navContent}>
-                            {extraItems}
-                        </ul>
-                    )}
-                </div>
-                <div className={styles.background}></div>
-            </nav>
-        </div>
+        <nav className={styles.nav}>
+            <ul className={styles.items}>
+                {items}
+            </ul>
+            <NavList
+                show={show}
+                item={getItemById as ItemWithChildren}
+            />
+        </nav>
     )
 }
 

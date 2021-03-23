@@ -224,6 +224,20 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
     ))
 )
 
+export const fetchUserCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+    filter(actions.FETCH_AUTH_USER_CATALOGUES.match),
+    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
+    switchMap(([_, id]) => concat(
+        of(actions.FETCH_AUTH_USER_CATALOGUES_START()),
+        axiosInstance$.get('/catalogues/', {
+            params: { created_by: id }
+        }).pipe(
+            map(response => actions.FETCH_AUTH_USER_CATALOGUES_SUCCESS(response.data)),
+            catchError(() => of(actions.FETCH_AUTH_USER_CATALOGUES_FAILURE()))
+        )
+    ))
+)
+
 export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELDS.match)),
     action$.pipe(filter(actions.CREATE_CATALOGUE_FIELD_SUCCESS.match)),
@@ -352,6 +366,7 @@ export const cataloguesEpics = combineEpics(
     createCatalogueFieldEpic,
     refreshCatalogueEpic,
     fetchCataloguesEpic,
+    fetchUserCataloguesEpic,
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,

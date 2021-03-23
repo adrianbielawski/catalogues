@@ -51,6 +51,20 @@ export const fetchCataloguesReducers = {
     },
 }
 
+export const fetchAuthUserCataloguesReducers = {
+    FETCH_AUTH_USER_CATALOGUES(state: State) { },
+    FETCH_AUTH_USER_CATALOGUES_START(state: State) {
+        state.authUser.fetchingCatalogues = true
+    },
+    FETCH_AUTH_USER_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
+        state.authUser.catalogues = action.payload.map(catalogueDeserializer)
+        state.authUser.fetchingCatalogues = false
+    },
+    FETCH_AUTH_USER_CATALOGUES_FAILURE(state: State) {
+        state.authUser.fetchingCatalogues = false
+    },
+}
+
 export const changeCatalogueNameReducers = {
     CHANGE_CATALOGUE_NAME(state: State, action: PayloadAction<T.ChangeCatalogueNamePayload>) { },
     TOGGLE_CATALOGUE_NAME_EDIT(state: State, action: PayloadAction<number>) {

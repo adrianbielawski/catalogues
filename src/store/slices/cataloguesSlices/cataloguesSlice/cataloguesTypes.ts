@@ -1,10 +1,16 @@
 import { Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field } from "src/globalTypes"
 
 export interface CataloguesState {
+    authUser: AuthUser,
     catalogues: DeserializedCatalogue[],
     fetchingCatalogues: boolean,
     creatingNewCatalogue: boolean,
     newCatalogueId: number | null,
+}
+
+export interface AuthUser {
+    catalogues: DeserializedCatalogue[],
+    fetchingCatalogues: boolean,
 }
 
 export interface ChangeCatalogueNamePayload {
