@@ -13,7 +13,6 @@ import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-import Header from 'components/global-components/header/header'
 
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
@@ -44,7 +43,7 @@ const Main = (props: HydratedRouteComponentProps) => {
     return (
         <div className={styles.main} style={{ minHeight: app.screenHeight }}>
             {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
-                ? <Header />
+                ? null
                 : <DeprecatedHeader />
             }
             {currentUser.user?.username ? (

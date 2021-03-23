@@ -22,6 +22,7 @@ import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
+import Header from 'components/global-components/header/header'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
@@ -177,15 +178,18 @@ const Catalogues = () => {
                         style={{ minHeight: `${minHeight}px` }}
                         ref={cataloguesRef}
                     >
-                        {app.switches.find(s => s === 'NAVIGATION_REDESIGN') ? null : (
-                            <DeprecatedNav
-                                content={NAV_CONTENT}
-                                extraItems={extraNavItems}
-                                className={styles.nav}
-                                show={showNav}
-                                onToggleNav={toggleNav}
-                            />
-                        )}
+                        {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                            ? <Header />
+                            : (
+                                <DeprecatedNav
+                                    content={NAV_CONTENT}
+                                    extraItems={extraNavItems}
+                                    className={styles.nav}
+                                    show={showNav}
+                                    onToggleNav={toggleNav}
+                                />
+                            )
+                        }
                         {catalogues.length === 0
                             ? getNoCatalogueMessage()
                             : (

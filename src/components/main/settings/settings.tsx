@@ -15,6 +15,7 @@ import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
 import SideMenuButton from 'components/global-components/side-menu/side-menu-button/sideMenuButton'
+import Header from 'components/global-components/header/header'
 
 const sideMenuContextValue = {
     show: false,
@@ -104,7 +105,9 @@ const Settings = () => {
                 style={{ minHeight: `${minHeight}px` }}
                 ref={settingsRef}
             >
-                {app.switches.find(s => s === 'NAVIGATION_REDESIGN') ? null : (
+                {app.switches.find(s => s === 'NAVIGATION_REDESIGN')
+                    ? <Header />
+                    : (
                     <DeprecatedNav
                         show={showNav}
                         content={NAV_CONTENT}
