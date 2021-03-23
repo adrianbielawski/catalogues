@@ -6,6 +6,8 @@ import styles from './nav.scss'
 import { LocationState } from 'src/globalTypes'
 //Router
 import { useUrlBuilder } from 'src/router'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
 //Custom components
 import NavLink from './navLink/navLink'
 import NavList from './navList/navList'
@@ -54,11 +56,11 @@ const cx = classNames.bind(styles)
 const DeprecaterdNav = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
     const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
     const [navView, setNavView] = useState<NavView>({ showList: false, listIndex: null })
     const [heightData, setHeightData] = useState<HeightData>({ top: 0, position: 0 })
-    const screenWidth = window.innerWidth
 
     useEffect(() => {
         window.addEventListener('scroll', inspectHeight)
@@ -113,7 +115,7 @@ const DeprecaterdNav = (props: Props) => {
     }
 
     const handleLinkClick = (e: React.MouseEvent) => {
-        if (screenWidth <= 640) {
+        if (is640OrLess) {
             props.onToggleNav(e)
             setNavView({
                 showList: false,
@@ -172,7 +174,7 @@ const DeprecaterdNav = (props: Props) => {
             }
         })
 
-        if (props.goBack !== undefined && screenWidth > 640) {
+        if (props.goBack !== undefined && !is640OrLess) {
             items.unshift(getGoBackButton())
         }
 
@@ -219,7 +221,7 @@ const DeprecaterdNav = (props: Props) => {
     }
 
     const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (screenWidth <= 640) {
+        if (is640OrLess) {
             e.stopPropagation()
         }
     }
@@ -240,7 +242,7 @@ const DeprecaterdNav = (props: Props) => {
 
     return (
         <div className={styles.navWrapper} ref={navRef}>
-            {screenWidth <= 640 && (
+            {is640OrLess && (
                 <MobileNavBar
                     extraItems={props.extraItems}
                     goBackButton={props.goBack !== undefined ? getGoBackButton() : undefined}

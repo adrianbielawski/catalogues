@@ -27,6 +27,7 @@ const cx = classNames.bind(styles)
 
 const CatalogueHeader = (props: Props) => {
     const { show } = useContext(NavContext)
+    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
     const currentUser = useTypedSelector(state => state.currentUser)
     const catalogues = useTypedSelector(state => state.catalogues)
     const [yOffset, setYOffset] = useState(0)
@@ -83,8 +84,8 @@ const CatalogueHeader = (props: Props) => {
         'header',
         props.className,
         {
-            hidable: window.innerWidth <= 640,
-            show: window.innerWidth <= 640 && scrolledUp,
+            hidable: is640OrLess,
+            show: is640OrLess && scrolledUp,
         }
     )
 

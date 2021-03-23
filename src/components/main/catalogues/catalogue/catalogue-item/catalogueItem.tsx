@@ -30,12 +30,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const itemRef = useRef<HTMLLIElement>()
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
+    const is800OrLess = useTypedSelector(state => state.app.screenWidth.is800OrLess)
     const item = useTypedSelector(itemSelector(props.item.id))
     const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
-    const screenWidth = window.innerWidth
 
     useEffect(() => {
         if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
@@ -44,7 +44,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }, [item.isSubmitting, item.isEditing])
 
     useEffect(() => {
-        if (screenWidth > 800) {
+        if (!is800OrLess) {
             window.addEventListener('resize', getCarouselWidth)
         }
         getCarouselWidth()
@@ -65,9 +65,9 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         setShowImagesPreview(!showImagesPreview)
     }
 
-    const imagesCarouselWidth = screenWidth > 800 ? 200 : carouselWrapperWidth
-    const imagesCarouselHeight = screenWidth > 800 ? 200 : undefined
-    const isImagesPreviewAllowed = item.images.length && screenWidth > 800
+    const imagesCarouselWidth = !is800OrLess ? 200 : carouselWrapperWidth
+    const imagesCarouselHeight = !is800OrLess ? 200 : undefined
+    const isImagesPreviewAllowed = item.images.length && !is800OrLess
     const showImagesCounter = item.images.length > 1
 
     return (

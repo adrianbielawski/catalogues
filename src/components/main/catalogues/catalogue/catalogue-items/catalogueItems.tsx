@@ -33,6 +33,7 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
     const itemsData = useTypedSelector(state => state.itemsData)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
     const filtersBarContext = useFiltersBarContext()
@@ -138,7 +139,7 @@ const CatalogueItems = (props: Props) => {
     }
 
     const getAddItemButton = () => {
-        if (window.innerWidth > 640) {
+        if (!is640OrLess) {
             return (
                 <AddButton
                     text="Add new item"

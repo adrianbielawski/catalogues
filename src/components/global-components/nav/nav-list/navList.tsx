@@ -66,7 +66,7 @@ const NavList = (props: Props) => {
         },
     )
 
-    const height = window.innerWidth <= 640 ? app.screenHeight - 44 : 'auto'
+    const height = app.screenWidth.is640OrLess ? app.screenHeight - 44 : 'auto'
 
     return (
         <div>

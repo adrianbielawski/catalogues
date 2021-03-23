@@ -1,6 +1,8 @@
 import React from 'react'
 import classNames from 'classnames/bind'
 import styles from './sideBar.scss'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
 
 type Props = {
     children: React.ReactNode,
@@ -11,10 +13,10 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const SideBar = (props: Props) => {
-    const screenWidth = window.innerWidth
+    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
 
     const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (screenWidth <= 640) {
+        if (is640OrLess) {
             e.stopPropagation()
         }
     }
@@ -36,7 +38,7 @@ const SideBar = (props: Props) => {
             <div className={sideBarClass} onClick={stopPropagation}>
                 {props.children}
             </div>
-            {screenWidth <= 640 &&
+            {is640OrLess &&
                 <div
                     className={styles.background}
                     onClick={props.onBackgroundClick}>
