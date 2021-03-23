@@ -63,7 +63,11 @@ const CatalogueHeader = (props: Props) => {
     return (
         <NavContextProvider value={contextValue}>
             <div className={headerClass}>
-                <Nav show={show} items={NAV_ITEMS} />
+                <Nav
+                    show={show}
+                    items={NAV_ITEMS}
+                    listOnLeft={true}
+                />
                 <p className={styles.catalogueName}>
                     {props.catalogue.name}
                 </p>

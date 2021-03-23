@@ -71,6 +71,7 @@ interface Props {
     items: ItemType[],
     show: boolean,
     className?: string,
+    listOnLeft?: boolean,
 }
 
 const Nav = (props: Props) => {
@@ -122,6 +123,7 @@ const Nav = (props: Props) => {
             <NavList
                 show={show}
                 item={getItemById as ItemWithChildren}
+                listOnLeft={props.listOnLeft}
             />
         </nav>
     )

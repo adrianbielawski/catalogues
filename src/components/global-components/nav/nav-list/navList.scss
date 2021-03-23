@@ -7,9 +7,13 @@
     z-index: 10000;
     background: #fff;
     border-radius: 5px;
-    box-shadow: 2px 2px 4px $midLightGrey;
+    box-shadow: 1px 1px 4px $midLightGrey;
     min-width: 300px;
     box-sizing: border-box;
+    &.left {
+        right: unset;
+        left: 5px;
+    }
     .listHeader {
         display: flex;
         align-items: center;
