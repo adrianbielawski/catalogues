@@ -1,13 +1,21 @@
 .catalogue {
     position: relative;
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
     max-width: 100%;
-    .mainContent {
+    .wrapper {
+        display: flex;
         flex-grow: 1;
-        max-width: 100%;
-    }
-    .loader {
-        margin: 0 auto;
+        &.moved {
+            margin-top: 45px;
+        }
+        .mainContent {
+            flex-grow: 1;
+            max-width: 100%;
+        }
+        .loader {
+            margin: 0 auto;
+        }
     }
 }

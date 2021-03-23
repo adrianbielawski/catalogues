@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import AnimateHeight from 'react-animate-height'
+import classNames from 'classnames/bind'
 import styles from './navList.scss'
 //Types
 import { ItemWithChildren } from '../nav'
@@ -17,7 +18,10 @@ import ItemIcon from '../item-icon/itemIcon'
 interface Props {
     show: boolean,
     item: ItemWithChildren,
+    listOnLeft?: boolean,
 }
+
+const cx = classNames.bind(styles)
 
 const NavList = (props: Props) => {
     const history = useHistory<LocationState>()
@@ -55,12 +59,19 @@ const NavList = (props: Props) => {
         )
     })
 
+    const navListClass = cx(
+        'navList',
+        {
+            left: props.listOnLeft
+        },
+    )
+
     const height = window.innerWidth <= 640 ? app.screenHeight - 44 : 'auto'
 
     return (
         <div>
             <AnimateHeight
-                className={styles.navList}
+                className={navListClass}
                 height={show ? height : 0}
             >
                 {listId ? (
