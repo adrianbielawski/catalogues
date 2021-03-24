@@ -2,8 +2,9 @@ export interface AppState {
     screenHeight: number,
     screenWidth: {
         width: number,
-        is640OrLess: boolean | null,
-        is800OrLess: boolean | null,
+        smallViewport: boolean | null,
+        mediumViewport: boolean | null,
+        largeViewport: boolean | null,
     },
     fetchingSwitches: boolean,
     switches: string[],

@@ -8,8 +8,9 @@ export const changeScreenSize = {
         state.screenHeight = action.payload.height
         state.screenWidth = {
             width: action.payload.width,
-            is640OrLess: action.payload.width <= 640,
-            is800OrLess: action.payload.width <= 800,
+            smallViewport: action.payload.width <= 640,
+            mediumViewport: action.payload.width <= 800 && action.payload.width > 640,
+            largeViewport: action.payload.width > 800,
         }
     },
 }

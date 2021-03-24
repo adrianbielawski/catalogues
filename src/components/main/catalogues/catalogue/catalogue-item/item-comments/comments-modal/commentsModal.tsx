@@ -25,7 +25,7 @@ type Props = {
 
 const CommentsModal = (props: Props) => {
     const dispatch = useAppDispatch()
-    const is800OrLess = useTypedSelector(state => state.app.screenWidth.is800OrLess)
+    const screenWidth = useTypedSelector(state => state.app.screenWidth)
     const item = useTypedSelector(itemSelector(props.itemId))
     const fetchingCommentsDelay = useDelay()
 
@@ -67,13 +67,13 @@ const CommentsModal = (props: Props) => {
     let commentsTop = 0
 
     if (props.canComment) {
-        if (!is800OrLess) {
+        if (screenWidth.largeViewport) {
             commentsTop = 52
         } else {
             commentsTop = 94
         }
     } else {
-        if (is800OrLess) {
+        if (screenWidth.mediumViewport || screenWidth.smallViewport) {
             commentsTop = 52
         }
     }
@@ -82,10 +82,10 @@ const CommentsModal = (props: Props) => {
         <AnimatedModal
             show={props.show}
             className={styles.commentsModal}
-            onClose={!is800OrLess ? props.onClose : undefined}
+            onClose={screenWidth.largeViewport ? props.onClose : undefined}
         >
             <div className={styles.wrapper}>
-                {!is800OrLess && (
+                {screenWidth.largeViewport && (
                     <div>
                         <ImagesCarousel
                             width={window.innerWidth * .5}
@@ -99,7 +99,7 @@ const CommentsModal = (props: Props) => {
                     </div>
                 )}
                 <div className={styles.commentsWrapper}>
-                    {is800OrLess && (
+                    {(screenWidth.mediumViewport || screenWidth.smallViewport) && (
                         <div
                             className={styles.buttonWrapper}
                         >

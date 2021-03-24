@@ -6,8 +6,9 @@ const initialState: T.AppState = {
     screenHeight: window.innerHeight,
     screenWidth: {
         width: window.innerWidth,
-        is640OrLess: window.innerWidth <= 640,
-        is800OrLess: window.innerWidth <= 800,
+        smallViewport: window.innerWidth <= 640,
+        mediumViewport: window.innerWidth <= 800 && window.innerWidth > 640,
+        largeViewport: window.innerWidth > 800,
     },
     fetchingSwitches: true,
     switches: [],

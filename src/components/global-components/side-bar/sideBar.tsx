@@ -13,10 +13,10 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const SideBar = (props: Props) => {
-    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
+    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
 
     const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (is640OrLess) {
+        if (smallViewport) {
             e.stopPropagation()
         }
     }
@@ -38,7 +38,7 @@ const SideBar = (props: Props) => {
             <div className={sideBarClass} onClick={stopPropagation}>
                 {props.children}
             </div>
-            {is640OrLess &&
+            {smallViewport &&
                 <div
                     className={styles.background}
                     onClick={props.onBackgroundClick}>

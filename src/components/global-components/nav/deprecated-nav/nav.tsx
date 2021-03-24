@@ -56,7 +56,7 @@ const cx = classNames.bind(styles)
 const DeprecaterdNav = (props: Props) => {
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
+    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const buildUrl = useUrlBuilder()
     const navRef = useRef<HTMLDivElement>(null)
     const [navView, setNavView] = useState<NavView>({ showList: false, listIndex: null })
@@ -115,7 +115,7 @@ const DeprecaterdNav = (props: Props) => {
     }
 
     const handleLinkClick = (e: React.MouseEvent) => {
-        if (is640OrLess) {
+        if (smallViewport) {
             props.onToggleNav(e)
             setNavView({
                 showList: false,
@@ -174,7 +174,7 @@ const DeprecaterdNav = (props: Props) => {
             }
         })
 
-        if (props.goBack !== undefined && !is640OrLess) {
+        if (props.goBack !== undefined && !smallViewport) {
             items.unshift(getGoBackButton())
         }
 
@@ -221,7 +221,7 @@ const DeprecaterdNav = (props: Props) => {
     }
 
     const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (is640OrLess) {
+        if (smallViewport) {
             e.stopPropagation()
         }
     }
@@ -242,7 +242,7 @@ const DeprecaterdNav = (props: Props) => {
 
     return (
         <div className={styles.navWrapper} ref={navRef}>
-            {is640OrLess && (
+            {smallViewport && (
                 <MobileNavBar
                     extraItems={props.extraItems}
                     goBackButton={props.goBack !== undefined ? getGoBackButton() : undefined}

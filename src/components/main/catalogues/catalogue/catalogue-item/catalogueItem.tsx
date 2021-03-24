@@ -32,7 +32,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
-    const is800OrLess = useTypedSelector(state => state.app.screenWidth.is800OrLess)
+    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(props.item.id))
     const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const [showImagesPreview, setShowImagesPreview] = useState(false)
@@ -46,7 +46,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }, [item.isSubmitting, item.isEditing])
 
     useEffect(() => {
-        if (!is800OrLess) {
+        if (largeViewport) {
             window.addEventListener('resize', getCarouselWidth)
         }
         getCarouselWidth()
@@ -75,9 +75,9 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const imagesCarouselWidth = !is800OrLess ? 200 : carouselWrapperWidth
-    const imagesCarouselHeight = !is800OrLess ? 200 : undefined
-    const isImagesPreviewAllowed = item.images.length && !is800OrLess
+    const imagesCarouselWidth = largeViewport ? 200 : carouselWrapperWidth
+    const imagesCarouselHeight = largeViewport ? 200 : undefined
+    const isImagesPreviewAllowed = item.images.length && largeViewport
     const showImagesCounter = item.images.length > 1
 
     return (
