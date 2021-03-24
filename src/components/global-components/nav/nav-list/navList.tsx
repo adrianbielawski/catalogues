@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import AnimateHeight from 'react-animate-height'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './navList.scss'
 //Types
@@ -27,7 +29,14 @@ const NavList = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
     const routerContext = useContext(RouterContext)
-    const { show, listId, closeList, showNestedList } = useContext(NavContext)
+    const {
+        show,
+        listId,
+        nestedListId,
+        closeList,
+        showNestedList,
+        removeNestedListId,
+    } = useContext(NavContext)
     const app = useTypedSelector(state => state.app)
 
     const getItems = () => props.item.children.map(item => {
@@ -83,6 +92,13 @@ const NavList = (props: Props) => {
                 {listId ? (
                     <div>
                         <div className={styles.listHeader}>
+                            {nestedListId !== null && (
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    className={styles.goBack}
+                                    onClick={removeNestedListId}
+                                />
+                            )}
                             <ItemIcon
                                 className={styles.icon}
                                 item={props.item}

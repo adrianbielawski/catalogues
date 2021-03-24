@@ -10,6 +10,7 @@ export const NavContext = createContext<T.NavContextInterface>({
     showList: () => {},
     closeList: () => {},
     showNestedList: () => {},
+    removeNestedListId: () => {},
 })
 
 export const reducer = (state: Draft<T.NavInitialState>, action: T.Action) => {
@@ -26,6 +27,10 @@ export const reducer = (state: Draft<T.NavInitialState>, action: T.Action) => {
 
         case T.SHOW_NESTED_LIST:
             state.nestedListId = action.nestedListId
+            break
+
+        case T.REMOVE_NESTED_LIST_ID:
+            state.nestedListId = null
             break
 
         default:

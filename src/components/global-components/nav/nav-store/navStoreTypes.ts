@@ -1,6 +1,7 @@
 export const SHOW_LIST = 'SHOW_LIST'
 export const CLOSE_LIST = 'CLOSE_LIST'
 export const SHOW_NESTED_LIST = 'SHOW_NESTED_LIST'
+export const REMOVE_NESTED_LIST_ID = 'REMOVE_NESTED_LIST_ID'
 
 interface ShowList {
     type: typeof SHOW_LIST,
@@ -16,7 +17,11 @@ interface ShowNestedList {
     nestedListId: string | number,
 }
 
-export type Action = ShowList | CloseList | ShowNestedList
+interface RemoveNestedListId {
+    type: typeof REMOVE_NESTED_LIST_ID,
+}
+
+export type Action = ShowList | CloseList | ShowNestedList | RemoveNestedListId
 
 export interface NavInitialState {
     show: boolean,
@@ -28,4 +33,5 @@ export interface NavContextInterface extends NavInitialState {
     showList: (listId: string | number) => void,
     closeList: () => void,
     showNestedList: (nestedListId: string | number) => void,
+    removeNestedListId: () => void,
 }
