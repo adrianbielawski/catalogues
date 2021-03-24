@@ -8,10 +8,14 @@ import { DeserializedCatalogue } from 'src/globalTypes'
 import { NavContext } from 'components/global-components/nav/nav-store/navStore'
 import NavContextProvider from 'components/global-components/nav/nav-store/navContextProvider'
 //Redux
-import { useTypedSelector } from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import {
+    ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE
+} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //custom components
 import UserImage from 'components/global-components/user-image/userImage'
 import Nav from 'components/global-components/nav/nav'
+import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 
 const BASE_URL = process.env.API_URL
 
@@ -28,6 +32,7 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const CatalogueHeader = (props: Props) => {
+    const dispatch = useAppDispatch()
     const { show } = useContext(NavContext)
     const is640OrLess = useTypedSelector(state => state.app.screenWidth.is640OrLess)
     const currentUser = useTypedSelector(state => state.currentUser)
@@ -55,6 +60,14 @@ const CatalogueHeader = (props: Props) => {
 
         setYOffset(offset)
         setScrolledUp(up)
+    }
+
+    const handleFavouriteChange = () => {
+        if (!props.catalogue.isFavourite) {
+            dispatch(ADD_CATALOGUE_TO_FAVOURITE(props.catalogue.id))
+        } else {
+            dispatch(DELETE_CATALOGUE_FROM_FAVOURITE(props.catalogue.id))
+        }
     }
 
     const NAV_ITEMS = [
@@ -110,7 +123,11 @@ const CatalogueHeader = (props: Props) => {
                     </p>
                 </div>
                 <div className={styles.social}>
-
+                    <FavouriteIcon
+                        className={styles.favouriteIcon}
+                        active={props.catalogue.isFavourite}
+                        onChange={handleFavouriteChange}
+                    />
                 </div>
             </div>
         </NavContextProvider>
