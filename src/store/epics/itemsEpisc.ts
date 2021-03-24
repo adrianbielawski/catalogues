@@ -1,6 +1,8 @@
 import { combineEpics } from "redux-observable"
 import { concat, of, defer, forkJoin, Observable, from, merge, iif } from 'rxjs'
-import { catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck } from 'rxjs/operators'
+import {
+    catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck
+} from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import mime from 'mime-types'
 import { axiosInstance$ } from "src/axiosInstance"
@@ -66,7 +68,7 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
-export const addItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+export const addItemEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.ADD_ITEM.match),
     switchMap(action => concat(
         of(actions.ADD_ITEM_START()),
@@ -82,7 +84,10 @@ export const addItemEpic = (action$: Observable<Action>, state$: Observable<Root
     ))
 )
 
-export const saveItemEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+export const saveItemEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
     filter(actions.SAVE_ITEM.match),
     switchMap(action => {
         const filteredValues = action.payload.fieldsValues.filter(v => v.value !== null)
@@ -127,7 +132,8 @@ export const saveItemEpic = (action$: Observable<Action>, state$: Observable<Roo
                     defaultIfEmpty(),
                     withLatestFrom(state$.pipe(pluck('catalogues'))),
                     mergeMap(([_, state]) => merge(
-                        iif(() => getCatalogueById(state, action.payload.catalogueId).itemsRanges.date.min === null,
+                        iif(() =>
+                            getCatalogueById(state, action.payload.catalogueId).itemsRanges.date.min === null,
                             of(catalogueActions.REFRESH_CATALOGUE(action.payload.catalogueId))
                         ),
                         of(actions.SAVE_ITEM_SUCCESS(response.data.id)),

@@ -81,11 +81,9 @@ const NavList = (props: Props) => {
         },
     )
 
-    const height = app.screenWidth.smallViewport ? app.screenHeight - 44 : 'auto'
-
-    if (listId) {
-        console.log(getItems() || 'sdf')
-    }
+    const height = app.screenWidth.smallViewport
+        ? app.screenHeight - 44
+        : 'auto'
 
     return (
         <div>

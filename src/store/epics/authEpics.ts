@@ -99,7 +99,10 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
     ))
 )
 
-export const logOutEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+export const logOutEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
     filter(actions.LOG_OUT.match),
     mergeMap(action => concat(
         of(actions.LOG_OUT_START()),

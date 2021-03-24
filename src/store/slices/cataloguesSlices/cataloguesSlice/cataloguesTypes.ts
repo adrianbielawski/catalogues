@@ -1,4 +1,6 @@
-import { Catalogue, Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field } from "src/globalTypes"
+import {
+    Catalogue, Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field
+} from "src/globalTypes"
 
 export interface CataloguesState {
     authUser: AuthUser,
@@ -24,10 +26,8 @@ export interface CatalogueAndFieldIdPayload {
     fieldId: number,
 }
 
-export interface FetchCatalogueFieldSuccessPayload {
+export interface FetchCatalogueFieldSuccessPayload extends CatalogueAndFieldIdPayload {
     data: Field,
-    catalogueId: number,
-    fieldId: number,
 }
 
 export interface FetchCatalogueFieldsSuccessPayload {
@@ -35,10 +35,8 @@ export interface FetchCatalogueFieldsSuccessPayload {
     catalogueId: number,
 }
 
-export interface FetchFieldChoicesPayload {
+export interface FetchFieldChoicesPayload extends CatalogueAndFieldIdPayload {
     data: Choice[],
-    catalogueId: number,
-    fieldId: number,
 }
 
 export interface FetchFieldsChoicesPayload {
@@ -48,22 +46,16 @@ export interface FetchFieldsChoicesPayload {
     }
 }
 
-export interface RemoveFieldToStatePayload {
+export interface RemoveFieldToStatePayload extends CatalogueAndFieldIdPayload {
     id: number | string,
-    catalogueId: number,
-    fieldId: number,
 }
 
-export interface AddFieldToStatePayload {
+export interface AddFieldToStatePayload extends CatalogueAndFieldIdPayload {
     name: string,
-    catalogueId: number,
-    fieldId: number,
 }
 
-export interface TextFieldNameChange {
+export interface TextFieldNameChange extends CatalogueAndFieldIdPayload {
     name: string,
-    catalogueId: number,
-    fieldId: number,
 }
 
 export interface ChioceFieldChangesPayload {
@@ -71,21 +63,15 @@ export interface ChioceFieldChangesPayload {
     field: DeserializedChoiceField,
 }
 
-export interface AddChoiceError {
-    catalogueId: number,
-    fieldId: number,
+export interface AddChoiceError extends CatalogueAndFieldIdPayload {
     error: ErrorMessage,
 }
 
-export interface PostChoicePayload {
-    catalogueId: number,
-    fieldId: number,
+export interface PostChoicePayload extends CatalogueAndFieldIdPayload {
     name: string,
 }
 
-export interface PostChoiceSuccessPayload {
-    catalogueId: number,
-    fieldId: number,
+export interface PostChoiceSuccessPayload extends CatalogueAndFieldIdPayload {
     choice: Choice,
 }
 
@@ -97,21 +83,15 @@ export interface CreateCatalogueFieldPayload {
     public: boolean,
 }
 
-export interface RemoveChoicePayload {
-    catalogueId: number,
-    fieldId: number,
+export interface RemoveChoicePayload extends CatalogueAndFieldIdPayload {
     choiceId: number,
 }
 
-export interface ChangeFieldNamePayload {
-    catalogueId: number,
-    fieldId: number,
+export interface ChangeFieldNamePayload extends CatalogueAndFieldIdPayload {
     name: string,
 }
 
-export interface ChangeFieldNameSuccessPayload {
-    catalogueId: number,
-    fieldId: number,
+export interface ChangeFieldNameSuccessPayload extends CatalogueAndFieldIdPayload {
     field: Field,
 }
 

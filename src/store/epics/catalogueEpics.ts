@@ -229,7 +229,10 @@ export const refreshCatalogueEpic = (action$: Observable<Action>) => action$.pip
     ))
 )
 
-export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+export const fetchCataloguesEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
     filter(actions.FETCH_CATALOGUES.match),
     withLatestFrom(state$.pipe(pluck('currentUser', 'user', 'id'))),
     switchMap(([_, id]) => concat(
@@ -243,7 +246,10 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
     ))
 )
 
-export const fetchAuthUserDataEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+export const fetchAuthUserDataEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
     filter(actions.FETCH_AUTH_USER_DATA.match),
     withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
     switchMap(([_, id]) => concat(
