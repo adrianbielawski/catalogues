@@ -51,17 +51,18 @@ export const fetchCataloguesReducers = {
     },
 }
 
-export const fetchAuthUserCataloguesReducers = {
-    FETCH_AUTH_USER_CATALOGUES(state: State) { },
-    FETCH_AUTH_USER_CATALOGUES_START(state: State) {
-        state.authUser.fetchingCatalogues = true
+export const fetchAuthUserDataReducers = {
+    FETCH_AUTH_USER_DATA(state: State) { },
+    FETCH_AUTH_USER_DATA_START(state: State) {
+        state.authUser.fetchingData = true
     },
-    FETCH_AUTH_USER_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
-        state.authUser.catalogues = action.payload.map(catalogueDeserializer)
-        state.authUser.fetchingCatalogues = false
+    FETCH_AUTH_USER_DATA_SUCCESS(state: State, action: PayloadAction<T.FetchAuthUserDataSuccessPayload>) {
+        state.authUser.catalogues = action.payload.catalogues.map(catalogueDeserializer)
+        state.authUser.favouriteCatalogues = action.payload.favCatalogues.map(catalogueDeserializer)
+        state.authUser.fetchingData = false
     },
-    FETCH_AUTH_USER_CATALOGUES_FAILURE(state: State) {
-        state.authUser.fetchingCatalogues = false
+    FETCH_AUTH_USER_DATA_FAILURE(state: State) {
+        state.authUser.fetchingData = false
     },
 }
 

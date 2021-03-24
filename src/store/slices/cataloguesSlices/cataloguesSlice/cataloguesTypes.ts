@@ -1,4 +1,4 @@
-import { Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field } from "src/globalTypes"
+import { Catalogue, Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field } from "src/globalTypes"
 
 export interface CataloguesState {
     authUser: AuthUser,
@@ -10,7 +10,8 @@ export interface CataloguesState {
 
 export interface AuthUser {
     catalogues: DeserializedCatalogue[],
-    fetchingCatalogues: boolean,
+    favouriteCatalogues: DeserializedCatalogue[],
+    fetchingData: boolean,
 }
 
 export interface ChangeCatalogueNamePayload {
@@ -131,4 +132,9 @@ export interface ChangePublicFieldPayload extends CatalogueAndFieldIdPayload {
 export interface ChangeCatalogueImagePayload {
     catalogueId: number,
     image: string,
+}
+
+export interface FetchAuthUserDataSuccessPayload {
+    catalogues: Catalogue[],
+    favCatalogues: any,
 }

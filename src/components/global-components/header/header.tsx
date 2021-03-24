@@ -12,6 +12,7 @@ import NavContextProvider from '../nav/nav-store/navContextProvider'
 import { NavContext } from '../nav/nav-store/navStore'
 import { useHistory } from 'react-router'
 import { LocationState } from 'src/globalTypes'
+import FavouriteIcon from '../favourite-icon/favouriteIcon'
 
 const contextValue = {
     show: false,
@@ -30,6 +31,37 @@ const Header = () => {
     }
 
     const NAV_ITEMS = user !== null ? [
+        // {
+        //     id: 'Favourite catalogues',
+        //     title: 'Favourite catalogues',
+        //     icon: (
+        //         <FavouriteIcon
+        //             className={styles.favouriteIcon}
+        //             active={props.catalogue.isFavourite}
+        //             onChange={handleFavouriteChange}
+        //         />
+        //     ),
+        //     children: [
+        //         {
+        //             id: 'My account',
+        //             title: 'My account',
+        //             faIcon: faCog,
+        //             url: `/${user!.username}/settings/account/my-account`,
+        //         },
+        //         {
+        //             id: 'Manage catalogues',
+        //             title: 'Manage catalogues',
+        //             faIcon: faCog,
+        //             url: `/${user!.username}/settings/account/manage-catalogues`,
+        //         },
+        //         {
+        //             id: 'Logout',
+        //             title: 'Logout',
+        //             faIcon: faSignOutAlt,
+        //             onClick: handleLogout,
+        //         }
+        //     ],
+        // },
         {
             id: 'My catalogues',
             title: 'My catalogues',
