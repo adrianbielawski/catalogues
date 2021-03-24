@@ -9,12 +9,17 @@ import TransparentButton from 'components/global-components/transparent-button/t
 type Props = {
     active: boolean,
     className?: string,
-    onChange: () => void,
+    onChange?: () => void,
 }
 
 const cx = classNames.bind(styles)
 
 const FavouriteIcon = (props: Props) => {
+    const handleChange = () => {
+        if (props.onChange) {
+            props.onChange()
+        }
+    }
     const iconClass = cx(
         'favouriteIcon',
         props.className,
@@ -26,7 +31,7 @@ const FavouriteIcon = (props: Props) => {
     return (
         <TransparentButton
             className={iconClass}
-            onClick={props.onChange}
+            onClick={handleChange}
         >
             <FontAwesomeIcon icon={faHeart} />
         </TransparentButton>
