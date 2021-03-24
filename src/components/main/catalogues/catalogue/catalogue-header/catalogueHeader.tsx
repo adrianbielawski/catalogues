@@ -97,7 +97,9 @@ const CatalogueHeader = (props: Props) => {
         },
     ]
 
-    const image = `${BASE_URL}${props.catalogue.imageThumbnail}`
+    const catalogueImage = props.catalogue.imageThumbnail
+        ? `${BASE_URL}${props.catalogue.imageThumbnail}`
+        : undefined
 
     const headerClass = cx(
         'header',
@@ -117,9 +119,10 @@ const CatalogueHeader = (props: Props) => {
                     listOnLeft={true}
                 />
                 <div className={styles.catalogueName}>
-                    <div>
-                        <img src={image} />
-                    </div>
+                    <Avatar
+                        className={styles.userImage}
+                        url={catalogueImage}
+                    />
                     <p>
                         {props.catalogue.name}
                     </p>
