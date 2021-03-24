@@ -98,7 +98,7 @@ const CatalogueHeader = (props: Props) => {
     ]
 
     const catalogueImage = props.catalogue.imageThumbnail
-        ? `${BASE_URL}${props.catalogue.imageThumbnail}`
+        ? `${props.catalogue.imageThumbnail}`
         : undefined
 
     const headerClass = cx(
