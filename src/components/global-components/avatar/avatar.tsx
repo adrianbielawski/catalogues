@@ -23,20 +23,18 @@ const Avatar = (props: Props) => {
 
     return (
         <div className={avatarClass}>
-            {props.url?.length
-                ? (
-                    <img
-                        src={`${BASE_URL}${props.url}`}
-                        className={styles.image}
-                    />
-                )
-                : (
-                    <FontAwesomeIcon
-                        icon={props.placeholderIcon || faImage}
-                        className={styles.image}
-                    />
-                )
-            }
+            {props.url?.length && (
+                <img
+                    src={`${BASE_URL}${props.url}`}
+                    className={styles.image}
+                />
+            )}
+            {(!props.url?.length && props.placeholderIcon) && (
+                <FontAwesomeIcon
+                    icon={props.placeholderIcon}
+                    className={styles.image}
+                />
+            )}
         </div>
     )
 }
