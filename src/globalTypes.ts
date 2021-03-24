@@ -83,6 +83,7 @@ export interface Catalogue {
     },
     image: string,
     image_thumbnail: string,
+    is_favourite: boolean,
 }
 
 export interface CataloguePermisions {
@@ -105,6 +106,7 @@ export interface DeserializedCatalogue {
     fields: DeserializedField[],
     image: string,
     imageThumbnail: string,
+    isFavourite: boolean,
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,
     isEditingCatalogueName: boolean,

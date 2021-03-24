@@ -29,6 +29,8 @@ export const cataloguesSlice = createSlice({
         ...cataloguesReducers.changeCatalogueImageReducers,
         ...cataloguesReducers.catalogueReducer,
         ...cataloguesReducers.deleteCatalogueReducers,
+        ...cataloguesReducers.addCatalogueToFavouriteReducers,
+        ...cataloguesReducers.deleteCatalogueFromFavouriteReducers,
         ...fieldsReducers.fetchCatalogueFieldReducers,
         ...fieldsReducers.fetchCatalogueFieldsReducers,
         ...fieldsReducers.fetchFieldChoicesReducers,
@@ -71,4 +73,6 @@ export const {
     TOGGLE_ADD_FIELD,
     CREATE_CATALOGUE_FIELD, CREATE_CATALOGUE_FIELD_START, CREATE_CATALOGUE_FIELD_SUCCESS, CREATE_CATALOGUE_FIELD_FAILURE,
     DELETE_CATALOGUE_FIELD, DELETE_CATALOGUE_FIELD_START, DELETE_CATALOGUE_FIELD_SUCCESS, DELETE_CATALOGUE_FIELD_FAILURE,
+    ADD_CATALOGUE_TO_FAVOURITE, ADD_CATALOGUE_TO_FAVOURITE_SUCCESS, ADD_CATALOGUE_TO_FAVOURITE_FAILURE,
+    DELETE_CATALOGUE_FROM_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS, DELETE_CATALOGUE_FROM_FAVOURITE_FAILURE,
 } = cataloguesSlice.actions

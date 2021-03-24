@@ -36,6 +36,7 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
     fields: [],
     image: catalogue.image,
     imageThumbnail: catalogue.image_thumbnail,
+    isFavourite: catalogue.is_favourite,
     fetchingFields: true,
     fetchingFieldsChoices: true,
     isEditingCatalogueName: false,

@@ -182,3 +182,35 @@ export const deleteCatalogueReducers = {
         }
     },
 }
+
+export const addCatalogueToFavouriteReducers = {
+    ADD_CATALOGUE_TO_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = true
+    },
+    ADD_CATALOGUE_TO_FAVOURITE_SUCCESS(state: State) { },
+    ADD_CATALOGUE_TO_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = false
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
+
+export const deleteCatalogueFromFavouriteReducers = {
+    DELETE_CATALOGUE_FROM_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = false
+    },
+    DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS(state: State) { },
+    DELETE_CATALOGUE_FROM_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = true
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
