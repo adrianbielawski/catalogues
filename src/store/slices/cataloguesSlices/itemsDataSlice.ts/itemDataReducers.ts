@@ -185,12 +185,19 @@ export const changeItemRating = {
 }
 
 export const addItemToFavourite = {
-    ADD_ITEM_TO_FAVOURITE(state: State, action: PayloadAction<T.AddItemToFavouritePayload>) {
-        const item = getItemById(state, action.payload.itemId)
-        item.isFavourite = action.payload.isFavourite
+    ADD_ITEM_TO_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isFavourite = true
     },
     ADD_ITEM_TO_FAVOURITE_SUCCESS(state: State) { },
-    ADD_ITEM_TO_FAVOURITE_FAILURE(state: State) { },
+    ADD_ITEM_TO_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isFavourite = false
+        state.itemsDataError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
 }
 
 export const deleteItemFromFavourite = {
@@ -199,7 +206,14 @@ export const deleteItemFromFavourite = {
         item.isFavourite = false
     },
     DELETE_ITEM_FROM_FAVOURITE_SUCCESS(state: State) { },
-    DELETE_ITEM_FROM_FAVOURITE_FAILURE(state: State) { },
+    DELETE_ITEM_FROM_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.isFavourite = true
+        state.itemsDataError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
 }
 
 export const fetchItemComments = {

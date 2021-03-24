@@ -1,0 +1,36 @@
+import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
+import classNames from 'classnames/bind'
+import styles from './favouriteIcon.scss'
+//Custom components
+import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+
+type Props = {
+    active: boolean,
+    className?: string,
+    onChange: () => void,
+}
+
+const cx = classNames.bind(styles)
+
+const FavouriteIcon = (props: Props) => {
+    const iconClass = cx(
+        'favouriteIcon',
+        props.className,
+        {
+            active: props.active
+        },
+    )
+
+    return (
+        <TransparentButton
+            className={iconClass}
+            onClick={props.onChange}
+        >
+            <FontAwesomeIcon icon={faHeart} />
+        </TransparentButton>
+    )
+}
+
+export default FavouriteIcon
