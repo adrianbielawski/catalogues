@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import icon from 'assets/img/icon.svg'
-import { faCog, faFolderOpen, faSignInAlt, faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faFolderOpen, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-regular-svg-icons'
 import styles from './header.scss'
 //Types
@@ -13,8 +13,8 @@ import { LOG_OUT } from 'store/slices/authSlices/authSlices'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //custom components
 import Nav from '../nav/nav'
-import UserImage from '../user-image/userImage'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
+import Avatar from '../avatar/avatar'
 
 const contextValue = {
     show: false,
@@ -46,7 +46,11 @@ const Header = () => {
                     children: catalogues.authUser.favouriteCatalogues.map(c => ({
                         id: c.name,
                         title: c.name,
-                        faIcon: faFolderOpen,
+                        icon: <Avatar
+                            className={styles.catalogueImage}
+                            placeholderIcon={faFolderOpen}
+                            url={c.imageThumbnail}
+                        />,
                         url: `/${user!.username}/catalogues/${c.slug}`,
                     })),
                 }
@@ -66,12 +70,11 @@ const Header = () => {
         {
             id: 'User',
             title: user.username,
-            icon: (
-                <UserImage
-                    className={styles.userImage}
-                    url={user?.imageThumbnail}
-                />
-            ),
+            icon: <Avatar
+                className={styles.userImage}
+                placeholderIcon={faUser}
+                url={user?.imageThumbnail}
+            />,
             children: [
                 {
                     id: 'My account',

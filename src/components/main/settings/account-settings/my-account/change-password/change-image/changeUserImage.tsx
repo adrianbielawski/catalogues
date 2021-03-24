@@ -1,11 +1,12 @@
 import React, { useRef } from 'react'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 import styles from './changeUserImage.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { POST_USER_IMAGE } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
 //Custom components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
-import UserImage from 'components/global-components/user-image/userImage'
+import Avatar from 'components/global-components/avatar/avatar'
 import Loader from 'components/global-components/loader/loader'
 
 const ChangeUserImage = () => {
@@ -34,9 +35,10 @@ const ChangeUserImage = () => {
                     ? (
                         <Loader size={35} />
                     ) : (
-                        <UserImage
-                            url={auth.user!.imageThumbnail}
+                        <Avatar
+                            placeholderIcon={faUser}
                             className={styles.image}
+                            url={auth.user!.imageThumbnail}
                         />
                     )
                 }

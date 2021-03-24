@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
+import { faUser } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import classNames from 'classnames/bind'
 import styles from './comment.scss'
@@ -8,7 +9,7 @@ import { DeserializedItemComment, LocationState } from 'src/globalTypes'
 //Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
 //Custom components
-import UserImage from 'components/global-components/user-image/userImage'
+import Avatar from 'components/global-components/avatar/avatar'
 import CommentChildren from './comment-children/commentChildren'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
@@ -88,9 +89,10 @@ const Comment: React.ForwardRefRenderFunction<
         >
             <div className={styles.parent}>
                 <div className={styles.commentContent}>
-                    <UserImage
-                        url={props.comment.createdBy.imageThumbnail}
+                    <Avatar
+                        placeholderIcon={faUser}
                         className={styles.userImage}
+                        url={props.comment.createdBy.imageThumbnail}
                     />
                     <p className={wrapperClass}>
                         <span

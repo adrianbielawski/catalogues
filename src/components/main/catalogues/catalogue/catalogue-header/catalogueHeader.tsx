@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
+import { faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueHeader.scss'
 //Types
@@ -13,7 +13,7 @@ import {
     ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE
 } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //custom components
-import UserImage from 'components/global-components/user-image/userImage'
+import Avatar from 'components/global-components/avatar/avatar'
 import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 
@@ -76,7 +76,8 @@ const CatalogueHeader = (props: Props) => {
             id: 'User',
             title: currentUser.user!.username,
             icon: (
-                <UserImage
+                <Avatar
+                    placeholderIcon={faUser}
                     className={styles.userImage}
                     url={currentUser.user?.imageThumbnail}
                 />
