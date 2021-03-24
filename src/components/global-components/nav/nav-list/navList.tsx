@@ -83,6 +83,10 @@ const NavList = (props: Props) => {
 
     const height = app.screenWidth.is640OrLess ? app.screenHeight - 44 : 'auto'
 
+    if (listId) {
+        console.log(getItems() || 'sdf')
+    }
+
     return (
         <div>
             <AnimateHeight
@@ -105,8 +109,15 @@ const NavList = (props: Props) => {
                             />
                             <p>{props.item.title}</p>
                         </div>
-                        <ul className={styles.list}>
-                            {getItems()}
+                        <ul>
+                            {props.item.children.length
+                                ? getItems()
+                                : (
+                                    <p className={styles.noContent}>
+                                        No content
+                                    </p>
+                                )
+                            }
                         </ul>
                     </div>
                 ) : (
