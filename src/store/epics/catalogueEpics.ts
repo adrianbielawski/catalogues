@@ -243,16 +243,22 @@ export const fetchCataloguesEpic = (action$: Observable<Action>, state$: Observa
     ))
 )
 
-export const fetchUserCataloguesEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
-    filter(actions.FETCH_AUTH_USER_CATALOGUES.match),
+export const fetchAuthUserDataEpic = (action$: Observable<Action>, state$: Observable<RootState>) => action$.pipe(
+    filter(actions.FETCH_AUTH_USER_DATA.match),
     withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
     switchMap(([_, id]) => concat(
-        of(actions.FETCH_AUTH_USER_CATALOGUES_START()),
-        axiosInstance$.get('/catalogues/', {
-            params: { created_by: id }
-        }).pipe(
-            map(response => actions.FETCH_AUTH_USER_CATALOGUES_SUCCESS(response.data)),
-            catchError(() => of(actions.FETCH_AUTH_USER_CATALOGUES_FAILURE()))
+        of(actions.FETCH_AUTH_USER_DATA_START()),
+        forkJoin([
+            axiosInstance$.get('/catalogues/', {
+                params: { created_by: id }
+            }),
+            axiosInstance$.get(`/catalogues/favourites/`)
+        ]).pipe(
+            map((response) => actions.FETCH_AUTH_USER_DATA_SUCCESS({
+                catalogues: response[0].data,
+                favCatalogues: response[1].data,
+            })),
+            catchError(() => of(actions.FETCH_AUTH_USER_DATA_FAILURE()))
         )
     ))
 )
@@ -371,6 +377,49 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => merge(
         ))
 }))
 
+export const addCatalogueToFavouritesEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.ADD_CATALOGUE_TO_FAVOURITE.match),
+    switchMap(action =>
+        axiosInstance$.put(`/catalogues/${action.payload}/favourite/`, {
+            is_favourite: true
+        }).pipe(
+            map(() => actions.ADD_CATALOGUE_TO_FAVOURITE_SUCCESS()),
+            catchError(() =>
+                of(actions.ADD_CATALOGUE_TO_FAVOURITE_FAILURE(action.payload))
+            )
+        )
+    )
+)
+
+export const deleteItemFromFavouriteEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.DELETE_CATALOGUE_FROM_FAVOURITE.match),
+    switchMap(action =>
+        axiosInstance$.delete(`/catalogues/${action.payload}/favourite/`).pipe(
+            map(() => actions.DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS()),
+            catchError(() => of(actions.DELETE_CATALOGUE_FROM_FAVOURITE_FAILURE(action.payload)))
+        )
+    )
+)
+
+export const refreshFavouriteCataloguesEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS.match)),
+    action$.pipe(filter(actions.ADD_CATALOGUE_TO_FAVOURITE_SUCCESS.match)),
+).pipe(
+    map(() => actions.FETCH_FAVOURITE_CATALOGUES())
+)
+
+export const fetchFavouriteCataloguesEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
+    filter(actions.FETCH_FAVOURITE_CATALOGUES.match),
+    switchMap(() => concat(
+        axiosInstance$.get(`/catalogues/favourites/`).pipe(
+            map(response => actions.FETCH_FAVOURITE_CATALOGUES_SUCCESS(response.data)),
+        )
+    ))
+)
+
 export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
@@ -386,11 +435,15 @@ export const cataloguesEpics = combineEpics(
     createCatalogueFieldEpic,
     refreshCatalogueEpic,
     fetchCataloguesEpic,
-    fetchUserCataloguesEpic,
+    fetchAuthUserDataEpic,
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
     fetchFieldChoicesEpic,
     fetchFieldsChoicesEpic,
+    addCatalogueToFavouritesEpic,
+    deleteItemFromFavouriteEpic,
+    refreshFavouriteCataloguesEpic,
+    fetchFavouriteCataloguesEpic,
 )

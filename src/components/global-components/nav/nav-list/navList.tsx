@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import AnimateHeight from 'react-animate-height'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './navList.scss'
 //Types
@@ -27,7 +29,14 @@ const NavList = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
     const routerContext = useContext(RouterContext)
-    const { show, listId, closeList } = useContext(NavContext)
+    const {
+        show,
+        listId,
+        nestedListId,
+        closeList,
+        showNestedList,
+        removeNestedListId,
+    } = useContext(NavContext)
     const app = useTypedSelector(state => state.app)
 
     const getItems = () => props.item.children.map(item => {
@@ -44,6 +53,12 @@ const NavList = (props: Props) => {
                     }
                 })
             }
+
+            if ('children' in item) {
+                showNestedList(item.id)
+                return
+            }
+
             closeList()
         }
 
@@ -68,6 +83,10 @@ const NavList = (props: Props) => {
 
     const height = app.screenWidth.is640OrLess ? app.screenHeight - 44 : 'auto'
 
+    if (listId) {
+        console.log(getItems() || 'sdf')
+    }
+
     return (
         <div>
             <AnimateHeight
@@ -77,14 +96,28 @@ const NavList = (props: Props) => {
                 {listId ? (
                     <div>
                         <div className={styles.listHeader}>
+                            {nestedListId !== null && (
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    className={styles.goBack}
+                                    onClick={removeNestedListId}
+                                />
+                            )}
                             <ItemIcon
                                 className={styles.icon}
                                 item={props.item}
                             />
                             <p>{props.item.title}</p>
                         </div>
-                        <ul className={styles.list}>
-                            {getItems()}
+                        <ul>
+                            {props.item.children.length
+                                ? getItems()
+                                : (
+                                    <p className={styles.noContent}>
+                                        No content
+                                    </p>
+                                )
+                            }
                         </ul>
                     </div>
                 ) : (

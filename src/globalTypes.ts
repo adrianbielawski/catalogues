@@ -72,7 +72,7 @@ export interface DeserializedItemsRanges {
 
 export interface Catalogue {
     id: number,
-    created_by: number,
+    created_by: User,
     default: boolean,
     public: boolean,
     name: string,
@@ -83,6 +83,7 @@ export interface Catalogue {
     },
     image: string,
     image_thumbnail: string,
+    is_favourite: boolean,
 }
 
 export interface CataloguePermisions {
@@ -95,7 +96,7 @@ export interface DeserializedCataloguePermisions {
 
 export interface DeserializedCatalogue {
     id: number,
-    createdBy: number,
+    createdBy: DeserializedUser,
     default: boolean,
     public: boolean,
     name: string,
@@ -105,6 +106,7 @@ export interface DeserializedCatalogue {
     fields: DeserializedField[],
     image: string,
     imageThumbnail: string,
+    isFavourite: boolean,
     fetchingFields: boolean,
     fetchingFieldsChoices: boolean,
     isEditingCatalogueName: boolean,
@@ -217,7 +219,7 @@ export interface DeserializedCommentsData extends DeserializedListData<Deseriali
 
 export interface Item {
     id: number,
-    created_by: number,
+    created_by: User,
     created_at: string,
     modified_at: string,
     catalogue_id: number,
@@ -230,7 +232,7 @@ export interface Item {
 
 export interface DeserializedItem {
     id: number,
-    createdBy: number | null,
+    createdBy: DeserializedUser,
     createdAt: string,
     modifiedAt: string,
     catalogueId: number,

@@ -51,17 +51,18 @@ export const fetchCataloguesReducers = {
     },
 }
 
-export const fetchAuthUserCataloguesReducers = {
-    FETCH_AUTH_USER_CATALOGUES(state: State) { },
-    FETCH_AUTH_USER_CATALOGUES_START(state: State) {
-        state.authUser.fetchingCatalogues = true
+export const fetchAuthUserDataReducers = {
+    FETCH_AUTH_USER_DATA(state: State) { },
+    FETCH_AUTH_USER_DATA_START(state: State) {
+        state.authUser.fetchingData = true
     },
-    FETCH_AUTH_USER_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
-        state.authUser.catalogues = action.payload.map(catalogueDeserializer)
-        state.authUser.fetchingCatalogues = false
+    FETCH_AUTH_USER_DATA_SUCCESS(state: State, action: PayloadAction<T.FetchAuthUserDataSuccessPayload>) {
+        state.authUser.catalogues = action.payload.catalogues.map(catalogueDeserializer)
+        state.authUser.favouriteCatalogues = action.payload.favCatalogues.map(catalogueDeserializer)
+        state.authUser.fetchingData = false
     },
-    FETCH_AUTH_USER_CATALOGUES_FAILURE(state: State) {
-        state.authUser.fetchingCatalogues = false
+    FETCH_AUTH_USER_DATA_FAILURE(state: State) {
+        state.authUser.fetchingData = false
     },
 }
 
@@ -180,5 +181,44 @@ export const deleteCatalogueReducers = {
             title: 'Network error',
             message: 'Something went wrong. Plaese try again.',
         }
+    },
+}
+
+export const addCatalogueToFavouriteReducers = {
+    ADD_CATALOGUE_TO_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = true
+    },
+    ADD_CATALOGUE_TO_FAVOURITE_SUCCESS(state: State) { },
+    ADD_CATALOGUE_TO_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = false
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
+
+export const deleteCatalogueFromFavouriteReducers = {
+    DELETE_CATALOGUE_FROM_FAVOURITE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = false
+    },
+    DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS(state: State) { },
+    DELETE_CATALOGUE_FROM_FAVOURITE_FAILURE(state: State, action: PayloadAction<number>) {
+        const catalogue = getCatalogueById(state, action.payload)
+        catalogue.isFavourite = true
+        catalogue.catalogueError = {
+            title: 'Network error',
+            message: 'Something went wrong. Plaese try again.',
+        }
+    },
+}
+
+export const refreshFavouriteCataloguesReducers = {
+    FETCH_FAVOURITE_CATALOGUES(state: State) { },
+    FETCH_FAVOURITE_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
+        state.authUser.favouriteCatalogues = action.payload.map(catalogueDeserializer)
     },
 }

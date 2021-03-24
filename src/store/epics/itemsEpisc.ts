@@ -168,11 +168,11 @@ export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pip
 export const addItemToFavouriteEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.ADD_ITEM_TO_FAVOURITE.match),
     switchMap(action =>
-        axiosInstance$.put(`/items/${action.payload.itemId}/favourite/`, {
-            is_favourite: action.payload.isFavourite
+        axiosInstance$.put(`/items/${action.payload}/favourite/`, {
+            is_favourite: true,
         }).pipe(
             map(() => actions.ADD_ITEM_TO_FAVOURITE_SUCCESS()),
-            catchError(() => of(actions.ADD_ITEM_TO_FAVOURITE_FAILURE()))
+            catchError(() => of(actions.ADD_ITEM_TO_FAVOURITE_FAILURE(action.payload)))
         )
     )
 )
@@ -182,7 +182,7 @@ export const deleteItemFromFavouriteEpic = (action$: Observable<Action>) => acti
     switchMap(action =>
         axiosInstance$.delete(`/items/${action.payload}/favourite/`).pipe(
             map(() => actions.DELETE_ITEM_FROM_FAVOURITE_SUCCESS()),
-            catchError(() => of(actions.DELETE_ITEM_FROM_FAVOURITE_FAILURE()))
+            catchError(() => of(actions.DELETE_ITEM_FROM_FAVOURITE_FAILURE(action.payload)))
         )
     )
 )

@@ -9,7 +9,7 @@ import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext 
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
-import { FETCH_AUTH_USER_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { FETCH_AUTH_USER_DATA } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import DeprecatedHeader from 'components/global-components/deprecated-header/header'
 import Catalogues from './catalogues/catalogues'
@@ -37,7 +37,7 @@ const Main = (props: HydratedRouteComponentProps) => {
         if (!user?.id) {
             return
         }
-        dispatch(FETCH_AUTH_USER_CATALOGUES())
+        dispatch(FETCH_AUTH_USER_DATA())
     }, [user])
 
     const handleCloseMessage = () => {
@@ -47,7 +47,7 @@ const Main = (props: HydratedRouteComponentProps) => {
 
     const currentUserError = currentUser.currentUserError
 
-    if (!currentUser.user?.username) {
+    if (!currentUser.user?.username || currentUser.user?.username !== username) {
         return null
     }
 

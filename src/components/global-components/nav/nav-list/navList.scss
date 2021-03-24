@@ -20,6 +20,12 @@
         height: 50px;
         border-bottom: 1px solid $lightGrey;
         padding: 5px;
+        .goBack {
+            color: $grey;
+            font-size: 1.3em;
+            margin-right: 10px;
+            cursor: pointer;
+        }
         p {
             font-size: 1.3em;
             font-weight: 700;
@@ -35,6 +41,12 @@
             margin-left: 10px;
             font-size: 1.2em;
         }
+    }
+    .noContent {
+        margin: 10px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.2em;
     }
 }
 

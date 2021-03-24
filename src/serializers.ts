@@ -26,7 +26,7 @@ export const cataloguePermissionsDeserializer = (permissions: T.CataloguePermisi
 
 export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCatalogue => ({
     id: catalogue.id,
-    createdBy: catalogue.created_by,
+    createdBy: userDeserializer(catalogue.created_by),
     default: catalogue.default,
     public: catalogue.public,
     name: catalogue.name,
@@ -36,6 +36,7 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
     fields: [],
     image: catalogue.image,
     imageThumbnail: catalogue.image_thumbnail,
+    isFavourite: catalogue.is_favourite,
     fetchingFields: true,
     fetchingFieldsChoices: true,
     isEditingCatalogueName: false,
@@ -115,7 +116,7 @@ export const itemCommentDeserializer = (comment: T.ItemCommentParent) => ({
 
 export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     id: item.id,
-    createdBy: item.created_by,
+    createdBy: userDeserializer(item.created_by),
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,

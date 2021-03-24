@@ -2,7 +2,7 @@ import React, { ReactNode, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import styles from './nav.scss'
 //Types
-import { IconProp } from '@fortawesome/fontawesome-svg-core'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { LocationState } from 'src/globalTypes'
 //Router
 import { RouterContext, useUrlBuilder } from 'src/router'
@@ -25,7 +25,7 @@ export type ItemWithOnClickAndIcon = CommonItem & {
 
 export type ItemWithOnClickAndFaIcon = CommonItem & {
     icon?: never,
-    faIcon: IconProp,
+    faIcon: IconDefinition,
     onClick?: () => void,
 }
 
@@ -41,7 +41,7 @@ export type ItemWithUrlAndIcon = CommonItem & {
 
 export type ItemWithUrlAndFaIcon = CommonItem & {
     icon?: never,
-    faIcon: IconProp,
+    faIcon: IconDefinition,
     url: string,
     children?: never,
     onClick?: never,
@@ -58,7 +58,7 @@ type ItemWithChildrenAndIcon = CommonItem & {
 
 type ItemWithChildrenAndFaIcon = CommonItem & {
     icon?: never,
-    faIcon: IconProp,
+    faIcon: IconDefinition,
     url?: never,
     children: (ItemWithUrl | ItemWithOnClick)[],
 }
@@ -78,10 +78,18 @@ const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
     const routerContext = useContext(RouterContext)
-    const { show, listId, showList, closeList } = useContext(NavContext)
+    const { show, listId, nestedListId, showList, closeList } = useContext(NavContext)
     const buildUrl = useUrlBuilder()
 
-    const getItemById = props.items.filter(i => i.id === listId)[0]
+    const getItemById = () => {
+        const item = props.items.filter(i => i.id === listId)[0]
+
+        if (nestedListId) {
+            return (item as ItemWithChildren).children.filter(i => i.id === nestedListId)[0]
+        }
+
+        return item
+    }
 
     const items = props.items.map(item => {
         const handleClick = () => {
@@ -122,7 +130,7 @@ const Nav = (props: Props) => {
             </ul>
             <NavList
                 show={show}
-                item={getItemById as ItemWithChildren}
+                item={getItemById() as ItemWithChildren}
                 listOnLeft={props.listOnLeft}
             />
         </nav>

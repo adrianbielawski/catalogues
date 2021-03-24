@@ -1,26 +1,28 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './userImage.scss'
-import { faUser } from '@fortawesome/free-solid-svg-icons'
+import styles from './avatar.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { faImage } from '@fortawesome/free-regular-svg-icons'
 
 const BASE_URL = process.env.API_URL
 
 type Props = {
     url?: string,
+    placeholderIcon?: IconDefinition,
     className: string,
 }
 
 const cx = classNames.bind(styles)
 
-const UserImage = (props: Props) => {
-    const userImageClass = cx(
-        'userImage',
+const Avatar = (props: Props) => {
+    const avatarClass = cx(
+        'avatar',
         props.className,
     )
 
     return (
-        <div className={userImageClass}>
+        <div className={avatarClass}>
             {props.url?.length
                 ? (
                     <img
@@ -30,7 +32,7 @@ const UserImage = (props: Props) => {
                 )
                 : (
                     <FontAwesomeIcon
-                        icon={faUser}
+                        icon={props.placeholderIcon || faImage}
                         className={styles.image}
                     />
                 )
@@ -39,4 +41,4 @@ const UserImage = (props: Props) => {
     )
 }
 
-export default UserImage
+export default Avatar

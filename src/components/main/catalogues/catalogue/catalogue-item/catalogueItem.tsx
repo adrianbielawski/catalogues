@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './catalogueItem.scss'
 //Redux
-import { useTypedSelector } from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
@@ -18,7 +18,8 @@ import ItemData from './item-data/itemData'
 import ItemRating from './item-rating/itemRating'
 import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
-import FavouriteItemIcon from './favourite-item-icon/favouriteItemIcon'
+import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
+import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 
 type Props = {
     item: DeserializedItem
@@ -28,6 +29,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
     Props
 > = (props, ref) => {
+    const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
     const is800OrLess = useTypedSelector(state => state.app.screenWidth.is800OrLess)
@@ -65,6 +67,14 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         setShowImagesPreview(!showImagesPreview)
     }
 
+    const handleFavouriteChange = () => {
+        if (!props.item.isFavourite) {
+            dispatch(ADD_ITEM_TO_FAVOURITE(props.item.id))
+        } else {
+            dispatch(DELETE_ITEM_FROM_FAVOURITE(props.item.id))
+        }
+    }
+
     const imagesCarouselWidth = !is800OrLess ? 200 : carouselWrapperWidth
     const imagesCarouselHeight = !is800OrLess ? 200 : undefined
     const isImagesPreviewAllowed = item.images.length && !is800OrLess
@@ -97,9 +107,10 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             <div className={styles.ratingWrapper}>
                                 <ItemRating item={item} />
                                 {item.permissions.canAddToFavourites && (
-                                    <FavouriteItemIcon
-                                        itemId={item.id}
-                                        isFavourite={item.isFavourite}
+                                    <FavouriteIcon
+                                        className={styles.favouriteIcon}
+                                        active={item.isFavourite}
+                                        onChange={handleFavouriteChange}
                                     />
                                 )}
                                 {item.permissions.canEdit &&
