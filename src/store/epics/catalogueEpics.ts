@@ -401,6 +401,25 @@ export const deleteItemFromFavouriteEpic = (action$: Observable<Action>) => acti
     )
 )
 
+export const refreshFavouriteCataloguesEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.DELETE_CATALOGUE_FROM_FAVOURITE_SUCCESS.match)),
+    action$.pipe(filter(actions.ADD_CATALOGUE_TO_FAVOURITE_SUCCESS.match)),
+).pipe(
+    map(() => actions.FETCH_FAVOURITE_CATALOGUES())
+)
+
+export const fetchFavouriteCataloguesEpic = (
+    action$: Observable<Action>,
+    state$: Observable<RootState>
+) => action$.pipe(
+    filter(actions.FETCH_FAVOURITE_CATALOGUES.match),
+    switchMap(() => concat(
+        axiosInstance$.get(`/catalogues/favourites/`).pipe(
+            map(response => actions.FETCH_FAVOURITE_CATALOGUES_SUCCESS(response.data)),
+        )
+    ))
+)
+
 export const cataloguesEpics = combineEpics(
     createCatalogueEpic,
     changeCatalogueNameEpic,
@@ -425,4 +444,6 @@ export const cataloguesEpics = combineEpics(
     fetchFieldsChoicesEpic,
     addCatalogueToFavouritesEpic,
     deleteItemFromFavouriteEpic,
+    refreshFavouriteCataloguesEpic,
+    fetchFavouriteCataloguesEpic,
 )

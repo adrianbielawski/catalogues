@@ -215,3 +215,10 @@ export const deleteCatalogueFromFavouriteReducers = {
         }
     },
 }
+
+export const refreshFavouriteCataloguesReducers = {
+    FETCH_FAVOURITE_CATALOGUES(state: State) { },
+    FETCH_FAVOURITE_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
+        state.authUser.favouriteCatalogues = action.payload.map(catalogueDeserializer)
+    },
+}
