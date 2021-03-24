@@ -3,7 +3,7 @@ import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './main.scss'
 //Custom hooks
-import { useSwitch } from 'src/customHooks'
+import { useSwitches } from 'src/customHooks'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
@@ -23,7 +23,7 @@ const Main = (props: HydratedRouteComponentProps) => {
     const app = useTypedSelector(state => state.app)
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
-    const isSwitchOn = useSwitch('NAVIGATION_REDESIGN')
+    const switches = useSwitches(['NAVIGATION_REDESIGN'])
     const username = props.match.params.username
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const Main = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.main} style={{ minHeight: app.screenHeight }}>
-            {isSwitchOn
+            {switches[0]
                 ? null
                 : <DeprecatedHeader />
             }

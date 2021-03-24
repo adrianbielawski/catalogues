@@ -137,8 +137,7 @@ export const useElementInView = (
     return elementRef
 }
 
-export const useSwitch = (switchName: string) => {
+export const useSwitches = (switches: string[]) => {
     const app = useTypedSelector(state => state.app)
-    
-    return app.switches.find(s => s === switchName)
+    return switches.map(s => app.switches.find(switchOn => switchOn === s))
 }

@@ -5,7 +5,8 @@ import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//Utils
+//Custom hooks and Utils
+import { useSwitches } from 'src/customHooks'
 import buildFilters from '../filter-bar-utils/filtersBuilder'
 import { scrollTop } from 'src/utils'
 //Custom components
@@ -13,14 +14,13 @@ import CatalogueItems from './catalogue-items/catalogueItems'
 import FiltersBar from 'components/global-components/filters-bar/filtersBar'
 import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
 import CatalogueHeader from './catalogue-header/catalogueHeader'
-import { useSwitch } from 'src/customHooks'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
     const { filtersContext } = useFiltersBarContext()
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
-    const isSwitchOn = useSwitch('NAVIGATION_REDESIGN')
+    const switches = useSwitches(['NAVIGATION_REDESIGN'])
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.catalogue}>
-            {(isSwitchOn && user?.id !== currentUser.user?.id) && (
+            {(switches[0] && user?.id !== currentUser.user?.id) && (
                 <CatalogueHeader
                     className={styles.header}
                     catalogue={catalogue}
