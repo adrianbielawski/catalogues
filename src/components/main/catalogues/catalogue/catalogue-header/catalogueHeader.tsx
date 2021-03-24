@@ -22,6 +22,7 @@ const BASE_URL = process.env.API_URL
 const contextValue = {
     show: false,
     listId: null,
+    nestedListId: null,
 }
 
 type Props = {

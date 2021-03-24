@@ -29,10 +29,18 @@ const NavContextProvider = (props: Props) => {
         })
     }
 
+    const showNestedList = (nestedListId: string | number) => {
+        dispatch({
+            type: T.SHOW_NESTED_LIST,
+            nestedListId,
+        })
+    }
+
     const context = {
         ...state,
         showList,
         closeList,
+        showNestedList,
     }
 
     return (

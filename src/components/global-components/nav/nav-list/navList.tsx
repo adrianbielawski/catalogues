@@ -27,7 +27,7 @@ const NavList = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
     const routerContext = useContext(RouterContext)
-    const { show, listId, closeList } = useContext(NavContext)
+    const { show, listId, closeList, showNestedList } = useContext(NavContext)
     const app = useTypedSelector(state => state.app)
 
     const getItems = () => props.item.children.map(item => {
@@ -44,6 +44,12 @@ const NavList = (props: Props) => {
                     }
                 })
             }
+
+            if ('children' in item) {
+                showNestedList(item.id)
+                return
+            }
+
             closeList()
         }
 
