@@ -46,14 +46,6 @@
         }
     }
 
-    .fullScreenButton {
-        top: 10px;
-        right: 10px;
-        padding: 10px;
-        font-size: 20px;
-        border-radius: 50%;
-    }
-
     .prev,
     .next {
         top: 50%;
@@ -149,14 +141,16 @@
                     opacity: 0.9;
                 }
             }
+            .primaryImageStar {
+                opacity: 1;
+            }
         }
     }
 }
-@media (hover: none) {
+@media (hover: hover) and (pointer: fine) {
     .carousel {
         &:hover .prev,
-        &:hover .next,
-        &:hover .fullScreenButton {
+        &:hover .next {
             opacity: .75;
         }
         .prev,

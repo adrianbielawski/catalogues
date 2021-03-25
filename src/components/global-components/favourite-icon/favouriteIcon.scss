@@ -16,13 +16,11 @@
     }
 }
 
-@media (hover: none) {
-    .favouriteItemIcon {
-        &:hover {
-            path {
-                stroke: $red;
-                fill: $red;
-            }
+@media (hover: hover) and (pointer: fine) {
+    .favouriteIcon {
+        &:hover path {
+            stroke: $red;
+            fill: $red;
         }
     }
 }

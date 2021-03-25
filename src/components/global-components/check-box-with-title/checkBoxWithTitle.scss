@@ -10,7 +10,7 @@
         white-space: break-spaces;
     }
 }
-@media (hover: none) {
+@media (hover: hover) and (pointer: fine) {
     .checkBoxWithTitle {
         &:hover {
             color: $lightOrange;

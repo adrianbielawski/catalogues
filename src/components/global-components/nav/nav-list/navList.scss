@@ -59,3 +59,13 @@
         top: 45px;
     }
 }
+
+@media (hover: hover) and (pointer: fine) {
+    .navList {
+        .listHeader {
+            .goBack:hover {
+                color: $orange;
+            }
+        }
+    }
+}

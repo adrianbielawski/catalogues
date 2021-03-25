@@ -6,7 +6,7 @@
     @include resetTapHighlight;
 }
 
-@media (hover: none) {
+@media (hover: hover) and (pointer: fine) {
     .navItem {
         &:hover,
         &:hover div,

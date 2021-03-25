@@ -23,7 +23,7 @@
 	}
 }
 
-@media (hover: none) {
+@media (hover: hover) {
 	.stars {
 		&:hover path {
 			stroke: $orange;

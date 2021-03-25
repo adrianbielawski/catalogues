@@ -28,7 +28,7 @@
 .loader {
     margin: 50px auto;
 }
-@media (hover: none) {
+@media (hover: hover) and (pointer: fine) {
     .catalogues {
         .authButton {
             &:hover {

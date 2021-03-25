@@ -16,7 +16,7 @@
         margin-left: 5px;
     }
 }
-@media (hover: none) {
+@media (hover: hover) and (pointer: fine) {
     .button {
         &:hover {
             color: $lightOrange;
