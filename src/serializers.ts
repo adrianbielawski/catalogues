@@ -85,7 +85,7 @@ export const itemPermissionsDeserializer = (permissions: T.ItemPermisions): T.De
 })
 
 export const itemRatingDeserializer = (rating: T.ItemRating) => ({
-    average: rating.average,
+    average: Math.round((rating.average + Number.EPSILON) * 100) / 100,
     count: rating.count,
     currentUser: rating.current_user,
 })
