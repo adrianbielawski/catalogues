@@ -105,7 +105,7 @@ const CatalogueHeader = (props: Props) => {
         'header',
         props.className,
         {
-            hidable: smallViewport,
+            hideable: smallViewport,
             show: smallViewport && scrolledUp,
         }
     )
@@ -114,6 +114,7 @@ const CatalogueHeader = (props: Props) => {
         <NavContextProvider value={contextValue}>
             <div className={headerClass}>
                 <Nav
+                    className={styles.nav}
                     show={show}
                     items={NAV_ITEMS}
                     listOnLeft={true}

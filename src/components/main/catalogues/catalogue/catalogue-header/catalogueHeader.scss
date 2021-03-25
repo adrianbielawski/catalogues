@@ -13,16 +13,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    &.hidable {
+    &.hideable {
         top: 0;
         transition: all 0.3s ease-out;
     }
     &.show {
         top: 50px;
     }
+    .nav {
+        display: flex;
+        flex: 1;
+    }
     .catalogueName {
         display: flex;
         align-items: center;
+        justify-content: center;
+        flex: 3;
         div {
             display: flex;
             align-items: center;
@@ -52,6 +58,9 @@
         min-height: 35px;
     }
     .social {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
         margin-right: 5px;
         .favouriteIcon {
             font-size: 1.3em;
