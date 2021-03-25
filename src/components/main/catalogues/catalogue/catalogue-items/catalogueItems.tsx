@@ -11,7 +11,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom hooks
 import { useDelay, useElementInView } from 'src/customHooks'
-import useFiltersBarContext from 'components/global-components/filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
 //Utils
 import filtersBarValuesBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
 //Custom components
