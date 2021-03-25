@@ -20,7 +20,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const { filtersContext } = useFiltersBarContext()
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
-    const switches = useSwitches(['NAVIGATION_REDESIGN'])
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     const catalogue = props.match.params.catalogue!
 
     useEffect(() => {
@@ -40,7 +40,7 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.catalogue}>
-            {(switches[0] && user?.id !== currentUser.user?.id) && (
+            {(navigationRedesign && user?.id !== currentUser.user?.id) && (
                 <CatalogueHeader
                     className={styles.header}
                     catalogue={catalogue}

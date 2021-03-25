@@ -31,7 +31,7 @@ const Settings = () => {
     const app = useTypedSelector(state => state.app)
     const [showNav, setShowNav] = useState(false)
     const [showSideMenu, setShowSideMenu] = useState(false)
-    const switches = useSwitches(['NAVIGATION_REDESIGN'])
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
 
     const toggleNav = (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -108,7 +108,7 @@ const Settings = () => {
                 style={{ minHeight: `${minHeight}px` }}
                 ref={settingsRef}
             >
-                {switches[0]
+                {navigationRedesign
                     ? <Header />
                     : (
                     <DeprecatedNav

@@ -23,7 +23,7 @@ const Main = (props: HydratedRouteComponentProps) => {
     const app = useTypedSelector(state => state.app)
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
-    const switches = useSwitches(['NAVIGATION_REDESIGN'])
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     const username = props.match.params.username
 
     useEffect(() => {
@@ -55,7 +55,7 @@ const Main = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.main} style={{ minHeight: app.screenHeight }}>
-            {switches[0]
+            {navigationRedesign
                 ? null
                 : <DeprecatedHeader />
             }

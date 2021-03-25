@@ -13,11 +13,11 @@ import Header from 'components/global-components/header/header'
 
 const Auth = () => {
     const location = useLocation<LocationState>()
-    const switches = useSwitches(['NAVIGATION_REDESIGN'])
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     
     return (
         <div className={styles.auth}>
-            {switches[0]
+            {navigationRedesign
                 ? <Header />
                 : <DeprecatedHeader />
             }

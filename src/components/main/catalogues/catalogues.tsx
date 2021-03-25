@@ -39,7 +39,7 @@ const Catalogues = () => {
     const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
     const [showNav, setShowNav] = useState(false)
     const [showFilters, setShowFilters] = useState(false)
-    const switches = useSwitches(['NAVIGATION_REDESIGN'])
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
 
     useEffect(() => {
         if (fetchingCatalogues || firstRender) {
@@ -179,7 +179,7 @@ const Catalogues = () => {
                         style={{ minHeight: `${minHeight}px` }}
                         ref={cataloguesRef}
                     >
-                        {switches[0]
+                        {navigationRedesign
                             ? <Header />
                             : (
                                 <DeprecatedNav
