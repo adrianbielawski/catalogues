@@ -37,6 +37,7 @@ const CatalogueHeader = (props: Props) => {
     const dispatch = useAppDispatch()
     const { show } = useContext(NavContext)
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
+    const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
     const catalogues = useTypedSelector(state => state.catalogues)
     const [yOffset, setYOffset] = useState(0)
@@ -115,25 +116,38 @@ const CatalogueHeader = (props: Props) => {
         }
     )
 
+    const catalogueNameClass = cx(
+        'catalogueName',
+        {
+            noJustify: user?.id === currentUser.user?.id,
+        }
+    )
+
     return (
         <NavContextProvider value={contextValue}>
             <div className={headerClass}>
-                <Nav
-                    className={styles.nav}
-                    show={show}
-                    items={NAV_ITEMS}
-                    listOnLeft={true}
-                />
-                <div className={styles.catalogueName}>
-                    <Avatar
-                        className={styles.userImage}
-                        url={catalogueImage}
-                    />
+                {user?.id !== currentUser.user?.id &&
+                    <div className={styles.nav}>
+                        <Nav
+                            className={styles.nav}
+                            show={show}
+                            items={NAV_ITEMS}
+                            listOnLeft={true}
+                        />
+                    </div>
+                }
+                <div className={catalogueNameClass}>
+                    {catalogueImage &&
+                        <Avatar
+                            className={styles.userImage}
+                            url={catalogueImage}
+                        />
+                    }
                     <p>
                         {props.catalogue.name}
                     </p>
                 </div>
-                <div className={styles.social}>
+                <div className={styles.catalogueActions}>
                     {(smallViewport && props.catalogue.itemsRanges.date.min) &&
                         <TransparentButton
                             className={styles.filtersButton}
