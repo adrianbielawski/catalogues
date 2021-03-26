@@ -7,11 +7,11 @@
     .childrenWrapper {
         box-sizing: border-box;
         width: 250px;
-        max-height: calc(100vh - var(--top));
+        max-height: calc(100vh - 95px);
         overflow-y: scroll;
         @include scrollBar;
         position: sticky;
-        top: var(--top);
+        top: 95px;
     }
 }
 
@@ -23,7 +23,7 @@
         border-top: 1px solid $midLightGrey;
         bottom: 0;
         width: 100%;
-        height: calc(100vh - var(--top));
+        height: calc(100vh - 50px);
         overflow-y: scroll;
         z-index: 100;
         transition: all 0s;
@@ -58,6 +58,7 @@
         .childrenWrapper {
             background: #fff;
             z-index: 101;
+            max-height: calc(100vh - 50px);
             transition: all .2s ease-out;
             transform: translate(-100vw);
         }

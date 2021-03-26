@@ -7,7 +7,6 @@ type SlideDirection = 'right' | 'left'
 interface Props extends PropsWithChildren<any> {
     active: boolean,
     mobile: boolean,
-    top?: number,
     slideDirection?: SlideDirection,
     className?: string,
     childrenWrapperClassName?: string,
@@ -18,11 +17,10 @@ interface Props extends PropsWithChildren<any> {
 const defaultProps: Props = {
     active: false,
     mobile: false,
-    top: 0,
     slideDirection: 'left',
     className: '',
     childrenWrapperClassName: '',
-    onBackgroundClick: (e: React.MouseEvent) => null,
+    onBackgroundClick: () => null,
 }
 
 const cx = classNames.bind(styles)
@@ -66,9 +64,6 @@ const SideBar = (props: Props) => {
     return (
         <div
             className={sideBarClass}
-            style={{
-                '--top': `${props.top || 0}px`,
-            } as React.CSSProperties}
         >
             <div className={childrenWrapperClass} onClick={stopPropagation}>
                 {props.children}

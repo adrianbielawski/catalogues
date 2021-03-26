@@ -28,8 +28,6 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const deprecatedFiltersContext = useDeprecatedFiltersBarContext()
     const { filtersContext } = useFiltersBarContext()
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
-    const currentUser = useTypedSelector(state => state.currentUser)
-    const user = useTypedSelector(state => state.auth.user)
     const [showFilters, setShowFilters] = useState(false)
     const catalogue = props.match.params.catalogue!
 
@@ -75,8 +73,6 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         )
     }
 
-    const sideBarTop = smallViewport ? 50 : (user?.id !== currentUser.user?.id ? 95 : 50)
-
     return (
         <div className={styles.catalogue}>
             <CatalogueHeader
@@ -89,7 +85,6 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
                     <SideBar
                         active={showFilters}
                         mobile={smallViewport!}
-                        top={sideBarTop}
                         onBackgroundClick={toggleFiltersBar}
                     >
                         <div className={styles.filtersBar} >
