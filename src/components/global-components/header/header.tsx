@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import { faCog, faFolderOpen, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
-import { faHeart } from '@fortawesome/free-regular-svg-icons'
+import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import styles from './header.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
