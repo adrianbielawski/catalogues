@@ -26,7 +26,7 @@ const Sort = (props: Props) => {
 
     return (
         <div className={sortClass}>
-            <div className={styles.title}>Sort</div>
+            <p className={styles.title}>Sort</p>
             <ul>
                 {optionsComponents}
             </ul>

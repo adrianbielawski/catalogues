@@ -29,7 +29,7 @@ const Filters = (props: Props) => {
 
     return (
         <div className={filtersClass}>
-            <div className={styles.title}>Filters</div>
+            <p className={styles.title}>Filters</p>
             <ul>
                 {filters}
             </ul>
