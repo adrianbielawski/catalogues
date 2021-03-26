@@ -7,23 +7,29 @@ import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/catalogues
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks and Utils
 import { useSwitches } from 'src/customHooks'
-import buildFilters from '../filter-bar-utils/filtersBuilder'
 import { scrollTop } from 'src/utils'
-//Filter bar utils
-import { searchValue, sortValue, filtersValue, filtersBarValue } from '../filter-bar-utils/contextInitialValues'
+//Filters context
+import deprecatedBuildFilters from '../filter-bar-utils/filtersBuilder'
+import buildFilters from './filter-bar-utils/filtersBuilder'
+import useDeprecatedFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
 import DeprecatedFiltersBar from 'components/global-components/deprecated-filters-bar/filtersBar'
-import useFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
 import CatalogueHeader from './catalogue-header/catalogueHeader'
-import FiltersBarBulkContextProvider from 'components/global-components/deprecated-filters-bar/filtersBarBulkContextProvider'
+import SideBar from 'components/global-components/side-bar/sideBar'
+import Search from 'components/global-components/filters-bar/search/search'
+import Sort from 'components/global-components/filters-bar/sort/sort'
+import Filters from 'components/global-components/filters-bar/filters/filters'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
+    const deprecatedFiltersContext = useDeprecatedFiltersBarContext()
     const { filtersContext } = useFiltersBarContext()
+    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const currentUser = useTypedSelector(state => state.currentUser)
     const user = useTypedSelector(state => state.auth.user)
-    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     const [showFilters, setShowFilters] = useState(false)
     const catalogue = props.match.params.catalogue!
 
@@ -33,8 +39,13 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     useEffect(() => {
         if (!catalogue.fetchingFieldsChoices) {
-            const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
-            filtersContext.changeFilters(filters)
+            if (!navigationRedesign) {
+                const filters = deprecatedBuildFilters(catalogue.fields, catalogue.itemsRanges)
+                deprecatedFiltersContext.filtersContext.changeFilters(filters)
+            } else {
+                const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
+                filtersContext.changeFilters(filters)
+            }
         }
     }, [catalogue.fetchingFieldsChoices])
 

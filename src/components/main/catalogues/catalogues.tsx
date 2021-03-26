@@ -6,7 +6,8 @@ import styles from './catalogues.scss'
 import { LocationState } from 'src/globalTypes'
 import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
 //Context
-import FiltersBarBulkContextProvider from 'components/global-components/deprecated-filters-bar/filtersBarBulkContextProvider'
+import DeprecatedFiltersBarBulkContextProvider from 'components/global-components/deprecated-filters-bar/filtersBarBulkContextProvider'
+import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
@@ -23,6 +24,7 @@ import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import DeprecatedFiltersBar from 'components/global-components/deprecated-filters-bar/filtersBar'
 import Header from 'components/global-components/header/header'
+import { filtersBarInitialState } from './catalogue/filter-bar-utils/contextInitialValues'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
@@ -164,7 +166,7 @@ const Catalogues = () => {
 
     if (!navigationRedesign) {
         return (
-            <FiltersBarBulkContextProvider
+            <DeprecatedFiltersBarBulkContextProvider
                 searchValue={searchValue}
                 sortValue={sortValue}
                 filtersValue={filtersValue}
@@ -212,13 +214,16 @@ const Catalogues = () => {
                         </div>
                     )
                 }
-            </FiltersBarBulkContextProvider>
+            </DeprecatedFiltersBarBulkContextProvider>
         )
     }
 
 
     return (
-        fetchingCatalogues || firstRender || defaultCatalogue === null
+        <FiltersBarBulkContextProvider
+                values={filtersBarInitialState}
+            >
+        {fetchingCatalogues || firstRender || defaultCatalogue === null
             ? <Loader className={styles.loader} />
             : (
                 <div
@@ -250,7 +255,8 @@ const Catalogues = () => {
                         )
                     }
                 </div>
-            )
+            )}
+            </FiltersBarBulkContextProvider>
     )
 }
 

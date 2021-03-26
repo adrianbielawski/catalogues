@@ -1,0 +1,16 @@
+@import "global-styles/variables_and_mixins";
+
+.wrapper {
+    .selectAll {
+        margin-top: 5px;
+    }
+    .filterChoices {
+        margin-left: 5px;
+        max-height: 200px;
+        overflow-y: scroll;
+        @include scrollBar;
+    }
+    input {
+        border: none;
+    }
+}

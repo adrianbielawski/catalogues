@@ -10,18 +10,22 @@ import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/catalogues
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom hooks
-import { useDelay, useElementInView } from 'src/customHooks'
-import useFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
+import { useDelay, useElementInView, useSwitches } from 'src/customHooks'
+import useDeprecatedFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
+import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
-import filtersBarValuesBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
+import deprecatedFiltersBarValuesBuilder from 'components/main/catalogues/filter-bar-utils/filtersBarValuesBuilder'
+import filtersBarValuesBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/filtersBarValuesBuilder'
+import deprecatedQueryBuilder from 'components/main/catalogues/filter-bar-utils/queryBuilder'
+import queryBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/queryBuilder'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Button from 'components/global-components/button/button'
-import queryBuilder from 'components/main/catalogues/filter-bar-utils/queryBuilder'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
 import NewItemModal from './new-item-modal/newItemModal'
+import { scrollTop } from 'src/utils'
 
 type Props = {
     catalogueId: number,
@@ -36,6 +40,8 @@ const CatalogueItems = (props: Props) => {
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const itemsData = useTypedSelector(state => state.itemsData)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
+    const deprecatedFiltersBarContext = useDeprecatedFiltersBarContext()
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     const filtersBarContext = useFiltersBarContext()
     const delayCompleted = useDelay(itemsData.fetchingItems)
 
@@ -48,21 +54,39 @@ const CatalogueItems = (props: Props) => {
     const lastItemRef = useElementInView(handleIntersecting)
 
     useEffect(() => {
-        const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
+        if (!navigationRedesign) {
+            const parsedQuery = deprecatedFiltersBarValuesBuilder(deprecatedFiltersBarContext)
 
-        if (parsedQuery.searchValue) {
-            filtersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)
+            if (parsedQuery.searchValue) {
+                deprecatedFiltersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)
+            }
+
+            if (parsedQuery.orderingValue) {
+                deprecatedFiltersBarContext.sortContext.setSortValue(parsedQuery.orderingValue)
+            }
+
+            if (size(parsedQuery.filtersValue)) {
+                deprecatedFiltersBarContext.filtersContext.setSelectedFilters(parsedQuery.filtersValue)
+            }
+
+            deprecatedFiltersBarContext.filtersBar.initialize()
+        } else {
+            const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
+
+            if (parsedQuery.searchValue) {
+                filtersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)
+            }
+
+            if (parsedQuery.orderingValue) {
+                filtersBarContext.sortContext.setSortValue(parsedQuery.orderingValue)
+            }
+
+            if (size(parsedQuery.filtersValue)) {
+                filtersBarContext.filtersContext.setSelectedFilters(parsedQuery.filtersValue)
+            }
+
+            filtersBarContext.filtersBar.initialize()
         }
-
-        if (parsedQuery.orderingValue) {
-            filtersBarContext.sortContext.setSortValue(parsedQuery.orderingValue)
-        }
-
-        if (size(parsedQuery.filtersValue)) {
-            filtersBarContext.filtersContext.setSelectedFilters(parsedQuery.filtersValue)
-        }
-
-        filtersBarContext.filtersBar.initialize()
     }, [])
 
     useEffect(() => {
@@ -72,33 +96,64 @@ const CatalogueItems = (props: Props) => {
     }, [props.catalogueId])
 
     useEffect(() => {
-        if (!filtersBarContext.filtersBar.isInitialized) return
-        fetchItems(1)
+        if (!navigationRedesign) {
+            if (!deprecatedFiltersBarContext.filtersBar.isInitialized) return
+            fetchItems(1)
+        } else {
+            if (!filtersBarContext.filtersBar.isInitialized) return
+            fetchItems(1)
+        }
+        scrollTop()
     }, [
+        deprecatedFiltersBarContext.searchContext.search,
+        deprecatedFiltersBarContext.sortContext.selected,
+        deprecatedFiltersBarContext.filtersContext.selectedFilters,
+        deprecatedFiltersBarContext.filtersBar.isInitialized,
         filtersBarContext.searchContext.search,
         filtersBarContext.sortContext.selected,
         filtersBarContext.filtersContext.selectedFilters,
         filtersBarContext.filtersBar.isInitialized,
     ])
 
+
     const fetchItems = (pageNum?: number) => {
-        let page = 1
+        if (!navigationRedesign) {
+            let page = 1
 
-        if (itemsData.catalogueId === props.catalogueId) {
-            page = pageNum || itemsData.next || 1
+            if (itemsData.catalogueId === props.catalogueId) {
+                page = pageNum || itemsData.next || 1
+            }
+
+            const query = deprecatedQueryBuilder(deprecatedFiltersBarContext)
+
+            history.push({ search: query.query })
+
+            dispatch(FETCH_ITEMS({
+                catalogueId: props.catalogueId,
+                page,
+                search: query.search,
+                sort: query.sort,
+                filters: query.filters,
+            }))
+        } else {
+            let page = 1
+
+            if (itemsData.catalogueId === props.catalogueId) {
+                page = pageNum || itemsData.next || 1
+            }
+
+            const query = queryBuilder(filtersBarContext)
+
+            history.push({ search: query.query })
+
+            dispatch(FETCH_ITEMS({
+                catalogueId: props.catalogueId,
+                page,
+                search: query.search,
+                sort: query.sort,
+                filters: query.filters,
+            }))
         }
-
-        const query = queryBuilder(filtersBarContext)
-
-        history.push({ search: query.query })
-
-        dispatch(FETCH_ITEMS({
-            catalogueId: props.catalogueId,
-            page,
-            search: query.search,
-            sort: query.sort,
-            filters: query.filters,
-        }))
     }
 
     const handleMoreItemsClick = () => {
