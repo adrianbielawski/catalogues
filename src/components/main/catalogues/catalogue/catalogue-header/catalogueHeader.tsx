@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faFilter, faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueHeader.scss'
 //Types
@@ -16,8 +16,8 @@ import {
 import Avatar from 'components/global-components/avatar/avatar'
 import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
-
-const BASE_URL = process.env.API_URL
+import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const contextValue = {
     show: false,
@@ -28,6 +28,7 @@ const contextValue = {
 type Props = {
     catalogue: DeserializedCatalogue,
     className?: string,
+    toggleFiltersBar: (e: React.MouseEvent) => void,
 }
 
 const cx = classNames.bind(styles)
@@ -69,6 +70,10 @@ const CatalogueHeader = (props: Props) => {
         } else {
             dispatch(DELETE_CATALOGUE_FROM_FAVOURITE(props.catalogue.id))
         }
+    }
+
+    const handleFilterButtonClick = (e: React.MouseEvent) => {
+        props.toggleFiltersBar(e)
     }
 
     const NAV_ITEMS = [
@@ -129,6 +134,14 @@ const CatalogueHeader = (props: Props) => {
                     </p>
                 </div>
                 <div className={styles.social}>
+                    {(smallViewport && props.catalogue.itemsRanges.date.min) &&
+                        <TransparentButton
+                            className={styles.filtersButton}
+                            onClick={handleFilterButtonClick}
+                        >
+                            <FontAwesomeIcon icon={faFilter} />
+                        </TransparentButton>
+                    }
                     <FavouriteIcon
                         className={styles.favouriteIcon}
                         active={props.catalogue.isFavourite}

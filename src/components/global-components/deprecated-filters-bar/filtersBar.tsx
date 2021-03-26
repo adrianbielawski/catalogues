@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './filtersBar.scss'
 //Context
-import useFiltersBarContext from '../filters-bar/useFiltersBarContext'
+import useFiltersBarContext from './useFiltersBarContext'
 //Custom components
-import SideBar from 'components/global-components/side-bar/sideBar'
+import SideBar from 'components/global-components/deprecated-side-bar/sideBar'
 import Filters from './filters/filters'
 import Sort from './sort/sort'
 import Search from './search/search'

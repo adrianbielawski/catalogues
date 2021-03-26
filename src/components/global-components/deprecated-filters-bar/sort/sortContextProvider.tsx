@@ -7,6 +7,7 @@ import { SortInitialState, SortValue, CHANGE_SORT } from './sortTypes'
 type Props = {
     children: JSX.Element,
     value: SortInitialState,
+    onChange: (value: SortValue) => void,
 }
 
 const SortContextProvider = (props: Props) => {
@@ -17,6 +18,7 @@ const SortContextProvider = (props: Props) => {
     const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const setSortValue = (value: SortValue) => {
+        props.onChange(value)
         dispatch({
             type: CHANGE_SORT,
             value,

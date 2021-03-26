@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './sideMenu.scss'
 //Custom components
 import SideMenuItem from './side-menu-item/sideMenuItem'
-import SideBar from 'components/global-components/side-bar/sideBar'
+import SideBar from 'components/global-components/deprecated-side-bar/sideBar'
 
 type ItemType = {
     title: string,

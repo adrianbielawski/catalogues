@@ -1,0 +1,56 @@
+@import "global-styles/variables_and_mixins";
+
+.sideBarWrapper {
+    box-sizing: border-box;
+    min-width: 250px;
+    background: $lightGrey;
+    .sideBar {
+        box-sizing: border-box;
+        min-width: 250px;
+        max-height: calc(100vh - 50px);
+        background: $lightGrey;
+        overflow-y: scroll;
+        @include scrollBar;
+        position: sticky;
+        top: 50px;
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .sideBarWrapper {
+        background: transparent;
+        position: absolute;
+        display: flex;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+        transition: left 0s;
+        transition-delay: .2s;
+        .sideBar {
+            z-index: 1001;
+            transition: all .2s ease-out;
+            transform: translate(-100%);
+        }
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: $grey;
+            opacity: 0;
+            transition: opacity .2s linear;
+        }
+        &.active {
+            left: 0;
+            transition: all 0s;
+            transition-delay: 0s;
+            .sideBar {
+                transform: translate(0);
+                transition: all .2s ease-out;
+            }
+            .background {
+                opacity: .2;
+            }
+        }
+    }
+}

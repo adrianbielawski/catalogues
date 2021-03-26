@@ -10,6 +10,7 @@ import {
 type Props = {
     children: JSX.Element,
     value: FiltersInitialState,
+    onChange: (filterId: number | string, value: FilterValue) => void,
 }
 
 
@@ -28,6 +29,7 @@ const FiltersContextProvider = (props: Props) => {
     }
 
     const changeSelectedFilters = (filterId: number | string, value: FilterValue) => {
+        props.onChange(filterId, value)
         dispatch({
             type: CHANGE_SELECTED_FILTERS,
             filterId,

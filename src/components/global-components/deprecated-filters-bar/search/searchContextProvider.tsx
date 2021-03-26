@@ -8,6 +8,7 @@ import { CHANGE_SEARCH, SearchValue, SearchInitialState } from './searchTypes'
 type Props = {
     children: JSX.Element,
     value: SearchInitialState,
+    onChange: (value: SearchValue) => void,
 }
 
 const SearchContextProvider = (props: Props) => {
@@ -18,6 +19,7 @@ const SearchContextProvider = (props: Props) => {
     const [state, dispatch] = useImmerReducer(reducer, initialState)
 
     const setSearchValue = (value: SearchValue) => {
+        props.onChange(value)
         dispatch({
             type: CHANGE_SEARCH,
             value,

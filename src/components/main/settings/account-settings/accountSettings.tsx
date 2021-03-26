@@ -14,6 +14,7 @@ import Loader from 'components/global-components/loader/loader'
 import MyAccount from './my-account/myAccount'
 import ManageCatalogues from './manage-catalogues/manageCatalogues'
 import { SideMenuContext } from 'components/global-components/side-menu/sideMenuStore'
+import { useSwitches } from 'src/customHooks'
 
 type Props = {
     onToggleSideMenu: (e: React.MouseEvent) => void
@@ -23,6 +24,7 @@ const AccountSettings = (props: Props) => {
     const user = useTypedSelector(state => state.auth.user)
     const location = useLocation<LocationState>()
     const sideMenuContext = useContext(SideMenuContext)
+    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
 
     const SIDE_MENU_CONTENT = [
         {
@@ -37,11 +39,13 @@ const AccountSettings = (props: Props) => {
 
     return (
         <div className={styles.accountSettings}>
-            <SideMenu
-                content={SIDE_MENU_CONTENT}
-                show={sideMenuContext.show}
-                onToggle={props.onToggleSideMenu}
-            />
+            {!navigationRedesign &&
+                <SideMenu
+                    content={SIDE_MENU_CONTENT}
+                    show={sideMenuContext.show}
+                    onToggle={props.onToggleSideMenu}
+                />
+            }
             <Suspense fallback={<Loader />}>
                 <Switch>
                     <Redirect

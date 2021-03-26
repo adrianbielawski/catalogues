@@ -6,7 +6,8 @@ import styles from './catalogues.scss'
 import { LocationState } from 'src/globalTypes'
 import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
 //Context
-import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filtersBarBulkContextProvider'
+import DeprecatedFiltersBarBulkContextProvider from 'components/global-components/deprecated-filters-bar/filtersBarBulkContextProvider'
+import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
@@ -21,8 +22,9 @@ import DeprecatedNav from 'components/global-components/nav/deprecated-nav/nav'
 import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
-import FiltersBar from 'components/global-components/filters-bar/filtersBar'
+import DeprecatedFiltersBar from 'components/global-components/deprecated-filters-bar/filtersBar'
 import Header from 'components/global-components/header/header'
+import { filtersBarInitialState } from './catalogue/filter-bar-utils/contextInitialValues'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
@@ -153,7 +155,7 @@ const Catalogues = () => {
         },
         {
             component: (
-                <FiltersBar.FiltersBarButton
+                <DeprecatedFiltersBar.FiltersBarButton
                     onToggleFiltersBar={toggleFiltersBar}
                     className={styles.filterButton}
                 />
@@ -162,61 +164,99 @@ const Catalogues = () => {
         }
     ]
 
+    if (!navigationRedesign) {
+        return (
+            <DeprecatedFiltersBarBulkContextProvider
+                searchValue={searchValue}
+                sortValue={sortValue}
+                filtersValue={filtersValue}
+                filtersBarValue={filtersBarValue}
+                onChange={() => { }}
+                showFilters={showFilters}
+            >
+                {fetchingCatalogues || firstRender || defaultCatalogue === null
+                    ? <Loader className={styles.loader} />
+                    : (
+                        <div
+                            className={styles.catalogues}
+                            style={{ minHeight: `${minHeight}px` }}
+                            ref={cataloguesRef}
+                        >
+                            <DeprecatedNav
+                                content={NAV_CONTENT}
+                                extraItems={extraNavItems}
+                                className={styles.nav}
+                                show={showNav}
+                                onToggleNav={toggleNav}
+                            />
+                            {catalogues.length === 0
+                                ? getNoCatalogueMessage()
+                                : (
+                                    <Suspense fallback={<Loader />}>
+                                        <Switch>
+                                            <Redirect
+                                                exact
+                                                from="/:username/catalogues"
+                                                to={{
+                                                    pathname: `/:username/catalogues/${catalogues[defaultCatalogue].slug}`,
+                                                    state: location.state,
+                                                }}
+                                            />
+                                            <RouteWithContext
+                                                path="/:username/catalogues/:slug"
+                                                component={Catalogue}
+                                                canonical={true}
+                                            />
+                                        </Switch>
+                                    </Suspense>
+                                )
+                            }
+                        </div>
+                    )
+                }
+            </DeprecatedFiltersBarBulkContextProvider>
+        )
+    }
+
+
     return (
         <FiltersBarBulkContextProvider
-            searchValue={searchValue}
-            sortValue={sortValue}
-            filtersValue={filtersValue}
-            filtersBarValue={filtersBarValue}
-            onChange={() => { }}
-            showFilters={showFilters}
-        >
-            {fetchingCatalogues || firstRender || defaultCatalogue === null
-                ? <Loader className={styles.loader} />
-                : (
-                    <div
-                        className={styles.catalogues}
-                        style={{ minHeight: `${minHeight}px` }}
-                        ref={cataloguesRef}
-                    >
-                        {navigationRedesign
-                            ? <Header />
-                            : (
-                                <DeprecatedNav
-                                    content={NAV_CONTENT}
-                                    extraItems={extraNavItems}
-                                    className={styles.nav}
-                                    show={showNav}
-                                    onToggleNav={toggleNav}
-                                />
-                            )
-                        }
-                        {catalogues.length === 0
-                            ? getNoCatalogueMessage()
-                            : (
-                                <Suspense fallback={<Loader />}>
-                                    <Switch>
-                                        <Redirect
-                                            exact
-                                            from="/:username/catalogues"
-                                            to={{
-                                                pathname: `/:username/catalogues/${catalogues[defaultCatalogue].slug}`,
-                                                state: location.state,
-                                            }}
-                                        />
-                                        <RouteWithContext
-                                            path="/:username/catalogues/:slug"
-                                            component={Catalogue}
-                                            canonical={true}
-                                        />
-                                    </Switch>
-                                </Suspense>
-                            )
-                        }
-                    </div>
-                )
-            }
-        </FiltersBarBulkContextProvider>
+                values={filtersBarInitialState}
+            >
+        {fetchingCatalogues || firstRender || defaultCatalogue === null
+            ? <Loader className={styles.loader} />
+            : (
+                <div
+                    className={styles.catalogues}
+                    style={{ minHeight: `${minHeight}px` }}
+                    ref={cataloguesRef}
+                >
+                    <Header />
+                    {catalogues.length === 0
+                        ? getNoCatalogueMessage()
+                        : (
+                            <Suspense fallback={<Loader />}>
+                                <Switch>
+                                    <Redirect
+                                        exact
+                                        from="/:username/catalogues"
+                                        to={{
+                                            pathname: `/:username/catalogues/${catalogues[defaultCatalogue].slug}`,
+                                            state: location.state,
+                                        }}
+                                    />
+                                    <RouteWithContext
+                                        path="/:username/catalogues/:slug"
+                                        component={Catalogue}
+                                        canonical={true}
+                                    />
+                                </Switch>
+                            </Suspense>
+                        )
+                    }
+                </div>
+            )}
+            </FiltersBarBulkContextProvider>
     )
 }
 
