@@ -65,7 +65,7 @@ const MyAccount = () => {
 
     return (
         <div className={styles.myAccount}>
-            <ul>
+            <ul className={styles.list}>
                 <li key="userImage">
                     <ChangeUserImage />
                 </li>
