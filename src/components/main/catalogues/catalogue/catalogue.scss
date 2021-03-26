@@ -7,8 +7,8 @@
     .wrapper {
         display: flex;
         flex-grow: 1;
-        &.moved {
-            margin-top: 45px;
+        .filtersBar {
+            padding: 10px;
         }
         .mainContent {
             flex-grow: 1;

@@ -53,6 +53,11 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         scrollTop()
     }, [catalogue.id])
 
+    const toggleFiltersBar = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        setShowFilters(!showFilters)
+    }
+
     if (!navigationRedesign) {
         return (
             <div className={styles.catalogue}>
@@ -70,32 +75,38 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
         )
     }
 
+    const sideBarTop = smallViewport ? 50 : (user?.id !== currentUser.user?.id ? 95 : 50)
+
     return (
-        <FiltersBarBulkContextProvider
-            searchValue={searchValue}
-            sortValue={sortValue}
-            filtersValue={filtersValue}
-            filtersBarValue={filtersBarValue}
-            onChange={() => { }}
-            showFilters={showFilters}
-        >
-            <div className={styles.catalogue}>
-                {user?.id !== currentUser.user?.id && (
-                    <CatalogueHeader
-                        className={styles.header}
-                        catalogue={catalogue}
+        <div className={styles.catalogue}>
+            <CatalogueHeader
+                className={styles.header}
+                catalogue={catalogue}
+                toggleFiltersBar={toggleFiltersBar}
+            />
+            <div className={styles.wrapper}>
+                {catalogue.itemsRanges.date.min &&
+                    <SideBar
+                        active={showFilters}
+                        mobile={smallViewport!}
+                        top={sideBarTop}
+                        onBackgroundClick={toggleFiltersBar}
+                    >
+                        <div className={styles.filtersBar} >
+                            <Search />
+                            <Sort />
+                            <Filters />
+                        </div>
+                    </SideBar>
+                }
+                <div className={styles.mainContent}>
+                    <CatalogueItems
+                        catalogueId={catalogue.id}
+                        key={catalogue.id}
                     />
-                )}
-                <div className={styles.wrapper}>
-                    <div className={styles.mainContent}>
-                        <CatalogueItems
-                            catalogueId={catalogue.id}
-                            key={catalogue.id}
-                        />
-                    </div>
                 </div>
             </div>
-        </FiltersBarBulkContextProvider>
+        </div>
     )
 }
 
