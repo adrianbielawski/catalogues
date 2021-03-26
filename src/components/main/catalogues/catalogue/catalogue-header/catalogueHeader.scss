@@ -68,6 +68,9 @@
         .filtersButton {
             margin-right: 10px;
             font-size: 1.3em;
+            &.active {
+                color: $orange;
+            }
         }
         .favouriteIcon {
             font-size: 1.3em;

@@ -3,7 +3,7 @@ import { faFilter, faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icon
 import classNames from 'classnames/bind'
 import styles from './catalogueHeader.scss'
 //Types
-import { DeserializedCatalogue } from 'src/globalTypes'
+import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Context
 import { NavContext } from 'components/global-components/nav/nav-store/navStore'
 import NavContextProvider from 'components/global-components/nav/nav-store/navContextProvider'
@@ -18,6 +18,7 @@ import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useLocation } from 'react-router'
 
 const contextValue = {
     show: false,
@@ -35,6 +36,7 @@ const cx = classNames.bind(styles)
 
 const CatalogueHeader = (props: Props) => {
     const dispatch = useAppDispatch()
+    const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const user = useTypedSelector(state => state.auth.user)
@@ -123,6 +125,13 @@ const CatalogueHeader = (props: Props) => {
         }
     )
 
+    const filtersButtonClass = cx(
+        'filtersButton',
+        {
+            active: location.search,
+        }
+    )
+
     return (
         <NavContextProvider value={contextValue}>
             <div className={headerClass}>
@@ -150,7 +159,7 @@ const CatalogueHeader = (props: Props) => {
                 <div className={styles.catalogueActions}>
                     {(smallViewport && props.catalogue.itemsRanges.date.min) &&
                         <TransparentButton
-                            className={styles.filtersButton}
+                            className={filtersButtonClass}
                             onClick={handleFilterButtonClick}
                         >
                             <FontAwesomeIcon icon={faFilter} />
