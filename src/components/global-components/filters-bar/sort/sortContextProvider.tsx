@@ -2,7 +2,7 @@ import React from 'react'
 import { useImmerReducer } from 'use-immer'
 //Contexts
 import { SortContext, reducer } from './sortStore'
-import { SortInitialState, SortValue, CHANGE_SORT } from './sortTypes'
+import { SortInitialState, SortValue, CHANGE_SORT, SET_ACTIVE_OPTION } from './sortTypes'
 
 type Props = {
     children: JSX.Element,
@@ -23,9 +23,17 @@ const SortContextProvider = (props: Props) => {
         })
     }
 
+    const setActiveOption = (option: string | null) => {
+        dispatch({
+            type: SET_ACTIVE_OPTION,
+            option,
+        })
+    }
+
     const context = {
         ...state,
         setSortValue,
+        setActiveOption,
     }
 
     return (

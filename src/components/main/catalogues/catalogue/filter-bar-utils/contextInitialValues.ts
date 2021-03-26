@@ -23,6 +23,7 @@ export const filtersBarInitialState = {
                 type: 'date',
             },
         ],
+        activeOption: null,
         selected: {},
     }
 }

@@ -14,15 +14,15 @@ type Props = {
 }
 
 const SortOption = (props: Props) => {
-    const { selected, setSortValue } = useContext(SortContext)
+    const { activeOption, setActiveOption } = useContext(SortContext)
     const SortChoiceRef = useRef<HTMLDivElement>(null)
     const sortChoiceH = SortChoiceRef.current?.getBoundingClientRect().height
 
-    const isActive = selected?.[props.option.id] !== undefined
+    const isActive = activeOption === props.option.id
 
     const handleChange = () => {
-        const value = isActive ? undefined : { [props.option.id]: null }
-        setSortValue(value)
+        const option = isActive ? null : props.option.id
+        setActiveOption(option)
     }
 
     return (

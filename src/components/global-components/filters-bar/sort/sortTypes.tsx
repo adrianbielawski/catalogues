@@ -1,20 +1,26 @@
 export const CHANGE_SORT = 'CHANGE_SORT'
+export const SET_ACTIVE_OPTION = 'SET_ACTIVE_OPTION'
 
-interface changeSort {
+interface ChangeSort {
     type: typeof CHANGE_SORT,
     value: SortValue,
 }
 
-export type Action = changeSort
+interface SetActiveOption {
+    type: typeof SET_ACTIVE_OPTION,
+    option: string | null,
+}
+
+export type Action = ChangeSort | SetActiveOption
 
 export interface SortInitialState {
     sortOptions: Option[],
+    activeOption: string | null,
     selected: Selected,
 }
-export interface SortContextInterface {
-    sortOptions: Option[],
-    selected: Selected,
+export interface SortContextInterface extends SortInitialState {
     setSortValue: (value: SortValue) => void,
+    setActiveOption: (option: string | null) => void,
 }
 
 export interface Option {
