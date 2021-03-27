@@ -23,7 +23,7 @@ Props
     const { loading, inputProps, buttonProps, invalidInputMessage, onConfirm } = props
 
     const handleConfirm = () => {
-        if (invalidInputMessage?.length !== 0) {
+        if (invalidInputMessage && invalidInputMessage?.length !== 0) {
             return
         }
         onConfirm(inputRef.current!.value)

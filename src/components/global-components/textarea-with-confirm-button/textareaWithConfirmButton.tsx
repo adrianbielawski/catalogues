@@ -16,7 +16,9 @@ const TextareaWithConfirmButton = (props: Props) => {
 
     const handleConfirm = () => {
         onConfirm(inputRef.current!.value)
-        inputRef.current!.value = ''
+        if (inputRef.current) {
+            inputRef.current.value = ''
+        }
     }
     confirmOnEnter(inputRef, handleConfirm)
 
