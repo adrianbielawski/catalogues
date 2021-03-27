@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sideBar.scss'
+import { useTypedSelector } from 'store/storeConfig'
 
 type SlideDirection = 'right' | 'left'
 
@@ -26,6 +27,8 @@ const defaultProps: Props = {
 const cx = classNames.bind(styles)
 
 const SideBar = (props: Props) => {
+    const app = useTypedSelector(state => state.app)
+
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0]
         if (props.active) {
@@ -64,6 +67,9 @@ const SideBar = (props: Props) => {
     return (
         <div
             className={sideBarClass}
+            style={{
+                '--height': `${app.screenHeight}px`,
+            } as React.CSSProperties}
         >
             <div className={childrenWrapperClass} onClick={stopPropagation}>
                 {props.children}
