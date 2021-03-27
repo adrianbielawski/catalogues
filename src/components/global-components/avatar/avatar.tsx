@@ -3,7 +3,6 @@ import classNames from 'classnames/bind'
 import styles from './avatar.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import { faImage } from '@fortawesome/free-regular-svg-icons'
 
 const BASE_URL = process.env.API_URL
 
