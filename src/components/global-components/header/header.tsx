@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import icon from 'assets/img/icon.svg'
-import { faCog, faFolderOpen, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faFolderOpen, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import styles from './header.scss'
 //Types
@@ -15,6 +15,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import Nav from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
+import SettingsIcon from './settings-icon/settingsIcon'
 
 const contextValue = {
     show: false,
@@ -83,13 +84,17 @@ const Header = () => {
                 {
                     id: 'My account',
                     title: 'My account',
-                    faIcon: faCog,
+                    icon: (
+                        <SettingsIcon mainIcon={faUser} />
+                    ),
                     url: `/${user!.username}/settings/account/my-account`,
                 },
                 {
                     id: 'Manage catalogues',
                     title: 'Manage catalogues',
-                    faIcon: faCog,
+                    icon: (
+                        <SettingsIcon mainIcon={faFolderOpen} />
+                    ),
                     url: `/${user!.username}/settings/account/manage-catalogues`,
                 },
                 {
