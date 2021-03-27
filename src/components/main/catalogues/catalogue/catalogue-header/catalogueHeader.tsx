@@ -44,13 +44,29 @@ const CatalogueHeader = (props: Props) => {
     const catalogues = useTypedSelector(state => state.catalogues)
     const [yOffset, setYOffset] = useState(0)
     const [scrolledUp, setScrolledUp] = useState(true)
+    const [touchStart, setTouchStart] = useState(0)
 
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll)
+        if (smallViewport) {
+            window.addEventListener('scroll', handleScroll)
+        }
         return () => {
             window.removeEventListener('scroll', handleScroll)
         }
     }, [yOffset, scrolledUp])
+
+    useEffect(() => {
+        if (smallViewport && !scrolledUp) {
+            window.addEventListener('touchstart', handleTouchStart)
+        }
+        return () => {
+            window.removeEventListener('touchstart', handleTouchStart)
+        }
+    }, [scrolledUp])
+
+    const handleTouchStart = () => {
+        setTouchStart(window.pageYOffset)
+    }
 
     const handleScroll = () => {
         const offset = window.pageYOffset
@@ -59,7 +75,7 @@ const CatalogueHeader = (props: Props) => {
         if (offset >= yOffset) {
             up = false
         }
-        if (offset < yOffset) {
+        if (offset < yOffset && touchStart - 30 > offset) {
             up = true
         }
 
