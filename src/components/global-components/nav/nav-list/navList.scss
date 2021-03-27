@@ -3,7 +3,7 @@
 .navList {
     position: absolute;
     right: 5px;
-    top: 55px;
+    top: calc(100% + 5px);
     z-index: 10000;
     background: #fff;
     border-radius: 5px;
@@ -55,8 +55,11 @@
         min-width: 100vw;
         border-radius: 0;
         box-shadow: inset 0px 1px 0px $midLightGrey;
-        right: -5px;
-        top: 45px;
+        top: 100%;
+        right: 0;
+        &.left {
+            left: 0;
+        }
     }
 }
 

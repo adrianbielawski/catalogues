@@ -140,14 +140,12 @@ const CatalogueHeader = (props: Props) => {
         <NavContextProvider value={contextValue}>
             <div className={headerClass}>
                 {user?.id !== currentUser.user?.id &&
-                    <div className={styles.nav}>
-                        <Nav
-                            className={styles.nav}
-                            show={show}
-                            items={NAV_ITEMS}
-                            listOnLeft={true}
-                        />
-                    </div>
+                    <Nav
+                        className={styles.nav}
+                        show={show}
+                        items={NAV_ITEMS}
+                        listOnLeft={true}
+                    />
                 }
                 <div className={catalogueNameClass}>
                     {catalogueImage &&
