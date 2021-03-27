@@ -21,8 +21,7 @@ const AverageRating = (props: Props) => {
     )
 
     const rating = props.rating || ''
-    const count = props.count ? `/${props.count}` : 0
-    const text = props.count === 1 ? 'vote' : 'votes'
+    const count = props.count ? `(${props.count})` : 0
 
     return (
         <div className={styles.averageRating}>
@@ -30,7 +29,7 @@ const AverageRating = (props: Props) => {
                 icon={!props.rating ? regStar : solidStar}
                 className={starClass}
             />
-            <p>{`${rating} ${count} ${text}`}</p>
+            <p>{`${rating} ${count}`}</p>
         </div>
     )
 }
