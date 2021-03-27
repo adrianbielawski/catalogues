@@ -99,7 +99,11 @@ const CatalogueHeader = (props: Props) => {
             children: catalogues.catalogues.map(c => ({
                 id: c.name,
                 title: c.name,
-                faIcon: faFolderOpen,
+                icon: <Avatar
+                    className={styles.catalogueImage}
+                    placeholderIcon={faFolderOpen}
+                    url={c.imageThumbnail}
+                />,
                 url: `/${currentUser.user!.username}/catalogues/${c.slug}`,
             })),
         },

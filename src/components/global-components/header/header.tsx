@@ -63,7 +63,11 @@ const Header = () => {
             children: catalogues.authUser.catalogues.map(c => ({
                 id: c.name,
                 title: c.name,
-                faIcon: faFolderOpen,
+                icon: <Avatar
+                    className={styles.catalogueImage}
+                    placeholderIcon={faFolderOpen}
+                    url={c.imageThumbnail}
+                />,
                 url: `/${user!.username}/catalogues/${c.slug}`,
             })),
         },
