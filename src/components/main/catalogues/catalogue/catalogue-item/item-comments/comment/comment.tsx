@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
@@ -28,9 +28,17 @@ const Comment: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
     const history = useHistory<LocationState>()
+    const [clipText, setClipText] = useState(props.clipText)
 
     const handleUsernameClick = () => {
         history.push(`/${props.comment.createdBy.username}`)
+    }
+
+    const handleCommentClick = () => {
+        if (!props.clipText) {
+            return
+        }
+        setClipText(!clipText)
     }
 
     const handleReply = () => {
@@ -72,7 +80,7 @@ const Comment: React.ForwardRefRenderFunction<
     const wrapperClass = cx(
         'wrapper',
         {
-            clipText: props.clipText,
+            clipText: clipText,
         },
     )
 
@@ -101,7 +109,12 @@ const Comment: React.ForwardRefRenderFunction<
                         >
                             {props.comment.createdBy.username}
                         </span>
-                        {props.comment.text}
+                        <span
+                            className={styles.commentText}
+                            onClick={handleCommentClick}
+                        >
+                            {props.comment.text}
+                        </span>
                     </p>
                 </div>
                 <div className={styles.info}>
