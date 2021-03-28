@@ -6,16 +6,12 @@ import { HydratedRouteComponentProps } from 'src/router'
 import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom hooks and Utils
-import { useSwitches } from 'src/customHooks'
 import { scrollTop } from 'src/utils'
 //Filters context
-import deprecatedBuildFilters from '../filter-bar-utils/filtersBuilder'
 import buildFilters from './filter-bar-utils/filtersBuilder'
-import useDeprecatedFiltersBarContext from 'components/global-components/deprecated-filters-bar/useFiltersBarContext'
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Custom components
 import CatalogueItems from './catalogue-items/catalogueItems'
-import DeprecatedFiltersBar from 'components/global-components/deprecated-filters-bar/filtersBar'
 import CatalogueHeader from './catalogue-header/catalogueHeader'
 import SideBar from 'components/global-components/side-bar/sideBar'
 import Search from 'components/global-components/filters-bar/search/search'
@@ -24,8 +20,6 @@ import Filters from 'components/global-components/filters-bar/filters/filters'
 
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
-    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
-    const deprecatedFiltersContext = useDeprecatedFiltersBarContext()
     const { filtersContext } = useFiltersBarContext()
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const [showFilters, setShowFilters] = useState(false)
@@ -37,13 +31,8 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     useEffect(() => {
         if (!catalogue.fetchingFieldsChoices) {
-            if (!navigationRedesign) {
-                const filters = deprecatedBuildFilters(catalogue.fields, catalogue.itemsRanges)
-                deprecatedFiltersContext.filtersContext.changeFilters(filters)
-            } else {
                 const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
                 filtersContext.changeFilters(filters)
-            }
         }
     }, [catalogue.fetchingFieldsChoices])
 
@@ -54,23 +43,6 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const toggleFiltersBar = (e: React.MouseEvent) => {
         e.stopPropagation()
         setShowFilters(!showFilters)
-    }
-
-    if (!navigationRedesign) {
-        return (
-            <div className={styles.catalogue}>
-                <div className={styles.wrapper}>
-                    {catalogue.itemsRanges.date.min &&
-                        <DeprecatedFiltersBar />
-                    }
-                    <div className={styles.mainContent}>
-                        {filtersContext.filters.length > 0 &&
-                            <CatalogueItems key={catalogue.id} catalogueId={catalogue.id} />
-                        }
-                    </div>
-                </div>
-            </div>
-        )
     }
 
     return (

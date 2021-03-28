@@ -2,48 +2,22 @@ import React, { Suspense, useState, useEffect, useRef } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
 import styles from './settings.scss'
-//Custom hooks
-import { useSwitches } from 'src/customHooks'
 //Types
 import { LocationState } from 'src/globalTypes'
-import { NavItemType } from 'components/global-components/nav/deprecated-nav/nav'
-//Contexts
-import SideMenuContextProvider from 'components/global-components/side-menu/sideMenuContextProvider'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components
-import DeprecatedNav from 'components/global-components/nav/deprecated-nav/nav'
-import AuthButton from 'components/auth/auth-button/authButton'
 import Loader from 'components/global-components/loader/loader'
 import AccountSettings from './account-settings/accountSettings'
-import SideMenuButton from 'components/global-components/side-menu/side-menu-button/sideMenuButton'
 import Header from 'components/global-components/header/header'
-
-const sideMenuContextValue = {
-    show: false,
-}
 
 const Settings = () => {
     const location = useLocation<LocationState>()
     const settingsRef = useRef<HTMLDivElement>(null)
-    const currentUser = useTypedSelector(state => state.currentUser.user)
     const [minHeight, setMinHeight] = useState(0)
     const app = useTypedSelector(state => state.app)
     const [showNav, setShowNav] = useState(false)
     const [showSideMenu, setShowSideMenu] = useState(false)
-    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
-
-    const toggleNav = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setShowNav(!showNav)
-        setShowSideMenu(false)
-    }
-
-    const toggleSideMenu = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setShowNav(false)
-        setShowSideMenu(!showSideMenu)
-    }
 
     useEffect(() => {
         const close = () => {
@@ -58,15 +32,6 @@ const Settings = () => {
             window.removeEventListener('click', close)
         }
     }, [showNav, showSideMenu])
-
-
-    const NAV_CONTENT: NavItemType[] = [
-        {
-            id: 'AccountSettings',
-            title: 'Account settings',
-            url: `/${currentUser!.username}/settings/account`,
-        }
-    ]
 
     useEffect(() => {
         if (settingsRef.current === null) {
@@ -86,65 +51,32 @@ const Settings = () => {
         setMinHeight(minHeight)
     }
 
-    const navBarExtraItems = [
-        {
-            component: <AuthButton className={styles.logout} />,
-            inNavBarOnMobile: false,
-        },
-        {
-            component: <SideMenuButton onToggle={toggleSideMenu} />,
-            inNavBarOnMobile: true,
-        }
-    ]
-
     return (
-        <SideMenuContextProvider
-            value={sideMenuContextValue}
-            show={showSideMenu}
-            onChange={() => { }}
+        <div
+            className={styles.settings}
+            style={{ minHeight: `${minHeight}px` }}
+            ref={settingsRef}
         >
-            <div
-                className={styles.settings}
-                style={{ minHeight: `${minHeight}px` }}
-                ref={settingsRef}
-            >
-                {navigationRedesign
-                    ? <Header />
-                    : (
-                    <DeprecatedNav
-                        show={showNav}
-                        content={NAV_CONTENT}
-                        goBack={{
-                            title: 'Catalogues',
-                            url: `/${currentUser!.username}/catalogues`,
-                            location: `/${currentUser!.username}/settings`,
+            <Header />
+            <Suspense fallback={<Loader />}>
+                <Switch>
+                    <Redirect
+                        exact
+                        from="/:username/settings"
+                        to={{
+                            pathname: "/:username/settings/account",
+                            state: location.state,
                         }}
-                        extraItems={navBarExtraItems}
-                        onToggleNav={toggleNav}
                     />
-                )}
-                <Suspense fallback={<Loader />}>
-                    <Switch>
-                        <Redirect
-                            exact
-                            from="/:username/settings"
-                            to={{
-                                pathname: "/:username/settings/account",
-                                state: location.state,
-                            }}
-                        />
-                        <Route
-                            path="/:username/settings/account"
-                            render={() => (
-                                <AccountSettings
-                                    onToggleSideMenu={toggleSideMenu}
-                                />
-                            )}
-                        />
-                    </Switch>
-                </Suspense>
-            </div>
-        </SideMenuContextProvider>
+                    <Route
+                        path="/:username/settings/account"
+                        render={() => (
+                            <AccountSettings />
+                        )}
+                    />
+                </Switch>
+            </Suspense>
+        </div>
     )
 }
 

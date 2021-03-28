@@ -1,9 +1,0 @@
-@import "global-styles/variables_and_mixins";
-
-.filtersBarButton {
-    font-size: 24px;
-    margin: 5px;
-    &.filtersApplied {
-        color: $orange;
-    }
-}

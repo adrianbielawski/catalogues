@@ -2,8 +2,6 @@ import React, { Suspense, useEffect } from 'react'
 import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './main.scss'
-//Custom hooks
-import { useSwitches } from 'src/customHooks'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
@@ -11,7 +9,6 @@ import { useTypedSelector } from 'store/storeConfig'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
 import { FETCH_AUTH_USER_DATA } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
-import DeprecatedHeader from 'components/global-components/deprecated-header/header'
 import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
@@ -23,7 +20,6 @@ const Main = (props: HydratedRouteComponentProps) => {
     const app = useTypedSelector(state => state.app)
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
-    const [navigationRedesign] = useSwitches(['NAVIGATION_REDESIGN'])
     const username = props.match.params.username
 
     useEffect(() => {
@@ -55,10 +51,6 @@ const Main = (props: HydratedRouteComponentProps) => {
 
     return (
         <div className={styles.main} style={{ minHeight: app.screenHeight }}>
-            {navigationRedesign
-                ? null
-                : <DeprecatedHeader />
-            }
             {currentUser.user?.username ? (
                 <Suspense fallback={<Loader />}>
                     <Switch>
