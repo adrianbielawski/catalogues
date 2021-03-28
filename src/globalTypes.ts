@@ -168,13 +168,13 @@ export interface DeserializedItemPermisions {
 export interface ItemRating {
     average: number,
     count: number,
-    current_user: number,
+    current_user: number | null,
 }
 
 export interface DesrializedItemRating {
     average: number,
     count: number,
-    currentUser: number,
+    currentUser: number | null,
 }
 
 export interface ItemCommentCreatedBy {

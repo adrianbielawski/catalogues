@@ -4,7 +4,7 @@ import styles from './itemRating.scss'
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useAppDispatch } from 'store/storeConfig'
-import { CHANGE_ITEM_RATING } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { CHANGE_ITEM_RATING, DELETE_ITEM_RATING } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import AverageRating from 'components/global-components/average-rating/averageRating'
 import UserRating from 'components/global-components/user-rating/userRating'
@@ -17,10 +17,14 @@ const ItemRating = (props: Props) => {
     const dispatch = useAppDispatch()
 
     const handleRatingChange = (rating: number) => {
-        dispatch(CHANGE_ITEM_RATING({
-            itemId: props.item.id,
-            rating,
-        }))
+        if (props.item.rating.currentUser === rating) {
+            dispatch(DELETE_ITEM_RATING(props.item.id))
+        } else {
+            dispatch(CHANGE_ITEM_RATING({
+                itemId: props.item.id,
+                rating,
+            }))
+        }
     }
 
     return (
@@ -29,7 +33,6 @@ const ItemRating = (props: Props) => {
                 rating={props.item.rating.average}
                 count={props.item.rating.count}
             />
-
             {props.item.permissions.canRate
                 ? (
                     <UserRating

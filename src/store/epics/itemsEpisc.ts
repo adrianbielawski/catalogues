@@ -171,6 +171,19 @@ export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pip
     )
 )
 
+export const deleteItemRatingEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.DELETE_ITEM_RATING.match),
+    switchMap(action =>
+        axiosInstance$.delete(`/items/${action.payload}/rating/`).pipe(
+            map(response => actions.DELETE_ITEM_RATING_SUCCESS({
+                itemId: action.payload,
+                rating: response.data.rating,
+            })),
+            catchError(() => of(actions.DELETE_ITEM_RATING_FAILURE()))
+        )
+    )
+)
+
 export const addItemToFavouriteEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.ADD_ITEM_TO_FAVOURITE.match),
     switchMap(action =>
@@ -254,6 +267,7 @@ export const itemsEpics = combineEpics(
     saveItemEpic,
     deleteItemEpic,
     changeItemRatingEpic,
+    deleteItemRatingEpic,
     addItemToFavouriteEpic,
     deleteItemFromFavouriteEpic,
     refreshItemCommentsEpic,

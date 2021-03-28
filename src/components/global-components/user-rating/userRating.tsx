@@ -5,7 +5,7 @@ import classNames from 'classnames/bind'
 import styles from './userRating.scss'
 
 type Props = {
-    rating: number,
+    rating: number | null,
     range: number,
     onChange: (rating: number) => void
 }
@@ -23,7 +23,7 @@ const UserRating = (props: Props) => {
         const starClass = cx(
             'star',
             {
-                active: props.rating >= i + 1
+                active: props.rating && props.rating >= i + 1
             },
         )
 

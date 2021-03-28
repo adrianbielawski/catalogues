@@ -184,6 +184,18 @@ export const changeItemRating = {
     CHANGE_ITEM_RATING_FAILURE(state: State) { },
 }
 
+export const deleteItemRating = {
+    DELETE_ITEM_RATING(state: State, action: PayloadAction<number>) {
+        const item = getItemById(state, action.payload)
+        item.rating.currentUser = null
+    },
+    DELETE_ITEM_RATING_SUCCESS(state: State, action: PayloadAction<T.ChangeItemRatingSuccessPayload>) {
+        const item = getItemById(state, action.payload.itemId)
+        item.rating = itemRatingDeserializer(action.payload.rating)
+    },
+    DELETE_ITEM_RATING_FAILURE(state: State) { },
+}
+
 export const addItemToFavourite = {
     ADD_ITEM_TO_FAVOURITE(state: State, action: PayloadAction<number>) {
         const item = getItemById(state, action.payload)
