@@ -10,6 +10,7 @@
 	.star {
 		padding: 0 2px;
 		color: $midLightGrey;
+		cursor: pointer;
 		&.active path {
 			stroke: $orange;
 			fill: $orange;
