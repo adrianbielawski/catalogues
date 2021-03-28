@@ -142,6 +142,7 @@ const CatalogueHeader = (props: Props) => {
         'catalogueName',
         {
             noJustify: user?.id === currentUser.user?.id,
+            increasedMargin: user?.id === currentUser.user?.id,
         }
     )
 

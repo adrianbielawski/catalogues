@@ -1,5 +1,6 @@
 import React, { ReactNode, useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import classNames from 'classnames/bind'
 import styles from './nav.scss'
 //Types
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
@@ -74,6 +75,8 @@ interface Props {
     listOnLeft?: boolean,
 }
 
+const cx = classNames.bind(styles)
+
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
@@ -123,8 +126,13 @@ const Nav = (props: Props) => {
         )
     })
 
+    const navClass = cx(
+        'nav',
+        props.className,
+    )
+
     return (
-        <nav className={styles.nav}>
+        <nav className={navClass}>
             <ul className={styles.items}>
                 {items}
             </ul>
