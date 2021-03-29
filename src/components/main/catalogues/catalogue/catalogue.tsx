@@ -48,7 +48,6 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     return (
         <div className={styles.catalogue}>
             <CatalogueHeader
-                className={styles.header}
                 catalogue={catalogue}
                 toggleFiltersBar={toggleFiltersBar}
             />

@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
+import { useLocation } from 'react-router'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueHeader.scss'
@@ -17,8 +19,7 @@ import Avatar from 'components/global-components/avatar/avatar'
 import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useLocation } from 'react-router'
+import ComponentHeader from 'components/global-components/component-header/componentHeader'
 
 const contextValue = {
     show: false,
@@ -28,7 +29,6 @@ const contextValue = {
 
 type Props = {
     catalogue: DeserializedCatalogue,
-    className?: string,
     toggleFiltersBar: (e: React.MouseEvent) => void,
 }
 
@@ -42,46 +42,6 @@ const CatalogueHeader = (props: Props) => {
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
     const catalogues = useTypedSelector(state => state.catalogues)
-    const [yOffset, setYOffset] = useState(0)
-    const [scrolledUp, setScrolledUp] = useState(true)
-    const [touchStart, setTouchStart] = useState(0)
-
-    useEffect(() => {
-        if (smallViewport) {
-            window.addEventListener('scroll', handleScroll)
-        }
-        return () => {
-            window.removeEventListener('scroll', handleScroll)
-        }
-    }, [yOffset, scrolledUp])
-
-    useEffect(() => {
-        if (smallViewport && !scrolledUp) {
-            window.addEventListener('touchstart', handleTouchStart)
-        }
-        return () => {
-            window.removeEventListener('touchstart', handleTouchStart)
-        }
-    }, [scrolledUp])
-
-    const handleTouchStart = () => {
-        setTouchStart(window.pageYOffset)
-    }
-
-    const handleScroll = () => {
-        const offset = window.pageYOffset
-        let up = scrolledUp
-
-        if (offset >= yOffset) {
-            up = false
-        }
-        if (offset < yOffset && touchStart - 30 > offset) {
-            up = true
-        }
-
-        setYOffset(offset)
-        setScrolledUp(up)
-    }
 
     const handleFavouriteChange = () => {
         if (!props.catalogue.isFavourite) {
@@ -129,15 +89,6 @@ const CatalogueHeader = (props: Props) => {
         ? `${props.catalogue.imageThumbnail}`
         : undefined
 
-    const headerClass = cx(
-        'header',
-        props.className,
-        {
-            hideable: smallViewport,
-            show: smallViewport && scrolledUp,
-        }
-    )
-
     const catalogueNameClass = cx(
         'catalogueName',
         {
@@ -155,7 +106,7 @@ const CatalogueHeader = (props: Props) => {
 
     return (
         <NavContextProvider value={contextValue}>
-            <div className={headerClass}>
+            <ComponentHeader className={styles.catalogueHeader}>
                 {user?.id !== currentUser.user?.id &&
                     <Nav
                         className={styles.nav}
@@ -190,7 +141,7 @@ const CatalogueHeader = (props: Props) => {
                         onChange={handleFavouriteChange}
                     />
                 </div>
-            </div>
+            </ComponentHeader>
         </NavContextProvider>
     )
 }

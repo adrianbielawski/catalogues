@@ -1,7 +1,10 @@
-import Header from 'components/global-components/header/header'
 import React, { useEffect, useRef, useState } from 'react'
-import { useTypedSelector } from 'store/storeConfig'
 import styles from './favouriteItems.scss'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
+//Custom components
+import Header from 'components/global-components/header/header'
+import ComponentHeader from 'components/global-components/component-header/componentHeader'
 
 const FavouriteItems = () => {
     const favouriteItemsRef = useRef<HTMLDivElement>(null)
@@ -30,6 +33,13 @@ const FavouriteItems = () => {
             ref={favouriteItemsRef}
         >
             <Header />
+            <ComponentHeader
+                className={styles.favouriteItemsHeader}
+            >
+                <p className={styles.title}>
+                    My favourite items
+                </p>
+            </ComponentHeader>
             <p>favourite items</p>
         </div>
     )
