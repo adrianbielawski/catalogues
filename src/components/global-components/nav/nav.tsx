@@ -50,14 +50,14 @@ export type ItemWithUrlAndFaIcon = CommonItem & {
 
 export type ItemWithUrl = ItemWithUrlAndIcon | ItemWithUrlAndFaIcon
 
-type ItemWithChildrenAndIcon = CommonItem & {
+export type ItemWithChildrenAndIcon = CommonItem & {
     icon: ReactNode,
     faIcon?: never,
     url?: never,
     children: (ItemWithUrl | ItemWithOnClick)[],
 }
 
-type ItemWithChildrenAndFaIcon = CommonItem & {
+export type ItemWithChildrenAndFaIcon = CommonItem & {
     icon?: never,
     faIcon: IconDefinition,
     url?: never,

@@ -12,10 +12,11 @@ import { NavContext } from '../nav/nav-store/navStore'
 import { LOG_OUT } from 'store/slices/authSlices/authSlices'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //custom components
-import Nav from '../nav/nav'
+import Nav, { ItemWithChildrenAndFaIcon } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
+import { useSwitches } from 'src/customHooks'
 
 const contextValue = {
     show: false,
@@ -29,6 +30,7 @@ const Header = () => {
     const { show } = useContext(NavContext)
     const user = useTypedSelector(state => state.auth.user)
     const catalogues = useTypedSelector(state => state.catalogues)
+    const [FAVOURITE_ITEMS] = useSwitches(['FAVOURITE_ITEMS'])
 
     const handleLogout = () => {
         dispatch(LOG_OUT({ history }))
@@ -54,12 +56,6 @@ const Header = () => {
                         />,
                         url: `/${c.createdBy.username}/catalogues/${c.slug}`,
                     })),
-                },
-                {
-                    id: 'Favourite items',
-                    title: 'Favourite items',
-                    faIcon: faTh,
-                    url: `/${user.username}/favourite-items`,
                 },
             ]
         },
@@ -119,6 +115,15 @@ const Header = () => {
             url: '/'
         }
     ]
+
+    if (user !== null && FAVOURITE_ITEMS) {
+        (NAV_ITEMS[0] as ItemWithChildrenAndFaIcon).children.push({
+            id: 'Favourite items',
+            title: 'Favourite items',
+            faIcon: faTh,
+            url: `/${user.username}/favourite-items`,
+        })
+    }
 
     return (
         <NavContextProvider value={contextValue}>
