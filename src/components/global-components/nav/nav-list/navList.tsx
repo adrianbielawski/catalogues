@@ -41,7 +41,7 @@ const NavList = (props: Props) => {
 
     const getItems = () => props.item.children.map(item => {
         const handleItemClick = () => {
-            if (item.onClick) {
+            if ('onClick' in item && item.onClick) {
                 item.onClick()
             }
 

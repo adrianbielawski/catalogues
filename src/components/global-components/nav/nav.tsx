@@ -54,14 +54,14 @@ export type ItemWithChildrenAndIcon = CommonItem & {
     icon: ReactNode,
     faIcon?: never,
     url?: never,
-    children: (ItemWithUrl | ItemWithOnClick)[],
+    children: ItemType[],
 }
 
 export type ItemWithChildrenAndFaIcon = CommonItem & {
     icon?: never,
     faIcon: IconDefinition,
     url?: never,
-    children: (ItemWithUrl | ItemWithOnClick)[],
+    children: ItemType[],
 }
 
 export type ItemWithChildren = ItemWithChildrenAndIcon | ItemWithChildrenAndFaIcon
