@@ -20,6 +20,7 @@ import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import ItemHeader from './item-header/itemHeader'
 
 type Props = {
     item: DeserializedItem
@@ -92,6 +93,13 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     />
                 )
                 : <>
+                    <ItemHeader
+                        className={styles.itemHeader}
+                        userImage={item.createdBy.imageThumbnail}
+                        username={item.createdBy.username}
+                        catalogueImage={catalogue.imageThumbnail}
+                        catalogueName={catalogue.name}
+                    />
                     <div className={styles.wrapper}>
                         <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
                             <ImagesCarousel
@@ -117,15 +125,24 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                     <EditItemButton itemId={item.id} />
                                 }
                             </div>
-                            <ItemData item={item} />
+                            <ItemData
+                                className={styles.itemData}
+                                item={item}
+                            />
                             {catalogue.fetchingFields
                                 ? <Loader />
-                                : <ItemFields item={item} />
+                                : (
+                                    <ItemFields
+                                        className={styles.itemFields}
+                                        item={item}
+                                    />
+                                )
                             }
                         </div>
                     </div>
                     {item.commentsData &&
                         <ItemComments
+                            className={styles.itemComments}
                             itemId={item.id}
                             commentsData={item.commentsData}
                             canComment={item.permissions.canComment}

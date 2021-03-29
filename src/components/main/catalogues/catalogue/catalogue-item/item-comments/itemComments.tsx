@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import classNames from 'classnames/bind'
 import styles from './itemComments.scss'
 //Types
 import { DeserializedCommentsData } from 'src/globalTypes'
@@ -20,7 +21,10 @@ type Props = {
     itemId: number,
     commentsData: DeserializedCommentsData,
     canComment: boolean,
+    className?: string,
 }
+
+const cx = classNames.bind(styles)
 
 const ItemComments = (props: Props) => {
     const dispatch = useAppDispatch()
@@ -53,10 +57,14 @@ const ItemComments = (props: Props) => {
             text,
         }))
     }
+    const itemCommentsClass = cx(
+        'itemComments',
+        props.className,
+    )
 
     return (
         <ItemCommentsContextProvider value={contextValue}>
-            <div className={styles.itemComments}>
+            <div className={itemCommentsClass}>
                 {props.commentsData.results.length > 2 && (
                     <TransparentButton
                         onClick={toggleShowAllComments}

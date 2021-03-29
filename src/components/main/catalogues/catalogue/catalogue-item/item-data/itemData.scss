@@ -2,13 +2,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 5px;
-    .wrapper {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        span {
-            font-weight: 700;
-        }
+    max-width: 100%;
+    span {
+        font-weight: 700;
     }
 }
