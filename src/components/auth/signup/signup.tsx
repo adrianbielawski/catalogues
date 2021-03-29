@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useHistory } from 'react-router-dom'
 import styles from './signup.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
@@ -26,7 +26,10 @@ const Signup = () => {
     const [isValid, setIsValid] = useState(false)
 
     useEffect(() => {
-        validateUserInput()
+        if (auth.user) {
+            return
+        }
+            validateUserInput()
     }, [auth.invalidUsernameMessage])
 
     const validateUsername = () => {
@@ -80,7 +83,9 @@ const Signup = () => {
     }
 
     if (auth.user) {
-        history.push(`/${auth.user.username}`)
+        return <Redirect to={{
+            pathname: `/${auth.user.username}`
+        }} />
     }
 
     return (

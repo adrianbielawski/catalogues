@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import styles from './login.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -45,7 +45,11 @@ const Login = () => {
     }
 
     if (auth.user) {
-        history.push(`/${auth.user.username}`)
+        return (
+            <Redirect to={{
+                pathname: `/${auth.user.username}`
+            }} />
+        )
     }
 
     return (
