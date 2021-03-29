@@ -9,7 +9,8 @@ import CollapsableList from 'components/global-components/collapsable-list/colla
 import Field from './field/field'
 
 type Props = {
-    item: DeserializedItem
+    item: DeserializedItem,
+    className?: string,
 }
 
 const ItemFields = (props: Props) => {
@@ -18,17 +19,19 @@ const ItemFields = (props: Props) => {
     const itemsProps = { catalogueId: props.item.catalogueId }
 
     return (
-        <CollapsableList >
-            <>
-                <CollapsableList.List
-                    items={itemFields}
-                    itemsProps={itemsProps}
-                    maxHeight={maxHeight}
-                    itemComponent={Field}
-                />
-                <CollapsableList.Button />
-            </>
-        </CollapsableList>
+        <div className={props.className}>
+            <CollapsableList >
+                <>
+                    <CollapsableList.List
+                        items={itemFields}
+                        itemsProps={itemsProps}
+                        maxHeight={maxHeight}
+                        itemComponent={Field}
+                    />
+                    <CollapsableList.Button />
+                </>
+            </CollapsableList>
+        </div>
     )
 }
 

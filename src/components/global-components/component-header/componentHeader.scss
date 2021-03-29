@@ -1,0 +1,19 @@
+@import "global-styles/variables_and_mixins";
+
+.componentHeader {
+    background: #fff;
+    width: 100%;
+    height: 45px;
+    border-bottom: 1px solid #eee;
+    box-sizing: border-box;
+    z-index: 100;
+    position: sticky;
+    top: 50px;
+    &.hideable {
+        top: 0;
+        transition: all 0.3s ease-out;
+    }
+    &.show {
+        top: 50px;
+    }
+}

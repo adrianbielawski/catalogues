@@ -13,6 +13,8 @@ import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import FavouriteItems from './favourite-items/favouriteItems'
+import { useSwitches } from 'src/customHooks'
 
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
@@ -21,6 +23,7 @@ const Main = (props: HydratedRouteComponentProps) => {
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
     const username = props.match.params.username
+    const [FAVOURITE_ITEMS] = useSwitches(['FAVOURITE_ITEMS'])
 
     useEffect(() => {
         if (!username) {
@@ -61,6 +64,9 @@ const Main = (props: HydratedRouteComponentProps) => {
                         />
                         <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
                         <PrivateRouteWithContext path={"/:username/settings"} component={Settings} />
+                        {FAVOURITE_ITEMS && 
+                            <PrivateRouteWithContext path={"/:username/favourite-items"} component={FavouriteItems} />
+                        }
                     </Switch>
                 </Suspense>
             ) : null}

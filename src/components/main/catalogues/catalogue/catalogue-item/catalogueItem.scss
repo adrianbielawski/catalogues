@@ -5,12 +5,12 @@
     background: #fff;
     border-radius: 5px;
     margin: 10px 0;
-    padding: 10px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     .wrapper {
         display: flex;
+        margin-top: 5px;
         .carouselWrapper {
             min-width: 200px;
         }
@@ -20,12 +20,19 @@
             .ratingWrapper {
                 display: flex;
                 align-items: center;
-                margin-bottom: 5px;
+                margin: 0 5px 5px;
                 .favouriteIcon {
                     margin-left: 10px;
                 }
             }
+            .itemData,
+            .itemFields {
+                margin: 0 5px 5px;
+            }
         }
+    }
+    .itemComments {
+        margin: 0 5px 5px;
     }
     .editItem {
         width: 100%;
@@ -35,12 +42,12 @@
 @media only screen and (max-width: 800px) {
     .item {
         flex-direction: column;
+        border-radius: unset;
         .wrapper {
             flex-direction: column;
-            margin-bottom: 10px;
             .itemContent {
                 width: 100%;
-                margin: 10px 0 0 0;
+                margin: 5px 0 0 0;
             }
         }
     }
