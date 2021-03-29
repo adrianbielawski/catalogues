@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import icon from 'assets/img/icon.svg'
-import { faFolderOpen, faSignInAlt, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faFolderOpen, faSignInAlt, faSignOutAlt, faTh, faUser } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import styles from './header.scss'
 //Types
@@ -54,7 +54,13 @@ const Header = () => {
                         />,
                         url: `/${c.createdBy.username}/catalogues/${c.slug}`,
                     })),
-                }
+                },
+                {
+                    id: 'Favourite items',
+                    title: 'Favourite items',
+                    faIcon: faTh,
+                    url: `/${user.username}/favourite-items`,
+                },
             ]
         },
         {

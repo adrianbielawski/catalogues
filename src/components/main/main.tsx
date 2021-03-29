@@ -13,6 +13,7 @@ import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import FavouriteItems from './favourite-items/favouriteItems'
 
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
@@ -61,6 +62,7 @@ const Main = (props: HydratedRouteComponentProps) => {
                         />
                         <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
                         <PrivateRouteWithContext path={"/:username/settings"} component={Settings} />
+                        <PrivateRouteWithContext path={"/:username/favourite-items"} component={FavouriteItems} />
                     </Switch>
                 </Suspense>
             ) : null}
