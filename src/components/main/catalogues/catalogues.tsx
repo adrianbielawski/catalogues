@@ -33,8 +33,6 @@ const Catalogues = () => {
     const app = useTypedSelector(state => state.app)
     const [minHeight, setMinHeight] = useState(0)
     const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
-    const [showNav, setShowNav] = useState(false)
-    const [showFilters, setShowFilters] = useState(false)
 
     useEffect(() => {
         if (fetchingCatalogues || firstRender) {
@@ -57,20 +55,6 @@ const Catalogues = () => {
 
         getMinHeight()
     }, [cataloguesRef.current, app.screenHeight])
-
-    useEffect(() => {
-        const close = () => {
-            setShowNav(false)
-            setShowFilters(false)
-        }
-
-        if (showNav || showFilters) {
-            window.addEventListener('click', close)
-        }
-        return () => {
-            window.removeEventListener('click', close)
-        }
-    }, [showNav])
 
 
     const getMinHeight = () => {
