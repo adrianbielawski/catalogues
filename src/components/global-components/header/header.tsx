@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router'
 import icon from 'assets/img/icon.svg'
-import { faFolderOpen, faSignInAlt, faSignOutAlt, faTh, faUser } from '@fortawesome/free-solid-svg-icons'
+import {
+    faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
+} from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import styles from './header.scss'
 //Types
@@ -12,7 +14,7 @@ import { NavContext } from '../nav/nav-store/navStore'
 import { LOG_OUT } from 'store/slices/authSlices/authSlices'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //custom components
-import Nav, { ItemWithChildrenAndFaIcon } from '../nav/nav'
+import Nav, { ItemType, ItemWithChildrenAndFaIcon } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
@@ -30,13 +32,13 @@ const Header = () => {
     const { show } = useContext(NavContext)
     const user = useTypedSelector(state => state.auth.user)
     const catalogues = useTypedSelector(state => state.catalogues)
-    const [FAVOURITE_ITEMS] = useSwitches(['FAVOURITE_ITEMS'])
+    const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
     const handleLogout = () => {
         dispatch(LOG_OUT({ history }))
     }
 
-    const NAV_ITEMS = user !== null ? [
+    const NAV_ITEMS: ItemType[] = user !== null ? [
         {
             id: 'Favourites',
             title: 'Favourites',
@@ -122,6 +124,15 @@ const Header = () => {
             title: 'Favourite items',
             faIcon: faTh,
             url: `/${user.username}/favourite-items`,
+        })
+    }
+
+    if (user !== null && USER_DASHBOARD) {
+        NAV_ITEMS.unshift({
+            id: 'User dashboard',
+            title: 'User dashboard',
+            faIcon: faHouseUser,
+            url: `/${user.username}`,
         })
     }
 
