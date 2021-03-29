@@ -14,6 +14,7 @@ import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import FavouriteItems from './favourite-items/favouriteItems'
+import UserDashboard from './user-dashboard/userDashboard'
 import { useSwitches } from 'src/customHooks'
 
 const Main = (props: HydratedRouteComponentProps) => {
@@ -23,7 +24,7 @@ const Main = (props: HydratedRouteComponentProps) => {
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
     const username = props.match.params.username
-    const [FAVOURITE_ITEMS] = useSwitches(['FAVOURITE_ITEMS'])
+    const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
     useEffect(() => {
         if (!username) {
@@ -57,11 +58,16 @@ const Main = (props: HydratedRouteComponentProps) => {
             {currentUser.user?.username ? (
                 <Suspense fallback={<Loader />}>
                     <Switch>
-                        <Redirect
-                            exact
-                            from="/:username"
-                            to="/:username/catalogues"
-                        />
+                        {USER_DASHBOARD
+                        ? (
+                            <RouteWithContext exact path={"/:username"} component={UserDashboard} />
+                        ) : (
+                            <Redirect
+                                exact
+                                from="/:username"
+                                to="/:username/catalogues"
+                            />
+                        )}
                         <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
                         <PrivateRouteWithContext path={"/:username/settings"} component={Settings} />
                         {FAVOURITE_ITEMS && 
