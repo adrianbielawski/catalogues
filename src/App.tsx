@@ -50,7 +50,8 @@ const App = () => {
     <div className={styles.app} style={{ minHeight: app.screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
-          <Route exact path={["/", "/signup"]} component={Auth} />
+          <Route exact path="/" component={Auth} />
+          <Route path={["/login", "/signup"]} component={Auth} />
           <Route path="/:username" component={Main} />
         </Switch>
       </Suspense>

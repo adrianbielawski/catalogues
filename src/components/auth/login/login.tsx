@@ -44,6 +44,10 @@ const Login = () => {
         history.push('/signup')
     }
 
+    if (auth.user) {
+        history.push(`/${auth.user.username}`)
+    }
+
     return (
         <div className={styles.login}>
             <form onSubmit={handleSubmit} onChange={validateInput}>

@@ -1,33 +1,36 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { Suspense } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import styles from './auth.scss'
-//Types
-import { LocationState } from 'src/globalTypes'
+//Redux
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { CLEAR_AUTH_ERROR } from 'store/slices/authSlices/authSlices'
 //Custom components
 import Login from './login/login'
 import Signup from './signup/signup'
 import Header from 'components/global-components/header/header'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { CLEAR_AUTH_ERROR } from 'store/slices/authSlices/authSlices'
+import Loader from 'components/global-components/loader/loader'
+import VerifyEmail from './verify-email/verifyEmail'
 
 const Auth = () => {
     const dispatch = useAppDispatch()
-    const location = useLocation<LocationState>()
     const auth = useTypedSelector(state => state.auth)
 
     const clearError = () => {
         dispatch(CLEAR_AUTH_ERROR())
     }
-    
+
     return (
         <div className={styles.auth}>
             <Header />
             <div className={styles.content}>
-                {location.pathname === '/signup' ?
-                    <Signup /> :
-                    <Login />
-                }
+                <Suspense fallback={<Loader />}>
+                    <Switch>
+                        <Route exact path={['/', '/login']} component={Login} />
+                        <Route exact path="/signup" component={Signup} />
+                        <Route path="/signup/verify/:key" component={VerifyEmail} />
+                    </Switch>
+                </Suspense>
             </div>
             <MessageModal
                 show={auth.authError.message.length !== 0}

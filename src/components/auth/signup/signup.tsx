@@ -79,6 +79,10 @@ const Signup = () => {
         history.push('/')
     }
 
+    if (auth.user) {
+        history.push(`/${auth.user.username}`)
+    }
+
     return (
         <div className={styles.signup}>
             <form onSubmit={handleSubmit} onChange={validateUserInput}>
