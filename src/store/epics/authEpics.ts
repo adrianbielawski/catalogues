@@ -55,12 +55,8 @@ export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
             password2: action.payload.repeatedPassword,
             username: action.payload.userName,
         }).pipe(
-            mergeMap(response => concat(
-                of(actions.SIGN_UP_SUCCESS(response.data.user)),
-                defer(() => {
-                    localStorage.setItem('token', response.data.key)
-                    action.payload.history.push(`/${response.data.user.username}/catalogues`)
-                })
+            mergeMap(() => concat(
+                of(actions.SIGN_UP_SUCCESS()),
             )),
             catchError(error => {
                 const message = getErrorMessage(error)

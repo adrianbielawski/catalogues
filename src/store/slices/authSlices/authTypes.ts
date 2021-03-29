@@ -1,17 +1,16 @@
-import { DeserializedUser, LocationState } from "src/globalTypes"
+import { DeserializedUser, ErrorMessage, LocationState } from "src/globalTypes"
 import { History, Location } from 'history'
 
 export interface AuthState {
     user: DeserializedUser | null,
     isInitialized: boolean,
     isLoggingIn: boolean,
-    loginError: string,
     isLoggingOut: boolean,
-    logOutError: string,
     isCheckingUsername: boolean,
     invalidUsernameMessage: string,
     isSigningUp: boolean,
-    signUpError: string,
+    signUpMessage: ErrorMessage,
+    authError: ErrorMessage,
 }
 
 export interface GetUserDetails {

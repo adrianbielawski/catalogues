@@ -4,13 +4,6 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    .authButton {
-        font-weight: 700;
-        font-size: 1.2em;
-        padding: 5px 10px;
-        border-bottom: 2px solid transparent;
-        cursor: pointer;
-    }
     .noCatalogues {
         margin: 30px auto 0 auto;
         text-align: center;
@@ -30,11 +23,6 @@
 }
 @media (hover: hover) and (pointer: fine) {
     .catalogues {
-        .authButton {
-            &:hover {
-                color: $lightOrange;
-            }
-        }
         .noCatalogues {
             &:hover {
                 color: $lightOrange;

@@ -5,7 +5,7 @@ import styles from './signup.scss'
 import { LocationState } from 'src/globalTypes'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { SIGN_UP, CLEAR_SIGNUP_ERROR, VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
+import { SIGN_UP, CLEAR_SIGNUP_MESSAGE, VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom hooks and utils
 import { useDebouncedDispatch } from 'src/customHooks'
 import { mergeRefs } from 'src/utils'
@@ -75,7 +75,8 @@ const Signup = () => {
     }
 
     const clearError = () => {
-        dispatch(CLEAR_SIGNUP_ERROR())
+        dispatch(CLEAR_SIGNUP_MESSAGE())
+        history.push('/')
     }
 
     return (
@@ -119,9 +120,9 @@ const Signup = () => {
                 }
             </form>
             <MessageModal
-                show={auth.signUpError.length !== 0}
-                title="Signup error"
-                message={auth.signUpError}
+                show={auth.signUpMessage.message.length !== 0}
+                title={auth.signUpMessage.title}
+                message={auth.signUpMessage.message}
                 onConfirm={clearError}
             />
         </div>
