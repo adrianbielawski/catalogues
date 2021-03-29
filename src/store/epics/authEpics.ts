@@ -58,12 +58,29 @@ export const signUpEpic = (action$: Observable<Action>) => action$.pipe(
             mergeMap(() => concat(
                 of(actions.SIGN_UP_SUCCESS()),
             )),
-            catchError(error => {
-                const message = getErrorMessage(error)
-                return of(actions.SIGN_UP_FAILURE(message))
-            })
+            catchError(error => of(actions.SIGN_UP_FAILURE(getErrorMessage(error))))
         )
     ))
+)
+
+export const verifyEmailEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.VERIFY_EMAIL.match),
+    mergeMap(action =>
+        axiosInstance$.post('/registration/verify-email/', {
+            key: action.payload.key,
+        }).pipe(
+            mergeMap(response => concat(
+                defer(() => {
+                    localStorage.setItem('token', response.data.key)
+                }),
+                of(actions.VERIFY_EMAIL_SUCCESS(response.data.user)),
+                defer(() => {
+                    action.payload.history.push(`/${response.data.user.username}/catalogues`)
+                }),
+            )),
+            catchError(error => of(actions.VERIFY_EMAIL_FAILURE(error.response.data.key)))
+        )
+    )
 )
 
 export const logInEpic = (action$: Observable<Action>) => action$.pipe(
@@ -87,10 +104,7 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                     action.payload.history.push(pathname)
                 }),
             )),
-            catchError(error => {
-                const message = getErrorMessage(error)
-                return of(actions.LOG_IN_FAILURE(message))
-            })
+            catchError(error => of(actions.LOG_IN_FAILURE(getErrorMessage(error))))
         )
     ))
 )
@@ -112,10 +126,7 @@ export const logOutEpic = (
                     action.payload.history.push(`/${username || ''}`)
                 })
             )),
-            catchError(error => {
-                const message = getErrorMessage(error)
-                return of(actions.LOG_OUT_FAILURE(message))
-            })
+            catchError(error => of(actions.LOG_OUT_FAILURE(getErrorMessage(error))))
         )
     ))
 )
@@ -124,6 +135,7 @@ export const authEpics = combineEpics(
     getUserEpic,
     validateUsernameEpic,
     signUpEpic,
+    verifyEmailEpic,
     logInEpic,
     logOutEpic,
 )

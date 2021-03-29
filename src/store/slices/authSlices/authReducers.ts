@@ -90,6 +90,19 @@ export const signupReducers = {
     },
 }
 
+export const verifyEmailReducers = {
+    VERIFY_EMAIL(state: State, action: PayloadAction<T.VerifyEmailPayload>) {},
+    VERIFY_EMAIL_SUCCESS(state: State, action: PayloadAction<User>) {
+        state.user = userDeserializer(action.payload)
+    },
+    VERIFY_EMAIL_FAILURE(state: State, action: PayloadAction<string>) {
+        state.verifyEmailError = action.payload
+    },
+    CLEAR_VERIFY_EMAIL_ERROR(state: State) {
+        state.verifyEmailError = ''
+    },
+}
+
 export const logoutReducers = {
     LOG_OUT(state: State, action: PayloadAction<T.HistoryPayload>) {},
     LOG_OUT_START(state: State) {

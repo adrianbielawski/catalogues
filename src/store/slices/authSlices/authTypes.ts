@@ -10,22 +10,23 @@ export interface AuthState {
     invalidUsernameMessage: string,
     isSigningUp: boolean,
     signUpMessage: ErrorMessage,
+    verifyEmailError: string,
     authError: ErrorMessage,
 }
 
 export interface GetUserDetails {
-    history: History,
+    history: History<LocationState>,
     location: Location<LocationState>,
 }
 
 export interface HistoryPayload {
-    history: History,
+    history: History<LocationState>,
 }
 
 export interface LoginDetails {
     email: string,
     password: string,
-    history: History,
+    history: History<LocationState>,
     location: Location<LocationState>,
 }
 
@@ -34,5 +35,11 @@ export interface SignUpDetails {
     email: string,
     password: string,
     repeatedPassword: string,
-    history: History,
+    history: History<LocationState>,
+}
+
+export interface VerifyEmailPayload {
+    key: string,
+    history: History<LocationState>,
+    location: Location<LocationState>,
 }

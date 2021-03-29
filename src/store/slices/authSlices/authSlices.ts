@@ -18,6 +18,7 @@ export const initialState: AuthState = {
         title: '',
         message: '',
     },
+    verifyEmailError: '',
     authError: {
         title: '',
         message: '',
@@ -33,6 +34,7 @@ export const authSlice = createSlice({
         ...reducers.loginReducers,
         ...reducers.validateUsernameReducer,
         ...reducers.signupReducers,
+        ...reducers.verifyEmailReducers,
         ...reducers.logoutReducers,
     },
     extraReducers: (builder) => {
@@ -56,5 +58,6 @@ export const {
     LOG_IN, LOG_IN_START, LOG_IN_SUCCESS, LOG_IN_FAILURE,
     VALIDATE_USERNAME, VALIDATE_USERNAME_START, VALIDATE_USERNAME_SUCCESS, VALIDATE_USERNAME_FAILURE,
     SIGN_UP, SIGN_UP_START, SIGN_UP_SUCCESS, SIGN_UP_FAILURE, CLEAR_SIGNUP_MESSAGE,
+    VERIFY_EMAIL, VERIFY_EMAIL_SUCCESS, VERIFY_EMAIL_FAILURE, CLEAR_VERIFY_EMAIL_ERROR,
     LOG_OUT, LOG_OUT_START, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
 } = authSlice.actions
