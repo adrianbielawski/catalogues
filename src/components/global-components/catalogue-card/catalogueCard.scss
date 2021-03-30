@@ -1,0 +1,50 @@
+@import "global-styles/variables_and_mixins";
+
+.catalogueCard {
+    border-bottom: 1px solid $lightGrey;
+    .header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.3em;
+        padding: 5px;
+    }
+    .image {
+        width: 100%;
+        min-height: 100px;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+    .meta {
+        padding: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .user {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .avatar {
+                font-size: 1.7em;
+                min-width: 35px;
+                min-height: 35px;
+                width: 35px;
+                height: 35px;
+            }
+            p {
+                font-weight: 700;
+                margin-left: 5px;
+            }
+        }
+        .date {
+            font-size: 0.8em;
+            color: $midLightGrey;
+        }
+    }
+}
