@@ -9,6 +9,7 @@ import { useAppDispatch } from 'store/storeConfig'
 import { POST_CATALOGUE_IMAGE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom components
 import Loader from 'components/global-components/loader/loader'
+import NoInameIcon from 'components/global-components/no-image-icon/noImageIcon'
 
 const BASE_URL = process.env.API_URL
 
@@ -47,12 +48,7 @@ const CatalogueImage = (props: Props) => {
                 className={styles.image}
             />
         )
-        : (
-            <div className={`fa-layers fa-fw ${styles.image}`}>
-                <FontAwesomeIcon icon={faCamera} />
-                <FontAwesomeIcon icon={faSlash} className={styles.slash} />
-            </div>
-        )
+        : <NoInameIcon size="6x" />
 
     return (
         <div className={styles.catalogueImage} onClick={handleClick}>

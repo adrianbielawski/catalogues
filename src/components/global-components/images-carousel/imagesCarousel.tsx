@@ -15,6 +15,7 @@ import ArrowButton from './arrow-button/arrowButton'
 import TransparentButton from '../transparent-button/transparentButton'
 import ImagesCounter from './images-counter/imagesCounter'
 import PrimaryImageStar from './primary-image-star/primaryImageStar'
+import NoInameIcon from '../no-image-icon/noImageIcon'
 
 const BASE_URL = process.env.API_URL
 
@@ -294,12 +295,7 @@ const ImagesCarousel = (props: Props) => {
                         )}
                     </>
                 )
-                : (
-                    <div className={`fa-layers fa-fw ${styles.cameraIcon}`}>
-                        <FontAwesomeIcon icon={faCamera} />
-                        <FontAwesomeIcon icon={faSlash} className={styles.slash} />
-                    </div>
-                )
+                : <NoInameIcon size="6x" />
             }
         </div>
     )
