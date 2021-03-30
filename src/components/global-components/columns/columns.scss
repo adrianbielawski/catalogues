@@ -1,0 +1,42 @@
+@import "global-styles/variables_and_mixins";
+
+.columns {
+    box-sizing: border-box;
+    display: grid;
+    width: calc(100% / var(--count));
+    height: calc(100vh - 95px);
+    margin: 0 auto;
+    padding: 8px;
+    .column {
+        display: flex;
+        grid-area: 1 / -1;
+        flex-direction: column;
+        height: calc(100vh - 111px);
+        .wrapper {
+            transform: translateX(calc((var(--offset) * 104%)));
+            transition: .2s;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .columns {
+        width: 100%;
+        overflow: hidden;
+        height: unset;
+        min-height: calc(100vh - 95px);
+        padding: 0;
+        .column {
+            min-width: 100%;
+            height: unset;
+            min-height: calc(100% - 95px);
+            .wrapper {
+                box-shadow: none;
+                transform: translateX(calc((var(--offset) * 100%)));
+                min-height: 100%;
+            }
+        }
+    }
+}

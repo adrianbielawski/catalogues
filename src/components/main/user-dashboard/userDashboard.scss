@@ -1,3 +1,5 @@
+@import "global-styles/variables_and_mixins";
+
 .userDashboard {
     .userDashboardHeader {
         display: flex;
@@ -6,6 +8,50 @@
         .title {
             font-size: 1.4em;
             font-weight: 700;
+        }
+    }
+    .column {
+        box-sizing: border-box;
+        background: #fff;
+        box-shadow: 2px 2px 6px -3px #7b7b7b;
+        .columnHeader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            height: 40px;
+            border-bottom: 1px solid $midLightGrey;
+            padding: 5px;
+        }
+        .columnContent {
+            height: calc(100% - 40px);
+            padding: 5px;
+            @include scrollY;
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .userDashboard {
+        .userDashboardHeader {
+            justify-content: space-between;
+            .arrowButton {
+                font-size: 1.3em;
+                padding: 5px 10px;
+                &:enabled:active {
+                    color: $orange;
+                }
+            }
+        }
+        .column {
+            .columnHeader {
+                display: none;
+            }
+            .columnContent {
+                height: unset;
+                overflow: unset;
+            }
         }
     }
 }
