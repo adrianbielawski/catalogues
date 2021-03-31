@@ -9,7 +9,7 @@ import {
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldsSelector } from 'store/selectors'
 //Custom hooks
-import { useDebouncedDispatch } from 'src/customHooks'
+import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 //Custom components
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'

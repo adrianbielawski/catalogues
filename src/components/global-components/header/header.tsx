@@ -18,7 +18,7 @@ import Nav, { ItemType, ItemWithChildrenAndFaIcon } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
-import { useSwitches } from 'src/customHooks'
+import { useSwitches } from 'src/hooks/useSwitches'
 
 const contextValue = {
     show: false,

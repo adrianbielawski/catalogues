@@ -4,7 +4,8 @@ import styles from './manageCatalogues.scss'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { CREATE_CATALOGUE, FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom hooks
-import { useDelay, useFirstRender } from 'src/customHooks'
+import { useDelay} from 'src/hooks/useDelay'
+import { useFirstRender } from 'src/hooks/useFirstRender'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'

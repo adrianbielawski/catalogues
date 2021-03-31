@@ -7,7 +7,7 @@ import { catalogueSelector, itemSelector } from 'store/selectors'
 import { DeserializedItem } from 'src/globalTypes'
 //Custom hooks and utils
 import { mergeRefs } from 'src/utils'
-import { useFirstRender } from 'src/customHooks'
+import { useFirstRender } from 'src/hooks/useFirstRender'
 //Custom components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'

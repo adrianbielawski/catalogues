@@ -10,7 +10,8 @@ import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/catalogues
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
 //Custom hooks
-import { useDelay, useElementInView } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
+import { useElementInView } from 'src/hooks/useElementInView'
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
 import { scrollTop } from 'src/utils'

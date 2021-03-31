@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styles from './editItem.scss'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'

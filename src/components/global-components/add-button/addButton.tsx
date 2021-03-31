@@ -4,7 +4,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './addButton.scss'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from '../loader/loader'

@@ -12,7 +12,7 @@ import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/
 //Router
 import { RouteWithContext } from 'src/router'
 //Custom hooks
-import { useFirstRender } from 'src/customHooks'
+import { useFirstRender } from 'src/hooks/useFirstRender'
 //Filter bar utils
 //Custom components
 import Loader from 'components/global-components/loader/loader'

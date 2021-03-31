@@ -3,7 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './commentsModal.scss'
 //Custom hooks and utils
-import { useDelay, useElementInView } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
+import { useElementInView } from 'src/hooks/useElementInView'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'

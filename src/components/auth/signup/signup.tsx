@@ -7,7 +7,7 @@ import { LocationState } from 'src/globalTypes'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { SIGN_UP, CLEAR_SIGNUP_MESSAGE, VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom hooks and utils
-import { useDebouncedDispatch } from 'src/customHooks'
+import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 import { mergeRefs } from 'src/utils'
 //Custom Components
 import Loader from 'components/global-components/loader/loader'

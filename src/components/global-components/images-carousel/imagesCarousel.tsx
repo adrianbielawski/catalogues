@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
-import { faCamera, faSlash } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
 //Custom hooks and utils
-import { useFirstRender } from 'src/customHooks'
+import { useFirstRender } from 'src/hooks/useFirstRender'
 import { mod } from 'src/utils'
 //Types
 import { DeserializedImage } from 'src/globalTypes'

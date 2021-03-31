@@ -9,7 +9,7 @@ import { catalogueSelector } from 'store/selectors'
 //Custom components
 import EditableField from 'components/global-components/editable-field/editableField'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-import { useDebouncedDispatch } from 'src/customHooks'
+import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 
 type Props = {
     id: number,

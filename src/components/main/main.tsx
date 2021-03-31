@@ -15,7 +15,7 @@ import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import FavouriteItems from './favourite-items/favouriteItems'
 import UserDashboard from './user-dashboard/userDashboard'
-import { useSwitches } from 'src/customHooks'
+import { useSwitches } from 'src/hooks/useSwitches'
 
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()

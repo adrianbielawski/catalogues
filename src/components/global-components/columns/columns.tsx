@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './columns.scss'
-import { useSwipe } from 'src/hooks/use-swipe'
+import { useSwipe } from 'src/hooks/useSwipe'
 
 export interface ColumnInterface {
     component: ReactNode,

@@ -4,7 +4,8 @@ import styles from './myAccount.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom hooks and utils
-import { useDebouncedDispatch, useFirstRender } from 'src/customHooks'
+import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
+import { useFirstRender } from 'src/hooks/useFirstRender'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import {

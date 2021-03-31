@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import styles from './search.scss'
 //Custom hooks and utils
-import { useDebouncedCallback } from 'src/customHooks'
+import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 import { mergeRefs } from 'src/utils'
 //Contexts
 import { SearchContext } from './searchStore'

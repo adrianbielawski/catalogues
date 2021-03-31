@@ -6,7 +6,7 @@ import { catalogueSelector, fieldsSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
 //Custom components
 import Input from 'components/global-components/input/input'
 import ChoiceList from 'components/global-components/choice-list/choiceList'

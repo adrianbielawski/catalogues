@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './editableField.scss'
 //Custom hooks
-import { useDelay } from 'src/customHooks'
+import { useDelay } from 'src/hooks/useDelay'
 //Custom components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
