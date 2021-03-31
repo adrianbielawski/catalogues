@@ -1,8 +1,9 @@
-import moment from 'moment'
 import React from 'react'
+import { useHistory } from 'react-router'
+import moment from 'moment'
 import styles from './catalogueCard.scss'
 //Types
-import { DeserializedCatalogue } from 'src/globalTypes'
+import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Custom components
 import Avatar from '../avatar/avatar'
 import NoInameIcon from '../no-image-icon/noImageIcon'
@@ -13,23 +14,44 @@ type Props = {
     catalogue: DeserializedCatalogue,
 }
 
-const CatalogueCard = (props: Props) => {
+const CatalogueCard: React.ForwardRefRenderFunction<
+    HTMLDivElement,
+    Props
+> = (props, ref) => {
+    const history = useHistory<LocationState>()
     const { catalogue } = props
     const user = props.catalogue.createdBy
 
+    const redirectToCatalogue = () => {
+        history.push(`/${catalogue.createdBy.username}/catalogues/${catalogue.slug}`)
+    }
+
+    const redirectToUser = () => {
+        history.push(`/${catalogue.createdBy.username}`)
+    }
+
     return (
-        <div className={styles.catalogueCard}>
-            <div className={styles.header}>
+        <div className={styles.catalogueCard} ref={ref}>
+            <p
+                className={styles.header}
+                onClick={redirectToCatalogue}
+            >
                 {catalogue.name}
-            </div>
-            <div className={styles.image}>
+            </p>
+            <div
+                className={styles.image}
+                onClick={redirectToCatalogue}
+            >
                 {catalogue.imageThumbnail
                     ? <img src={`${BASE_URL}${catalogue.imageThumbnail}`} />
                     : <NoInameIcon size="6x" />
                 }
             </div>
             <div className={styles.meta}>
-                <div className={styles.user}>
+                <div
+                    className={styles.user}
+                    onClick={redirectToUser}
+                >
                     <Avatar
                         className={styles.avatar}
                         url={user.imageThumbnail}
@@ -37,11 +59,13 @@ const CatalogueCard = (props: Props) => {
                     <p>{user.username}</p>
                 </div>
                 <p className={styles.date}>
-                    {moment(catalogue.itemsRanges.date.max).fromNow()}
+                    {catalogue.itemsRanges.date.max &&
+                        moment(catalogue.itemsRanges.date.max).fromNow()
+                    }
                 </p>
             </div>
         </div>
     )
 }
 
-export default CatalogueCard
+export default React.forwardRef(CatalogueCard)
