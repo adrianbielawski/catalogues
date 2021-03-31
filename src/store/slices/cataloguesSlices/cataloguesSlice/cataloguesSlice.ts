@@ -7,6 +7,17 @@ import * as fieldsReducers from './reducers/fieldsReducer'
 const initialState: CataloguesState = {
     authUser: {
         catalogues: [],
+        recomended: {
+            fetchingCatalogues: false,
+            count: null,
+            pageSize: null,
+            startIndex: null,
+            endIndex: null,
+            current: null,
+            next: null,
+            previous: null,
+            results: [],
+        },
         favouriteCatalogues: [],
         fetchingData: true,
     },
@@ -23,6 +34,7 @@ export const cataloguesSlice = createSlice({
         ...cataloguesReducers.createCatalogueReducers,
         ...cataloguesReducers.refreshCatalogueReducers,
         ...cataloguesReducers.fetchCataloguesReducers,
+        ...cataloguesReducers.fetchRecomendedCataloguesReducers,
         ...cataloguesReducers.fetchAuthUserDataReducers,
         ...cataloguesReducers.changeCatalogueNameReducers,
         ...cataloguesReducers.changeDefaultCatalogueReducers,
@@ -54,6 +66,7 @@ export const {
     CREATE_CATALOGUE, CREATE_CATALOGUE_START, CREATE_CATALOGUE_SUCCESS, CREATE_CATALOGUE_FAILURE, NEW_CATALOGUE_CREATED,
     REFRESH_CATALOGUE, REFRESH_CATALOGUE_START, REFRESH_CATALOGUE_SUCCESS, REFRESH_CATALOGUE_FAILURE,
     FETCH_CATALOGUES, FETCH_CATALOGUES_START, FETCH_CATALOGUES_SUCCESS, FETCH_CATALOGUES_FAILURE,
+    FETCH_RECOMENDED_CATALOGUES, FETCH_RECOMENDED_CATALOGUES_START, FETCH_RECOMENDED_CATALOGUES_SUCCESS, FETCH_RECOMENDED_CATALOGUES_FAILURE,
     FETCH_AUTH_USER_DATA, FETCH_AUTH_USER_DATA_START, FETCH_AUTH_USER_DATA_SUCCESS, FETCH_AUTH_USER_DATA_FAILURE,
     TOGGLE_CATALOGUE_NAME_EDIT,
     CHANGE_CATALOGUE_NAME, FETCH_CATALOGUE_FIELDS, CHANGE_CATALOGUE_NAME_START, CHANGE_CATALOGUE_NAME_SUCCESS, CHANGE_CATALOGUE_NAME_FAILURE,
