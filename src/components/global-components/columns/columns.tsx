@@ -43,7 +43,13 @@ const Columns = (props: Props) => {
 
     useEffect(() => {
         if (!props.mobileView) {
-            setCurrent(Math.floor(count / 2))
+            const newCurrent = Math.floor(count / 2)
+
+            setCurrent(newCurrent)
+            
+            if (props.onChange) {
+                props.onChange(newCurrent)
+            }
         }
     }, [props.mobileView])
 
