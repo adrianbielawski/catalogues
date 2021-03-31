@@ -1,0 +1,28 @@
+@import "global-styles/variables_and_mixins";
+
+.column {
+    height: 100%;
+    width: 100%;
+    @include scrollY;
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3em;
+        font-weight: 700;
+        height: 40px;
+        background: #fff;
+        border-bottom: 1px solid $midLightGrey;
+        padding: 5px;
+        position: sticky;
+        top: 0;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .column {
+        .header {
+            display: none;
+        }
+    }
+}
