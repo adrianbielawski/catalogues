@@ -1,6 +1,7 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './columns.scss'
+import { useSwipe } from 'src/hooks/use-swipe'
 
 export interface ColumnInterface {
     component: ReactNode,
@@ -9,13 +10,6 @@ export interface ColumnInterface {
 interface Coords {
     x: number,
     y: number,
-}
-
-interface Slide {
-    start: {
-        time: number | null,
-    } & Coords | null,
-    length: Coords | null,
 }
 
 type Props = {
@@ -31,9 +25,8 @@ const cx = classNames.bind(styles)
 
 const Columns = (props: Props) => {
     const count = props.columns.length
-    const columnsRef = useRef<HTMLUListElement>(null)
     const [current, setCurrent] = useState(props.current || 0)
-    const [slide, setSlide] = useState<Slide>({ start: null, length: null })
+    const [swipe, setSwipe] = useState<Coords | null>(null)
 
     useEffect(() => {
         if (props.current !== undefined) {
@@ -43,116 +36,87 @@ const Columns = (props: Props) => {
 
     useEffect(() => {
         if (!props.mobileView) {
-            const newCurrent = Math.floor(count / 2)
-
-            setCurrent(newCurrent)
-            
-            if (props.onChange) {
-                props.onChange(newCurrent)
-            }
+            const diff = Math.floor(count / 2)
+            changeCurrent(diff)
         }
     }, [props.mobileView])
 
-    useEffect(() => {
-        if (columnsRef.current !== null && count > 1) {
-            columnsRef.current.addEventListener('touchstart', handleTouchStart)
-        }
-
-        return () => {
-            if (columnsRef.current !== null) {
-                columnsRef.current.removeEventListener('touchstart', handleTouchStart)
+    const validateSwipe = useCallback(
+        (x: number, y: number) => {
+            if ((current === count - 1 && x < 0)
+                || (current === 0 && x > 0)
+                || (Math.abs(x) < Math.abs(y))
+            ) {
+                return false
             }
-        }
-    }, [slide, count])
+            return true
+        },
+        [current, count]
+    )
 
-    useEffect(() => {
-        if (columnsRef.current !== null && slide.start?.x !== null) {
-            columnsRef.current.addEventListener('touchmove', handleTouchMove)
-            columnsRef.current.addEventListener('touchend', handleTouchEnd)
-        }
+    const handleSwipe = useCallback(
+        (x: number, y: number) => {
+            const isValid = validateSwipe(x, y)
 
-        return () => {
-            if (columnsRef.current !== null) {
-                columnsRef.current.removeEventListener('touchmove', handleTouchMove)
-                columnsRef.current.removeEventListener('touchend', handleTouchEnd)
+            if (!isValid) {
+                return
             }
-        }
-    }, [slide, current, count])
+            setSwipe({ x, y })
+        },
+        [validateSwipe, setSwipe]
+    )
 
-    const handleTouchStart = (e: TouchEvent) => {
-        setSlide({
-            ...slide,
-            start: {
-                x: e.touches[0].clientX,
-                y: e.touches[0].clientY,
-                time: Date.now(),
-            },
-        })
-    }
+    const changeCurrent = useCallback(
+        diff => {
+            setCurrent(current + diff)
 
-    const handleTouchMove = (e: TouchEvent) => {
-        const slideX = e.touches[0].clientX - slide.start!.x
-        const slideY = e.touches[0].clientY - slide.start!.y
-
-        if ((current === count - 1 && slideX < 0)
-            || (current === 0 && slideX > 0)
-            || (Math.abs(slideX) < Math.abs(slideY))
-        ) {
-            return
-        }
-
-        setSlide({
-            ...slide,
-            length: {
-                x: slideX,
-                y: slideY,
-            },
-        })
-    }
-
-    const handleTouchEnd = () => {
-        if (!slide.length
-            || (current === count - 1 && !slide.length)
-            || (current === 0 && !slide.length)) {
-            return
-        }
-
-        let newCurrent = current
-
-        if (Date.now() < slide.start!.time! + 300) {
-            if (slide.length!.x > 50) {
-                newCurrent -= 1
+            if (props.onChange) {
+                props.onChange(current + diff)
             }
-            if (slide.length!.x < -50) {
-                newCurrent += 1
+        },
+        [current, props.onChange]
+    )
+
+    const handleSwipeEnd = useCallback(
+        (x: number, y: number, isQuick: boolean) => {
+            const isValid = validateSwipe(x, y)
+
+            if (!isValid) {
+                setSwipe(null)
+                return
             }
-        } else {
-            newCurrent -= Math.round(slide.length!.x / window.innerWidth)
-        }
 
-        setSlide({
-            start: null,
-            length: null,
-        })
+            let diff
 
-        if (props.onChange) {
-            props.onChange(newCurrent)
-        }
+            if (isQuick) {
+                if (x > 50) {
+                    diff = -1
+                }
+                if (x < -50) {
+                    diff = 1
+                }
+            } else {
+                diff = -Math.round(x / window.innerWidth)
+            }
 
-        setCurrent(newCurrent)
-    }
+            setSwipe(null)
+
+            changeCurrent(diff)
+        },
+        [validateSwipe, setSwipe, changeCurrent]
+    )
+
+    let columnsRef = useSwipe(handleSwipe, handleSwipeEnd)
 
     const getOffset = (i: number) => {
         let offset = i - current
 
-        if ((!props.mobileView)
-            && count % 2 === 0
-        ) {
+        if (!props.mobileView && count % 2 === 0) {
             offset += .5
         }
 
-        if (slide.start?.x && slide.length) {
-            offset = offset + ((slide.length.x) / window.innerWidth)
+        if (swipe?.x) {
+            offset = offset + (swipe.x / window.innerWidth)
         }
         return offset
     }
@@ -160,6 +124,11 @@ const Columns = (props: Props) => {
     const wrapperClass = cx(
         'wrapper',
         props.columnClassName,
+    )
+
+    const columnsClass = cx(
+        'columns',
+        props.className,
     )
 
     const COLUMNS = props.columns.map((column, i) => (
@@ -177,15 +146,10 @@ const Columns = (props: Props) => {
         </li>
     ))
 
-    const columnsClass = cx(
-        'columns',
-        props.className,
-    )
-
     return (
         <ul
             className={columnsClass}
-            ref={columnsRef}
+            ref={count > 1 ? columnsRef : null}
             style={{
                 '--count': `${props.columns.length}`,
             } as React.CSSProperties}
