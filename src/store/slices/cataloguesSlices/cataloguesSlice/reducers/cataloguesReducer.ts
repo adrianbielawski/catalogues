@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { Catalogue } from 'src/globalTypes'
+import { Catalogue, RecomendedCatalogues } from 'src/globalTypes'
 import * as T from '../cataloguesTypes'
-import { catalogueDeserializer } from 'src/serializers'
+import { catalogueDeserializer, listDeserializer } from 'src/serializers'
 import { getCatalogueById } from '../cataloguesSlectors'
 
 type State = T.CataloguesState
@@ -48,6 +48,22 @@ export const fetchCataloguesReducers = {
     },
     FETCH_CATALOGUES_FAILURE(state: State) {
         state.fetchingCatalogues = false
+    },
+}
+
+export const fetchRecomendedCataloguesReducers = {
+    FETCH_RECOMENDED_CATALOGUES(state: State, action: PayloadAction<number>) { },
+    FETCH_RECOMENDED_CATALOGUES_START(state: State) {
+        state.authUser.recomended.fetchingCatalogues = true
+    },
+    FETCH_RECOMENDED_CATALOGUES_SUCCESS(state: State, action: PayloadAction<RecomendedCatalogues>) {
+        state.authUser.recomended = {
+            ...listDeserializer(action.payload, catalogueDeserializer),
+            fetchingCatalogues: false
+        }
+    },
+    FETCH_RECOMENDED_CATALOGUES_FAILURE(state: State) {
+        state.authUser.recomended.fetchingCatalogues = false
     },
 }
 

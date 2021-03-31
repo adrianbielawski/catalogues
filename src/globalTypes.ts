@@ -119,6 +119,11 @@ export interface DeserializedCatalogue {
     isInitialized: boolean,
 }
 
+export interface RecomendedCatalogues extends ListData<Catalogue> { }
+export interface DeserializedRecomendedCatalogues extends DeserializedListData<DeserializedCatalogue> {
+    fetchingCatalogues: boolean,
+}
+
 export interface ListData<R> {
     count: number,
     page_size: number,
@@ -138,7 +143,7 @@ export interface DeserializedListData<R> {
     current: number | null,
     next: number | null,
     previous: number | null,
-    results: R,
+    results: R[],
 }
 
 export interface ItemsData extends ListData<Item> { }
@@ -214,8 +219,8 @@ export interface DeserializedItemCommentParent {
 
 export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChildren
 
-export interface CommentsData extends ListData<ItemCommentParent[]> { }
-export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment[]> { }
+export interface CommentsData extends ListData<ItemCommentParent> { }
+export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment> { }
 
 export interface Item {
     id: number,

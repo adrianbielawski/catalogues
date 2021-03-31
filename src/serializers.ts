@@ -55,7 +55,7 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
 export const listDeserializer = <S, D>(
     data: T.ListData<S>,
     resultsDeserializer: (results: S) => D
-): T.DeserializedListData<D[]> => ({
+): T.DeserializedListData<D> => ({
     count: data.count,
     pageSize: data.page_size,
     startIndex: data.start_index,

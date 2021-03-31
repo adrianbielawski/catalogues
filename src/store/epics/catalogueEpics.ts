@@ -246,6 +246,21 @@ export const fetchCataloguesEpic = (
     ))
 )
 
+export const fetchRecomendedCataloguesEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_RECOMENDED_CATALOGUES.match),
+    switchMap((action) => concat(
+        of(actions.FETCH_RECOMENDED_CATALOGUES_START()),
+        axiosInstance$.get('/catalogues/recomended', {
+            params: {
+                page: action.payload,
+            }
+        }).pipe(
+            map(response => actions.FETCH_RECOMENDED_CATALOGUES_SUCCESS(response.data)),
+            catchError(() => of(actions.FETCH_RECOMENDED_CATALOGUES_FAILURE()))
+        )
+    ))
+)
+
 export const fetchAuthUserDataEpic = (
     action$: Observable<Action>,
     state$: Observable<RootState>
@@ -441,6 +456,7 @@ export const cataloguesEpics = combineEpics(
     createCatalogueFieldEpic,
     refreshCatalogueEpic,
     fetchCataloguesEpic,
+    fetchRecomendedCataloguesEpic,
     fetchAuthUserDataEpic,
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,

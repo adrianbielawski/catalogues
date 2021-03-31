@@ -1,5 +1,6 @@
 import {
-    Catalogue, Choice, DeserializedCatalogue, DeserializedChoiceField, ErrorMessage, Field
+    Catalogue, Choice, DeserializedCatalogue, DeserializedChoiceField, DeserializedRecomendedCatalogues,
+    ErrorMessage, Field,
 } from "src/globalTypes"
 
 export interface CataloguesState {
@@ -12,6 +13,7 @@ export interface CataloguesState {
 
 export interface AuthUser {
     catalogues: DeserializedCatalogue[],
+    recomended: DeserializedRecomendedCatalogues,
     favouriteCatalogues: DeserializedCatalogue[],
     fetchingData: boolean,
 }

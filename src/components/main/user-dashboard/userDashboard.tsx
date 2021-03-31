@@ -11,12 +11,13 @@ import Header from 'components/global-components/header/header'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import Columns from 'components/global-components/columns/columns'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import RecomendedCatalogues from './recomended-catalogues/recomendedCatalogues'
 
 const UserDashboard = () => {
     const userDashboardRef = useRef<HTMLDivElement>(null)
     const app = useTypedSelector(state => state.app)
     const [minHeight, setMinHeight] = useState(0)
-    const [currentColumn, setCurrentColumn] = useState(1)
+    const [currentColumn, setCurrentColumn] = useState(0)
 
     useEffect(() => {
         if (userDashboardRef.current === null) {
@@ -33,58 +34,23 @@ const UserDashboard = () => {
         setMinHeight(minHeight)
     }
 
-    const handleColumnChange = (i: number) => {
+    const handleColumnChange = (column: number) => {
         scrollTop()
-        setCurrentColumn(i)
+        setCurrentColumn(column)
     }
 
     const showPrevColumn = () => {
-        setCurrentColumn(currentColumn - 1)
+        handleColumnChange(currentColumn - 1)
     }
 
     const showNextColumn = () => {
-        setCurrentColumn(currentColumn + 1)
+        handleColumnChange(currentColumn + 1)
     }
 
     const COLUMNS = [
         {
-            title: 'column 1',
-            component: (
-                <div>
-                    <p className={styles.columnHeader}>
-                        column 1
-                    </p>
-                    <div className={styles.columnContent}>
-                        <p>column1</p>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            title: 'column 2',
-            component: (
-                <div>
-                    <p className={styles.columnHeader}>
-                        column 2
-                    </p>
-                    <div className={styles.columnContent}>
-                        <p>column2</p>
-                    </div>
-                </div>
-            ),
-        },
-        {
-            title: 'column 3',
-            component: (
-                <div>
-                    <p className={styles.columnHeader}>
-                        column 3
-                    </p>
-                    <div className={styles.columnContent}>
-                        <p>column3</p>
-                    </div>
-                </div>
-            ),
+            title: 'Recomended catalogues',
+            component: <RecomendedCatalogues />
         },
     ]
 
