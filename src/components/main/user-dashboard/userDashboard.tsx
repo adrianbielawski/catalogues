@@ -33,17 +33,17 @@ const UserDashboard = () => {
         setMinHeight(minHeight)
     }
 
-    const handleColumnChange = (i: number) => {
+    const handleColumnChange = (column: number) => {
         scrollTop()
-        setCurrentColumn(i)
+        setCurrentColumn(column)
     }
 
     const showPrevColumn = () => {
-        setCurrentColumn(currentColumn - 1)
+        handleColumnChange(currentColumn - 1)
     }
 
     const showNextColumn = () => {
-        setCurrentColumn(currentColumn + 1)
+        handleColumnChange(currentColumn + 1)
     }
 
     const COLUMNS = [
