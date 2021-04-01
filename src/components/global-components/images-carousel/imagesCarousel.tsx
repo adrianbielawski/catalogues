@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useCallback } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
-//Custom hooks and utils
+//Hooks and utils
 import { useFirstRender } from 'src/hooks/useFirstRender'
 import { mod } from 'src/utils'
+import { useSwipe } from 'src/hooks/useSwipe'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Custom components
@@ -36,16 +37,11 @@ type Props = {
 
 const cx = classNames.bind(styles)
 
-interface TouchStart { x: number, y: number }
-
 const ImagesCarousel = (props: Props) => {
     const count = props.images.length
     const screenWidth = window.innerWidth
-
-    const carouselRef = useRef<HTMLDivElement>(null)
-    const [touchStart, setTouchStart] = useState<TouchStart | null>(null)
-    const [touchStartTime, setTouchStartTime] = useState<number | null>(null)
-    const [slideX, setSlideX] = useState<number>(0)
+    
+    const [swipeX, setSwipeX] = useState<number>(0)
     const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
     const firstRender = useFirstRender()
 
@@ -57,88 +53,60 @@ const ImagesCarousel = (props: Props) => {
         IMAGE_WIDTH = (props.width) * .416
     }
 
-    useEffect(() => {
-        if (props.onChange !== undefined && count > 0 && !firstRender) {
-            props.onChange(mod(current, count))
-        }
-    }, [current])
-
-    useEffect(() => {
-        if (carouselRef.current !== null && count > 1) {
-            carouselRef.current.addEventListener('touchstart', handleTouchStart)
-        }
-
-        return () => {
-            if (carouselRef.current !== null) {
-                carouselRef.current.removeEventListener('touchstart', handleTouchStart)
+    const changeCurrent = useCallback(
+        (diff: number) => {
+            if (props.onChange && count > 0) {
+                props.onChange(mod(current + diff, count))
             }
-        }
-    }, [touchStart, count])
 
-    useEffect(() => {
-        if (carouselRef.current !== null && touchStart !== null) {
-            document.addEventListener('touchmove', handleTouchMove)
-            document.addEventListener('touchend', handleTouchEnd)
-        } else if (carouselRef.current !== null && touchStart === null) {
-            document.removeEventListener('touchmove', handleTouchMove)
-            document.removeEventListener('touchend', handleTouchEnd)
-        }
+            setCurrent(current + diff)
+        },
+        [current, props.onChange]
+    )
 
-        return () => {
-            if (carouselRef.current !== null) {
-                document.removeEventListener('touchmove', handleTouchMove)
-                document.removeEventListener('touchend', handleTouchEnd)
+    const handleSwipe = useCallback(
+        (x: number, y: number) => {
+            if (Math.abs(x) < Math.abs(y)) {
+                return
             }
-        }
-    }, [touchStart, slideX, current, count])
 
-    const handleTouchStart = (e: TouchEvent) => {
-        setTouchStart({
-            x: e.touches[0].clientX,
-            y: e.touches[0].clientY
-        })
-        setTouchStartTime(Date.now())
-    }
+            setSwipeX(x / IMAGE_WIDTH)
+        },
+        [IMAGE_WIDTH]
+    )
 
-    const handleTouchMove = (e: TouchEvent) => {
-        const slideX = e.touches[0].clientX - touchStart!.x
-        const slideY = e.touches[0].clientY - touchStart!.y
-        if (Math.abs(slideY) > Math.abs(slideX)) {
-            return
-        }
-        const newSlideX = (slideX) / IMAGE_WIDTH
-        setSlideX(newSlideX)
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-        let newCurrent = current
-        if (Date.now() < touchStartTime! + 300) {
-            const slideX = e.changedTouches[0].clientX - touchStart!.x
-            if (slideX > 50) {
-                newCurrent -= 1
+    const handleSwipeEnd = useCallback(
+        (x: number, y: number, isQuick: boolean) => {
+            let diff = 0
+            if (isQuick) {
+                if (x > 50) {
+                    diff = -1
+                }
+                if (x < -50) {
+                    diff = 1
+                }
+            } else {
+                diff = -Math.round(x / IMAGE_WIDTH)
             }
-            if (slideX < -50) {
-                newCurrent += 1
-            }
-        } else {
-            newCurrent -= Math.round(slideX)
-        }
-        setTouchStart(null)
-        setSlideX(0)
-        setCurrent(newCurrent)
-        setTouchStartTime(null)
-    }
+            
+            setSwipeX(0)
+            changeCurrent(diff)
+        },
+        [current, IMAGE_WIDTH]
+    )
+
+    const columnsRef = useSwipe(handleSwipe, handleSwipeEnd)
 
     const handlePreviousImage = () => {
-        setCurrent(current - 1)
+        changeCurrent(-1)
     }
 
     const handleNextImage = () => {
-        setCurrent(current + 1)
+        changeCurrent(1)
     }
 
     const getDynamicStyles = (i: number) => {
-        let newCurrent = current - parseInt(slideX.toString())
+        let newCurrent = current - parseInt(swipeX.toString())
         const IMAGE_OFFSET = IMAGE_WIDTH * 1.22
 
         let styles = {
@@ -146,8 +114,8 @@ const ImagesCarousel = (props: Props) => {
             offset: `${IMAGE_OFFSET * (i - current)}px`,
         }
 
-        if (touchStart !== null) {
-            const scaleValue = Math.abs(slideX % 1 * .3)
+        if (swipeX) {
+            const scaleValue = Math.abs(swipeX % 1 * .3)
 
             let scale = i === newCurrent
                 ? clamp(
@@ -157,7 +125,7 @@ const ImagesCarousel = (props: Props) => {
                 )
                 : MIN_SCALE
 
-            if (slideX < 0 && i === newCurrent + 1 || slideX > 0 && i === newCurrent - 1) {
+            if (swipeX < 0 && i === newCurrent + 1 || swipeX > 0 && i === newCurrent - 1) {
                 scale = clamp(
                     MIN_SCALE + scaleValue,
                     MIN_SCALE,
@@ -167,7 +135,7 @@ const ImagesCarousel = (props: Props) => {
 
             styles = {
                 scale,
-                offset: `${IMAGE_OFFSET * (i - current) + slideX * IMAGE_OFFSET}px`,
+                offset: `${IMAGE_OFFSET * (i - current) + swipeX * IMAGE_OFFSET}px`,
             }
         }
 
@@ -203,7 +171,8 @@ const ImagesCarousel = (props: Props) => {
             const IMG = props.images[mod(i, count)]
             const IMAGE_URL = IMG.id.toString().startsWith('newImage')
                 ? IMG.image
-                : !props.fullSizeImages ? `${BASE_URL}${IMG.imageThumbnail}`
+                : !props.fullSizeImages
+                    ? `${BASE_URL}${IMG.imageThumbnail}`
                     : `${BASE_URL}${IMG.image}`
 
 
@@ -266,7 +235,7 @@ const ImagesCarousel = (props: Props) => {
     return (
         <div
             className={carouselClass}
-            ref={carouselRef}
+            ref={columnsRef}
             style={count ? CSSConstants : undefined}
         >
             {count > 0
