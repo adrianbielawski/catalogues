@@ -4,7 +4,7 @@ import styles from './recomendedCatalogues.scss'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { FETCH_RECOMENDED_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Custon hooks and utils
-import { useElementInView } from 'src/customHooks'
+import { useElementInView } from 'src/hooks/useElementInView'
 //Custom components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
 import Button from 'components/global-components/button/button'
