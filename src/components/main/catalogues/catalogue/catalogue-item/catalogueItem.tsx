@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
+import classNames from 'classnames/bind'
 import styles from './catalogueItem.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
+import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
-//Custom hooks and utils
+//Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
 //Custom components
@@ -19,12 +21,15 @@ import ItemRating from './item-rating/itemRating'
 import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
-import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import ItemHeader from './item-header/itemHeader'
 
 type Props = {
-    item: DeserializedItem
+    item: DeserializedItem,
+    mobileView: boolean,
+    className?: string,
 }
+
+const cx = classNames.bind(styles)
 
 const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
@@ -33,7 +38,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
     const carouselWrapperRef = useRef<HTMLDivElement>(null)
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(props.item.id))
     const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const [showImagesPreview, setShowImagesPreview] = useState(false)
@@ -47,9 +51,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     }, [item.isSubmitting, item.isEditing])
 
     useEffect(() => {
-        if (largeViewport) {
-            window.addEventListener('resize', getCarouselWidth)
-        }
+        window.addEventListener('resize', getCarouselWidth)
         getCarouselWidth()
 
         return () => {
@@ -76,13 +78,35 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const imagesCarouselWidth = largeViewport ? 200 : carouselWrapperWidth
-    const imagesCarouselHeight = largeViewport ? 200 : undefined
-    const isImagesPreviewAllowed = item.images.length && largeViewport
+    const imagesCarouselWidth = !props.mobileView ? 200 : carouselWrapperWidth
+    const imagesCarouselHeight = !props.mobileView ? 200 : undefined
+    const isImagesPreviewAllowed = item.images.length && !props.mobileView
     const showImagesCounter = item.images.length > 1
 
+    const itemClass = cx(
+        'item',
+        props.className,
+        {
+            mobile: props.mobileView,
+        }
+    )
+
+    const wrapperClass = cx(
+        'wrapper',
+        {
+            mobile: props.mobileView,
+        }
+    )
+
+    const itemContentClass = cx(
+        'itemContent',
+        {
+            mobile: props.mobileView,
+        }
+    )
+
     return (
-        <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
+        <li className={itemClass} ref={mergeRefs([ref, itemRef])}>
             {item.isEditing
                 ? (
                     <EditItem
@@ -100,7 +124,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
                     />
-                    <div className={styles.wrapper}>
+                    <div className={wrapperClass}>
                         <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
                             <ImagesCarousel
                                 width={imagesCarouselWidth}
@@ -111,7 +135,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 showCounter={showImagesCounter}
                             />
                         </div>
-                        <div className={styles.itemContent}>
+                        <div className={itemContentClass}>
                             <div className={styles.ratingWrapper}>
                                 <ItemRating item={item} />
                                 {item.permissions.canAddToFavourites && (

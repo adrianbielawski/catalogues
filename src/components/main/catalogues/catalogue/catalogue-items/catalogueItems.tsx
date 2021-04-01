@@ -35,7 +35,7 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
+    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
     const itemsData = useTypedSelector(state => state.itemsData)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
     const filtersBarContext = useFiltersBarContext()
@@ -111,7 +111,14 @@ const CatalogueItems = (props: Props) => {
 
     const getItems = () => itemsData.results.map((item, i) => {
         const ref = i === itemsData.results.length - 1 ? lastItemRef : null
-        return <CatalogueItem item={item} key={item.id} ref={ref} />
+        return (
+            <CatalogueItem
+                item={item}
+                mobileView={!largeViewport}
+                key={item.id}
+                ref={ref}
+            />
+        )
     })
 
     const getNoItemsMessage = () => {
@@ -143,7 +150,7 @@ const CatalogueItems = (props: Props) => {
     }
 
     const getAddItemButton = () => {
-        if (!smallViewport) {
+        if (largeViewport) {
             return (
                 <AddButton
                     text="Add new item"
