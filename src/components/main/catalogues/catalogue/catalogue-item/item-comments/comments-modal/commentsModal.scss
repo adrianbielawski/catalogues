@@ -9,6 +9,11 @@
         background: #fff;
         max-height: 90vh;
         max-width: 90vw;
+        .carouselWrapper {
+            width: 50vw;
+            height: 90vh;
+            background: $lightGrey;
+        }
         .commentsWrapper {
             .addComment {
                 padding: 10px 5px;

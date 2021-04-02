@@ -18,15 +18,13 @@ const ImagesPreview = (props: Props) => (
         className={styles.imagesPreview}
         onClose={props.onClose}
     >
-        <ImagesCarousel
-            width={window.innerWidth * .9}
-            height={window.innerHeight * .9}
-            images={props.images}
-            singleView={true}
-            fullSizeImages={true}
-            showCounter={true}
-            background={'grey'}
-        />
+        <div className={styles.wrapper}>
+            <ImagesCarousel
+                images={props.images}
+                singleView={true}
+                showCounter={true}
+            />
+        </div>
     </AnimatedModal>
 )
 

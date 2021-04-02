@@ -24,28 +24,10 @@ type Props = {
 
 const EditItem = (props: Props) => {
     const dispatch = useAppDispatch()
+    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(props.itemId))
     const delayCompleated = useDelay(item.isSubmitting)
     const editItemRef = useRef<HTMLDivElement>(null)
-    const [width, setWidth] = useState(0)
-
-    useEffect(() => {
-        if (editItemRef.current && props.show) {
-            window.addEventListener('resize', handleResize)
-            handleResize()
-        }
-        return () => {
-            window.removeEventListener('resize', handleResize)
-        }
-    }, [props.show])
-
-    const handleResize = () => {
-        if (editItemRef.current) {
-            setTimeout(() => setWidth(
-                editItemRef.current!.getBoundingClientRect().width
-            ), 300)
-        }
-    }
 
     const handleImageRemove = (i: number) => {
         dispatch(REMOVE_IMAGE_FROM_STATE({
@@ -83,11 +65,11 @@ const EditItem = (props: Props) => {
     return (
         <div className={styles.editItem} ref={editItemRef} >
             <ImagesCarousel
-                width={width}
-                height={400}
                 images={item.images}
+                singleView={!largeViewport}
+                useThumbnails={true}
                 showCounter={true}
-                primaryImageStar={true}
+                showPrimaryStar={true}
                 onRemove={handleImageRemove}
                 onPrimaryChange={handlePrimaryImageChange}
             />

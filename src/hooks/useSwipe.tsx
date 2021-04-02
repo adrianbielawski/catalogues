@@ -15,6 +15,7 @@ interface Slide {
 export const useSwipe = (
     onSwipe: (x: number, y: number) => void,
     onSwipeEnd: (x: number, y: number, quickSlide: boolean) => void,
+    stopPropagation: boolean = true,
     quickSwipeDuration: number = 300,
     quickSwipeDistance: number = 50,
 ) => {
@@ -24,6 +25,10 @@ export const useSwipe = (
 
     useEffect(() => {
         const handleTouchStart = (e: TouchEvent) => {
+            if (stopPropagation) {
+                e.stopPropagation()
+            }
+
             slide.current = {
                 start: {
                     x: e.touches[0].clientX,
@@ -38,6 +43,10 @@ export const useSwipe = (
         }
 
         const handleTouchMove = (e: TouchEvent) => {
+            if (stopPropagation) {
+                e.stopPropagation()
+            }
+            
             const slideX = e.touches[0].clientX - slide.current!.start!.x
             const slideY = e.touches[0].clientY - slide.current!.start!.y
 
@@ -52,7 +61,11 @@ export const useSwipe = (
             onSwipe(slideX, slideY)
         }
 
-        const handleTouchEnd = () => {
+        const handleTouchEnd = (e: TouchEvent) => {
+            if (stopPropagation) {
+                e.stopPropagation()
+            }
+            
             const start = slide.current?.start
             const length = slide.current?.length
             

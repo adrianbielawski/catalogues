@@ -12,6 +12,7 @@ import ComponentHeader from 'components/global-components/component-header/compo
 import Columns from 'components/global-components/columns/columns'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import RecomendedCatalogues from './recomended-catalogues/recomendedCatalogues'
+import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
 
 const UserDashboard = () => {
     const userDashboardRef = useRef<HTMLDivElement>(null)
@@ -51,6 +52,10 @@ const UserDashboard = () => {
         {
             title: 'Recomended catalogues',
             component: <RecomendedCatalogues />
+        },
+        {
+            title: 'Latest from favourites',
+            component: <LatestFromFavourites />
         },
     ]
 

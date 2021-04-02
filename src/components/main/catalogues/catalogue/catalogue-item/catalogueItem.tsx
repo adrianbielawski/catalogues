@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
+import classNames from 'classnames/bind'
 import styles from './catalogueItem.scss'
 //Redux
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector } from 'store/selectors'
+import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
-//Custom hooks and utils
+//Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
 //Custom components
@@ -19,12 +21,15 @@ import ItemRating from './item-rating/itemRating'
 import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
-import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import ItemHeader from './item-header/itemHeader'
 
 type Props = {
-    item: DeserializedItem
+    item: DeserializedItem,
+    isNarrow: boolean,
+    className?: string,
 }
+
+const cx = classNames.bind(styles)
 
 const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
@@ -32,10 +37,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
-    const carouselWrapperRef = useRef<HTMLDivElement>(null)
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(props.item.id))
-    const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
@@ -45,24 +47,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
             itemRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
     }, [item.isSubmitting, item.isEditing])
-
-    useEffect(() => {
-        if (largeViewport) {
-            window.addEventListener('resize', getCarouselWidth)
-        }
-        getCarouselWidth()
-
-        return () => {
-            window.addEventListener('resize', getCarouselWidth)
-        }
-    }, [])
-
-    const getCarouselWidth = () => {
-        if (carouselWrapperRef.current) {
-            const width = carouselWrapperRef.current.getBoundingClientRect().width
-            setCarouselWrapperWidth(width)
-        }
-    }
 
     const toggleImagesPreview = () => {
         setShowImagesPreview(!showImagesPreview)
@@ -76,13 +60,19 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const imagesCarouselWidth = largeViewport ? 200 : carouselWrapperWidth
-    const imagesCarouselHeight = largeViewport ? 200 : undefined
-    const isImagesPreviewAllowed = item.images.length && largeViewport
+    const isImagesPreviewAllowed = item.images.length && !props.isNarrow
     const showImagesCounter = item.images.length > 1
 
+    const itemClass = cx(
+        'item',
+        props.className,
+        {
+            narrow: props.isNarrow,
+        }
+    )
+
     return (
-        <li className={styles.item} ref={mergeRefs([ref, itemRef])}>
+        <li className={itemClass} ref={mergeRefs([ref, itemRef])}>
             {item.isEditing
                 ? (
                     <EditItem
@@ -101,13 +91,13 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         catalogueName={catalogue.name}
                     />
                     <div className={styles.wrapper}>
-                        <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
+                        <div className={styles.carouselWrapper}>
                             <ImagesCarousel
-                                width={imagesCarouselWidth}
-                                height={imagesCarouselHeight}
                                 images={item.images}
+                                useThumbnails={true}
                                 singleView={true}
-                                onFullScreenView={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
+                                withShadow={!props.isNarrow}
+                                onImageClick={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
                                 showCounter={showImagesCounter}
                             />
                         </div>

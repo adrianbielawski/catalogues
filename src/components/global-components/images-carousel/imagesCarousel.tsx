@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import { useResizeDetector } from 'react-resize-detector';
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
 import styles from './imagesCarousel.scss'
 //Hooks and utils
-import { useFirstRender } from 'src/hooks/useFirstRender'
 import { mod } from 'src/utils'
 import { useSwipe } from 'src/hooks/useSwipe'
 //Types
@@ -21,37 +21,30 @@ const BASE_URL = process.env.API_URL
 
 type Props = {
     images: DeserializedImage[],
-    width: number,
-    height?: number,
     singleView?: boolean,
-    fullSizeImages?: boolean,
-    background?: string,
+    useThumbnails?: boolean,
+    withShadow?: boolean,
     showCounter?: boolean,
-    primaryImageStar?: true,
+    showPrimaryStar?: true,
     className?: string,
     onRemove?: (i: number) => void,
     onChange?: (i: number) => void,
     onPrimaryChange?: (i: number) => void,
-    onFullScreenView?: () => void,
+    onImageClick?: () => void,
 }
 
 const cx = classNames.bind(styles)
 
 const ImagesCarousel = (props: Props) => {
     const count = props.images.length
-    const screenWidth = window.innerWidth
-    
-    const [swipeX, setSwipeX] = useState<number>(0)
-    const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
-    const firstRender = useFirstRender()
 
     const MIN_SCALE = .7
     const MAX_SCALE = 1
-    const IMAGE_HEIGHT = props.height
-    let IMAGE_WIDTH = props.width
-    if (!props.singleView && screenWidth > 800) {
-        IMAGE_WIDTH = (props.width) * .416
-    }
+
+    const [swipeX, setSwipeX] = useState<number>(0)
+    const [current, setCurrent] = useState(props.images.findIndex(img => img.isPrimary === true))
+    const currentRef = useRef<HTMLLIElement>(null)
+    const { width } = useResizeDetector({ targetRef: currentRef })
 
     const changeCurrent = useCallback(
         (diff: number) => {
@@ -61,7 +54,7 @@ const ImagesCarousel = (props: Props) => {
 
             setCurrent(current + diff)
         },
-        [current, props.onChange]
+        [current, count, props.onChange]
     )
 
     const handleSwipe = useCallback(
@@ -70,9 +63,9 @@ const ImagesCarousel = (props: Props) => {
                 return
             }
 
-            setSwipeX(x / IMAGE_WIDTH)
+            setSwipeX(x / width!)
         },
-        [IMAGE_WIDTH]
+        [width]
     )
 
     const handleSwipeEnd = useCallback(
@@ -86,16 +79,16 @@ const ImagesCarousel = (props: Props) => {
                     diff = 1
                 }
             } else {
-                diff = -Math.round(x / IMAGE_WIDTH)
+                diff = -Math.round(x / width!)
             }
-            
+
             setSwipeX(0)
             changeCurrent(diff)
         },
-        [current, IMAGE_WIDTH]
+        [current, count, width, changeCurrent]
     )
 
-    const columnsRef = useSwipe(handleSwipe, handleSwipeEnd)
+    const carouselRef = useSwipe(handleSwipe, handleSwipeEnd)
 
     const handlePreviousImage = () => {
         changeCurrent(-1)
@@ -106,18 +99,17 @@ const ImagesCarousel = (props: Props) => {
     }
 
     const getDynamicStyles = (i: number) => {
-        let newCurrent = current - parseInt(swipeX.toString())
-        const IMAGE_OFFSET = IMAGE_WIDTH * 1.22
+        const offset = width! * 1.3
 
         let styles = {
             scale: i === current ? MAX_SCALE : MIN_SCALE,
-            offset: `${IMAGE_OFFSET * (i - current)}px`,
+            offset: `${offset * (i - current)}px`,
         }
 
         if (swipeX) {
             const scaleValue = Math.abs(swipeX % 1 * .3)
 
-            let scale = i === newCurrent
+            let scale = i === current
                 ? clamp(
                     MAX_SCALE - scaleValue,
                     MIN_SCALE,
@@ -125,7 +117,7 @@ const ImagesCarousel = (props: Props) => {
                 )
                 : MIN_SCALE
 
-            if (swipeX < 0 && i === newCurrent + 1 || swipeX > 0 && i === newCurrent - 1) {
+            if (swipeX < 0 && i === current + 1 || swipeX > 0 && i === current - 1) {
                 scale = clamp(
                     MIN_SCALE + scaleValue,
                     MIN_SCALE,
@@ -135,18 +127,11 @@ const ImagesCarousel = (props: Props) => {
 
             styles = {
                 scale,
-                offset: `${IMAGE_OFFSET * (i - current) + swipeX * IMAGE_OFFSET}px`,
+                offset: `${offset * (i - current) + swipeX * offset}px`,
             }
         }
 
         return styles
-    }
-
-    const handleFullImageViev = () => {
-        if (props.onFullScreenView === undefined) {
-            return
-        }
-        props.onFullScreenView()
     }
 
     const getItems = () => {
@@ -154,44 +139,40 @@ const ImagesCarousel = (props: Props) => {
 
         for (let i = current - 3; i <= current + 3; i++) {
             const onRemove = () => {
-                if (props.onRemove === undefined) {
-                    return
+                if (props.onRemove !== undefined) {
+                    props.onRemove(mod(i, count))
                 }
-                props.onRemove(mod(i, count))
             }
 
             const onPrimaryImageChange = () => {
-                if (props.onPrimaryChange !== undefined && count > 0 && !firstRender) {
+                if (props.onPrimaryChange !== undefined && count > 0) {
                     props.onPrimaryChange(mod(i, count))
                 }
             }
 
             const dynamicStyles = getDynamicStyles(i)
 
-            const IMG = props.images[mod(i, count)]
-            const IMAGE_URL = IMG.id.toString().startsWith('newImage')
-                ? IMG.image
-                : !props.fullSizeImages
-                    ? `${BASE_URL}${IMG.imageThumbnail}`
-                    : `${BASE_URL}${IMG.image}`
+            const img = props.images[mod(i, count)]
+            const url = img.id.toString().startsWith('newImage')
+                ? img.image
+                : props.useThumbnails
+                    ? `${BASE_URL}${img.imageThumbnail}`
+                    : `${BASE_URL}${img.image}`
 
+            const imgRef = current ? currentRef : null
 
-            const imgClass = cx(
-                {
-                    imgHover: props.onFullScreenView !== undefined,
-                }
-            )
             items.push(
-                <li key={i}>
+                <li key={i} ref={imgRef}>
                     <div
                         style={{
                             '--offset': dynamicStyles.offset,
                             '--scale': dynamicStyles.scale,
-                            '--width': `${IMAGE_WIDTH}px`,
-                            '--height': `${IMAGE_HEIGHT}px`,
                         } as React.CSSProperties}
                     >
-                        <img src={IMAGE_URL} className={imgClass} onClick={handleFullImageViev} />
+                        <img
+                            src={url}
+                            onClick={props.onImageClick}
+                        />
                         {props.onRemove &&
                             <TransparentButton
                                 className={styles.trashButton}
@@ -200,10 +181,10 @@ const ImagesCarousel = (props: Props) => {
                                 <FontAwesomeIcon icon={faTrashAlt} />
                             </TransparentButton>
                         }
-                        {props.primaryImageStar &&
+                        {props.showPrimaryStar &&
                             <PrimaryImageStar
                                 className={styles.primaryImageStar}
-                                solid={IMG.isPrimary}
+                                solid={img.isPrimary}
                                 onClick={onPrimaryImageChange}
                             />
                         }
@@ -218,30 +199,20 @@ const ImagesCarousel = (props: Props) => {
         'carousel',
         props.className,
         {
-            whiteBackground: props.background === 'white',
-            greyBackground: props.background === 'grey'
+            singleView: props.singleView,
+            withShadow: props.withShadow,
         }
     )
-
-    const CSSConstants = {
-        '--width': `${IMAGE_WIDTH}px`,
-        '--height': `${IMAGE_HEIGHT}px`,
-        '--minScale': MIN_SCALE,
-        '--scaledImagesQty': !props.singleView && count >= 3 ? 2 : 0,
-    } as React.CSSProperties
-
-    const displayButtons = count >= 2
 
     return (
         <div
             className={carouselClass}
-            ref={columnsRef}
-            style={count ? CSSConstants : undefined}
+            ref={carouselRef}
         >
             {count > 0
                 ? (
                     <>
-                        {displayButtons && (
+                        {count >= 2 && (
                             <ArrowButton
                                 className={styles.prev}
                                 leftArrow={true}
@@ -251,7 +222,7 @@ const ImagesCarousel = (props: Props) => {
                         <ul>
                             {getItems()}
                         </ul>
-                        {displayButtons && (
+                        {count >= 2 && (
                             <ArrowButton
                                 className={styles.next}
                                 leftArrow={false}
