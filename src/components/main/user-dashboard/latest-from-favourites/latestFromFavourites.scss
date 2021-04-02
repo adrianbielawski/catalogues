@@ -1,0 +1,12 @@
+@import "global-styles/variables_and_mixins";
+
+.latestFromFavourites {
+    .item {
+        margin: 0 0 10px 0;
+        border-radius: 0;
+    }
+    .button {
+        margin: 15px auto;
+    }
+}
+
