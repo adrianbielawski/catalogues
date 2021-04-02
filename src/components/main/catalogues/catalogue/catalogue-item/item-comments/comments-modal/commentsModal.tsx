@@ -87,15 +87,11 @@ const CommentsModal = (props: Props) => {
         >
             <div className={styles.wrapper}>
                 {screenWidth.largeViewport && (
-                    <div>
+                    <div className={styles.carouselWrapper}>
                         <ImagesCarousel
-                            width={window.innerWidth * .5}
-                            height={window.innerHeight * .9}
                             images={item.images}
                             singleView={true}
-                            fullSizeImages={true}
                             showCounter={true}
-                            background={'grey'}
                         />
                     </div>
                 )}

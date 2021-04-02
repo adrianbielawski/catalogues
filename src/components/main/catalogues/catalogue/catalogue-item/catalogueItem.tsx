@@ -37,9 +37,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const dispatch = useAppDispatch()
     const itemRef = useRef<HTMLLIElement>()
-    const carouselWrapperRef = useRef<HTMLDivElement>(null)
     const item = useTypedSelector(itemSelector(props.item.id))
-    const [carouselWrapperWidth, setCarouselWrapperWidth] = useState(0)
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
@@ -49,22 +47,6 @@ const CatalogueItem: React.ForwardRefRenderFunction<
             itemRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
     }, [item.isSubmitting, item.isEditing])
-
-    useEffect(() => {
-        window.addEventListener('resize', getCarouselWidth)
-        getCarouselWidth()
-
-        return () => {
-            window.addEventListener('resize', getCarouselWidth)
-        }
-    }, [])
-
-    const getCarouselWidth = () => {
-        if (carouselWrapperRef.current) {
-            const width = carouselWrapperRef.current.getBoundingClientRect().width
-            setCarouselWrapperWidth(width)
-        }
-    }
 
     const toggleImagesPreview = () => {
         setShowImagesPreview(!showImagesPreview)
@@ -78,9 +60,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const imagesCarouselWidth = !props.mobileView ? 200 : carouselWrapperWidth
-    const imagesCarouselHeight = !props.mobileView ? 200 : undefined
-    const isImagesPreviewAllowed = item.images.length && !props.mobileView
+    const isImagesPreviewAllowed = item.images.length && !props.isNarrow
     const showImagesCounter = item.images.length > 1
 
     const itemClass = cx(
@@ -124,14 +104,13 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
                     />
-                    <div className={wrapperClass}>
-                        <div className={styles.carouselWrapper} ref={carouselWrapperRef}>
+                        <div className={styles.carouselWrapper}>
                             <ImagesCarousel
-                                width={imagesCarouselWidth}
-                                height={imagesCarouselHeight}
                                 images={item.images}
+                                useThumbnails={true}
                                 singleView={true}
-                                onFullScreenView={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
+                                withShadow={!props.isNarrow}
+                                onImageClick={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
                                 showCounter={showImagesCounter}
                             />
                         </div>
