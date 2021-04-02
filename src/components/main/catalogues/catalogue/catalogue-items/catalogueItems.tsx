@@ -114,7 +114,7 @@ const CatalogueItems = (props: Props) => {
         return (
             <CatalogueItem
                 item={item}
-                mobileView={!largeViewport}
+                isNarrow={!largeViewport}
                 key={item.id}
                 ref={ref}
             />

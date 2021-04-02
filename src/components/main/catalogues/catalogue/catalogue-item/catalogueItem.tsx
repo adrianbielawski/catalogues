@@ -25,7 +25,7 @@ import ItemHeader from './item-header/itemHeader'
 
 type Props = {
     item: DeserializedItem,
-    mobileView: boolean,
+    isNarrow: boolean,
     className?: string,
 }
 
@@ -67,21 +67,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         'item',
         props.className,
         {
-            mobile: props.mobileView,
-        }
-    )
-
-    const wrapperClass = cx(
-        'wrapper',
-        {
-            mobile: props.mobileView,
-        }
-    )
-
-    const itemContentClass = cx(
-        'itemContent',
-        {
-            mobile: props.mobileView,
+            narrow: props.isNarrow,
         }
     )
 
@@ -104,6 +90,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
                     />
+                    <div className={styles.wrapper}>
                         <div className={styles.carouselWrapper}>
                             <ImagesCarousel
                                 images={item.images}
@@ -114,7 +101,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 showCounter={showImagesCounter}
                             />
                         </div>
-                        <div className={itemContentClass}>
+                        <div className={styles.itemContent}>
                             <div className={styles.ratingWrapper}>
                                 <ItemRating item={item} />
                                 {item.permissions.canAddToFavourites && (

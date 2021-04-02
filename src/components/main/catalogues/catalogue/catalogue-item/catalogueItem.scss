@@ -8,24 +8,17 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    &.mobile {
-        border-radius: unset;
-    }
     .wrapper {
         display: flex;
-        &.mobile {
-            flex-direction: column;
-        }
         .carouselWrapper {
-            min-width: 200px;
+            min-width: 220px;
+            width: 220px;
+            max-height: 220px;
+            height: 220px;
         }
         .itemContent {
-            margin-left: 10px;
-            width: 100%;
-            &.mobile {
-                width: 100%;
-                margin: 5px 0 0 0;
-            }
+            margin-top: 5px;
+            flex: 1;
             .ratingWrapper {
                 display: flex;
                 align-items: center;
@@ -40,10 +33,27 @@
             }
         }
     }
+    &.narrow {
+        border-radius: unset;
+        .wrapper {
+            flex-direction: column;
+        }
+        .carouselWrapper {
+            width: 100%;
+            max-height: 600px;
+            height: auto;
+        }
+    }
     .itemComments {
         margin: 0 5px 5px;
     }
     .editItem {
         width: 100%;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .item .wrapper .carouselWrapper img:hover {
+        cursor: zoom-in;
     }
 }
