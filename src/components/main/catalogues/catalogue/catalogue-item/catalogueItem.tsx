@@ -89,6 +89,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         username={item.createdBy.username}
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
+                        slug={catalogue.slug}
                     />
                     <div className={styles.wrapper}>
                         <div className={styles.carouselWrapper}>

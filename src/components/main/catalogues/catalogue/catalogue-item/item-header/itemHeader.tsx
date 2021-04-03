@@ -6,13 +6,14 @@ import styles from './itemHeader.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
-import Avatar from 'components/global-components/avatar/avatar'
+import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
 
 type Props = {
     userImage: string,
     username: string,
     catalogueImage: string,
     catalogueName: string,
+    slug: string,
     className?: string,
 }
 
@@ -24,6 +25,11 @@ const ItemHeader = (props: Props) => {
     const handleUserClick = () => {
         history.push(`/${props.username}`)
     }
+
+    const handleCatalogueClick = () => {
+        history.push(`/${props.username}/catalogues/${props.slug}`)
+    }
+
     const itemHeaderClass = cx(
         'itemHeader',
         props.className,
@@ -31,32 +37,22 @@ const ItemHeader = (props: Props) => {
 
     return (
         <div className={itemHeaderClass}>
-            <div
-                className={styles.wrapper}
+            <AvatarWithName
+                name={props.username}
+                placeholderIcon={faUser}
+                className={styles.username}
+                url={props.userImage}
+                avatarClassName={styles.userImage}
                 onClick={handleUserClick}
-            >
-                <Avatar
-                    placeholderIcon={faUser}
-                    className={styles.userImage}
-                    url={props.userImage}
-                />
-                <p className={styles.username}>
-                    {props.username}
-                </p>
-            </div>
-            <div
-                className={styles.wrapper}
-                onClick={handleUserClick}
-            >
-                <p className={styles.catalogueName}>
-                    {props.catalogueName}
-                </p>
-                <Avatar
-                    placeholderIcon={faFolderOpen}
-                    className={styles.catalogueImage}
-                    url={props.catalogueImage}
-                />
-            </div>
+            />
+            <AvatarWithName
+                name={props.catalogueName}
+                placeholderIcon={faFolderOpen}
+                url={props.catalogueImage}
+                avatarClassName={styles.catalogueImage}
+                reversed={true}
+                onClick={handleCatalogueClick}
+            />
         </div>
     )
 }

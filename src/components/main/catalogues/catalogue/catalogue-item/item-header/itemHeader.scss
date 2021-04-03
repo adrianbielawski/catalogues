@@ -4,41 +4,14 @@
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid $lightGrey;
-    cursor: pointer;
-    .wrapper {
-        display: flex;
-        align-items: center;
-        margin: 5px;
-        .userImage {
-            width: 35px;
-            height: 35px;
-            min-height: 35px;
-            min-width: 35px;
-            font-size: 1.3em;
-        }
-        .catalogueImage {
-            width: 30px;
-            height: 30px;
-            min-height: 30px;
-            min-width: 30px;
-            font-size: 1.3em;
-        }
-        .username {
-            font-weight: 700;
-        }
-        .catalogueName {
-            max-height: 100%;
-            line-height: 1.1em;
-            margin-right: 5px;
-            text-align: end;
-            overflow: hidden;
-        }
+    padding: 5px;
+    .userImage {
+        font-size: 1.6em;
     }
-}
-@media (hover: hover) and (pointer: fine) {
-    .itemHeader .wrapper {
-        &:hover p {
-            color: $lightOrange;
-        }
+    .catalogueImage {
+        font-size: 1.3em;
+    }
+    .username {
+        font-weight: 700;
     }
 }

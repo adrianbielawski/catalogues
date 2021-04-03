@@ -1,0 +1,35 @@
+@import "global-styles/variables_and_mixins";
+
+.avatarWithName {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &.reversed {
+        flex-direction: row-reverse;
+        p {
+            text-align: end;
+        }
+
+    }
+    .avatar {
+        width: 35px;
+        height: 35px;
+        min-height: 35px;
+        min-width: 35px;
+        font-size: 1.3em;
+    }
+    p {
+        max-height: 100%;
+        line-height: 1.1em;
+        margin: 0 5px;
+        overflow: hidden;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .avatarWithName {
+        &:hover p {
+            color: $lightOrange;
+        }
+    }
+}
