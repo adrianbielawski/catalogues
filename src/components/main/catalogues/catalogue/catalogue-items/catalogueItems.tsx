@@ -177,6 +177,7 @@ const CatalogueItems = (props: Props) => {
     const isItemInCatalogue = catalogue.itemsRanges.date.min
     const isSearchResult = isItemInCatalogue && location.search.length !== 0 && itemsData.results.length === 0
     const showAddItemButton = isItemInCatalogue && !itemsData.newItemId && !itemsData.creatingNewItem
+    const showButton = !itemsData.fetchingItems && itemsData.next && itemsData.next === 2
 
     return (
         <div className={itemsClass}>
@@ -189,12 +190,12 @@ const CatalogueItems = (props: Props) => {
             <ul>
                 {getItems()}
             </ul>
-            {delayCompleted
-                ? <Loader className={styles.loader} />
-                : (itemsData.next && itemsData.next <= 2) &&
+            {itemsData.fetchingItems &&
+                <Loader className={styles.loader} />
+            }
+            {showButton &&
                 <Button
                     className={styles.seeMoreButton}
-                    loading={delayCompleted}
                     onClick={handleMoreItemsClick}
                 >
                     See more
