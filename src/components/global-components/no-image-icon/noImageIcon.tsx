@@ -12,7 +12,7 @@ type Props = {
 
 const cx = classNames.bind(styles)
 
-const NoInameIcon = (props: Props) => {
+const NoImageIcon = (props: Props) => {
 
     const iconClass = cx(
         'noImageIcon',
@@ -33,5 +33,5 @@ const NoInameIcon = (props: Props) => {
     )
 }
 
-export default NoInameIcon
+export default NoImageIcon
 

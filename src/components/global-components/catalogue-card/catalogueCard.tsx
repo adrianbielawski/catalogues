@@ -6,7 +6,7 @@ import styles from './catalogueCard.scss'
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Custom components
 import Avatar from '../avatar/avatar'
-import NoInameIcon from '../no-image-icon/noImageIcon'
+import NoImageIcon from '../no-image-icon/noImageIcon'
 
 const BASE_URL = process.env.API_URL
 
@@ -44,7 +44,7 @@ const CatalogueCard: React.ForwardRefRenderFunction<
             >
                 {catalogue.imageThumbnail
                     ? <img src={`${BASE_URL}${catalogue.imageThumbnail}`} />
-                    : <NoInameIcon size="6x" />
+                    : <NoImageIcon size="6x" />
                 }
             </div>
             <div className={styles.meta}>
