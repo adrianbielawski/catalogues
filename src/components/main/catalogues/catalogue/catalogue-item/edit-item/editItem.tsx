@@ -64,39 +64,43 @@ const EditItem = (props: Props) => {
 
     return (
         <div className={styles.editItem} ref={editItemRef} >
-            <ImagesCarousel
-                images={item.images}
-                singleView={!largeViewport}
-                useThumbnails={true}
-                showCounter={true}
-                showPrimaryStar={true}
-                onRemove={handleImageRemove}
-                onPrimaryChange={handlePrimaryImageChange}
-            />
-            <AddImage
-                className={styles.addImageButton}
-                onAdd={handleAddImage}
-            />
-            {!props.isItemNew &&
-                <p className={styles.itemId}>
-                    Item id: {item.id}
-                </p>
-            }
-            <EditItemFields item={item} />
-            <ItemSettings item={item} />
-            <div className={styles.buttons}>
-                <Button
-                    disabled={item.isSubmitting}
-                    loading={delayCompleated}
-                    onClick={handleEditConfirm}
-                >
-                    Save
+            <div className={styles.carouselWrapper}>
+                <ImagesCarousel
+                    images={item.images}
+                    singleView={!largeViewport}
+                    useThumbnails={true}
+                    showCounter={true}
+                    showPrimaryStar={true}
+                    onRemove={handleImageRemove}
+                    onPrimaryChange={handlePrimaryImageChange}
+                />
+            </div>
+            <div className={styles.contentWrapper}>
+                <AddImage
+                    className={styles.addImageButton}
+                    onAdd={handleAddImage}
+                />
+                {!props.isItemNew &&
+                    <p className={styles.itemId}>
+                        Item id: {item.id}
+                    </p>
+                }
+                <EditItemFields item={item} />
+                <ItemSettings item={item} />
+                <div className={styles.buttons}>
+                    <Button
+                        disabled={item.isSubmitting}
+                        loading={delayCompleated}
+                        onClick={handleEditConfirm}
+                    >
+                        Save
                 </Button>
-                <Button
-                    onClick={handleEditCancel}
-                >
-                    {props.isItemNew ? 'Cancel' : 'Cancel changes'}
-                </Button>
+                    <Button
+                        onClick={handleEditCancel}
+                    >
+                        {props.isItemNew ? 'Cancel' : 'Cancel changes'}
+                    </Button>
+                </div>
             </div>
         </div>
     )
