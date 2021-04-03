@@ -101,11 +101,13 @@ const NavList = (props: Props) => {
                                     onClick={removeNestedListId}
                                 />
                             )}
-                            <ItemIcon
-                                className={styles.icon}
-                                item={props.item}
-                            />
-                            <p>{props.item.title}</p>
+                            <div className={styles.wrapper}>
+                                <ItemIcon
+                                    className={styles.icon}
+                                    item={props.item}
+                                />
+                                <p>{props.item.title}</p>
+                            </div>
                         </div>
                         <ul>
                             {props.item.children.length

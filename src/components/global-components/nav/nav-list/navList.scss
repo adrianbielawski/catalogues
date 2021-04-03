@@ -26,10 +26,16 @@
             margin-right: 10px;
             cursor: pointer;
         }
-        p {
-            font-size: 1.3em;
-            font-weight: 700;
-            margin-left: 10px;
+        .wrapper {
+            display: flex;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+            p {
+                font-size: 1.3em;
+                font-weight: 700;
+                margin-left: 3px;
+            }
         }
     }
     .listItem {
