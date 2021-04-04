@@ -1,8 +1,20 @@
-import React, { ReactNode, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './componentHeader.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
+
+interface ScrollData {
+    scrollUpStartOffset: number | null,
+    scrollDownStartOffset: number | null,
+    offset: number,
+}
+
+const initialScrollData = {
+    scrollUpStartOffset: null,
+    scrollDownStartOffset: null,
+    offset: 0,
+}
 
 type Props = {
     children: ReactNode,
@@ -12,54 +24,86 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const ComponentHeader = (props: Props) => {
-    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
-    const [yOffset, setYOffset] = useState(0)
-    const [scrolledUp, setScrolledUp] = useState(true)
-    const [touchStart, setTouchStart] = useState(0)
+    const MIN_SCROLL_VAL = 50
+    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
+    const [show, setShow] = useState(true)
+    const [scrollData, setScrollData] = useState<ScrollData>(initialScrollData)
 
     useEffect(() => {
-        if (smallViewport) {
+        if (!largeViewport) {
             window.addEventListener('scroll', handleScroll)
         }
         return () => {
             window.removeEventListener('scroll', handleScroll)
         }
-    }, [yOffset, scrolledUp])
+    }, [largeViewport, scrollData, show])
 
-    useEffect(() => {
-        if (smallViewport && !scrolledUp) {
-            window.addEventListener('touchstart', handleTouchStart)
-        }
-        return () => {
-            window.removeEventListener('touchstart', handleTouchStart)
-        }
-    }, [scrolledUp])
-
-    const handleTouchStart = () => {
-        setTouchStart(window.pageYOffset)
-    }
-
-    const handleScroll = () => {
+    const handleScroll = useCallback(() => {
         const offset = window.pageYOffset
-        let up = scrolledUp
 
-        if (offset >= yOffset) {
-            up = false
-        }
-        if (offset < yOffset && touchStart - 30 > offset) {
-            up = true
+        if (offset > scrollData.offset) {
+            handleScrollDown(offset)
         }
 
-        setYOffset(offset)
-        setScrolledUp(up)
+        if (offset < scrollData.offset) {
+            handleScrollUp(offset)
+        }
+    }, [scrollData, show])
+
+    const handleScrollDown = (offset: number) => {
+        let newShow = show
+        let upStart = scrollData.scrollUpStartOffset
+        let downStart = scrollData.scrollDownStartOffset
+
+        if (!scrollData.scrollDownStartOffset) {
+            upStart = null
+            downStart = offset
+        } else {
+            if (offset > scrollData.scrollDownStartOffset + MIN_SCROLL_VAL) {
+                newShow = false
+            } else {
+                newShow = show
+            }
+        }
+
+        setScrollData({
+            scrollUpStartOffset: upStart,
+            scrollDownStartOffset: downStart,
+            offset: offset,
+        })
+        setShow(newShow)
     }
+
+    const handleScrollUp = (offset: number) => {
+        let newShow = show
+        let upStart = scrollData.scrollUpStartOffset
+        let downStart = scrollData.scrollDownStartOffset
+
+        if (!scrollData.scrollUpStartOffset) {
+            upStart = offset
+            downStart = null
+        } else {
+            if (offset < scrollData.scrollUpStartOffset - MIN_SCROLL_VAL) {
+                newShow = true
+            } else {
+                newShow = show
+            }
+        }
+
+        setScrollData({
+            scrollUpStartOffset: upStart,
+            scrollDownStartOffset: downStart,
+            offset: offset,
+        })
+        setShow(newShow)
+    } 
 
     const headerClass = cx(
         'componentHeader',
         props.className,
         {
-            hideable: smallViewport,
-            show: smallViewport && scrolledUp,
+            hideable: !largeViewport,
+            show: !largeViewport && show,
         }
     )
 
