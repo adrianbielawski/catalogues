@@ -5,45 +5,42 @@
     width: 100%;
     padding: 3px 0;
     &.replying {
-        background: $lightGrey;
+        background: $veryLightGrey;
         padding: 3px 10px;
         margin: 0 -10px;
+    }
+    &.clipText .parent .commentContent .commentTextWrapper .parentCommentText {
+        @include clipText;
     }
     .parent {
         .commentContent {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            .avatar {
+                align-self: flex-start;
+                p {
+                    font-weight: 700;
+                }
+            }
             .userImage {
                 font-size: 1.7em;
-                min-width: 35px;
-                min-height: 35px;
-                width: 35px;
-                height: 35px;
             }
-            .wrapper {
-                display: flex;
-                flex-grow: 1;
+            .commentTextWrapper {
                 margin-left: 5px;
-                &.clipText {
-                    @include clipText;
-                }
-                .username {
-                    font-size: 1em;
-                    font-weight: 700;
-                    margin-right: 5px;
+                p {
+                    margin-top: 6.5px;
                 }
             }
         }
         .info {
             display: flex;
-            justify-content: space-between;
             align-items: center;
             margin-top: 5px;
             .createdAt {
                 font-size: 0.7em;
                 color: $midLightGrey;
                 white-space: nowrap;
+                text-align: end;
+                width: 100%;
             }
             button {
                 font-weight: 700;
@@ -60,3 +57,14 @@
         }
     }
 }
+
+// @media (hover: hover) and (pointer: fine) {
+//     .comment {
+//         &.clipText .parent .commentContent .commentText {
+//             &:hover .parentCommentText {
+//                 cursor: pointer;
+//                 color: $lightOrange;
+//             }
+//         }
+//     }
+// }

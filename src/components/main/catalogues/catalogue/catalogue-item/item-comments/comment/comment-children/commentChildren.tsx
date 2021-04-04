@@ -27,6 +27,7 @@ const CommentChildren = (props: Props) => {
         <Comment
             comment={child}
             canComment={props.canComment}
+            isChild={true}
             key={child.id}
         />
     ))
