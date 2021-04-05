@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import {
     faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
@@ -29,6 +29,7 @@ const contextValue = {
 const Header = () => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
+    const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
     const user = useTypedSelector(state => state.auth.user)
     const catalogues = useTypedSelector(state => state.catalogues)
@@ -117,6 +118,11 @@ const Header = () => {
             url: '/'
         }
     ]
+
+    if (!user && (location.pathname === '/login' || location.pathname === '/')) {
+        const loginIndex = NAV_ITEMS.findIndex(item => item.id !== 'Login')
+        NAV_ITEMS.splice(loginIndex, 1)
+    }
 
     if (user !== null && FAVOURITE_ITEMS) {
         (NAV_ITEMS[0] as ItemWithChildrenAndFaIcon).children.push({
