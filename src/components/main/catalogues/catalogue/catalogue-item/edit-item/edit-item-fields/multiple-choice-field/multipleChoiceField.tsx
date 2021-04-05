@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import classNames from 'classnames/bind'
 import styles from './multipleChoiceField.scss'
 //Types
 import { DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
@@ -8,17 +7,15 @@ import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsData
 import { fieldSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Custom components
-import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import AddChoice from 'components/global-components/add-choice/addChoice'
+import Field from '../field/field'
 
 interface Props {
     itemId: number,
     field: DeserializedChoiceField,
     fieldValue: DeserializedItemField,
 }
-
-const cx = classNames.bind(styles)
 
 const MultipleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
@@ -49,45 +46,34 @@ const MultipleChoiceField = (props: Props) => {
         return values.join(', ')
     }
 
-    const fieldClass = cx(
-        'multipleChoiceField',
-        {
-            active: isEditing
-        },
-    )
-
     if (field.fetchingChoices) {
         return null
     }
 
     return (
-        <li className={fieldClass}>
-            <EditableFieldTitle
-                title={props.field.name}
-                isEditing={isEditing}
-                onEdit={handleEdit}
-            />
-            <div className={styles.content}>
-                {isEditing
-                    ? (
-                        <>
-                            <ChoiceList
-                                choices={field.choices}
-                                defaultSortDir="asc"
-                                defaultSearchValue=""
-                                selected={props.fieldValue?.value as number[] || []}
-                                multiple={true}
-                                onChange={handleChange}
-                            />
-                            <AddChoice
-                                field={props.field}
-                            />
-                        </>
-                    )
-                    : getChoices()
-                }
-            </div>
-        </li>
+        <Field
+            className={styles.multipleChoiceField}
+            fieldName={props.field.name}
+            fieldValue={getChoices()}
+            isEditing={isEditing}
+            editComponent={
+                <>
+                    <ChoiceList
+                        className={styles.choiceList}
+                        choices={field.choices}
+                        defaultSortDir="asc"
+                        defaultSearchValue=""
+                        selected={props.fieldValue?.value as number[] || []}
+                        multiple={true}
+                        onChange={handleChange}
+                    />
+                    <AddChoice
+                        field={props.field}
+                    />
+                </>
+            }
+            onEditClick={handleEdit}
+        />
     )
 }
 

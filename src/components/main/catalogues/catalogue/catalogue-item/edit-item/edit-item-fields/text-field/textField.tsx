@@ -7,7 +7,7 @@ import { useAppDispatch } from 'store/storeConfig'
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
-import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
+import Field from '../field/field'
 
 interface Props {
     itemId: number,
@@ -31,31 +31,26 @@ const TextField = (props: Props) => {
         }))
         setIsEditing(false)
     }
-    
+
     const inputProps = {
         defaultValue: props.fieldValue?.value as string || ''
     }
 
     return (
-        <li className={styles.textField}>
-            <EditableFieldTitle
-                title={props.field.name}
-                isEditing={isEditing}
-                onEdit={handleEdit}
-            />
-            <div className={styles.content}>
-                {isEditing
-                    ? (
-                        <InputWithConfirmButton
-                            className={styles.input}
-                            inputProps={inputProps}
-                            onConfirm={handleConfirm}
-                        />
-                    )
-                    : props.fieldValue?.value
-                }
-            </div>
-        </li>
+        <Field
+            className={styles.textField}
+            fieldName={props.field.name}
+            fieldValue={props.fieldValue?.value}
+            isEditing={isEditing}
+            editComponent={
+                <InputWithConfirmButton
+                    className={styles.input}
+                    inputProps={inputProps}
+                    onConfirm={handleConfirm}
+                />
+            }
+            onEditClick={handleEdit}
+        />
     )
 }
 

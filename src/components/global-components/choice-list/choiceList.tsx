@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { orderBy, size, upperFirst } from 'lodash'
+import classNames from 'classnames/bind'
 import styles from './choiceList.scss'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
@@ -35,6 +36,8 @@ type MultipleChoiceProps<ChoiceType> = {
 }
 
 type Props<ChoiceType> = SingleChoiceProps<ChoiceType> | MultipleChoiceProps<ChoiceType>
+
+const cx = classNames.bind(styles)
 
 const ChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) => {
     const [allChoicesSelected, setAllChoicesSelected] = useState(false)
@@ -117,8 +120,13 @@ const ChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) =>
         )
     })
 
+    const choiceListClass = cx(
+        'choiceList',
+        props.className,
+    )
+
     return (
-        <div className={styles.choiceList}>
+        <div className={choiceListClass}>
             {showSearchBar &&
                 <SearchBar
                     sortDir={sortDir!}
@@ -136,7 +144,7 @@ const ChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) =>
                     onChange={handleSelectAllChange}
                 />
             }
-            <ul className={props.className}>
+            <ul>
                 {choices}
             </ul>
         </div>

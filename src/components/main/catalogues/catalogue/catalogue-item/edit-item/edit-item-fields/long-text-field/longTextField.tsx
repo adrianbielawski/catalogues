@@ -7,7 +7,7 @@ import { useAppDispatch } from 'store/storeConfig'
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 //Custom components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
-import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
+import Field from '../field/field'
 
 interface Props {
     itemId: number,
@@ -33,25 +33,20 @@ const LongTextField = (props: Props) => {
     }
 
     return (
-        <li className={styles.longTextField}>
-            <EditableFieldTitle
-                title={props.field.name}
-                isEditing={isEditing}
-                onEdit={handleEdit}
-            />
-            <div className={styles.content}>
-                {isEditing
-                    ? (
-                        <TextareaWithConfirmButton
-                            defaultValue={props.fieldValue?.value as string}
-                            rows={4}
-                            onConfirm={handleConfirm}
-                        />
-                    )
-                    : props.fieldValue?.value
-                }
-            </div>
-        </li>
+        <Field
+            className={styles.longTextField}
+            fieldName={props.field.name}
+            fieldValue={props.fieldValue?.value}
+            isEditing={isEditing}
+            editComponent={
+                <TextareaWithConfirmButton
+                    defaultValue={props.fieldValue?.value as string}
+                    rows={4}
+                    onConfirm={handleConfirm}
+                />
+            }
+            onEditClick={handleEdit}
+        />
     )
 }
 

@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import classNames from 'classnames/bind'
 import styles from './singleChoiceField.scss'
 //Types
 import { DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
@@ -8,17 +7,15 @@ import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsData
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldSelector } from 'store/selectors'
 //Custom components
-import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
+import Field from '../field/field'
 
 interface Props {
     itemId: number,
     field: DeserializedChoiceField,
     fieldValue: DeserializedItemField,
 }
-
-const cx = classNames.bind(styles)
 
 const SingleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
@@ -37,20 +34,6 @@ const SingleChoiceField = (props: Props) => {
         }))
     }
 
-    const fieldClass = cx(
-        'singleChoiceField',
-        {
-            active: isEditing
-        },
-    )
-
-    const contentClass = cx(
-        'content',
-        {
-            active: isEditing
-        },
-    )
-
     const selected = props.field.choices.filter(f => f.id === props.fieldValue?.value)[0]
 
     if (field.fetchingChoices) {
@@ -58,32 +41,28 @@ const SingleChoiceField = (props: Props) => {
     }
 
     return (
-        <li className={fieldClass}>
-            <EditableFieldTitle
-                title={props.field.name}
-                isEditing={isEditing}
-                onEdit={handleEdit}
-            />
-            <div className={contentClass}>
-                {isEditing
-                    ? (
-                        <>
-                            <ChoiceList
-                                choices={field.choices}
-                                defaultSortDir="asc"
-                                defaultSearchValue=""
-                                selected={props.fieldValue?.value as number}
-                                onChange={handleChange}
-                            />
-                            <AddChoice
-                                field={props.field}
-                            />
-                        </>
-                    )
-                    : selected?.value || null
-                }
-            </div>
-        </li>
+        <Field
+            className={styles.singleChoiceField}
+            fieldName={props.field.name}
+            fieldValue={selected?.value}
+            isEditing={isEditing}
+            editComponent={
+                <>
+                    <ChoiceList
+                        className={styles.choiceList}
+                        choices={field.choices}
+                        defaultSortDir="asc"
+                        defaultSearchValue=""
+                        selected={props.fieldValue?.value as number}
+                        onChange={handleChange}
+                    />
+                    <AddChoice
+                        field={props.field}
+                    />
+                </>
+            }
+            onEditClick={handleEdit}
+        />
     )
 }
 

@@ -1,23 +1,11 @@
 @import "global-styles/variables_and_mixins";
 
 .longTextField {
-    margin: 5px auto;
-    min-height: 30px;
-    width: 100%;
-    .content {
+    textarea {
+        resize: none;
         width: 100%;
-        font-size: 18px;
-        color: $darkGrey;
-        margin-left: 5px;
+        font-size: 16px;
         box-sizing: border-box;
-        border: none;
-        @include clipText;
-        textarea {
-            resize: none;
-            width: 100%;
-            font-size: 16px;
-            box-sizing: border-box;
         @include scrollY;
-        }
     }
 }

@@ -1,19 +1,15 @@
 @import "global-styles/variables_and_mixins";
 
 .multipleChoiceField {
-    margin: 5px auto;
-    min-height: 30px;
-    max-width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    .content {
-        max-width: 95%;
-        font-size: 18px;
-        color: $darkGrey;
-        margin: 0 0 0 5px;
-        box-sizing: border-box;
-        @include clipText;
+    .choiceList {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        ul {
+            max-height: 200px;
+            min-width: 250px;
+            margin: 5px 0 0 5px;
+        }
     }
 }
