@@ -9,6 +9,7 @@ export const filtersBarInitialState = {
         filters: [],
         selectedFilters: {},
         activeFilters: {},
+        filtersInitialized: false,
     },
     sortValue: {
         sortOptions: [

@@ -31,8 +31,8 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
 
     useEffect(() => {
         if (!catalogue.fetchingFieldsChoices) {
-                const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
-                filtersContext.changeFilters(filters)
+            const filters = buildFilters(catalogue.fields, catalogue.itemsRanges)
+            filtersContext.changeFilters(filters)
         }
     }, [catalogue.fetchingFieldsChoices])
 
@@ -43,6 +43,10 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const toggleFiltersBar = (e: React.MouseEvent) => {
         e.stopPropagation()
         setShowFilters(!showFilters)
+    }
+
+    if (!filtersContext.filtersInitialized) {
+        return null
     }
 
     return (

@@ -84,6 +84,7 @@ export interface FiltersInitialState {
     filters: FilterType[],
     selectedFilters: SelectedFilter,
     activeFilters: ActiveFilter,
+    filtersInitialized: boolean,
 }
 
 export interface FiltersContextInterface extends FiltersInitialState {

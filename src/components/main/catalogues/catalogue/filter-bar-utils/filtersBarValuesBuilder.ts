@@ -26,7 +26,7 @@ const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
         }
         else {
             if (filter.id in parsedQuery) {
-                parsedQuery[filter.id].split(',')
+                filtersValue[filter.id] = parsedQuery[filter.id].split(',')
             }
         }
     }

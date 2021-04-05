@@ -9,6 +9,7 @@ export const initialState = {
     filters: [],
     selectedFilters: {},
     activeFilters: {},
+    filtersInitialized: false,
     changeFilters: () => null,
     setSelectedFilters: () => null,
     changeSelectedFilters: () => null,
@@ -41,6 +42,7 @@ export const reducer = (state: Draft<FiltersInitialState>, action: Action) => {
 
         case CHANGE_FILTERS:
             state.filters = action.filters
+            state.filtersInitialized = true
             break
 
         default:
