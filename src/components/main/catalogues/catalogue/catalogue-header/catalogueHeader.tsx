@@ -135,11 +135,13 @@ const CatalogueHeader = (props: Props) => {
                             <FontAwesomeIcon icon={faFilter} />
                         </TransparentButton>
                     }
-                    <FavouriteIcon
-                        className={styles.favouriteIcon}
-                        active={props.catalogue.isFavourite}
-                        onChange={handleFavouriteChange}
-                    />
+                    {user && (
+                        <FavouriteIcon
+                            className={styles.favouriteIcon}
+                            active={props.catalogue.isFavourite}
+                            onChange={handleFavouriteChange}
+                        />
+                    )}
                 </div>
             </ComponentHeader>
         </NavContextProvider>
