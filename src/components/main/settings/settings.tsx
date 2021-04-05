@@ -16,33 +16,13 @@ const Settings = () => {
     const settingsRef = useRef<HTMLDivElement>(null)
     const [minHeight, setMinHeight] = useState(0)
     const app = useTypedSelector(state => state.app)
-    const [showNav, setShowNav] = useState(false)
-    const [showSideMenu, setShowSideMenu] = useState(false)
-
-    useEffect(() => {
-        const close = () => {
-            setShowNav(false)
-            setShowSideMenu(false)
-        }
-
-        if (showNav || showSideMenu) {
-            window.addEventListener('click', close)
-        }
-        return () => {
-            window.removeEventListener('click', close)
-        }
-    }, [showNav, showSideMenu])
 
     useEffect(() => {
         if (settingsRef.current === null) {
             return
         }
-        window.addEventListener('resize', getMinHeight)
+        
         getMinHeight()
-
-        return () => {
-            window.removeEventListener('resize', getMinHeight)
-        }
     }, [settingsRef.current, app.screenHeight])
 
     const getMinHeight = () => {

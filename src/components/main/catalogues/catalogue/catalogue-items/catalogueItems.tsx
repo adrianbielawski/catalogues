@@ -39,7 +39,6 @@ const CatalogueItems = (props: Props) => {
     const itemsData = useTypedSelector(state => state.itemsData)
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
     const filtersBarContext = useFiltersBarContext()
-    const delayCompleted = useDelay(itemsData.fetchingItems)
 
     const handleIntersecting = (isIntersecting: boolean) => {
         if (isIntersecting && itemsData.next && itemsData.next > 2) {
