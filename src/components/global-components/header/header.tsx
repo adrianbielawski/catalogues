@@ -13,7 +13,7 @@ import { NavContext } from '../nav/nav-store/navStore'
 //Redux
 import { LOG_OUT } from 'store/slices/authSlices/authSlices'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//custom components
+//Components
 import Nav, { ItemType, ItemWithChildrenAndFaIcon } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
@@ -32,7 +32,9 @@ const Header = () => {
     const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
     const user = useTypedSelector(state => state.auth.user)
-    const catalogues = useTypedSelector(state => state.catalogues)
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const cataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.cataloguesData)
+    const favouriteCatalogues = useTypedSelector(state => state.modules.authUserFavoirites.cataloguesIds)
     const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
     const handleLogout = () => {
@@ -49,15 +51,15 @@ const Header = () => {
                     id: 'Favourite catalogues',
                     title: 'Favourite catalogues',
                     faIcon: faFolderOpen,
-                    children: catalogues.authUser.favouriteCatalogues.map(c => ({
-                        id: c.name,
-                        title: c.name,
+                    children: favouriteCatalogues.map(id => ({
+                        id: catalogues[id]!.name,
+                        title: catalogues[id]!.name,
                         icon: <Avatar
                             className={styles.catalogueImage}
                             placeholderIcon={faFolderOpen}
-                            url={c.imageThumbnail}
+                            url={catalogues[id]!.imageThumbnail}
                         />,
-                        url: `/${c.createdBy.username}/catalogues/${c.slug}`,
+                        url: `/${catalogues[id]!.createdBy.username}/catalogues/${catalogues[id]!.slug}`,
                     })),
                 },
             ]
@@ -66,15 +68,15 @@ const Header = () => {
             id: 'My catalogues',
             title: 'My catalogues',
             faIcon: faFolderOpen,
-            children: catalogues.authUser.catalogues.map(c => ({
-                id: c.name,
-                title: c.name,
+            children: cataloguesData.map(c => ({
+                id: catalogues[c.id]!.name,
+                title: catalogues[c.id]!.name,
                 icon: <Avatar
                     className={styles.catalogueImage}
                     placeholderIcon={faFolderOpen}
-                    url={c.imageThumbnail}
+                    url={catalogues[c.id]!.imageThumbnail}
                 />,
-                url: `/${user!.username}/catalogues/${c.slug}`,
+                url: `/${user!.username}/catalogues/${catalogues[c.id]!.slug}`,
             })),
         },
         {

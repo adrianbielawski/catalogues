@@ -1,38 +1,38 @@
 import React from 'react'
 import styles from './newCatalogueModal.scss'
 //Redux
+import { DELETE_CATALOGUE, NEW_CATALOGUE_CREATED } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
-//Custom components
+//Components
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 import ManageCatalogue from '../manage-catalogue/manageCatalogue'
 import Button from 'components/global-components/button/button'
-import { DELETE_CATALOGUE, NEW_CATALOGUE_CREATED } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 
 type Props = {
-    newCatalogueId: number,
+    catalogueId: number,
 }
 
 const NewCatalogueModal = (props: Props) => {
     const dispatch = useAppDispatch()
-    const catalogue = useTypedSelector(catalogueSelector(props.newCatalogueId))
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
 
     const handleEditConfirm = () => {
         dispatch(NEW_CATALOGUE_CREATED())
     }
 
     const handleEditCancel = () => {
-        dispatch(DELETE_CATALOGUE(props.newCatalogueId))
+        dispatch(DELETE_CATALOGUE(props.catalogueId))
     }
 
     return (
         <AnimatedModal
-            show={props.newCatalogueId !== null}
+            show={props.catalogueId !== null}
             className={styles.newCatalogueModal}
         >
             <div className={styles.catalogue}>
                 <ManageCatalogue
-                    catalogue={catalogue}
+                    catalogueId={catalogue.id}
                 />
                 <div className={styles.buttons}>
                     <Button

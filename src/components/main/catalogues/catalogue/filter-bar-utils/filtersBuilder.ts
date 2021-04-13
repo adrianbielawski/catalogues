@@ -1,26 +1,38 @@
+import { Dictionary } from "@reduxjs/toolkit"
 import moment from "moment"
-import { DeserializedChoice, DeserializedChoiceField, DeserializedField, ItemsRanges } from "src/globalTypes"
+import { DeserializedChoice, DeserializedField, ItemsRanges } from "src/globalTypes"
 import { Choice, FilterType } from "components/global-components/filters-bar/filters/filtersTypes"
+import { CurrentUserChoiceFieldData, CurrentUserFieldData } from "store/modules/current-user-catalogues/types"
 
 const buildFilterChoice = (choice: DeserializedChoice): Choice => ({
     id: choice.value,
     value: choice.value,
 })
 
-const buildFilter = (field: DeserializedChoiceField): FilterType => ({
-    id: field.filterName,
-    title: field.name,
-    type: field.type,
-    choices: field.choices.map(buildFilterChoice),
-    choicesSortDir: 'asc',
-    searchValue: '',
-})
+const buildFilter = (field: DeserializedField, fieldsChoices: Dictionary<DeserializedChoice>): FilterType => {
+    const choices = Object.values(fieldsChoices).filter(choice => choice!.fieldId === field.id) as DeserializedChoice[]
 
-const buildFilters = (fields: DeserializedField[], itemsRanges: ItemsRanges): FilterType[] => {
-    const filteredFields = fields.filter(f =>
-        (f.type === 'multiple_choice' || f.type === 'single_choice')
-        && (f as DeserializedChoiceField).choices.length
-    ) as DeserializedChoiceField[]
+    return {
+        id: field.filterName,
+        title: field.name,
+        type: field.type,
+        choices: choices.map(buildFilterChoice),
+        choicesSortDir: 'asc',
+        searchValue: '',
+    }
+}
+
+const buildFilters = (
+    fieldsData: CurrentUserFieldData[],
+    itemsRanges: ItemsRanges,
+    catalogueFields: DeserializedField[],
+    fieldsChoices: Dictionary<DeserializedChoice>
+): FilterType[] => {
+    const choices: number[] = []
+    const filteredFields = catalogueFields.filter(f =>
+        (f!.type === 'multiple_choice' || f!.type === 'single_choice')
+        && (fieldsData.find(d => d.id === f!.id) as CurrentUserChoiceFieldData).choices?.length
+    ) as DeserializedField[]
 
     return [
         {
@@ -37,7 +49,7 @@ const buildFilters = (fields: DeserializedField[], itemsRanges: ItemsRanges): Fi
             minVal: moment(itemsRanges.date.min || '2021-01-01').format('YYYY-MM-DD'),
             maxVal: moment().format('YYYY-MM-DD'),
         },
-        ...filteredFields.map(buildFilter)
+        ...filteredFields.map(f => buildFilter(f, fieldsChoices))
     ]
 }
 

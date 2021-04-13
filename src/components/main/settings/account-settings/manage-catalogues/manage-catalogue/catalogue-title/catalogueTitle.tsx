@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import styles from './catalogueTitle.scss'
+//Hooks
+import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 //Redux
 import {
     CHANGE_CATALOGUE_NAME, CLEAR_CATALOGUE_ERROR, TOGGLE_CATALOGUE_NAME_EDIT
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+} from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector } from 'store/selectors'
-//Custom components
+import { authUserCatalogueSelector } from 'store/selectors'
+//Components
 import EditableField from 'components/global-components/editable-field/editableField'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 
 type Props = {
     id: number,
@@ -19,8 +20,10 @@ type Props = {
 const CatalogueTitle = (props: Props) => {
     const dispatch = useAppDispatch()
     const [inputError, setInputError] = useState('')
-    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
-    const catalogue = useTypedSelector(catalogueSelector(props.id))
+    const authUserCatalogues = useTypedSelector(state => state.modules.authUserCatalogues)
+    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.id))
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const error = catalogueData.catalogueError
 
     const validateName = (name: string) => {
         let message = ''
@@ -28,9 +31,12 @@ const CatalogueTitle = (props: Props) => {
         if (name.length < 1) {
             message = 'Minimum 1 characters'
         }
-        if (catalogues.find(c => c.name.toLowerCase() === name.toLowerCase() && c.id !== catalogue.id)) {
-            message = `Catalogue with name "${name}" already exists`
-        }
+
+        authUserCatalogues.cataloguesData.forEach(c => {
+            if (catalogues[c.id]?.name.toLowerCase() === name.toLowerCase()) {
+                message = `Catalogue with name "${name}" already exists`
+            }
+        })
 
         setInputError(message)
         return message.length === 0
@@ -50,25 +56,23 @@ const CatalogueTitle = (props: Props) => {
     )
 
     const clearError = () => {
-        dispatch(CLEAR_CATALOGUE_ERROR(catalogue.id))
+        dispatch(CLEAR_CATALOGUE_ERROR(catalogues[props.id]!.id))
     }
-    
-    const error = catalogue.catalogueError
 
     return (
         <div className={styles.catalogueTitle}>
             <EditableField
                 title="Name"
                 content={props.name}
-                isEditing={catalogue.isEditingCatalogueName}
+                isEditing={catalogueData.isEditingCatalogueName}
                 invalidInputMessage={inputError}
                 onEditClick={handleEditName}
                 ref={nameInputRef}
             />
             <MessageModal
-                show={error.message.length !== 0}
+                show={error !== null}
                 title={'Catalogue name error'}
-                message={error.message}
+                message={error?.message || ''}
                 onConfirm={clearError}
             />
         </div>

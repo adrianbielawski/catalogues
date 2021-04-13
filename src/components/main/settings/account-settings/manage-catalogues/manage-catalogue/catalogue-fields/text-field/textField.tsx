@@ -3,26 +3,29 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
-//Redux
-import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { fieldSelector, } from 'store/selectors'
 //Types
-import { DeserializedTextField } from 'src/globalTypes'
-//Custom components
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserTextFieldData } from 'store/modules/auth-user-catalogues/types'
+//Redux
+import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch } from 'store/storeConfig'
+//Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import EditTextField from './edit-text-field/editTextField'
 
 type Props = {
-    field: DeserializedTextField,
+    field: DeserializedField,
+    fieldData: AuthUserTextFieldData,
 }
 
 const cx = classNames.bind(styles)
 
 const TextField = (props: Props) => {
     const dispatch = useAppDispatch()
-    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
+    const fieldData = props.fieldData
+    const isEditing = fieldData.isEditing
+    const error = fieldData.fieldError
 
     const catalogueAndFieldId = {
         fieldId: props.field.id,
@@ -37,19 +40,17 @@ const TextField = (props: Props) => {
         dispatch(CLEAR_FIELD_ERROR(catalogueAndFieldId))
     }
 
-    const error = field.fieldError
-
     const fieldClass = cx(
         'field',
         {
-            active: field.isEditing,
+            active: isEditing,
         }
     )
 
     const editButtonClass = cx(
         'editButton',
         {
-            active: field.isEditing,
+            active: isEditing,
         }
     )
 
@@ -58,14 +59,19 @@ const TextField = (props: Props) => {
             <TransparentButton className={editButtonClass} onClick={handleEdit}>
                 <FontAwesomeIcon icon={faEdit} />
             </TransparentButton>
-            {field.isEditing
-                ? <EditTextField field={props.field} />
+            {isEditing
+                ? (
+                    <EditTextField
+                        field={props.field}
+                        fieldData={props.fieldData}
+                    />
+                )
                 : props.field.name
             }
             <MessageModal
-                show={error.message.length !== 0}
-                title={error.title}
-                message={error.message}
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
                 onConfirm={clearError}
             />
         </div>

@@ -1,19 +1,19 @@
 import React from 'react'
 import styles from './recomendedCatalogues.scss'
 //Redux
+import { FETCH_RECOMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { FETCH_RECOMENDED_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custon hooks and utils
+//Hooks and utils
 import { useElementInView } from 'src/hooks/useElementInView'
-//Custom components
+//Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
 import Button from 'components/global-components/button/button'
 import Column from '../column/column'
 
 const RecomendedCatalogues = () => {
     const dispatch = useAppDispatch()
-    const cats = useTypedSelector(state => state.catalogues.authUser.catalogues)
-    const recomended = useTypedSelector(state => state.catalogues.authUser.recomended)
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const recomended = useTypedSelector(state => state.modules.authUserDashboard.recomendedCataloguesData)
 
     const handleIntersecting = (isIntersecting: boolean) => {
         if (isIntersecting && recomended.next && recomended.next > 2) {
@@ -31,12 +31,12 @@ const RecomendedCatalogues = () => {
         fetchRecomended(2)
     }
 
-    const catalogues = cats.map((c, i) => {
-        const ref = i === cats.length - 3 ? thirdFromTheEndRef : null
+    const cataloguesComponents = recomended.results.map((id, i) => {
+        const ref = i === recomended.results.length - 3 ? thirdFromTheEndRef : null
         return (
             <CatalogueCard
-                catalogue={c}
-                key={c.id}
+                catalogue={catalogues[id]!}
+                key={id}
                 ref={ref}
             />
         )
@@ -47,7 +47,7 @@ const RecomendedCatalogues = () => {
             className={styles.recomendedCatalogues}
             title="Recomended catalogues"
         >
-            {catalogues}
+            {cataloguesComponents}
             {recomended.next === 2 && (
                 <Button
                     className={styles.button}

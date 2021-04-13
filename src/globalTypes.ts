@@ -13,6 +13,47 @@ export interface ErrorMessage {
     message: string,
 }
 
+export interface Referrer {
+    pathname: string,
+    params: {
+        username?: string,
+        slug?: string,
+        catalogue?: DeserializedCatalogue,
+    },
+}
+
+export interface LocationState {
+    referrer: Referrer;
+}
+
+export interface QueryObj {
+    [key: string]: number | string | string[]
+}
+
+//List data
+export interface ListData<R> {
+    count: number,
+    page_size: number,
+    start_index: number,
+    end_index: number,
+    current: number,
+    next: number,
+    previous: number,
+    results: R[],
+}
+
+export interface DeserializedListData<R> {
+    count: number | null,
+    pageSize: number | null,
+    startIndex: number | null,
+    endIndex: number | null,
+    current: number | null,
+    next: number | null,
+    previous: number | null,
+    results: R[],
+}
+
+//User
 export interface User {
     id: number,
     username: string,
@@ -31,23 +72,7 @@ export interface DeserializedUser {
     isAnonymous: boolean,
 }
 
-export interface Referrer {
-    pathname: string,
-    params: {
-        username?: string,
-        slug?: string,
-        catalogue?: DeserializedCatalogue,
-    },
-}
-
-export interface LocationState {
-    referrer: Referrer;
-}
-
-export interface QueryObj {
-    [key: string]: number | string | string[]
-}
-
+//Catalogues
 export interface ItemsRanges {
     id: {
         min: string,
@@ -103,20 +128,26 @@ export interface DeserializedCatalogue {
     slug: string,
     itemsRanges: DeserializedItemsRanges,
     permissions: DeserializedCataloguePermisions,
-    fields: DeserializedField[],
     image: string,
     imageThumbnail: string,
     isFavourite: boolean,
-    fetchingFields: boolean,
-    fetchingFieldsChoices: boolean,
-    isEditingCatalogueName: boolean,
-    isSubmittingCatalogueName: boolean,
-    catalogueError: ErrorMessage,
-    isAddFieldFormActive: boolean,
-    isSubmittingNewField: boolean,
-    deletingCatalogue: boolean,
-    isSubmittingImage: boolean,
+}
+
+export interface CatalogueData<F> {
+    id: number,
+    fieldsData: F[],
     isInitialized: boolean,
+    isFetchingFields: boolean,
+    isFetchingFieldsChoices: boolean,
+
+}
+
+export interface FieldsData {
+    id: number,
+}
+
+export interface ChoiceFieldsData<C> extends FieldsData {
+    choices: C[],
 }
 
 export interface RecomendedCatalogues extends ListData<Catalogue> { }
@@ -124,28 +155,42 @@ export interface DeserializedRecomendedCatalogues extends DeserializedListData<D
     fetchingCatalogues: boolean,
 }
 
-export interface ListData<R> {
-    count: number,
-    page_size: number,
-    start_index: number,
-    end_index: number,
-    current: number,
-    next: number,
-    previous: number,
-    results: R[],
+//Fields
+export interface Field {
+    id: number,
+    catalogue_id: number,
+    type: string,
+    name: string,
+    filter_name: string,
+    position: number,
+    public: boolean,
+    choices?: Choice[],
 }
 
-export interface DeserializedListData<R> {
-    count: number | null,
-    pageSize: number | null,
-    startIndex: number | null,
-    endIndex: number | null,
-    current: number | null,
-    next: number | null,
-    previous: number | null,
-    results: R[],
+export interface DeserializedField {
+    id: number,
+    catalogueId: number,
+    type: string,
+    name: string,
+    filterName: string,
+    position: number,
+    public: boolean,
 }
 
+//Choices
+export interface Choice {
+    id: number,
+    field_id: number,
+    value: string,
+}
+
+export interface DeserializedChoice {
+    id: number,
+    fieldId: number,
+    value: string,
+}
+
+//Items
 export interface ItemsData extends ListData<Item> { }
 
 export interface DeserializedItemsData extends DeserializedListData<DeserializedItem[]> {
@@ -274,65 +319,7 @@ export interface DeserializedItemField {
     value: ItemFieldValue,
 }
 
-export interface Field {
-    id: number,
-    catalogue_id: number,
-    type: string,
-    name: string,
-    filter_name: string,
-    position: number,
-    public: boolean,
-    choices?: Choice[],
-}
-
-export interface Choice {
-    id: number,
-    field_id: number,
-    value: string,
-}
-
-export interface DeserializedChoice {
-    id: number,
-    fieldId: number,
-    value: string,
-}
-
-export interface DeserializedChoiceField {
-    id: number,
-    catalogueId: number,
-    type: string,
-    name: string,
-    filterName: string,
-    position: number,
-    public: boolean,
-    choices: DeserializedChoice[],
-    fetchingChoices: boolean,
-    postingChoice: boolean,
-    fieldError: ErrorMessage,
-    removingChoice: boolean,
-    changingName: boolean,
-    isDeleting: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-}
-
-export interface DeserializedTextField {
-    id: number,
-    catalogueId: number,
-    type: string,
-    name: string,
-    filterName: string,
-    position: number,
-    public: boolean,
-    changingName: boolean,
-    fieldError: ErrorMessage,
-    isDeleting: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-}
-
-export type DeserializedField = DeserializedTextField | DeserializedChoiceField
-
+//Image
 export type Image = {
     id: number | null,
     image: string,

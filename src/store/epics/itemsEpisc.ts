@@ -11,13 +11,13 @@ import { retry$ } from "store/storeObservables"
 //Serializers
 import { itemFieldSerializer } from "src/serializers"
 //Selectors
-import { getCatalogueById } from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlectors"
+// import { getCatalogueById } from "store/entities/catalogues/"
 //Types
 import { DeserializedImage } from "src/globalTypes"
 import { RootState } from "store/storeConfig"
 //Actions
 import * as actions from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
-import * as catalogueActions from "store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice"
+import * as authUserCataloguesActions from "store/modules/auth-user-catalogues/slice"
 
 export const refreshItemEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_ITEM.match)),
@@ -130,11 +130,11 @@ export const saveItemEpic = (
             request$.pipe(
                 mergeMap(response => imagesRequests$(response.data.id).pipe(
                     defaultIfEmpty(),
-                    withLatestFrom(state$.pipe(pluck('catalogues'))),
-                    mergeMap(([_, state]) => merge(
+                    withLatestFrom(state$.pipe(pluck('entities', 'catalogues', 'entities', `${response.data.id}`))),
+                    mergeMap(([_, catalogue]) => merge(
                         iif(() =>
-                            getCatalogueById(state, action.payload.catalogueId).itemsRanges.date.min === null,
-                            of(catalogueActions.REFRESH_CATALOGUE(action.payload.catalogueId))
+                            catalogue?.itemsRanges.date.min === null,
+                            of(authUserCataloguesActions.REFRESH_CATALOGUE(action.payload.catalogueId))
                         ),
                         of(actions.SAVE_ITEM_SUCCESS(response.data.id)),
                     )),

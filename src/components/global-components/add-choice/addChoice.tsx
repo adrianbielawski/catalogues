@@ -1,21 +1,25 @@
 import React, { useState } from 'react'
 import styles from './addChoice.scss'
 //Types
-import { DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
 //Redux
-import { useAppDispatch } from 'store/storeConfig'
-import { CLEAR_FIELD_ERROR, POST_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CLEAR_FIELD_ERROR, POST_FIELD_CHOICE } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { authUserFieldDataSelector } from 'store/selectors'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
-    field: DeserializedChoiceField,
+    field: DeserializedField,
 }
 
 const AddChoice = (props: Props) => {
     const dispatch = useAppDispatch()
+    const choices = useTypedSelector(state => state.entities.choices.entities)
+    const fieldData = useTypedSelector(authUserFieldDataSelector(props.field.catalogueId, props.field.id)) as AuthUserChoiceFieldData
     const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
     const [inputError, setInputError] = useState('')
 
@@ -26,7 +30,7 @@ const AddChoice = (props: Props) => {
     const validateInput = (name: string) => {
         let error = null
 
-        if (props.field.choices.find(c => c.value.toLowerCase() === name.toLowerCase())) {
+        if (fieldData.choices.find(c => choices[c.id]?.value.toLowerCase() === name.toLowerCase())) {
             error = `Choice with name "${name}" already exists`
         }
 
@@ -58,14 +62,14 @@ const AddChoice = (props: Props) => {
     }
 
     const handleAddChoice = (name: string) => {
-        dispatch(POST_CHOICE({
+        dispatch(POST_FIELD_CHOICE({
             name,
             fieldId: props.field.id,
             catalogueId: props.field.catalogueId
         }))
     }
 
-    const error = props.field.fieldError
+    const error = fieldData.fieldError
 
     const inputProps = {
         placeholder: "New choice name",
@@ -96,9 +100,9 @@ const AddChoice = (props: Props) => {
                     />
                 )}
             <MessageModal
-                show={error.message.length !== 0}
-                title={error.title}
-                message={error.message}
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
                 onConfirm={clearError}
             />
         </>

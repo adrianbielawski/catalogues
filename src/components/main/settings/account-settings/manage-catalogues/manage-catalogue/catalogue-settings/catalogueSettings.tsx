@@ -4,11 +4,12 @@ import styles from './catalogueSettings.scss'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
-import { useAppDispatch } from 'store/storeConfig'
 import {
     CHANGE_DEFAULT_CATALOGUE, CHANGE_PUBLIC_CATALOGUE, DELETE_CATALOGUE
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+} from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { authUserCatalogueSelector } from 'store/selectors'
+//Components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import Button from 'components/global-components/button/button'
 import
@@ -22,6 +23,7 @@ type Props = {
 
 const CatalogueSettings = (props: Props) => {
     const dispatch = useAppDispatch()
+    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogue.id))
     const [message, setMessage] = useState<ProtectedMessage | null>(null)
 
     const handleChangeDefault = () => {
@@ -77,7 +79,7 @@ const CatalogueSettings = (props: Props) => {
                 </div>
                 <Button
                     className={styles.deleteCatalogueButton}
-                    disabled={props.catalogue.deletingCatalogue}
+                    disabled={catalogueData.isDeletingCatalogue}
                     onClick={handleDeleteCatalogue}
                 >
                     Delete catalogue

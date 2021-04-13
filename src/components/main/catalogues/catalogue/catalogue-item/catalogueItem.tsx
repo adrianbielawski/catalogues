@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItem.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, itemSelector } from 'store/selectors'
 import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { catalogueSelector, itemSelector, currentUserCatalogueSelector } from 'store/selectors'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
-//Custom components
+//Components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'
 import Loader from 'components/global-components/loader/loader'
@@ -40,6 +40,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const item = useTypedSelector(itemSelector(props.item.id))
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
+    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
     const firstRender = useFirstRender()
 
     useEffect(() => {
@@ -120,7 +121,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 className={styles.itemData}
                                 item={item}
                             />
-                            {catalogue.fetchingFields
+                            {catalogueData.isFetchingFields
                                 ? <Loader />
                                 : (
                                     <ItemFields

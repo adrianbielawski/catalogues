@@ -10,11 +10,9 @@ import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 import { NavContext } from 'components/global-components/nav/nav-store/navStore'
 import NavContextProvider from 'components/global-components/nav/nav-store/navContextProvider'
 //Redux
+import { ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import {
-    ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//custom components
+//Components
 import Avatar from 'components/global-components/avatar/avatar'
 import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
@@ -41,7 +39,8 @@ const CatalogueHeader = (props: Props) => {
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
     const user = useTypedSelector(state => state.auth.user)
     const currentUser = useTypedSelector(state => state.currentUser)
-    const catalogues = useTypedSelector(state => state.catalogues)
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues.cataloguesData)
 
     const handleFavouriteChange = () => {
         if (!props.catalogue.isFavourite) {
@@ -72,15 +71,15 @@ const CatalogueHeader = (props: Props) => {
             id: 'Catalogues',
             title: `${currentUser.user?.username}'s catalogues`,
             faIcon: faFolderOpen,
-            children: catalogues.catalogues.map(c => ({
-                id: c.name,
-                title: c.name,
+            children: currentUserCatalogues.map(c => ({
+                id: catalogues[c.id]!.name,
+                title: catalogues[c.id]!.name,
                 icon: <Avatar
                     className={styles.catalogueImage}
                     placeholderIcon={faFolderOpen}
-                    url={c.imageThumbnail}
+                    url={catalogues[c.id]!.imageThumbnail}
                 />,
-                url: `/${currentUser.user!.username}/catalogues/${c.slug}`,
+                url: `/${currentUser.user!.username}/catalogues/${catalogues[c.id]!.slug}`,
             })),
         },
     ]

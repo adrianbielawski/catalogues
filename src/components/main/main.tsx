@@ -5,10 +5,11 @@ import styles from './main.scss'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
-import { useTypedSelector } from 'store/storeConfig'
+import { FETCH_AUTH_USER_CATALOGUES } from 'store/modules/auth-user-catalogues/slice'
+import { FETCH_FAVOURITE_CATALOGUES } from 'store/modules/auth-user-favourites/slice'
 import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
-import { FETCH_AUTH_USER_DATA } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+import { useTypedSelector } from 'store/storeConfig'
+//Components
 import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
@@ -37,7 +38,8 @@ const Main = (props: HydratedRouteComponentProps) => {
         if (!user?.id) {
             return
         }
-        dispatch(FETCH_AUTH_USER_DATA())
+        dispatch(FETCH_AUTH_USER_CATALOGUES())
+        dispatch(FETCH_FAVOURITE_CATALOGUES())
     }, [user])
 
     const handleCloseMessage = () => {

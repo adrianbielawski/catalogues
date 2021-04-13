@@ -1,26 +1,26 @@
 import React, { useState } from 'react'
 import styles from './multipleChoiceField.scss'
 //Types
-import { DeserializedChoiceField, DeserializedItemField } from 'src/globalTypes'
+import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-import { fieldSelector } from 'store/selectors'
+import { fieldChoicesSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//Custom components
+//Components
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import Field from '../field/field'
 
 interface Props {
     itemId: number,
-    field: DeserializedChoiceField,
+    field: DeserializedField,
     fieldValue: DeserializedItemField,
 }
 
 const MultipleChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
-    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
+    const fieldChoices = useTypedSelector(fieldChoicesSelector(props.field.id))
 
     const handleEdit = () => {
         setIsEditing(!isEditing)
@@ -41,13 +41,9 @@ const MultipleChoiceField = (props: Props) => {
             return
         }
         const values = (props.fieldValue.value as number[]).map(id =>
-            props.field.choices.find(c => c.id === id)?.value
+            fieldChoices.find(c => c.id === id)?.value
         )
         return values.join(', ')
-    }
-
-    if (field.fetchingChoices) {
-        return null
     }
 
     return (
@@ -60,7 +56,7 @@ const MultipleChoiceField = (props: Props) => {
                 <>
                     <ChoiceList
                         className={styles.choiceList}
-                        choices={field.choices}
+                        choices={fieldChoices}
                         defaultSortDir="asc"
                         defaultSearchValue=""
                         selected={props.fieldValue?.value as number[] || []}

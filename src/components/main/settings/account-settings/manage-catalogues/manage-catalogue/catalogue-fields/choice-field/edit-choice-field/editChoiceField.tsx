@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import styles from './editChoiceField.scss'
 //Types
-import { DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
 //Redux
-import {
-    CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { fieldSelector, fieldsSelector } from 'store/selectors'
-//Custom hooks
+import { authUserFieldsDataSelector } from 'store/selectors'
+//Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
-//Custom components
+//Components
 import Input from 'components/global-components/input/input'
 import Choices from './choices/choices'
 import Button from 'components/global-components/button/button'
@@ -18,13 +17,14 @@ import ConfirmMessageModal from 'components/global-components/confirm-message-mo
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 type Props = {
-    field: DeserializedChoiceField,
+    field: DeserializedField,
+    fieldData: AuthUserChoiceFieldData,
 }
 
 const EditChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
-    const fields = useTypedSelector(fieldsSelector(props.field.catalogueId))
-    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
+    const fields = useTypedSelector(state => state.entities.fields.entities)
+    const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.field.catalogueId))
     const [inputError, setInputError] = useState('')
     const [message, setMessage] = useState({ title: '', value: '' })
 
@@ -33,15 +33,18 @@ const EditChoiceField = (props: Props) => {
         catalogueId: props.field.catalogueId
     }
 
-    const validateInput = (input: string) => {
+    const validateInput = (name: string) => {
         let message = ''
 
-        if (input.length < 1) {
+        if (name.length < 1) {
             message = 'Minimum 1 characters'
         }
-        if (fields.find(f => f.name.toLowerCase() === input.toLowerCase() && f.id !== field.id)) {
-            message = `Field with name "${input}" already exists`
-        }
+
+        fieldsData.forEach(f => {
+            if (fields[f.id]?.name.toLowerCase() === name.toLowerCase()) {
+                message = `Catalogue with name "${name}" already exists`
+            }
+        })
 
         setInputError(message)
         return message.length === 0
@@ -59,15 +62,15 @@ const EditChoiceField = (props: Props) => {
     const handleDeleteField = () => {
         setMessage({
             title: 'Confirm delete',
-            value: `Are you sure you want to delete ${field.name} field?`,
+            value: `Are you sure you want to delete ${props.field.name} field?`,
         })
     }
 
     const handlePublicChange = () => {
         dispatch(CHANGE_FIELD_PUBLIC({
-            catalogueId: field.catalogueId,
-            fieldId: field.id,
-            public: !field.public,
+            catalogueId: props.field.catalogueId,
+            fieldId: props.field.id,
+            public: !props.field.public,
         }))
     }
 
@@ -95,17 +98,18 @@ const EditChoiceField = (props: Props) => {
                 <CheckBoxWithTitle
                     id="public"
                     title="Public"
-                    selected={field.public}
+                    selected={props.field.public}
                     onChange={handlePublicChange}
                 />
             </div>
             <Choices
-                field={field}
+                field={props.field}
+                choices={props.fieldData.choices}
                 className={styles.choices}
             />
             <Button
                 className={styles.deleteButton}
-                disabled={field.isDeleting}
+                disabled={props.fieldData.isDeleting}
                 onClick={handleDeleteField}
             >
                 Delete field

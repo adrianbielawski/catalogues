@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styles from './manageCatalogues.scss'
 //Redux
+import { CREATE_CATALOGUE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { CREATE_CATALOGUE, FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom hooks
-import { useDelay} from 'src/hooks/useDelay'
-import { useFirstRender } from 'src/hooks/useFirstRender'
-//Custom components
+//Hooks
+import { useDelay } from 'src/hooks/useDelay'
+//Components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
 import Loader from 'components/global-components/loader/loader'
@@ -15,16 +14,12 @@ import NewCatalogueModal from './new-catalogue-modal/newCatalogueModal'
 
 const ManageCatalogues = () => {
     const dispatch = useAppDispatch()
-    const catalogues = useTypedSelector(state => state.catalogues)
-    const newCatalogueDelay = useDelay(catalogues.creatingNewCatalogue)
-    const firstRender = useFirstRender()
+    const authUserCatalogues = useTypedSelector(state => state.modules.authUserCatalogues)
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const newCatalogueDelay = useDelay(authUserCatalogues.isCreatingNewCatalogue)
     const inputRef = useRef<HTMLInputElement>(null)
     const [addingCatalogue, setAddingCatalogue] = useState(false)
     const [inputError, setInputError] = useState('')
-
-    useEffect(() => {
-        dispatch(FETCH_CATALOGUES())
-    }, [])
 
     const handleAddCatalogue = (name: string) => {
         if (inputError.length !== 0) {
@@ -41,17 +36,16 @@ const ManageCatalogues = () => {
         if (name.length < 1) {
             message = 'Minimum 1 character'
         }
-        if (catalogues.catalogues.find(c => c.name.toLowerCase() === name.toLowerCase())) {
-            message = `Catalogue with name "${name}" already exists`
-        }
+
+        authUserCatalogues.cataloguesData.forEach(c => {
+            if (catalogues[c.id]?.name.toLowerCase() === name.toLowerCase()) {
+                message = `Catalogue with name "${name}" already exists`
+            }
+        })
 
         setInputError(message)
         return message.length === 0
     }
-
-    const items = catalogues.catalogues.map(catalogue => (
-        <ManageCatalogue catalogue={catalogue} key={catalogue.id} />
-    ))
 
     const handleAddClick = () => {
         setAddingCatalogue(true)
@@ -65,6 +59,14 @@ const ManageCatalogues = () => {
         placeholder: "New catalogue name",
         className: styles.newCatalogueInput,
         onChange: handleNameChange,
+    }
+
+    const catalogueComponents = authUserCatalogues.cataloguesData.map(c => (
+        <ManageCatalogue catalogueId={c.id} key={c.id} />
+    ))
+    
+    if (authUserCatalogues.isFetchingCatalogues) {
+        return <Loader size={50} className={styles.loader} />
     }
 
     return (
@@ -88,13 +90,10 @@ const ManageCatalogues = () => {
                     )
                 }
             </div>
-            {catalogues.fetchingCatalogues || firstRender
-                ? <Loader size={50} className={styles.loader} />
-                : items
-            }
-            {catalogues.newCatalogueId && (
+            {catalogueComponents}
+            {authUserCatalogues.newCatalogueId && (
                 <NewCatalogueModal
-                    newCatalogueId={catalogues.newCatalogueId}
+                    catalogueId={authUserCatalogues.newCatalogueId}
                 />
             )}
         </div>

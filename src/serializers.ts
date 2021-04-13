@@ -9,6 +9,21 @@ export const userDeserializer = (user: T.User): T.DeserializedUser => ({
     isAnonymous: user.is_anonymous,
 })
 
+export const listDeserializer = <S, D>(
+    data: T.ListData<S>,
+    resultsDeserializer: (results: S) => D
+): T.DeserializedListData<D> => ({
+    count: data.count,
+    pageSize: data.page_size,
+    startIndex: data.start_index,
+    endIndex: data.end_index,
+    current: data.current,
+    next: data.next,
+    previous: data.previous,
+    results: data.results.map(resultsDeserializer),
+})
+
+//Catalogues
 export const itemsRangeDeserializer = (itemsRanges: T.ItemsRanges): T.DeserializedItemsRanges => ({
     id: {
         min: itemsRanges.id.min,
@@ -33,39 +48,38 @@ export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCat
     slug: catalogue.slug,
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),
     permissions: cataloguePermissionsDeserializer(catalogue.permissions),
-    fields: [],
     image: catalogue.image,
     imageThumbnail: catalogue.image_thumbnail,
     isFavourite: catalogue.is_favourite,
-    fetchingFields: true,
-    fetchingFieldsChoices: true,
-    isEditingCatalogueName: false,
-    isSubmittingCatalogueName: false,
-    catalogueError: {
-        title: '',
-        message: '',
-    },
-    isAddFieldFormActive: false,
-    isSubmittingNewField: false,
-    deletingCatalogue: false,
-    isSubmittingImage: false,
-    isInitialized: false,
 })
 
-export const listDeserializer = <S, D>(
-    data: T.ListData<S>,
-    resultsDeserializer: (results: S) => D
-): T.DeserializedListData<D> => ({
-    count: data.count,
-    pageSize: data.page_size,
-    startIndex: data.start_index,
-    endIndex: data.end_index,
-    current: data.current,
-    next: data.next,
-    previous: data.previous,
-    results: data.results.map(resultsDeserializer),
+//Fields
+export const fieldDeserializer = (field: T.Field): T.DeserializedField => ({
+    id: field.id,
+    catalogueId: field.catalogue_id,
+    type: field.type,
+    name: field.name,
+    filterName: field.filter_name,
+    position: field.position,
+    public: field.public,
 })
 
+export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] => (
+    fields.map(fieldDeserializer)
+)
+
+//Choices
+export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
+    id: choice.id,
+    fieldId: choice.field_id,
+    value: choice.value,
+})
+
+export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[] => (
+    choices.map(choiceDeserializer)
+)
+
+//Item
 export const itemFieldDeserializer = (field: T.ItemField): T.DeserializedItemField => ({
     itemId: field.item_id,
     fieldId: field.field_id,
@@ -134,75 +148,7 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     isDeleting: false,
 })
 
-export const textFieldDeserializer = (field: T.Field): T.DeserializedTextField => ({
-    id: field.id,
-    catalogueId: field.catalogue_id,
-    type: field.type,
-    name: field.name,
-    filterName: field.filter_name,
-    position: field.position,
-    public: field.public,
-    changingName: false,
-    fieldError: {
-        title: '',
-        message: '',
-    },
-    isDeleting: false,
-    isEditing: false,
-    isSubmitting: false,
-})
-
-export const choiceFieldDeserializer = (field: T.Field): T.DeserializedChoiceField => ({
-    id: field.id,
-    catalogueId: field.catalogue_id,
-    type: field.type,
-    name: field.name,
-    filterName: field.filter_name,
-    position: field.position,
-    public: field.public,
-    choices: field.choices ? choicesDeserializer(field.choices) : [],
-    fetchingChoices: false,
-    postingChoice: false,
-    fieldError: {
-        title: '',
-        message: '',
-    },
-    removingChoice: false,
-    changingName: false,
-    isDeleting: false,
-    isEditing: false,
-    isSubmitting: false,
-})
-
-export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
-    id: choice.id,
-    fieldId: choice.field_id,
-    value: choice.value,
-})
-
-export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[] => (
-    choices.map(choiceDeserializer)
-)
-
-export const fieldDeserializer = (field: T.Field): T.DeserializedField => {
-    switch (field.type) {
-        case 'short_text':
-        case 'long_text':
-            return textFieldDeserializer(field)
-
-        case 'single_choice':
-        case 'multiple_choice':
-            return choiceFieldDeserializer(field)
-
-        default:
-            return textFieldDeserializer(field)
-    }
-}
-
-export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] => (
-    fields.map(fieldDeserializer)
-)
-
+//Images
 export const imageDeserializer = (image: T.Image): T.DeserializedImage => ({
     id: image.id as number,
     image: image.image,

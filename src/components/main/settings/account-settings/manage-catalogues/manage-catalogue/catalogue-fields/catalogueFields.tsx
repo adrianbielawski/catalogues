@@ -1,34 +1,33 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { DeserializedCatalogue, DeserializedChoiceField, DeserializedTextField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
 //Redux
-import { useAppDispatch } from 'store/storeConfig'
-import { FETCH_CATALOGUE_FIELDS } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+import { useTypedSelector } from 'store/storeConfig'
+import { authUserFieldsDataSelector } from 'store/selectors'
+//Components
 import TextField from '../catalogue-fields/text-field/textField'
 import ChoiceField from '../catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 
 type Props = {
-    catalogue: DeserializedCatalogue,
+    catalogueId: number,
 }
 
 const CatalogueFields = (props: Props) => {
-    const dispatch = useAppDispatch()
+    const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.catalogueId))
+    const catalogueFields = useTypedSelector(state => state.entities.fields.entities)
 
-    useEffect(() => {
-        dispatch(FETCH_CATALOGUE_FIELDS(props.catalogue.id))
-    }, [])
-
-    const fields = props.catalogue.fields.map(field => {
+    const fields = fieldsData.map(fieldData => {
+        const field = catalogueFields[fieldData.id]!
         switch (field.type) {
             case 'short_text':
             case 'long_text':
                 return (
                     <TextField
-                        field={field as DeserializedTextField}
+                        field={field}
+                        fieldData={fieldData}
                         key={field.id}
                     />
                 )
@@ -36,16 +35,13 @@ const CatalogueFields = (props: Props) => {
             case 'multiple_choice':
                 return (
                     <ChoiceField
-                        field={field as DeserializedChoiceField}
+                        field={field}
+                        fieldData={fieldData as AuthUserChoiceFieldData}
                         key={field.id}
                     />
                 )
         }
     })
-
-    if (props.catalogue.fetchingFieldsChoices && !props.catalogue.isInitialized) {
-        return null
-    }
 
     return (
         <IconWithTitle
@@ -54,7 +50,7 @@ const CatalogueFields = (props: Props) => {
         >
             <>
                 {fields}
-                <AddField catalogueId={props.catalogue.id} />
+                <AddField catalogueId={props.catalogueId} />
             </>
         </IconWithTitle>
     )
