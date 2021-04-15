@@ -2,22 +2,23 @@ import React from 'react'
 import styles from './newItemModal.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
+//Components
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 import EditItem from '../../catalogue-item/edit-item/editItem'
 
 const NewItemModal = () => {
-    const itemsData = useTypedSelector(state => state.itemsData)
+    const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
 
     return (
         <AnimatedModal
-            show={itemsData.newItemId !== null}
+            show={currentUserItems.newItemId !== null}
             className={styles.newItemModal}
         >
             <div className={styles.editItem}>
-                {itemsData.newItemId && (
+                {currentUserItems.newItemId && (
                     <EditItem
-                        show={itemsData.newItemId !== null}
-                        itemId={itemsData.newItemId!}
+                        show={currentUserItems.newItemId !== null}
+                        itemId={currentUserItems.newItemId!}
                         isItemNew={true}
                     />
                 )}

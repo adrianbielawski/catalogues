@@ -3,7 +3,7 @@ import styles from './singleChoiceField.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldChoicesSelector } from 'store/selectors'
 //Components

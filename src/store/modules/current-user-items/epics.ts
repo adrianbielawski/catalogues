@@ -1,7 +1,7 @@
 import { combineEpics } from "redux-observable"
 import { concat, of, defer, forkJoin, Observable, from, merge, iif } from 'rxjs'
 import {
-    catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck
+    catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck,
 } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import mime from 'mime-types'
@@ -9,44 +9,45 @@ import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
 import { retry$ } from "store/storeObservables"
 //Serializers
-import { itemFieldSerializer } from "src/serializers"
-//Selectors
-// import { getCatalogueById } from "store/entities/catalogues/"
+import { itemFieldSerializer, itemRatingDeserializer } from "src/serializers"
 //Types
 import { DeserializedImage } from "src/globalTypes"
 import { RootState } from "store/storeConfig"
 //Actions
-import * as actions from "store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice"
+import * as actions from "./slice"
 import * as authUserCataloguesActions from "store/modules/auth-user-catalogues/slice"
+import * as itemsActions from "store/entities/items/slice"
+import * as itemsCommentsActions from "store/entities/items-comments/slice"
 
 export const refreshItemEpic = (action$: Observable<Action>) => merge(
-    action$.pipe(filter(actions.REFRESH_ITEM.match)),
+    action$.pipe(filter(actions.REFRESH_CURRENT_USER_ITEM.match)),
     action$.pipe(filter(actions.SAVE_ITEM_SUCCESS.match)),
 ).pipe(
-    map(action => actions.FETCH_ITEM(action.payload))
+    map(action => actions.FETCH_CURRENT_USER_ITEM(action.payload))
 )
 
 export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.FETCH_ITEM.match),
+    filter(actions.FETCH_CURRENT_USER_ITEM.match),
     mergeMap(action => concat(
-        of(actions.FETCH_ITEM_START(action.payload)),
+        of(actions.FETCH_CURRENT_USER_ITEM_START(action.payload)),
         defer(() => axiosInstance$.get(`/items/${action.payload}/`)).pipe(
             retryWhen(err => retry$(err)),
-            map(response =>
-                actions.FETCH_ITEM_SUCCESS({
+            mergeMap(response => concat(
+                of(itemsActions.ITEM_UPDATED(response.data)),
+                of(actions.FETCH_CURRENT_USER_ITEM_SUCCESS({
                     data: response.data,
                     itemId: action.payload,
-                })
-            ),
-            catchError(() => of(actions.FETCH_ITEM_FAILURE(action.payload)))
+                }))
+            )),
+            catchError(() => of(actions.FETCH_CURRENT_USER_ITEM_FAILURE(action.payload)))
         )
     ))
 )
 
 export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.FETCH_ITEMS.match),
+    filter(actions.FETCH_CURRENT_USER_ITEMS.match),
     switchMap(action => concat(
-        of(actions.FETCH_ITEMS_START()),
+        of(actions.FETCH_CURRENT_USER_ITEMS_START()),
         defer(() => axiosInstance$.get('/items/', {
             params: {
                 catalogue_id: action.payload.catalogueId,
@@ -57,13 +58,14 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
             }
         })).pipe(
             retryWhen(err => retry$(err)),
-            map(response =>
-                actions.FETCH_ITEMS_SUCCESS({
+            mergeMap(response => concat(
+                of(itemsActions.ITEMS_UPDATED(response.data.results)),
+                of(actions.FETCH_CURRENT_USER_ITEMS_SUCCESS({
                     data: response.data,
                     catalogueId: action.payload.catalogueId,
-                })
-            ),
-            catchError(() => of(actions.FETCH_ITEMS_FAILURE()))
+                }))
+            )),
+            catchError(() => of(actions.FETCH_CURRENT_USER_ITEMS_FAILURE()))
         )
     ))
 )
@@ -76,9 +78,10 @@ export const addItemEpic = (action$: Observable<Action>) => action$.pipe(
             catalogue_id: action.payload,
         })).pipe(
             retryWhen(err => retry$(err)),
-            map(response =>
-                actions.ADD_ITEM_SUCCESS(response.data)
-            ),
+            mergeMap(response => concat(
+                of(itemsActions.ITEM_ADDED(response.data)),
+                of(actions.ADD_ITEM_SUCCESS(response.data))
+            )),
             catchError(() => of(actions.ADD_ITEM_FAILURE()))
         )
     ))
@@ -150,7 +153,10 @@ export const deleteItemEpic = (action$: Observable<Action>) => action$.pipe(
     switchMap(action => concat(
         of(actions.DELETE_ITEM_START(action.payload)),
         defer(() => axiosInstance$.delete(`/items/${action.payload}/`)).pipe(
-            map(() => actions.DELETE_ITEM_SUCCESS(action.payload)),
+            mergeMap(() => concat(
+                of(actions.DELETE_ITEM_SUCCESS(action.payload)),
+                of(itemsActions.ITEM_REMOVED(action.payload))
+            )),
             catchError(() => of(actions.DELETE_ITEM_FAILURE(action.payload)))
         )
     ))
@@ -158,76 +164,111 @@ export const deleteItemEpic = (action$: Observable<Action>) => action$.pipe(
 
 export const changeItemRatingEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.CHANGE_ITEM_RATING.match),
-    switchMap(action =>
-        axiosInstance$.put(`/items/${action.payload.itemId}/rating/`, {
-            rating: action.payload.rating
-        }).pipe(
-            map(response => actions.CHANGE_ITEM_RATING_SUCCESS({
-                itemId: action.payload.itemId,
-                rating: response.data.rating,
-            })),
-            catchError(() => of(actions.CHANGE_ITEM_RATING_FAILURE()))
-        )
-    )
+    switchMap(action => concat(
+        of(itemsActions.ITEM_UPDATED({
+            id: action.payload.itemId,
+            changes: {
+                rating: {
+                    average: action.payload.prevRating.average,
+                    count: action.payload.prevRating.count,
+                    currentUser: action.payload.rating,
+                },
+            }
+        })),
+        defer(() =>
+            iif(() => action.payload.rating !== null,
+                axiosInstance$.put(`/items/${action.payload.itemId}/rating/`, {
+                    rating: action.payload.rating
+                }),
+                axiosInstance$.delete(`/items/${action.payload.itemId}/rating/`)
+            ).pipe(
+                map(response => itemsActions.ITEM_UPDATED({
+                    id: action.payload.itemId,
+                    changes: {
+                        rating: itemRatingDeserializer(response.data.rating),
+                    }
+                })),
+                catchError(() => concat(
+                    of(itemsActions.ITEM_UPDATED({
+                        id: action.payload.itemId,
+                        changes: {
+                            rating: action.payload.prevRating,
+                        }
+                    })),
+                    of(actions.CHANGE_ITEM_RATING_FAILURE(action.payload.itemId))
+                ))
+            ))
+    ))
 )
 
-export const deleteItemRatingEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.DELETE_ITEM_RATING.match),
-    switchMap(action =>
-        axiosInstance$.delete(`/items/${action.payload}/rating/`).pipe(
-            map(response => actions.DELETE_ITEM_RATING_SUCCESS({
-                itemId: action.payload,
-                rating: response.data.rating,
-            })),
-            catchError(() => of(actions.DELETE_ITEM_RATING_FAILURE()))
+export const changeFavouriteItemEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.CHANGE_FAVOURITE_ITEM.match),
+    switchMap(action => concat(
+        of(itemsActions.ITEM_UPDATED({
+            id: action.payload.itemId,
+            changes: {
+                isFavourite: action.payload.isFavourite,
+            }
+        })),
+        defer(() =>
+            iif(() =>
+                action.payload.isFavourite,
+                axiosInstance$.put(`/items/${action.payload.itemId}/favourite/`, {
+                    is_favourite: true,
+                }),
+                axiosInstance$.delete(`/items/${action.payload.itemId}/favourite/`)
+            ).pipe(
+                map(() => actions.CHANGE_FAVOURITE_ITEM_SUCCESS()),
+                catchError(() => concat(
+                    of(itemsActions.ITEM_UPDATED({
+                        id: action.payload.itemId,
+                        changes: {
+                            isFavourite: !action.payload.isFavourite,
+                        }
+                    })),
+                    of(actions.CHANGE_FAVOURITE_ITEM_FAILURE(action.payload.itemId))
+                ))
+            )
         )
-    )
-)
-
-export const addItemToFavouriteEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.ADD_ITEM_TO_FAVOURITE.match),
-    switchMap(action =>
-        axiosInstance$.put(`/items/${action.payload}/favourite/`, {
-            is_favourite: true,
-        }).pipe(
-            map(() => actions.ADD_ITEM_TO_FAVOURITE_SUCCESS()),
-            catchError(() => of(actions.ADD_ITEM_TO_FAVOURITE_FAILURE(action.payload)))
-        )
-    )
-)
-
-export const deleteItemFromFavouriteEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.DELETE_ITEM_FROM_FAVOURITE.match),
-    switchMap(action =>
-        axiosInstance$.delete(`/items/${action.payload}/favourite/`).pipe(
-            map(() => actions.DELETE_ITEM_FROM_FAVOURITE_SUCCESS()),
-            catchError(() => of(actions.DELETE_ITEM_FROM_FAVOURITE_FAILURE(action.payload)))
-        )
-    )
+    ))
 )
 
 export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
-    filter(actions.FETCH_ITEMS_SUCCESS.match),
-    mergeMap(action => from(action.payload.data.results.map(i => i.id)).pipe(
-        mergeMap(id => of(actions.FETCH_ITEM_COMMENTS({
-            itemId: id,
-            page: 1,
-        })))
-    )),
-)
+    filter(actions.FETCH_CURRENT_USER_ITEMS_SUCCESS.match),
+    mergeMap(action => {
+        const items = action.payload.data.results
+        const requests = Object.fromEntries(
+            items.map(item => [
+                item.id,
+                axiosInstance$.get(`/comments/`, {
+                    params: {
+                        item_id: item.id,
+                        page: 1,
+                    }
+                }).pipe(map(response => response.data))
+            ])
+        )
 
-export const refreshItemCommentsEpic = (action$: Observable<Action>) => merge(
-    action$.pipe(filter(actions.FETCH_ITEM_SUCCESS.match)),
-).pipe(
-    map(action => actions.FETCH_ITEM_COMMENTS({
-        itemId: action.payload.itemId,
-        page: 1,
-    }))
+        return concat(
+            of(actions.FETCH_ITEMS_COMMENTS_START()),
+            forkJoin<typeof requests, string>(requests).pipe(
+                defaultIfEmpty(),
+                mergeMap(data => concat(
+                    of(itemsCommentsActions.ITEMS_COMMENTS_UPDATED(
+                        //Create array of comments from data object
+                        Object.values(data).flat().map(list => list.results).filter(c => c.length > 0).flat()
+                    )),
+                    of(actions.FETCH_ITEMS_COMMENTS_SUCCESS(data)),
+                )),
+                catchError(() => of(actions.FETCH_ITEMS_COMMENTS_FAILURE()))
+            )
+        )
+    }),
 )
 
 export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_ITEM_COMMENTS.match),
-    mergeMap(action => concat (
+    mergeMap(action => concat(
         of(actions.FETCH_ITEM_COMMENTS_START(action.payload.itemId)),
         axiosInstance$.get(`/comments/`, {
             params: {
@@ -235,10 +276,13 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pi
                 page: action.payload.page,
             }
         }).pipe(
-            map(response => actions.FETCH_ITEM_COMMENTS_SUCCESS({
-                itemId: action.payload.itemId,
-                data: response.data
-            })),
+            mergeMap(response => concat(
+                of(itemsCommentsActions.ITEMS_COMMENTS_UPDATED(response.data.results)),
+                of(actions.FETCH_ITEM_COMMENTS_SUCCESS({
+                    itemId: action.payload.itemId,
+                    data: response.data
+                }))
+            )),
             catchError(() => of(actions.FETCH_ITEM_COMMENTS_FAILURE(action.payload.itemId)))
         )
     ))
@@ -253,13 +297,23 @@ export const postItemCommentEpic = (action$: Observable<Action>) => action$.pipe
             parent_id: action.payload.parentId,
             text: action.payload.text,
         }).pipe(
-            map(response => actions.POST_ITEM_COMMENT_SUCCESS(response.data)),
+            mergeMap(response => concat(
+                iif(() =>
+                    action.payload.parentId !== undefined,
+                    of(itemsCommentsActions.ITEM_COMMENT_CHILD_ADDED({
+                        parentId: action.payload.parentId!,
+                        child: response.data,
+                    })),
+                    of(itemsCommentsActions.ITEM_COMMENT_ADDED(response.data))
+                ),
+                of(actions.POST_ITEM_COMMENT_SUCCESS(response.data))
+            )),
             catchError(() => of(actions.POST_ITEM_COMMENT_FAILURE(action.payload.itemId)))
         ))
     ))
 )
 
-export const itemsEpics = combineEpics(
+export const currentUserItemsEpics = combineEpics(
     refreshItemEpic,
     fetchItemEpic,
     fetchItemsEpic,
@@ -267,10 +321,7 @@ export const itemsEpics = combineEpics(
     saveItemEpic,
     deleteItemEpic,
     changeItemRatingEpic,
-    deleteItemRatingEpic,
-    addItemToFavouriteEpic,
-    deleteItemFromFavouriteEpic,
-    refreshItemCommentsEpic,
+    changeFavouriteItemEpic,
     fetchItemCommentsEpic,
     fetchItemsCommentsEpic,
     postItemCommentEpic,

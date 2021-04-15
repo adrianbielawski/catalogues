@@ -1,8 +1,8 @@
 import queryString from 'query-string'
-import { QueryObj } from "src/globalTypes"
-import { Filter } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataTypes'
 import { UseFiltersBarContextInterface } from 'components/global-components/filters-bar/filters-bar-context/filtersBarTypes'
 import { Range } from 'components/global-components/filters-bar/filters/filtersTypes'
+import { Filter } from 'store/modules/current-user-items/types'
+import { QueryObj } from 'src/globalTypes'
 
 const queryBuilder = (context: UseFiltersBarContextInterface) => {
     const queryObj: QueryObj = {}

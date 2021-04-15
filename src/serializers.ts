@@ -9,9 +9,24 @@ export const userDeserializer = (user: T.User): T.DeserializedUser => ({
     isAnonymous: user.is_anonymous,
 })
 
+export const listResultsDeserializer = <R, DR>(
+    results: R[],
+    resultsDeserializer: (results: R) => DR,
+    prevResults?: DR[],
+): DR[] => {
+    const deserialized = results.map(resultsDeserializer)
+    
+    if (prevResults) {
+        return prevResults.concat(deserialized)
+    }
+
+    return deserialized
+}
+
 export const listDeserializer = <S, D>(
     data: T.ListData<S>,
-    resultsDeserializer: (results: S) => D
+    resultsDeserializer: (results: S) => D,
+    prevResults?: D[],
 ): T.DeserializedListData<D> => ({
     count: data.count,
     pageSize: data.page_size,
@@ -20,7 +35,7 @@ export const listDeserializer = <S, D>(
     current: data.current,
     next: data.next,
     previous: data.previous,
-    results: data.results.map(resultsDeserializer),
+    results: listResultsDeserializer(data.results, resultsDeserializer, prevResults),
 })
 
 //Catalogues
@@ -111,7 +126,7 @@ export const itemCommentCreatedByDeserializer = (createdBy: T.ItemCommentCreated
     imageThumbnail: createdBy.image_thumbnail,
 })
 
-export const itemCommentChildrenDeserializer = (comment: T.ItemCommentChildren) => ({
+export const itemCommentChildDeserializer = (comment: T.ItemCommentChild) => ({
     id: comment.id,
     itemId: comment.item_id,
     createdBy: itemCommentCreatedByDeserializer(comment.created_by),
@@ -125,7 +140,12 @@ export const itemCommentDeserializer = (comment: T.ItemCommentParent) => ({
     createdBy: itemCommentCreatedByDeserializer(comment.created_by),
     createdAt: comment.created_at,
     text: comment.text,
-    children: comment.children.map(itemCommentChildrenDeserializer),
+    children: comment.children?.map(itemCommentChildDeserializer) || [],
+})
+
+export const itemCommentDataDeserializer = (comment: T.ItemCommentParent) => ({
+    id: comment.id,
+    children: comment.children.map(c => c.id)
 })
 
 export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
@@ -140,12 +160,26 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],
-    commentsData: null,
-    fetchingComments: false,
-    postingComment: false,
+})
+
+export const itemDataDeserializer = (item: T.Item): T.DeserializedItemData => ({
+    id: item.id,
+    commentsData: {
+        count: null,
+        pageSize: null,
+        startIndex: null,
+        endIndex: null,
+        current: null,
+        next: null,
+        previous: null,
+        results: [],
+    },
+    isFetchingComments: true,
+    isPostingComment: true,
     isEditing: false,
     isSubmitting: false,
     isDeleting: false,
+    itemError: null,
 })
 
 //Images

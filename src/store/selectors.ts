@@ -1,4 +1,4 @@
-import { Selector } from "@reduxjs/toolkit"
+import { Dictionary, Selector } from "@reduxjs/toolkit"
 import { RootState } from "./storeConfig"
 import * as T from "src/globalTypes"
 import { CurrentUserCatalogueData, CurrentUserFieldData } from "./modules/current-user-catalogues/types"
@@ -66,10 +66,42 @@ export const authUserFieldsDataSelector = (catalogueId: number): SelectorType<Au
         f.id === catalogueId)[0].fieldsData
 )
 
+//Items data
 export const itemSelector = (itemId: number): SelectorType<T.DeserializedItem> => (
-    state => state.itemsData.results.filter(i => i.id == itemId)[0]
+    state => state.entities.items.entities[itemId]!
 )
 
-export const itemFieldsSelector = (itemId: number): SelectorType<T.DeserializedItemField[]> => (
-    state => state.itemsData.results.filter(i => i.id == itemId)[0].fieldsValues
+export const itemDataSelector = (itemId: number): SelectorType<T.DeserializedItemData> => (
+    state => state.modules.currentUserItems.itemsData.results.filter(i => i.id == itemId)[0]
+)
+
+export const itemsDataSelector = (): SelectorType<T.DeserializedListData<T.DeserializedItemData>> => (
+    state => state.modules.currentUserItems.itemsData
+)
+
+export const commentSelector = (commentId: number): SelectorType<T.DeserializedItemCommentParent> => (
+    state => state.entities.itemsComments.entities[commentId]!
+)
+
+export const commentsSelector = (): SelectorType<Dictionary<T.DeserializedItemCommentParent>> => (
+    state => state.entities.itemsComments.entities
+)
+
+export const commentChildrenSelector = (commentId: number): SelectorType<T.DeserializedItemCommentChild[]> => (
+    state => state.entities.itemsComments.entities[commentId]!.children
+)
+
+export const itemCommentsDataSelector = (
+    itemId: number
+): SelectorType<T.DeserializedListData<T.DeserializedCommentData>> => (
+    state => state.modules.currentUserItems.itemsData.results.filter(i =>
+        i.id == itemId)[0].commentsData
+)
+
+export const itemCommentDataSelector = (
+    itemId: number,
+    commentId: number,
+): SelectorType<T.DeserializedCommentData> => (
+    state => state.modules.currentUserItems.itemsData.results.filter(i =>
+        i.id == itemId)[0].commentsData.results.filter(c => c.id === commentId)[0]
 )

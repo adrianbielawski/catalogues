@@ -2,14 +2,14 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './commentsModal.scss'
-//Custom hooks and utils
+//Hooks and utils
 import { useDelay } from 'src/hooks/useDelay'
 import { useElementInView } from 'src/hooks/useElementInView'
 //Redux
+import { FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-import { itemSelector } from 'store/selectors'
-//Custom components
+import { commentsSelector, itemCommentsDataSelector, itemSelector } from 'store/selectors'
+//Components
 import Comment from '../comment/comment'
 import AddComment from '../add-comment/addComment'
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
@@ -28,10 +28,12 @@ const CommentsModal = (props: Props) => {
     const dispatch = useAppDispatch()
     const screenWidth = useTypedSelector(state => state.app.screenWidth)
     const item = useTypedSelector(itemSelector(props.itemId))
+    const commentsData = useTypedSelector(itemCommentsDataSelector(props.itemId))
+    const comments = useTypedSelector(commentsSelector())
     const fetchingCommentsDelay = useDelay()
 
     const handleIntersecting = (isIntersecting: boolean) => {
-        if (isIntersecting && item.commentsData?.next) {
+        if (isIntersecting && commentsData.next) {
             fetchComments()
         }
     }
@@ -41,7 +43,7 @@ const CommentsModal = (props: Props) => {
     const fetchComments = () => {
         dispatch(FETCH_ITEM_COMMENTS({
             itemId: props.itemId,
-            page: item.commentsData!.next,
+            page: commentsData.next,
         }))
     }
 
@@ -53,11 +55,11 @@ const CommentsModal = (props: Props) => {
         }))
     }
 
-    const comments = item.commentsData!.results.map((comment, i) => {
-        const ref = item.commentsData!.results.length - 1 === i ? lastItemRef : null
+    const commentsComponents = commentsData.results.map((comment, i) => {
+        const ref = commentsData.results.length - 1 === i ? lastItemRef : null
         return (
             <Comment
-                comment={comment}
+                comment={comments[comment.id]!}
                 canComment={props.canComment}
                 key={comment.id}
                 ref={ref}
@@ -118,7 +120,7 @@ const CommentsModal = (props: Props) => {
                             '--top': `${commentsTop}px`,
                         } as React.CSSProperties}
                     >
-                        {comments}
+                        {commentsComponents}
                     </ul>
                     {fetchingCommentsDelay && <Loader className={styles.loader} />}
                 </div>

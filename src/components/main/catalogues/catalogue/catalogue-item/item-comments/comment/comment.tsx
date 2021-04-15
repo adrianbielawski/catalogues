@@ -8,7 +8,7 @@ import styles from './comment.scss'
 import { DeserializedItemComment, LocationState } from 'src/globalTypes'
 //Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
-//Custom components
+//Components
 import CommentChildren from './comment-children/commentChildren'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
@@ -28,13 +28,14 @@ const Comment: React.ForwardRefRenderFunction<
     HTMLLIElement,
     Props
 > = (props, ref) => {
-    const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
+    const { comment } = props
     const history = useHistory<LocationState>()
+    const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
     const [clipText, setClipText] = useState(props.clipText)
     const [height, setHeight] = useState<'auto' | 35>(props.clipText ? 35 : 'auto')
-
+    
     const handleUsernameClick = () => {
-        history.push(`/${props.comment.createdBy.username}`)
+        history.push(`/${comment.createdBy.username}`)
     }
 
     const handleCommentClick = () => {
@@ -57,16 +58,16 @@ const Comment: React.ForwardRefRenderFunction<
 
     const handleReply = () => {
         changeReplyTo({
-            id: props.comment.id,
-            username: props.comment.createdBy.username,
+            id: comment.id,
+            username: comment.createdBy.username,
         })
     }
 
     const getChildren = () => {
-        if ('children' in props.comment && props.comment.children.length !== 0) {
+        if ('children' in comment && comment.children.length !== 0) {
             return (
                 <CommentChildren
-                    children={props.comment.children}
+                    children={comment.children}
                     canComment={props.canComment}
                 />
             )
@@ -74,7 +75,7 @@ const Comment: React.ForwardRefRenderFunction<
     }
 
     const getReplyButton = () => {
-        if ('children' in props.comment) {
+        if ('children' in comment) {
             return (
                 <TransparentButton onClick={handleReply}>
                     Reply
@@ -82,19 +83,19 @@ const Comment: React.ForwardRefRenderFunction<
             )
         }
     }
-    
-        const getCreatedAt = () => {
-            if (moment(props.comment.createdAt).isAfter(moment())) {
-                return 'now'
-            }
-            return moment(props.comment.createdAt).fromNow()
+
+    const getCreatedAt = () => {
+        if (moment(comment.createdAt).isAfter(moment())) {
+            return 'now'
         }
+        return moment(comment.createdAt).fromNow()
+    }
 
     const commentClass = cx(
         'comment',
         props.className,
         {
-            replying: replyTo?.id === props.comment.id,
+            replying: replyTo?.id === comment.id,
             clipText: clipText,
         }
     )
@@ -112,10 +113,10 @@ const Comment: React.ForwardRefRenderFunction<
             <div className={styles.parent}>
                 <div className={styles.commentContent}>
                     <AvatarWithName
-                        name={props.comment.createdBy.username}
+                        name={comment.createdBy.username}
                         placeholderIcon={faUser}
                         className={styles.avatar}
-                        url={props.comment.createdBy.imageThumbnail}
+                        url={comment.createdBy.imageThumbnail}
                         avatarClassName={styles.userImage}
                         onClick={handleUsernameClick}
                     />
@@ -127,7 +128,7 @@ const Comment: React.ForwardRefRenderFunction<
                         <p
                             className={parentCommentTextClass}
                             onClick={handleCommentClick}>
-                            {props.comment.text}
+                            {comment.text}
                         </p>
                     </AnimateHeight>
                 </div>

@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './itemComments.scss'
 //Types
-import { DeserializedCommentsData } from 'src/globalTypes'
+import { DeserializedCommentData, DeserializedListData } from 'src/globalTypes'
 //Redux
-import { useAppDispatch } from 'store/storeConfig'
-import { POST_ITEM_COMMENT } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-//Custom components
+import { POST_ITEM_COMMENT } from 'store/modules/current-user-items/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { commentsSelector } from 'store/selectors'
+//Components
 import Comment from './comment/comment'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddComment from './add-comment/addComment'
@@ -19,7 +20,7 @@ const contextValue = {
 
 type Props = {
     itemId: number,
-    commentsData: DeserializedCommentsData,
+    commentsData: DeserializedListData<DeserializedCommentData>,
     canComment: boolean,
     className?: string,
 }
@@ -28,16 +29,18 @@ const cx = classNames.bind(styles)
 
 const ItemComments = (props: Props) => {
     const dispatch = useAppDispatch()
+    const comments = useTypedSelector(commentsSelector())
     const [showAllComments, setShowAllComments] = useState(false)
-    const comments = []
+    const commentsComponents = []
 
     for (let i = 0; i < 2; i++) {
-        if (props.commentsData.results[i] === undefined) {
+        if (props.commentsData.results[i]?.id === undefined) {
             break
         }
-        comments.push(
+        
+        commentsComponents.push(
             <Comment
-                comment={props.commentsData.results[i]}
+                comment={comments[props.commentsData.results[i].id]!}
                 canComment={props.canComment}
                 className={styles.comment}
                 clipText={true}
@@ -74,7 +77,7 @@ const ItemComments = (props: Props) => {
                 )}
                 {!props.commentsData.results.length && <p>No comments</p>}
                 <ul>
-                    {comments}
+                    {commentsComponents}
                 </ul>
                 {props.canComment && (
                     <AddComment

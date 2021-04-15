@@ -6,7 +6,6 @@ import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import { appSlice } from 'store/slices/appSlices/appSlice'
 import { authSlice } from 'store/slices/authSlices/authSlices'
 import { currentUserSlice } from 'store/slices/currentUserSlices/currentUserSlice'
-import { itemsDataSlice } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 import { settingsSlices } from 'store/slices/settingsSlices'
 import { entities } from './entities'
 import { modules } from './modules'
@@ -14,23 +13,23 @@ import { modules } from './modules'
 import { appEpics } from 'store/epics/appEpics'
 import { authEpics } from 'store/epics/authEpics'
 import { currentUserEpics } from './epics/currentUserEpics'
-import { itemsEpics } from 'store/epics/itemsEpisc'
 import { settingsEpics } from 'store/epics/settingsEpics'
 import { authUserCataloguesIndexEpics } from 'store/modules/auth-user-catalogues/epics'
 import { authUserFavouritesEpics } from 'store/modules/auth-user-favourites/epics/authUserFavouritesEpics'
 import { authUserDashboardEpics } from 'store/modules/auth-user-dashboard/epics'
 import { currentUserCataloguesEpics } from 'store/modules/current-user-catalogues/epics'
+import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
 
 const rootEpic = combineEpics(
   appEpics,
   authEpics,
   currentUserEpics,
-  itemsEpics,
   settingsEpics,
   authUserCataloguesIndexEpics,
   authUserFavouritesEpics,
   authUserDashboardEpics,
   currentUserCataloguesEpics,
+  currentUserItemsEpics,
 )
 const epicMiddleware = createEpicMiddleware()
 
@@ -40,7 +39,6 @@ const rootReducer = combineReducers({
   app: appSlice.reducer,
   auth: authSlice.reducer,
   currentUser: currentUserSlice.reducer,
-  itemsData: itemsDataSlice.reducer,
   settings: settingsSlices,
 })
 

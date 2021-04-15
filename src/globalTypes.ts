@@ -191,7 +191,22 @@ export interface DeserializedChoice {
 }
 
 //Items
-export interface ItemsData extends ListData<Item> { }
+
+export interface DeserializedCommentData {
+    id: number,
+    children: number[]
+}
+
+export interface DeserializedItemData {
+    id: number,
+    commentsData: DeserializedListData<DeserializedCommentData>,
+    isFetchingComments: boolean,
+    isPostingComment: boolean,
+    isEditing: boolean,
+    isSubmitting: boolean,
+    isDeleting: boolean,
+    itemError: ErrorMessage | null,
+}
 
 export interface DeserializedItemsData extends DeserializedListData<DeserializedItem[]> {
     catalogueId: number | null,
@@ -221,7 +236,7 @@ export interface ItemRating {
     current_user: number | null,
 }
 
-export interface DesrializedItemRating {
+export interface DeserializedItemRating {
     average: number,
     count: number,
     currentUser: number | null,
@@ -241,8 +256,8 @@ export interface DeserializedItemCommentCreatedBy {
     imageThumbnail: string,
 }
 
-export type ItemCommentChildren = Omit<ItemCommentParent, 'children'>
-export type DeserializedItemCommentChildren = Omit<DeserializedItemCommentParent, 'children'>
+export type ItemCommentChild = Omit<ItemCommentParent, 'children'>
+export type DeserializedItemCommentChild = Omit<DeserializedItemCommentParent, 'children'>
 
 export interface ItemCommentParent {
     id: number,
@@ -250,7 +265,7 @@ export interface ItemCommentParent {
     created_by: ItemCommentCreatedBy,
     created_at: string,
     text: string,
-    children: ItemCommentChildren[],
+    children: ItemCommentChild[],
 }
 
 export interface DeserializedItemCommentParent {
@@ -259,10 +274,10 @@ export interface DeserializedItemCommentParent {
     createdBy: DeserializedItemCommentCreatedBy,
     createdAt: string,
     text: string,
-    children: DeserializedItemCommentChildren[],
+    children: DeserializedItemCommentChild[],
 }
 
-export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChildren
+export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChild
 
 export interface CommentsData extends ListData<ItemCommentParent> { }
 export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment> { }
@@ -287,17 +302,11 @@ export interface DeserializedItem {
     modifiedAt: string,
     catalogueId: number,
     permissions: DeserializedItemPermisions,
-    rating: DesrializedItemRating,
+    rating: DeserializedItemRating,
     isFavourite: boolean,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
-    commentsData: DeserializedCommentsData | null,
-    fetchingComments: boolean,
-    postingComment: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-    isDeleting: boolean,
 }
 
 export type ItemFieldValue = string | number | number[]

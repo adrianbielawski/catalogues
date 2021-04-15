@@ -1,41 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 import styles from './itemSettings.scss'
-//Types
-import { DeserializedItem } from 'src/globalTypes'
+//Redux
+import { DELETE_ITEM } from 'store/modules/current-user-items/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { itemDataSelector } from 'store/selectors'
+//Components
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 import Button from 'components/global-components/button/button'
 import
     ProtectedConfirmMessageModal, { ProtectedMessage }
 from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
-import { useAppDispatch } from 'store/storeConfig'
-import { DELETE_ITEM } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
 
 type Props = {
-    item: DeserializedItem,
+    itemId: number,
 }
 
 const ItemSettings = (props: Props) => {
     const dispatch = useAppDispatch()
+    const itemData = useTypedSelector(itemDataSelector(props.itemId))
     const [message, setMessage] = useState<ProtectedMessage | null>(null)
-    const isNewItem = props.item.id.toString().startsWith('newItem')
+    const isNewItem = props.itemId.toString().startsWith('newItem')
 
     useEffect(() => {
-        if (!props.item.isDeleting) {
+        if (!itemData.isDeleting) {
             setMessage(null)
         }
-    }, [props.item.isDeleting])
+    }, [itemData.isDeleting])
 
     const handleDeleteItem = () => {
         setMessage({
             title: 'Delete item',
-            value: `Are you sure you want to delete item with id: ${props.item.id}?`,
-            expectedInput: props.item.id.toString(),
+            value: `Are you sure you want to delete item with id: ${props.itemId}?`,
+            expectedInput: props.itemId.toString(),
         })
     }
 
     const deleteItem = () => {
-        dispatch(DELETE_ITEM(props.item.id as number))
+        dispatch(DELETE_ITEM(props.itemId as number))
     }
 
     const clearMessage = () => {
@@ -51,7 +53,7 @@ const ItemSettings = (props: Props) => {
             {!isNewItem &&
                 <Button
                     className={styles.deleteButton}
-                    disabled={props.item.isSubmitting}
+                    disabled={itemData.isSubmitting}
                     onClick={handleDeleteItem}
                 >
                     Delete item

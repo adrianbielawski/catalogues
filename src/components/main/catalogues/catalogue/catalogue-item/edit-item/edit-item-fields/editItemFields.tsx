@@ -4,7 +4,7 @@ import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
-import { currentUserFieldsDataSelector, itemFieldsSelector } from 'store/selectors'
+import { currentUserFieldsDataSelector } from 'store/selectors'
 //Components
 import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
@@ -19,11 +19,10 @@ type Props = {
 const EditItemFields = (props: Props) => {
     const fields = useTypedSelector(state => state.entities.fields.entities)
     const authUserFields = useTypedSelector(currentUserFieldsDataSelector(props.item.catalogueId))
-    const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.id))
 
     const fieldsComponents = authUserFields.map(fieldData => {
         const field = fields[fieldData.id]!
-        const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]
+        const fieldValue = props.item.fieldsValues.filter(v => v.fieldId === field.id)[0]
 
         switch (field.type) {
             case 'short_text':
