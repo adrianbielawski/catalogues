@@ -13,6 +13,47 @@ export interface ErrorMessage {
     message: string,
 }
 
+export interface Referrer {
+    pathname: string,
+    params: {
+        username?: string,
+        slug?: string,
+        catalogue?: DeserializedCatalogue,
+    },
+}
+
+export interface LocationState {
+    referrer: Referrer;
+}
+
+export interface QueryObj {
+    [key: string]: number | string | string[]
+}
+
+//List data
+export interface ListData<R> {
+    count: number,
+    page_size: number,
+    start_index: number,
+    end_index: number,
+    current: number,
+    next: number,
+    previous: number,
+    results: R[],
+}
+
+export interface DeserializedListData<R> {
+    count: number | null,
+    pageSize: number | null,
+    startIndex: number | null,
+    endIndex: number | null,
+    current: number | null,
+    next: number | null,
+    previous: number | null,
+    results: R[],
+}
+
+//User
 export interface User {
     id: number,
     username: string,
@@ -31,23 +72,7 @@ export interface DeserializedUser {
     isAnonymous: boolean,
 }
 
-export interface Referrer {
-    pathname: string,
-    params: {
-        username?: string,
-        slug?: string,
-        catalogue?: DeserializedCatalogue,
-    },
-}
-
-export interface LocationState {
-    referrer: Referrer;
-}
-
-export interface QueryObj {
-    [key: string]: number | string | string[]
-}
-
+//Catalogues
 export interface ItemsRanges {
     id: {
         min: string,
@@ -96,27 +121,33 @@ export interface DeserializedCataloguePermisions {
 
 export interface DeserializedCatalogue {
     id: number,
-    createdBy: DeserializedUser,
+    createdBy: number,
     default: boolean,
     public: boolean,
     name: string,
     slug: string,
     itemsRanges: DeserializedItemsRanges,
     permissions: DeserializedCataloguePermisions,
-    fields: DeserializedField[],
     image: string,
     imageThumbnail: string,
     isFavourite: boolean,
-    fetchingFields: boolean,
-    fetchingFieldsChoices: boolean,
-    isEditingCatalogueName: boolean,
-    isSubmittingCatalogueName: boolean,
-    catalogueError: ErrorMessage,
-    isAddFieldFormActive: boolean,
-    isSubmittingNewField: boolean,
-    deletingCatalogue: boolean,
-    isSubmittingImage: boolean,
+}
+
+export interface CatalogueData<F> {
+    id: number,
+    fieldsData: F[],
     isInitialized: boolean,
+    isFetchingFields: boolean,
+    isFetchingFieldsChoices: boolean,
+
+}
+
+export interface FieldsData {
+    id: number,
+}
+
+export interface ChoiceFieldsData<C> extends FieldsData {
+    choices: C[],
 }
 
 export interface RecomendedCatalogues extends ListData<Catalogue> { }
@@ -124,29 +155,58 @@ export interface DeserializedRecomendedCatalogues extends DeserializedListData<D
     fetchingCatalogues: boolean,
 }
 
-export interface ListData<R> {
-    count: number,
-    page_size: number,
-    start_index: number,
-    end_index: number,
-    current: number,
-    next: number,
-    previous: number,
-    results: R[],
+//Fields
+export interface Field {
+    id: number,
+    catalogue_id: number,
+    type: string,
+    name: string,
+    filter_name: string,
+    position: number,
+    public: boolean,
+    choices?: Choice[],
 }
 
-export interface DeserializedListData<R> {
-    count: number | null,
-    pageSize: number | null,
-    startIndex: number | null,
-    endIndex: number | null,
-    current: number | null,
-    next: number | null,
-    previous: number | null,
-    results: R[],
+export interface DeserializedField {
+    id: number,
+    catalogueId: number,
+    type: string,
+    name: string,
+    filterName: string,
+    position: number,
+    public: boolean,
 }
 
-export interface ItemsData extends ListData<Item> { }
+//Choices
+export interface Choice {
+    id: number,
+    field_id: number,
+    value: string,
+}
+
+export interface DeserializedChoice {
+    id: number,
+    fieldId: number,
+    value: string,
+}
+
+//Items
+
+export interface DeserializedCommentData {
+    id: number,
+    children: number[]
+}
+
+export interface DeserializedItemData {
+    id: number,
+    commentsData: DeserializedListData<DeserializedCommentData>,
+    isFetchingComments: boolean,
+    isPostingComment: boolean,
+    isEditing: boolean,
+    isSubmitting: boolean,
+    isDeleting: boolean,
+    itemError: ErrorMessage | null,
+}
 
 export interface DeserializedItemsData extends DeserializedListData<DeserializedItem[]> {
     catalogueId: number | null,
@@ -176,7 +236,7 @@ export interface ItemRating {
     current_user: number | null,
 }
 
-export interface DesrializedItemRating {
+export interface DeserializedItemRating {
     average: number,
     count: number,
     currentUser: number | null,
@@ -196,8 +256,8 @@ export interface DeserializedItemCommentCreatedBy {
     imageThumbnail: string,
 }
 
-export type ItemCommentChildren = Omit<ItemCommentParent, 'children'>
-export type DeserializedItemCommentChildren = Omit<DeserializedItemCommentParent, 'children'>
+export type ItemCommentChild = Omit<ItemCommentParent, 'children'>
+export type DeserializedItemCommentChild = Omit<DeserializedItemCommentParent, 'children'>
 
 export interface ItemCommentParent {
     id: number,
@@ -205,19 +265,19 @@ export interface ItemCommentParent {
     created_by: ItemCommentCreatedBy,
     created_at: string,
     text: string,
-    children: ItemCommentChildren[],
+    children: ItemCommentChild[],
 }
 
 export interface DeserializedItemCommentParent {
     id: number,
     itemId: number,
-    createdBy: DeserializedItemCommentCreatedBy,
+    createdBy: number,
     createdAt: string,
     text: string,
-    children: DeserializedItemCommentChildren[],
+    children: DeserializedItemCommentChild[],
 }
 
-export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChildren
+export type DeserializedItemComment = DeserializedItemCommentParent | DeserializedItemCommentChild
 
 export interface CommentsData extends ListData<ItemCommentParent> { }
 export interface DeserializedCommentsData extends DeserializedListData<DeserializedItemComment> { }
@@ -237,22 +297,16 @@ export interface Item {
 
 export interface DeserializedItem {
     id: number,
-    createdBy: DeserializedUser,
+    createdBy: number,
     createdAt: string,
     modifiedAt: string,
     catalogueId: number,
     permissions: DeserializedItemPermisions,
-    rating: DesrializedItemRating,
+    rating: DeserializedItemRating,
     isFavourite: boolean,
     fieldsValues: DeserializedItemField[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
-    commentsData: DeserializedCommentsData | null,
-    fetchingComments: boolean,
-    postingComment: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-    isDeleting: boolean,
 }
 
 export type ItemFieldValue = string | number | number[]
@@ -274,65 +328,7 @@ export interface DeserializedItemField {
     value: ItemFieldValue,
 }
 
-export interface Field {
-    id: number,
-    catalogue_id: number,
-    type: string,
-    name: string,
-    filter_name: string,
-    position: number,
-    public: boolean,
-    choices?: Choice[],
-}
-
-export interface Choice {
-    id: number,
-    field_id: number,
-    value: string,
-}
-
-export interface DeserializedChoice {
-    id: number,
-    fieldId: number,
-    value: string,
-}
-
-export interface DeserializedChoiceField {
-    id: number,
-    catalogueId: number,
-    type: string,
-    name: string,
-    filterName: string,
-    position: number,
-    public: boolean,
-    choices: DeserializedChoice[],
-    fetchingChoices: boolean,
-    postingChoice: boolean,
-    fieldError: ErrorMessage,
-    removingChoice: boolean,
-    changingName: boolean,
-    isDeleting: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-}
-
-export interface DeserializedTextField {
-    id: number,
-    catalogueId: number,
-    type: string,
-    name: string,
-    filterName: string,
-    position: number,
-    public: boolean,
-    changingName: boolean,
-    fieldError: ErrorMessage,
-    isDeleting: boolean,
-    isEditing: boolean,
-    isSubmitting: boolean,
-}
-
-export type DeserializedField = DeserializedTextField | DeserializedChoiceField
-
+//Image
 export type Image = {
     id: number | null,
     image: string,

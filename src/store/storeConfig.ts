@@ -3,37 +3,33 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 //Slices
-import { appSlice } from 'store/slices/appSlices/appSlice'
-import { authSlice } from 'store/slices/authSlices/authSlices'
-import { currentUserSlice } from 'store/slices/currentUserSlices/currentUserSlice'
-import { cataloguesSlice } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { itemsDataSlice } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-import { settingsSlices } from 'store/slices/settingsSlices'
+import { entities } from './entities'
+import { modules } from './modules'
 //Epics
-import { appEpics } from 'store/epics/appEpics'
-import { authEpics } from 'store/epics/authEpics'
-import { currentUserEpics } from './epics/currentUserEpics'
-import { cataloguesEpics } from 'store/epics/catalogueEpics'
-import { itemsEpics } from 'store/epics/itemsEpisc'
-import { settingsEpics } from 'store/epics/settingsEpics'
+import { appEpics } from './modules/app/epics'
+import { authUserEpics } from './modules/auth-user/epics'
+import { authUserCataloguesIndexEpics } from 'store/modules/auth-user-catalogues/epics'
+import { authUserFavouritesEpics } from 'store/modules/auth-user-favourites/epics/authUserFavouritesEpics'
+import { authUserDashboardEpics } from 'store/modules/auth-user-dashboard/epics'
+import { currentUserEpics } from './modules/current-user/epics'
+import { currentUserCataloguesEpics } from 'store/modules/current-user-catalogues/epics'
+import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
 
 const rootEpic = combineEpics(
   appEpics,
-  authEpics,
+  authUserEpics,
+  authUserCataloguesIndexEpics,
+  authUserFavouritesEpics,
+  authUserDashboardEpics,
   currentUserEpics,
-  cataloguesEpics,
-  itemsEpics,
-  settingsEpics,
+  currentUserCataloguesEpics,
+  currentUserItemsEpics,
 )
 const epicMiddleware = createEpicMiddleware()
 
 const rootReducer = combineReducers({
-  app: appSlice.reducer,
-  auth: authSlice.reducer,
-  currentUser: currentUserSlice.reducer,
-  catalogues: cataloguesSlice.reducer,
-  itemsData: itemsDataSlice.reducer,
-  settings: settingsSlices,
+  entities: entities,
+  modules: modules,
 })
 
 export const store = configureStore({

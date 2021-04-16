@@ -4,6 +4,9 @@ import moment from 'moment'
 import styles from './catalogueCard.scss'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
+import { userSelector } from 'store/selectors'
 //Custom components
 import Avatar from '../avatar/avatar'
 import NoImageIcon from '../no-image-icon/noImageIcon'
@@ -18,16 +21,16 @@ const CatalogueCard: React.ForwardRefRenderFunction<
     HTMLDivElement,
     Props
 > = (props, ref) => {
-    const history = useHistory<LocationState>()
     const { catalogue } = props
-    const user = props.catalogue.createdBy
+    const history = useHistory<LocationState>()
+    const user = useTypedSelector(userSelector(props.catalogue.createdBy))
 
     const redirectToCatalogue = () => {
-        history.push(`/${catalogue.createdBy.username}/catalogues/${catalogue.slug}`)
+        history.push(`/${user.username}/catalogues/${catalogue.slug}`)
     }
 
     const redirectToUser = () => {
-        history.push(`/${catalogue.createdBy.username}`)
+        history.push(`/${user.username}`)
     }
 
     return (

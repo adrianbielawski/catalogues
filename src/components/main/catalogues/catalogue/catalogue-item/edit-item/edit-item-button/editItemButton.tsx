@@ -3,9 +3,9 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './editItemButton.scss'
 //Redux
-import { TOGGLE_EDIT_ITEM } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { TOGGLE_EDIT_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch } from 'store/storeConfig'
-//Custom components
+//Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
 type Props = {

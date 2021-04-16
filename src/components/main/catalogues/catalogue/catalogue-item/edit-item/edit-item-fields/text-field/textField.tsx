@@ -3,9 +3,9 @@ import styles from './textField.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
+import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch } from 'store/storeConfig'
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-//Custom components
+//Components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import Field from '../field/field'
 

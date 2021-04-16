@@ -62,11 +62,13 @@ export const RouterContext = createContext({} as RouterContextInterface)
 
 const useParamHydrator = () => {
     const state = useTypedSelector(state => state)
+    const currentUserData = state.modules.currentUser
+    const currentUser = state.entities.users.entities[currentUserData.userId!]!
 
     const hydrate = (params: DehydratedParams): HydratedParams => {
         const hydrated: HydratedParams = {}
         if (params.username !== undefined) {
-            hydrated.username = state.currentUser?.user?.username
+            hydrated.username = currentUser.username
         }
         if (params.slug !== undefined) {
             hydrated.catalogue = catalogueSelectorBySlug(params.slug)(state)
@@ -77,7 +79,7 @@ const useParamHydrator = () => {
     const dehydrate = (params: HydratedParams): DehydratedParams => {
         const dehydrated: DehydratedParams = {}
         if (params.username !== undefined) {
-            dehydrated.username = state.currentUser.user?.username
+            dehydrated.username = currentUser.username
         }
         if (params.catalogue !== undefined) {
             dehydrated.slug = catalogueSelector(params.catalogue.id)(state)?.slug
@@ -174,16 +176,19 @@ export const PrivateRouteWithContext = (props: RouteWithContextProps) => {
 
 export const PrivateRoute = (props: PrivateRouteProps) => {
     const { component: Component, render, ...rest } = props
-    const isInitialized = useTypedSelector(state => state.auth.isInitialized)
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser)
     const location = useLocation()
+    const isInitialized = useTypedSelector(state => state.modules.authUser.isInitialized)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
 
     if (!isInitialized) {
         return <div>Loading...</div>
     }
 
-    if (!user) {
+    if (!authUserData.id) {
         return (
             <Redirect to={{
                 pathname: `/`,
@@ -196,10 +201,10 @@ export const PrivateRoute = (props: PrivateRouteProps) => {
         )
     }
 
-    if (user?.id !== currentUser.user?.id) {
+    if (authUserData.id !== currentUser?.id) {
         return (
             <Redirect to={{
-                pathname: `/${user.username || currentUser.user?.username || ''}`,
+                pathname: `/${authUser?.username || currentUser?.username || ''}`,
                 state: {
                     referrer: {
                         pathname: location.pathname

@@ -3,13 +3,13 @@ import ReactAnimateHeight from 'react-animate-height'
 import classNames from 'classnames/bind'
 import styles from './commentChildren.scss'
 //Types
-import { DeserializedItemCommentChildren } from 'src/globalTypes'
-//Custom components
+import { DeserializedItemCommentChild } from 'src/globalTypes'
+//Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Comment from '../comment'
 
 type Props = {
-    children: DeserializedItemCommentChildren[],
+    children: DeserializedItemCommentChild[],
     canComment: boolean,
     className?: string,
 }

@@ -16,7 +16,7 @@ import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
 
 const UserDashboard = () => {
     const userDashboardRef = useRef<HTMLDivElement>(null)
-    const app = useTypedSelector(state => state.app)
+    const app = useTypedSelector(state => state.modules.app)
     const [minHeight, setMinHeight] = useState(0)
     const [currentColumn, setCurrentColumn] = useState(0)
 

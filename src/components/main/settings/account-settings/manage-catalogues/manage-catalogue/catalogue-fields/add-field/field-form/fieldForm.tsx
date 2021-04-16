@@ -2,12 +2,12 @@ import React, { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
 //Redux
-import { catalogueSelector, fieldsSelector } from 'store/selectors'
+import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
+import { authUserFieldsDataSelector, authUserCatalogueSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom hooks
+//Hooks
 import { useDelay } from 'src/hooks/useDelay'
-//Custom components
+//Components
 import Input from 'components/global-components/input/input'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
@@ -42,15 +42,16 @@ const cx = classNames.bind(styles)
 
 const FieldForm = (props: Props) => {
     const dispatch = useAppDispatch()
-    const fields = useTypedSelector(fieldsSelector(props.catalogueId))
-    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const fields = useTypedSelector(state => state.entities.fields.entities)
+    const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.catalogueId))
+    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogueId))
     const nameInputRef = useRef<HTMLInputElement>(null)
     const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')
     const [formError, setFormError] = useState('')
     const [nameError, setNameError] = useState('')
     const [isPublic, setIsPublic] = useState(false)
-    const delayCompleated = useDelay(catalogue.isSubmittingNewField)
+    const delayCompleated = useDelay(catalogueData.isSubmittingNewField)
 
     const handlePublicChange = () => {
         setIsPublic(!isPublic)
@@ -59,9 +60,11 @@ const FieldForm = (props: Props) => {
     const validateName = (name: string) => {
         let error = null
 
-        if (fields.find(field => field.name === name)) {
-            error = `Field with name "${name}" already exists`
-        }
+        fieldsData.forEach(f => {
+            if (fields[f.id]?.name.toLowerCase() === name.toLowerCase()) {
+                error = `Field with name "${name}" already exists`
+            }
+        })
 
         if (name.length < 1) {
             error = 'Minimum 1 characters'
@@ -99,9 +102,11 @@ const FieldForm = (props: Props) => {
             error = "Please select field type"
         }
 
-        if (fields.find(f => f.name === fieldName)) {
-            error = `Field with name "${fieldName}" already exists`
-        }
+        fieldsData.forEach(f => {
+            if (fields[f.id]?.name.toLowerCase() === fieldName.toLowerCase()) {
+                    error = `Field with name "${fieldName}" already exists`
+            }
+        })
 
         return {
             valid: error === null,
@@ -124,7 +129,7 @@ const FieldForm = (props: Props) => {
             catalogueId: props.catalogueId,
             name: fieldName,
             type: fieldType,
-            position: fields.length,
+            position: fieldsData.length,
             public: isPublic,
         }))
     }
@@ -134,10 +139,10 @@ const FieldForm = (props: Props) => {
     }
 
     const handleCancel = () => {
-        dispatch(TOGGLE_ADD_FIELD(catalogue.id))
+        dispatch(TOGGLE_ADD_FIELD(catalogueData.id))
     }
 
-    const disabled = catalogue.isSubmittingNewField
+    const disabled = catalogueData.isSubmittingNewField
         || nameError.length > 0
         || fieldName.length === 0
         || fieldType.length === 0
@@ -185,7 +190,7 @@ const FieldForm = (props: Props) => {
                         Add field
                     </Button>
                     <Button
-                        disabled={catalogue.isSubmittingNewField}
+                        disabled={catalogueData.isSubmittingNewField}
                         onClick={handleCancel}
                     >
                         Cancel

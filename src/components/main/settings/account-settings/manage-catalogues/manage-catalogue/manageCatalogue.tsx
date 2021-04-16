@@ -1,32 +1,48 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './manageCatalogue.scss'
-//Types
-import { DeserializedCatalogue } from 'src/globalTypes'
-//Custom components
+//Redux
+import { FETCH_AUTH_USER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { catalogueSelector, authUserCatalogueSelector } from 'store/selectors'
+//Components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
 import CatalogueFields from './catalogue-fields/catalogueFields'
 import CatalogueSettings from './catalogue-settings/catalogueSettings'
 import CatalogueImage from './catalogue-image/catalogueImage'
 
 type Props = {
-    catalogue: DeserializedCatalogue,
+    catalogueId: number,
 }
 
-const ManageCatalogue = (props: Props) => (
-    <div className={styles.manageCatalogue}>
-        <CatalogueTitle
-            id={props.catalogue.id}
-            name={props.catalogue.name}
-        />
-        <div className={styles.content}>
-            <CatalogueImage
-                url={props.catalogue.imageThumbnail}
-                catalogue={props.catalogue}
+const ManageCatalogue = (props: Props) => {
+    const dispatch = useAppDispatch()
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogueId))
+
+    useEffect(() => {
+        dispatch(FETCH_AUTH_USER_CATALOGUE_FIELDS(props.catalogueId))
+    }, [])
+
+    if (catalogueData.isFetchingFieldsChoices && !catalogueData.isInitialized) {
+        return null
+    }
+
+    return (
+        <div className={styles.manageCatalogue}>
+            <CatalogueTitle
+                id={catalogue.id}
+                name={catalogue.name}
             />
-            <CatalogueFields catalogue={props.catalogue} />
-            <CatalogueSettings catalogue={props.catalogue} />
+            <div className={styles.content}>
+                <CatalogueImage
+                    url={catalogue.imageThumbnail}
+                    catalogue={catalogue}
+                />
+                <CatalogueFields catalogueId={catalogue.id} />
+                <CatalogueSettings catalogue={catalogue} />
+            </div>
         </div>
-    </div>
-)
+    )
+}
 
 export default ManageCatalogue

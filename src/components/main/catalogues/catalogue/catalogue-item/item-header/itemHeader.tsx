@@ -5,7 +5,7 @@ import classNames from 'classnames/bind'
 import styles from './itemHeader.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-//Custom components
+//Components
 import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
 
 type Props = {

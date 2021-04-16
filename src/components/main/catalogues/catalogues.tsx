@@ -1,24 +1,24 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
-import { clamp, upperFirst } from 'lodash'
+import { upperFirst } from 'lodash'
 import styles from './catalogues.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
 //Redux
+import { FETCH_CURRENT_USER_CATALOGUES } from 'store/modules/current-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { FETCH_CATALOGUES } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
 //Router
 import { RouteWithContext } from 'src/router'
-//Custom hooks
+//Hooks
 import { useFirstRender } from 'src/hooks/useFirstRender'
-//Filter bar utils
-//Custom components
+//Filters bar utils
+import { filtersBarInitialState } from './catalogue/filter-bar-utils/contextInitialValues'
+//Components
 import Loader from 'components/global-components/loader/loader'
 import Catalogue from './catalogue/catalogue'
 import Header from 'components/global-components/header/header'
-import { filtersBarInitialState } from './catalogue/filter-bar-utils/contextInitialValues'
 
 const Catalogues = () => {
     const history = useHistory<LocationState>()
@@ -26,27 +26,21 @@ const Catalogues = () => {
     const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser.user)
-    const catalogues = useTypedSelector(state => state.catalogues.catalogues)
-    const fetchingCatalogues = useTypedSelector(state => state.catalogues.fetchingCatalogues)
-    const app = useTypedSelector(state => state.app)
+    const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
+    const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues)
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const [minHeight, setMinHeight] = useState(0)
-    const [defaultCatalogue, setDefaultCatalogue] = useState<number | null>(null)
 
     useEffect(() => {
-        if (fetchingCatalogues || firstRender) {
-            return
+        if (currentUser) {
+            dispatch(FETCH_CURRENT_USER_CATALOGUES())
         }
-
-        const defaultCatalogueIndex = catalogues.findIndex(c => c.default === true)
-
-        setDefaultCatalogue(clamp(defaultCatalogueIndex, 0, catalogues.length - 1))
-    }, [fetchingCatalogues])
-
-    useEffect(() => {
-        dispatch(FETCH_CATALOGUES())
-    }, [currentUser?.username])
+    }, [currentUser])
 
     useEffect(() => {
         if (cataloguesRef.current === null) {
@@ -54,12 +48,12 @@ const Catalogues = () => {
         }
 
         getMinHeight()
-    }, [cataloguesRef.current, app.screenHeight])
+    }, [cataloguesRef.current, screenHeight])
 
 
     const getMinHeight = () => {
         const top = cataloguesRef.current!.getBoundingClientRect().top
-        const minHeight = app.screenHeight - top! - window.pageYOffset
+        const minHeight = screenHeight - top! - window.pageYOffset
         setMinHeight(minHeight)
     }
 
@@ -68,7 +62,7 @@ const Catalogues = () => {
     }
 
     const getNoCatalogueMessage = () => {
-        if (user?.username !== currentUser?.username) {
+        if (authUser?.username !== currentUser?.username) {
             return (
                 <p className={styles.noPublicCatalogues}>
                     {`${upperFirst(currentUser?.username)} has no public catalogues`}
@@ -89,9 +83,13 @@ const Catalogues = () => {
         }
     }
 
-    if (fetchingCatalogues || firstRender || defaultCatalogue === null) {
+    if (currentUserCatalogues.isFetchingCatalogues || firstRender) {
         return <Loader className={styles.loader} />
     }
+
+    const defaultCatalogueSlug = currentUserCatalogues.defaultCatalogueId
+        ? catalogues[currentUserCatalogues.defaultCatalogueId]!.slug
+        : null
 
     return (
         <FiltersBarBulkContextProvider
@@ -103,7 +101,7 @@ const Catalogues = () => {
                 ref={cataloguesRef}
             >
                 <Header />
-                {catalogues.length === 0
+                {currentUserCatalogues.cataloguesData.length === 0
                     ? getNoCatalogueMessage()
                     : (
                         <Suspense fallback={<Loader />}>
@@ -112,7 +110,7 @@ const Catalogues = () => {
                                     exact
                                     from="/:username/catalogues"
                                     to={{
-                                        pathname: `/:username/catalogues/${catalogues[defaultCatalogue!].slug}`,
+                                        pathname: `/:username/catalogues/${defaultCatalogueSlug || ''}`,
                                         state: location.state,
                                     }}
                                 />

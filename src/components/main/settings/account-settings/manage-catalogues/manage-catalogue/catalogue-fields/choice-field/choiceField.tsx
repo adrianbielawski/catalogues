@@ -4,25 +4,28 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
-import { DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
 //Redux
-import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { fieldSelector } from 'store/selectors'
-//Custom components
+import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch } from 'store/storeConfig'
+//Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import EditChoiceField from './edit-choice-field/editChoiceField'
 
 type Props = {
-    field: DeserializedChoiceField,
+    field: DeserializedField,
+    fieldData: AuthUserChoiceFieldData,
 }
 
 const cx = classNames.bind(styles)
 
 const ChoiceField = (props: Props) => {
     const dispatch = useAppDispatch()
-    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedChoiceField
+    const fieldData = props.fieldData
+    const isEditing = fieldData.isEditing
+    const error = fieldData.fieldError
 
     const catalogueAndFieldId = {
         fieldId: props.field.id,
@@ -40,20 +43,18 @@ const ChoiceField = (props: Props) => {
     const fieldClass = cx(
         'field',
         {
-            active: field.isEditing,
+            active: isEditing,
         }
     )
 
     const buttonClass = cx(
         'editButton',
         {
-            active: field.isEditing,
+            active: isEditing,
         }
     )
 
-    const error = field.fieldError
-
-    if (field.fetchingChoices) {
+    if (fieldData.isFetchingChoices) {
         return null
     }
 
@@ -62,14 +63,19 @@ const ChoiceField = (props: Props) => {
             <TransparentButton className={buttonClass} onClick={handleEdit}>
                 <FontAwesomeIcon icon={faEdit} />
             </TransparentButton>
-            {field.isEditing
-                ? <EditChoiceField field={props.field} />
+            {isEditing
+                ? (
+                    <EditChoiceField
+                        field={props.field}
+                        fieldData={fieldData}
+                    />
+                )
                 : props.field.name
             }
             <MessageModal
-                show={error.message.length !== 0}
-                title={error.title}
-                message={error.message}
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
                 onConfirm={clearError}
             />
         </div>

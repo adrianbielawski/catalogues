@@ -1,13 +1,12 @@
 import React, { useRef } from 'react'
-import { faCamera, faSlash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './catalogueImage.scss'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
-import { useAppDispatch } from 'store/storeConfig'
-import { POST_CATALOGUE_IMAGE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+import { POST_CATALOGUE_IMAGE } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { authUserCatalogueSelector } from 'store/selectors'
+//Components
 import Loader from 'components/global-components/loader/loader'
 import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
 
@@ -24,6 +23,7 @@ type Props = {
 
 const CatalogueImage = (props: Props) => {
     const dispatch = useAppDispatch()
+    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogue.id))
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleImageChange = (e: Event<HTMLInputElement>) => {
@@ -52,7 +52,7 @@ const CatalogueImage = (props: Props) => {
 
     return (
         <div className={styles.catalogueImage} onClick={handleClick}>
-            {props.catalogue.isSubmittingImage
+            {catalogueData.isSubmittingImage
                 ? <Loader className={styles.loader} />
                 : image
             }

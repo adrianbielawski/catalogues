@@ -1,10 +1,10 @@
 import React from 'react'
 import styles from './addField.scss'
 //Redux
+import { TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector } from 'store/selectors'
-import { TOGGLE_ADD_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+import { authUserCatalogueSelector } from 'store/selectors'
+//Components
 import AddButton from 'components/global-components/add-button/addButton'
 import FieldForm from './field-form/fieldForm'
 
@@ -14,7 +14,7 @@ type Props = {
 
 const AddField = (props: Props) => {
     const dispatch = useAppDispatch()
-    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
+    const catalogue = useTypedSelector(authUserCatalogueSelector(props.catalogueId))
 
     const handleAddClick = () => {
         dispatch(TOGGLE_ADD_FIELD(catalogue.id))

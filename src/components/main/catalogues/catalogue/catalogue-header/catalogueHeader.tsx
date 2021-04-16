@@ -10,11 +10,9 @@ import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 import { NavContext } from 'components/global-components/nav/nav-store/navStore'
 import NavContextProvider from 'components/global-components/nav/nav-store/navContextProvider'
 //Redux
+import { ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import {
-    ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE
-} from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//custom components
+//Components
 import Avatar from 'components/global-components/avatar/avatar'
 import Nav from 'components/global-components/nav/nav'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
@@ -38,10 +36,14 @@ const CatalogueHeader = (props: Props) => {
     const dispatch = useAppDispatch()
     const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
-    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser)
-    const catalogues = useTypedSelector(state => state.catalogues)
+    const smallViewport = useTypedSelector(state => state.modules.app.screenWidth.smallViewport)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
+    const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
+    const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues.cataloguesData)
 
     const handleFavouriteChange = () => {
         if (!props.catalogue.isFavourite) {
@@ -58,29 +60,29 @@ const CatalogueHeader = (props: Props) => {
     const NAV_ITEMS = [
         {
             id: 'User',
-            title: currentUser.user!.username,
+            title: currentUser!.username,
             icon: (
                 <Avatar
                     placeholderIcon={faUser}
                     className={styles.userImage}
-                    url={currentUser.user?.imageThumbnail}
+                    url={currentUser?.imageThumbnail}
                 />
             ),
-            url: `/${currentUser.user!.username}`
+            url: `/${currentUser!.username}`
         },
         {
             id: 'Catalogues',
-            title: `${currentUser.user?.username}'s catalogues`,
+            title: `${currentUser?.username}'s catalogues`,
             faIcon: faFolderOpen,
-            children: catalogues.catalogues.map(c => ({
-                id: c.name,
-                title: c.name,
+            children: currentUserCatalogues.map(c => ({
+                id: catalogues[c.id]!.name,
+                title: catalogues[c.id]!.name,
                 icon: <Avatar
                     className={styles.catalogueImage}
                     placeholderIcon={faFolderOpen}
-                    url={c.imageThumbnail}
+                    url={catalogues[c.id]!.imageThumbnail}
                 />,
-                url: `/${currentUser.user!.username}/catalogues/${c.slug}`,
+                url: `/${currentUser!.username}/catalogues/${catalogues[c.id]!.slug}`,
             })),
         },
     ]
@@ -92,8 +94,8 @@ const CatalogueHeader = (props: Props) => {
     const catalogueNameClass = cx(
         'catalogueName',
         {
-            noJustify: user?.id === currentUser.user?.id,
-            increasedMargin: user?.id === currentUser.user?.id,
+            noJustify: authUser?.id === currentUser!.id,
+            increasedMargin: authUser?.id === currentUser!.id,
         }
     )
 
@@ -107,7 +109,7 @@ const CatalogueHeader = (props: Props) => {
     return (
         <NavContextProvider value={contextValue}>
             <ComponentHeader className={styles.catalogueHeader}>
-                {user?.id !== currentUser.user?.id &&
+                {authUser?.id !== currentUser!.id &&
                     <Nav
                         className={styles.nav}
                         show={show}
@@ -135,7 +137,7 @@ const CatalogueHeader = (props: Props) => {
                             <FontAwesomeIcon icon={faFilter} />
                         </TransparentButton>
                     }
-                    {user && (
+                    {authUser && (
                         <FavouriteIcon
                             className={styles.favouriteIcon}
                             active={props.catalogue.isFavourite}

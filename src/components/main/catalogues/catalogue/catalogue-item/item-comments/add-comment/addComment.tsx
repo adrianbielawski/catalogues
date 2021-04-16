@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
-import { faReply, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './addComment.scss'
-//Custom components
+//Utils
+import { confirmOnEnter } from 'src/utils'
+//Redux
+import { itemDataSelector } from 'store/selectors'
+import { useTypedSelector } from 'store/storeConfig'
+//Context
+import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
+//Components
 import Input from 'components/global-components/input/input'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import { confirmOnEnter } from 'src/utils'
-import { useTypedSelector } from 'store/storeConfig'
-import { itemSelector } from 'store/selectors'
-import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
 
 type Props = {
     itemId: number,
@@ -22,7 +25,7 @@ const cx = classNames.bind(styles)
 
 const AddComment = (props: Props) => {
     const { replyTo, clearReplyTo } = useContext(ItemCommentsContext)
-    const posting = useTypedSelector(itemSelector(props.itemId)).postingComment
+    const isPosting = useTypedSelector(itemDataSelector(props.itemId)).isPostingComment
     const inputRef = useRef<HTMLInputElement>(null)
     const [comment, setComment] = useState('')
 
@@ -33,12 +36,12 @@ const AddComment = (props: Props) => {
     }, [replyTo])
 
     useEffect(() => {
-        if (!posting && inputRef.current) {
+        if (!isPosting && inputRef.current) {
             inputRef.current.value = ''
             setComment('')
             clearReplyTo()
         }
-    }, [posting])
+    }, [isPosting])
 
     const handleChange = () => {
         setComment(inputRef.current!.value)

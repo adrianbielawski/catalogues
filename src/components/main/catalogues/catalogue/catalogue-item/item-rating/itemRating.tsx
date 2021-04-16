@@ -3,9 +3,9 @@ import styles from './itemRating.scss'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Redux
+import { CHANGE_ITEM_RATING } from 'store/modules/current-user-items/slice'
 import { useAppDispatch } from 'store/storeConfig'
-import { CHANGE_ITEM_RATING, DELETE_ITEM_RATING } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
-//Custom components
+//Components
 import AverageRating from 'components/global-components/average-rating/averageRating'
 import UserRating from 'components/global-components/user-rating/userRating'
 
@@ -14,34 +14,30 @@ type Props = {
 }
 
 const ItemRating = (props: Props) => {
+    const { item } = props
     const dispatch = useAppDispatch()
 
     const handleRatingChange = (rating: number) => {
-        if (props.item.rating.currentUser === rating) {
-            dispatch(DELETE_ITEM_RATING(props.item.id))
-        } else {
-            dispatch(CHANGE_ITEM_RATING({
-                itemId: props.item.id,
-                rating,
-            }))
-        }
+        dispatch(CHANGE_ITEM_RATING({
+            itemId: item.id,
+            rating: item.rating.currentUser === rating ? null : rating,
+            prevRating: item.rating,
+        }))
     }
 
     return (
         <div className={styles.itemRating}>
             <AverageRating
-                rating={props.item.rating.average}
-                count={props.item.rating.count}
+                rating={item.rating.average}
+                count={item.rating.count}
             />
-            {props.item.permissions.canRate
-                ? (
-                    <UserRating
-                        rating={props.item.rating.currentUser}
-                        range={5}
-                        onChange={handleRatingChange}
-                    />
-                ) : null
-            }
+            {item.permissions.canRate && (
+                <UserRating
+                    rating={item.rating.currentUser}
+                    range={5}
+                    onChange={handleRatingChange}
+                />
+            )}
         </div>
     )
 }

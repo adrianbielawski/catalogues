@@ -5,10 +5,11 @@ import styles from './main.scss'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
+import { FETCH_AUTH_USER_CATALOGUES } from 'store/modules/auth-user-catalogues/slice'
+import { FETCH_FAVOURITE_CATALOGUES } from 'store/modules/auth-user-favourites/slice'
+import { CLEAR_CURRENT_USER_ERROR, GET_CURRENT_USER } from 'store/modules/current-user/slice'
 import { useTypedSelector } from 'store/storeConfig'
-import { CLEAR_CURRENT_USER_MESSAGE, GET_CURRENT_USER } from 'store/slices/currentUserSlices/currentUserSlice'
-import { FETCH_AUTH_USER_DATA } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-//Custom components
+//Components
 import Catalogues from './catalogues/catalogues'
 import Settings from './settings/settings'
 import Loader from 'components/global-components/loader/loader'
@@ -20,9 +21,12 @@ import { useSwitches } from 'src/hooks/useSwitches'
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const app = useTypedSelector(state => state.app)
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser)
+    const app = useTypedSelector(state => state.modules.app)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
+    const authUser = authUserData.id ? users[authUserData.id] : null
     const username = props.match.params.username
     const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
@@ -34,52 +38,49 @@ const Main = (props: HydratedRouteComponentProps) => {
     }, [username])
 
     useEffect(() => {
-        if (!user?.id) {
+        if (!authUser) {
             return
         }
-        dispatch(FETCH_AUTH_USER_DATA())
-    }, [user])
+        dispatch(FETCH_AUTH_USER_CATALOGUES())
+        dispatch(FETCH_FAVOURITE_CATALOGUES())
+    }, [authUser?.id])
 
     const handleCloseMessage = () => {
-        dispatch(CLEAR_CURRENT_USER_MESSAGE())
-        history.push(`/${user?.username || ''}`, undefined)
+        dispatch(CLEAR_CURRENT_USER_ERROR())
+        history.push(`/${authUser?.username || ''}`, undefined)
     }
 
-    const currentUserError = currentUser.currentUserError
-
-    if (!currentUser.user?.username
-        || currentUser.user?.username.toLowerCase() !== username?.toLowerCase()
-    ) {
+    if (!currentUser || currentUser.username.toLowerCase() !== username?.toLowerCase()) {
         return null
     }
 
     return (
         <div className={styles.main} style={{ minHeight: app.screenHeight }}>
-            {currentUser.user?.username ? (
+            {currentUser.username ? (
                 <Suspense fallback={<Loader />}>
                     <Switch>
                         {USER_DASHBOARD
-                        ? (
-                            <RouteWithContext exact path={"/:username"} component={UserDashboard} />
-                        ) : (
-                            <Redirect
-                                exact
-                                from="/:username"
-                                to="/:username/catalogues"
-                            />
-                        )}
+                            ? (
+                                <RouteWithContext exact path={"/:username"} component={UserDashboard} />
+                            ) : (
+                                <Redirect
+                                    exact
+                                    from="/:username"
+                                    to="/:username/catalogues"
+                                />
+                            )}
                         <RouteWithContext path={"/:username/catalogues/:slug?"} component={Catalogues} />
                         <PrivateRouteWithContext path={"/:username/settings"} component={Settings} />
-                        {FAVOURITE_ITEMS && 
+                        {FAVOURITE_ITEMS &&
                             <PrivateRouteWithContext path={"/:username/favourite-items"} component={FavouriteItems} />
                         }
                     </Switch>
                 </Suspense>
             ) : null}
             <MessageModal
-                show={currentUserError.message.length > 0}
-                title={currentUserError.title}
-                message={currentUserError.message}
+                show={currentUserData.currentUserError !== null}
+                title={currentUserData.currentUserError?.title}
+                message={currentUserData.currentUserError?.message || ''}
                 onConfirm={handleCloseMessage}
             />
         </div>

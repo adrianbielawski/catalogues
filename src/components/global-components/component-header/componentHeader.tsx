@@ -25,7 +25,7 @@ const cx = classNames.bind(styles)
 
 const ComponentHeader = (props: Props) => {
     const MIN_SCROLL_VAL = 50
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const [show, setShow] = useState(true)
     const [scrollData, setScrollData] = useState<ScrollData>(initialScrollData)
 

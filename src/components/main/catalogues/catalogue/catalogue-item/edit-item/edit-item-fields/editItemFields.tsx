@@ -1,11 +1,11 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { DeserializedChoiceField, DeserializedField, DeserializedItem } from 'src/globalTypes'
+import { DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
-import { fieldsSelector, itemFieldsSelector } from 'store/selectors'
-//Custom components
+import { currentUserFieldsDataSelector } from 'store/selectors'
+//Components
 import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
@@ -17,51 +17,48 @@ type Props = {
 }
 
 const EditItemFields = (props: Props) => {
-    const catalogueFields = useTypedSelector(fieldsSelector(props.item.catalogueId))
-    const fieldsValues = useTypedSelector(itemFieldsSelector(props.item.id))
+    const fields = useTypedSelector(state => state.entities.fields.entities)
+    const authUserFields = useTypedSelector(currentUserFieldsDataSelector(props.item.catalogueId))
 
-    const fields = catalogueFields.map(field => {
-        const fieldValue = fieldsValues.filter(v => v.fieldId === field.id)[0]
+    const fieldsComponents = authUserFields.map(fieldData => {
+        const field = fields[fieldData.id]!
+        const fieldValue = props.item.fieldsValues.filter(v => v.fieldId === field.id)[0]
 
         switch (field.type) {
             case 'short_text':
-                let shortTextField = field as DeserializedField
                 return (
                     <TextField
                         itemId={props.item.id}
-                        field={shortTextField}
+                        field={field}
                         fieldValue={fieldValue}
-                        key={shortTextField.id}
+                        key={field.id}
                     />
                 )
             case 'long_text':
-                let longTextField = field as DeserializedField
                 return (
                     <LongTextField
                         itemId={props.item.id}
-                        field={longTextField}
+                        field={field}
                         fieldValue={fieldValue}
-                        key={longTextField.id}
+                        key={field.id}
                     />
                 )
             case 'single_choice':
-                let singleChoiceField = field as DeserializedChoiceField
                 return (
                     <SingleChoiceField
                         itemId={props.item.id}
-                        field={singleChoiceField}
+                        field={field}
                         fieldValue={fieldValue}
-                        key={singleChoiceField.id}
+                        key={field.id}
                     />
                 )
             case 'multiple_choice':
-                let multipleChoiceField = field as DeserializedChoiceField
                 return (
                     <MultipleChoiceField
                         itemId={props.item.id}
-                        field={multipleChoiceField}
+                        field={field}
                         fieldValue={fieldValue}
-                        key={multipleChoiceField.id}
+                        key={field.id}
                     />
                 )
         }
@@ -73,7 +70,7 @@ const EditItemFields = (props: Props) => {
             icon={faListAlt}
         >
             <ul>
-                {fields}
+                {fieldsComponents}
             </ul>
         </IconWithTitle>
     )

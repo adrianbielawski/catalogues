@@ -9,6 +9,36 @@ export const userDeserializer = (user: T.User): T.DeserializedUser => ({
     isAnonymous: user.is_anonymous,
 })
 
+export const listResultsDeserializer = <R, DR>(
+    results: R[],
+    resultsDeserializer: (results: R) => DR,
+    prevResults?: DR[],
+): DR[] => {
+    const deserialized = results.map(resultsDeserializer)
+    
+    if (prevResults) {
+        return prevResults.concat(deserialized)
+    }
+
+    return deserialized
+}
+
+export const listDeserializer = <S, D>(
+    data: T.ListData<S>,
+    resultsDeserializer: (results: S) => D,
+    prevResults?: D[],
+): T.DeserializedListData<D> => ({
+    count: data.count,
+    pageSize: data.page_size,
+    startIndex: data.start_index,
+    endIndex: data.end_index,
+    current: data.current,
+    next: data.next,
+    previous: data.previous,
+    results: listResultsDeserializer(data.results, resultsDeserializer, prevResults),
+})
+
+//Catalogues
 export const itemsRangeDeserializer = (itemsRanges: T.ItemsRanges): T.DeserializedItemsRanges => ({
     id: {
         min: itemsRanges.id.min,
@@ -26,46 +56,45 @@ export const cataloguePermissionsDeserializer = (permissions: T.CataloguePermisi
 
 export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCatalogue => ({
     id: catalogue.id,
-    createdBy: userDeserializer(catalogue.created_by),
+    createdBy: catalogue.created_by.id,
     default: catalogue.default,
     public: catalogue.public,
     name: catalogue.name,
     slug: catalogue.slug,
     itemsRanges: itemsRangeDeserializer(catalogue.items_ranges),
     permissions: cataloguePermissionsDeserializer(catalogue.permissions),
-    fields: [],
     image: catalogue.image,
     imageThumbnail: catalogue.image_thumbnail,
     isFavourite: catalogue.is_favourite,
-    fetchingFields: true,
-    fetchingFieldsChoices: true,
-    isEditingCatalogueName: false,
-    isSubmittingCatalogueName: false,
-    catalogueError: {
-        title: '',
-        message: '',
-    },
-    isAddFieldFormActive: false,
-    isSubmittingNewField: false,
-    deletingCatalogue: false,
-    isSubmittingImage: false,
-    isInitialized: false,
 })
 
-export const listDeserializer = <S, D>(
-    data: T.ListData<S>,
-    resultsDeserializer: (results: S) => D
-): T.DeserializedListData<D> => ({
-    count: data.count,
-    pageSize: data.page_size,
-    startIndex: data.start_index,
-    endIndex: data.end_index,
-    current: data.current,
-    next: data.next,
-    previous: data.previous,
-    results: data.results.map(resultsDeserializer),
+//Fields
+export const fieldDeserializer = (field: T.Field): T.DeserializedField => ({
+    id: field.id,
+    catalogueId: field.catalogue_id,
+    type: field.type,
+    name: field.name,
+    filterName: field.filter_name,
+    position: field.position,
+    public: field.public,
 })
 
+export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] => (
+    fields.map(fieldDeserializer)
+)
+
+//Choices
+export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
+    id: choice.id,
+    fieldId: choice.field_id,
+    value: choice.value,
+})
+
+export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[] => (
+    choices.map(choiceDeserializer)
+)
+
+//Item
 export const itemFieldDeserializer = (field: T.ItemField): T.DeserializedItemField => ({
     itemId: field.item_id,
     fieldId: field.field_id,
@@ -90,17 +119,10 @@ export const itemRatingDeserializer = (rating: T.ItemRating) => ({
     currentUser: rating.current_user,
 })
 
-export const itemCommentCreatedByDeserializer = (createdBy: T.ItemCommentCreatedBy) => ({
-    id: createdBy.id,
-    username: createdBy.username,
-    image: createdBy.image,
-    imageThumbnail: createdBy.image_thumbnail,
-})
-
-export const itemCommentChildrenDeserializer = (comment: T.ItemCommentChildren) => ({
+export const itemCommentChildDeserializer = (comment: T.ItemCommentChild) => ({
     id: comment.id,
     itemId: comment.item_id,
-    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdBy: comment.created_by.id,
     createdAt: comment.created_at,
     text: comment.text,
 })
@@ -108,15 +130,20 @@ export const itemCommentChildrenDeserializer = (comment: T.ItemCommentChildren) 
 export const itemCommentDeserializer = (comment: T.ItemCommentParent) => ({
     id: comment.id,
     itemId: comment.item_id,
-    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdBy: comment.created_by.id,
     createdAt: comment.created_at,
     text: comment.text,
-    children: comment.children.map(itemCommentChildrenDeserializer),
+    children: comment.children?.map(itemCommentChildDeserializer) || [],
+})
+
+export const itemCommentDataDeserializer = (comment: T.ItemCommentParent) => ({
+    id: comment.id,
+    children: comment.children.map(c => c.id)
 })
 
 export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     id: item.id,
-    createdBy: userDeserializer(item.created_by),
+    createdBy: item.created_by.id,
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,
@@ -126,83 +153,29 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     fieldsValues: item.values.map(itemFieldDeserializer),
     images: item.images.map(imageDeserializer),
     removedImages: [],
-    commentsData: null,
-    fetchingComments: false,
-    postingComment: false,
-    isEditing: false,
-    isSubmitting: false,
-    isDeleting: false,
 })
 
-export const textFieldDeserializer = (field: T.Field): T.DeserializedTextField => ({
-    id: field.id,
-    catalogueId: field.catalogue_id,
-    type: field.type,
-    name: field.name,
-    filterName: field.filter_name,
-    position: field.position,
-    public: field.public,
-    changingName: false,
-    fieldError: {
-        title: '',
-        message: '',
+export const itemDataDeserializer = (item: T.Item): T.DeserializedItemData => ({
+    id: item.id,
+    commentsData: {
+        count: null,
+        pageSize: null,
+        startIndex: null,
+        endIndex: null,
+        current: null,
+        next: null,
+        previous: null,
+        results: [],
     },
-    isDeleting: false,
+    isFetchingComments: true,
+    isPostingComment: true,
     isEditing: false,
     isSubmitting: false,
-})
-
-export const choiceFieldDeserializer = (field: T.Field): T.DeserializedChoiceField => ({
-    id: field.id,
-    catalogueId: field.catalogue_id,
-    type: field.type,
-    name: field.name,
-    filterName: field.filter_name,
-    position: field.position,
-    public: field.public,
-    choices: field.choices ? choicesDeserializer(field.choices) : [],
-    fetchingChoices: false,
-    postingChoice: false,
-    fieldError: {
-        title: '',
-        message: '',
-    },
-    removingChoice: false,
-    changingName: false,
     isDeleting: false,
-    isEditing: false,
-    isSubmitting: false,
+    itemError: null,
 })
 
-export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
-    id: choice.id,
-    fieldId: choice.field_id,
-    value: choice.value,
-})
-
-export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[] => (
-    choices.map(choiceDeserializer)
-)
-
-export const fieldDeserializer = (field: T.Field): T.DeserializedField => {
-    switch (field.type) {
-        case 'short_text':
-        case 'long_text':
-            return textFieldDeserializer(field)
-
-        case 'single_choice':
-        case 'multiple_choice':
-            return choiceFieldDeserializer(field)
-
-        default:
-            return textFieldDeserializer(field)
-    }
-}
-
-export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] => (
-    fields.map(fieldDeserializer)
-)
-
+//Images
 export const imageDeserializer = (image: T.Image): T.DeserializedImage => ({
     id: image.id as number,
     image: image.image,

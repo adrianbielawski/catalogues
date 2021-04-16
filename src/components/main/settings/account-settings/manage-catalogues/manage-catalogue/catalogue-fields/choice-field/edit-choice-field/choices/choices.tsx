@@ -1,25 +1,26 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choices.scss'
 //Types
-import { DeserializedChoiceField } from 'src/globalTypes'
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserChoiceData } from 'store/modules/auth-user-catalogues/types'
 //Redux
-import { CLEAR_FIELD_ERROR, REMOVE_CHOICE } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
-import { useAppDispatch } from 'store/storeConfig'
-//Custom components
+import { REMOVE_FIELD_CHOICE } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddChoice from 'components/global-components/add-choice/addChoice'
-import MessageModal from 'components/global-components/message-modal/messageModal'
 import SearchBar from 'components/global-components/search-bar/searchBar'
-import { orderBy } from 'lodash'
 import
     ProtectedConfirmMessageModal, { ProtectedMessage }
 from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
 
 type Props = {
-    field: DeserializedChoiceField,
+    field: DeserializedField,
+    choices: AuthUserChoiceData[],
     className: string,
 }
 
@@ -27,16 +28,10 @@ const cx = classNames.bind(styles)
 
 const Choices = (props: Props) => {
     const dispatch = useAppDispatch()
+    const choices = useTypedSelector(state => state.entities.choices.entities)
     const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
     const [searchChoiceValue, setSearchChoiceValue] = useState('')
     const [protectedMessage, setProtectedMessage] = useState<ProtectedMessage | null>(null)
-
-    const clearError = () => {
-        dispatch(CLEAR_FIELD_ERROR({
-            catalogueId: props.field.catalogueId,
-            fieldId: props.field.id,
-        }))
-    }
 
     const displayMessage = (choiceId: number, expected: string) => {
         setProtectedMessage({
@@ -52,7 +47,7 @@ const Choices = (props: Props) => {
     }
 
     const deleteChoice = () => {
-        dispatch(REMOVE_CHOICE({
+        dispatch(REMOVE_FIELD_CHOICE({
             catalogueId: props.field.catalogueId,
             fieldId: props.field.id,
             choiceId: protectedMessage!.callbackParams!.choiceId,
@@ -75,34 +70,32 @@ const Choices = (props: Props) => {
         setSearchChoiceValue(input)
     }
 
-    const filteredChoices = props.field.choices.filter(choice =>
-        choice.value.toLowerCase().includes(searchChoiceValue.toLowerCase())
+    const filteredChoices = props.choices.filter(c =>
+        choices[c.id]!.value.toLowerCase().includes(searchChoiceValue.toLowerCase())
     )
 
     const sortedChoices = orderBy(
         filteredChoices,
-        (c) => c.value.toLowerCase(),
+        (c) => choices[c.id]!.value.toLowerCase(),
         choicesSortDir
     )
 
-    const choices = (
-        sortedChoices.map(choice => {
+    const choicesComponents = (
+        sortedChoices.map(c => {
             const handleDelete = () => {
-                displayMessage(choice.id, choice.value)
+                displayMessage(c.id, choices[c.id]!.value)
             }
 
             return (
-                <li className={styles.choice} key={choice.value}>
+                <li className={styles.choice} key={choices[c.id]!.value}>
                     <TransparentButton className={styles.removeButton} onClick={handleDelete}>
                         <FontAwesomeIcon icon={faTimes} />
                     </TransparentButton>
-                    <span>{choice.value}</span>
+                    <span>{choices[c.id]!.value}</span>
                 </li>
             )
         })
     )
-
-    const error = props.field.fieldError
 
     const choicesClass = cx(
         'choicesList',
@@ -118,16 +111,10 @@ const Choices = (props: Props) => {
                 onSearch={handleSearch}
             />
             <ul className={choicesClass}>
-                {choices}
+                {choicesComponents}
             </ul>
             <AddChoice
                 field={props.field}
-            />
-            <MessageModal
-                show={error.message.length !== 0}
-                title={error.title}
-                message={error.message}
-                onConfirm={clearError}
             />
             <ProtectedConfirmMessageModal
                 show={protectedMessage !== null}

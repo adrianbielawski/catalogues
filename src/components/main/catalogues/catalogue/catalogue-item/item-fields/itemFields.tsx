@@ -1,10 +1,7 @@
 import React from 'react'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
-//Redux
-import { itemFieldsSelector } from 'store/selectors'
-import { useTypedSelector } from 'store/storeConfig'
-//Custom components
+//Components
 import CollapsableList from 'components/global-components/collapsable-list/collapsableList'
 import Field from './field/field'
 
@@ -14,7 +11,6 @@ type Props = {
 }
 
 const ItemFields = (props: Props) => {
-    const itemFields = useTypedSelector(itemFieldsSelector(props.item.id))
     const maxHeight = 55
     const itemsProps = { catalogueId: props.item.catalogueId }
 
@@ -23,7 +19,7 @@ const ItemFields = (props: Props) => {
             <CollapsableList >
                 <>
                     <CollapsableList.List
-                        items={itemFields}
+                        items={props.item.fieldsValues}
                         itemsProps={itemsProps}
                         maxHeight={maxHeight}
                         itemComponent={Field}

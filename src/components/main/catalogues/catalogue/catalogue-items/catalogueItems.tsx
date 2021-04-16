@@ -6,24 +6,26 @@ import styles from './catalogueItems.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
-import { ADD_ITEM, CLEAR_ITEMS_DATA, FETCH_ITEMS } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import {
+    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, FETCH_CURRENT_USER_ITEMS
+} from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
-//Custom hooks
-import { useDelay } from 'src/hooks/useDelay'
+//Hooks
 import { useElementInView } from 'src/hooks/useElementInView'
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
 import { scrollTop } from 'src/utils'
 import filtersBarValuesBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/filtersBarValuesBuilder'
 import queryBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/queryBuilder'
-//Custom components
+//Components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Button from 'components/global-components/button/button'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
 import NewItemModal from './new-item-modal/newItemModal'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
     catalogueId: number,
@@ -35,8 +37,9 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
-    const itemsData = useTypedSelector(state => state.itemsData)
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
+    const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
+    const itemsData = currentUserItems.itemsData
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
     const filtersBarContext = useFiltersBarContext()
 
@@ -46,7 +49,7 @@ const CatalogueItems = (props: Props) => {
         }
     }
 
-    const lastItemRef = useElementInView(handleIntersecting)
+    const thirdFromTheEndRef = useElementInView(handleIntersecting)
 
     useEffect(() => {
         const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
@@ -87,7 +90,7 @@ const CatalogueItems = (props: Props) => {
     const fetchItems = (pageNum?: number) => {
         let page = 1
 
-        if (itemsData.catalogueId === props.catalogueId) {
+        if (currentUserItems.catalogueId === props.catalogueId) {
             page = pageNum || itemsData.next || 1
         }
 
@@ -95,7 +98,7 @@ const CatalogueItems = (props: Props) => {
 
         history.push({ search: query.query })
 
-        dispatch(FETCH_ITEMS({
+        dispatch(FETCH_CURRENT_USER_ITEMS({
             catalogueId: props.catalogueId,
             page,
             search: query.search,
@@ -108,20 +111,20 @@ const CatalogueItems = (props: Props) => {
         fetchItems()
     }
 
-    const getItems = () => itemsData.results.map((item, i) => {
-        const ref = i === itemsData.results.length - 1 ? lastItemRef : null
+    const getItems = () => itemsData.results.map((itemData, i) => {
+        const ref = i === itemsData.results.length - 2 ? thirdFromTheEndRef : null
         return (
             <CatalogueItem
-                item={item}
+                itemData={itemData}
                 isNarrow={!largeViewport}
-                key={item.id}
+                key={itemData.id}
                 ref={ref}
             />
         )
     })
 
     const getNoItemsMessage = () => {
-        if (itemsData.creatingNewItem) return
+        if (currentUserItems.isCreatingNewItem) return
         return (
             <div className={styles.noContent}>
                 <p>You have no items yet,</p>
@@ -136,7 +139,10 @@ const CatalogueItems = (props: Props) => {
     }
 
     const getNoItemsFoundMessage = () => {
-        if (itemsData.creatingNewItem) return
+        if (currentUserItems.isCreatingNewItem) {
+            return
+        }
+        
         return (
             <div className={styles.noItemsFound}>
                 <p>No items found</p>
@@ -162,6 +168,10 @@ const CatalogueItems = (props: Props) => {
         }
     }
 
+    const clearError = () => {
+        dispatch(CLEAR_ITEMS_DATA_ERROR())
+    }
+
     const itemsClass = cx(
         'items',
         {
@@ -169,14 +179,15 @@ const CatalogueItems = (props: Props) => {
         },
     )
 
-    if (itemsData.fetchingItems && !itemsData.results?.length) {
+    if (currentUserItems.isFetchingItems && !itemsData.results?.length) {
         return <Loader className={styles.loader} />
     }
 
+    const error = currentUserItems.itemsDataError
     const isItemInCatalogue = catalogue.itemsRanges.date.min
     const isSearchResult = isItemInCatalogue && location.search.length !== 0 && itemsData.results.length === 0
-    const showAddItemButton = isItemInCatalogue && !itemsData.newItemId && !itemsData.creatingNewItem
-    const showButton = !itemsData.fetchingItems && itemsData.next && itemsData.next === 2
+    const showAddItemButton = isItemInCatalogue && !currentUserItems.newItemId && !currentUserItems.isCreatingNewItem
+    const showButton = !currentUserItems.isFetchingItems && itemsData.next && itemsData.next === 2
 
     return (
         <div className={itemsClass}>
@@ -189,7 +200,7 @@ const CatalogueItems = (props: Props) => {
             <ul>
                 {getItems()}
             </ul>
-            {itemsData.fetchingItems &&
+            {currentUserItems.isFetchingItems &&
                 <Loader className={styles.loader} />
             }
             {showButton &&
@@ -201,6 +212,12 @@ const CatalogueItems = (props: Props) => {
                 </Button>
             }
             <NewItemModal />
+            <MessageModal
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
+                onConfirm={clearError}
+            />
         </div>
     )
 }

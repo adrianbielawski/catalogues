@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItem.scss'
 //Redux
+import { CHANGE_FAVOURITE_ITEM, CLEAR_ITEM_ERROR } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, itemSelector } from 'store/selectors'
-import { ADD_ITEM_TO_FAVOURITE, DELETE_ITEM_FROM_FAVOURITE } from 'store/slices/cataloguesSlices/itemsDataSlice.ts/itemsDataSlice'
+import { catalogueSelector, currentUserCatalogueSelector, itemSelector, userSelector } from 'store/selectors'
 //Types
-import { DeserializedItem } from 'src/globalTypes'
+import { DeserializedItemData } from 'src/globalTypes'
 //Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
-//Custom components
+//Components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'
 import Loader from 'components/global-components/loader/loader'
@@ -22,9 +22,10 @@ import EditItemButton from './edit-item/edit-item-button/editItemButton'
 import ItemComments from './item-comments/itemComments'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 import ItemHeader from './item-header/itemHeader'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
-    item: DeserializedItem,
+    itemData: DeserializedItemData,
     isNarrow: boolean,
     className?: string,
 }
@@ -35,49 +36,56 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     HTMLLIElement,
     Props
 > = (props, ref) => {
+    const { itemData, isNarrow, className } = props
     const dispatch = useAppDispatch()
+    const item = useTypedSelector(itemSelector(itemData.id))
+    const user = useTypedSelector(userSelector(item.createdBy))
+    const catalogue = useTypedSelector(catalogueSelector(item.catalogueId))
+    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
     const itemRef = useRef<HTMLLIElement>()
-    const item = useTypedSelector(itemSelector(props.item.id))
     const [showImagesPreview, setShowImagesPreview] = useState(false)
-    const catalogue = useTypedSelector(catalogueSelector(props.item.catalogueId))
     const firstRender = useFirstRender()
 
     useEffect(() => {
-        if (!firstRender && itemRef.current !== null && !item.isSubmitting) {
+        if (!firstRender && itemRef.current !== null && !itemData.isSubmitting) {
             itemRef.current!.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
-    }, [item.isSubmitting, item.isEditing])
+    }, [itemData.isSubmitting, itemData.isEditing])
 
     const toggleImagesPreview = () => {
         setShowImagesPreview(!showImagesPreview)
     }
 
     const handleFavouriteChange = () => {
-        if (!props.item.isFavourite) {
-            dispatch(ADD_ITEM_TO_FAVOURITE(props.item.id))
-        } else {
-            dispatch(DELETE_ITEM_FROM_FAVOURITE(props.item.id))
-        }
+        dispatch(CHANGE_FAVOURITE_ITEM({
+            itemId: item.id,
+            isFavourite: !item.isFavourite,
+        }))
     }
 
-    const isImagesPreviewAllowed = item.images.length && !props.isNarrow
+    const clearError = () => {
+        dispatch(CLEAR_ITEM_ERROR(item.id))
+    }
+
+    const isImagesPreviewAllowed = item.images.length && !isNarrow
     const showImagesCounter = item.images.length > 1
+    const error = itemData.itemError
 
     const itemClass = cx(
         'item',
-        props.className,
+        className,
         {
-            narrow: props.isNarrow,
+            narrow: isNarrow,
         }
     )
 
     return (
         <li className={itemClass} ref={mergeRefs([ref, itemRef])}>
-            {item.isEditing
+            {itemData.isEditing
                 ? (
                     <EditItem
-                        show={item.isEditing}
-                        itemId={props.item.id}
+                        show={itemData.isEditing}
+                        itemId={item.id}
                         isItemNew={false}
                         className={styles.editItem}
                     />
@@ -85,8 +93,8 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 : <>
                     <ItemHeader
                         className={styles.itemHeader}
-                        userImage={item.createdBy.imageThumbnail}
-                        username={item.createdBy.username}
+                        userImage={user.imageThumbnail}
+                        username={user.username}
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
                         slug={catalogue.slug}
@@ -97,7 +105,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 images={item.images}
                                 useThumbnails={true}
                                 singleView={true}
-                                withShadow={!props.isNarrow}
+                                withShadow={!isNarrow}
                                 onImageClick={isImagesPreviewAllowed ? toggleImagesPreview : undefined}
                                 showCounter={showImagesCounter}
                             />
@@ -120,7 +128,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 className={styles.itemData}
                                 item={item}
                             />
-                            {catalogue.fetchingFields
+                            {catalogueData.isFetchingFields
                                 ? <Loader />
                                 : (
                                     <ItemFields
@@ -131,20 +139,24 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             }
                         </div>
                     </div>
-                    {item.commentsData &&
-                        <ItemComments
-                            className={styles.itemComments}
-                            itemId={item.id}
-                            commentsData={item.commentsData}
-                            canComment={item.permissions.canComment}
-                        />
-                    }
+                    <ItemComments
+                        className={styles.itemComments}
+                        itemId={item.id}
+                        commentsData={itemData.commentsData}
+                        canComment={item.permissions.canComment}
+                    />
                 </>
             }
             <ImagesPreview
                 show={showImagesPreview}
                 images={item.images}
                 onClose={toggleImagesPreview}
+            />
+            <MessageModal
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
+                onConfirm={clearError}
             />
         </li>
     )

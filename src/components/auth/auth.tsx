@@ -2,8 +2,8 @@ import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styles from './auth.scss'
 //Redux
+import { CLEAR_AUTH_USER_ERROR } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { CLEAR_AUTH_ERROR } from 'store/slices/authSlices/authSlices'
 //Custom components
 import Login from './login/login'
 import Signup from './signup/signup'
@@ -14,10 +14,10 @@ import VerifyEmail from './verify-email/verifyEmail'
 
 const Auth = () => {
     const dispatch = useAppDispatch()
-    const auth = useTypedSelector(state => state.auth)
+    const authUser = useTypedSelector(state => state.modules.authUser)
 
     const clearError = () => {
-        dispatch(CLEAR_AUTH_ERROR())
+        dispatch(CLEAR_AUTH_USER_ERROR())
     }
 
     return (
@@ -33,9 +33,9 @@ const Auth = () => {
                 </Suspense>
             </div>
             <MessageModal
-                show={auth.authError.message.length !== 0}
-                title={auth.authError.title}
-                message={auth.authError.message}
+                show={authUser.authUserError !== null}
+                title={authUser.authUserError?.title}
+                message={authUser.authUserError?.message || ''}
                 onConfirm={clearError}
             />
         </div>

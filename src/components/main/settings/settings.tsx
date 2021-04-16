@@ -14,8 +14,8 @@ import Header from 'components/global-components/header/header'
 const Settings = () => {
     const location = useLocation<LocationState>()
     const settingsRef = useRef<HTMLDivElement>(null)
+    const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
-    const app = useTypedSelector(state => state.app)
 
     useEffect(() => {
         if (settingsRef.current === null) {
@@ -23,11 +23,11 @@ const Settings = () => {
         }
         
         getMinHeight()
-    }, [settingsRef.current, app.screenHeight])
+    }, [settingsRef.current, screenHeight])
 
     const getMinHeight = () => {
         const top = settingsRef.current?.getBoundingClientRect().top
-        const minHeight = app.screenHeight - top!
+        const minHeight = screenHeight - top!
         setMinHeight(minHeight)
     }
 

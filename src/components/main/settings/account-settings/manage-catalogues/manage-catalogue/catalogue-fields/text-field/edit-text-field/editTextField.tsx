@@ -1,27 +1,29 @@
 import React, { useState } from 'react'
 import styles from './editTextField.scss'
 //Redux
-import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/slices/cataloguesSlices/cataloguesSlice/cataloguesSlice'
+import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { fieldSelector, fieldsSelector } from 'store/selectors'
+import { authUserFieldsDataSelector } from 'store/selectors'
 //Types
-import { DeserializedTextField } from 'src/globalTypes'
-//Custom hooks
+import { DeserializedField } from 'src/globalTypes'
+import { AuthUserTextFieldData } from 'store/modules/auth-user-catalogues/types'
+//Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
-//Custom components
+//Components
 import Input from 'components/global-components/input/input'
 import Button from 'components/global-components/button/button'
 import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 type Props = {
-    field: DeserializedTextField,
+    field: DeserializedField,
+    fieldData: AuthUserTextFieldData
 }
 
 const EditTextField = (props: Props) => {
     const dispatch = useAppDispatch()
-    const fields = useTypedSelector(fieldsSelector(props.field.catalogueId))
-    const field = useTypedSelector(fieldSelector(props.field.catalogueId, props.field.id)) as DeserializedTextField
+    const fields = useTypedSelector(state => state.entities.fields.entities)
+    const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.field.catalogueId))
     const [inputError, setInputError] = useState('')
     const [message, setMessage] = useState({ title: '', value: '' })
 
@@ -30,15 +32,18 @@ const EditTextField = (props: Props) => {
         catalogueId: props.field.catalogueId
     }
 
-    const validateInput = (input: string) => {
+    const validateInput = (name: string) => {
         let message = ''
 
-        if (input.length < 1) {
+        if (name.length < 1) {
             message = 'Minimum 1 characters'
         }
-        if (fields.find(f => f.name.toLowerCase() === input.toLowerCase() && f.id !== field.id)) {
-            message = `Field with name "${input}" already exists`
-        }
+
+        fieldsData.forEach(f => {
+            if (fields[f.id]?.name.toLowerCase() === name.toLowerCase()) {
+                message = `Field with name "${name}" already exists`
+            }
+        })
 
         setInputError(message)
         return message.length === 0
@@ -56,15 +61,15 @@ const EditTextField = (props: Props) => {
     const handleDeleteField = () => {
         setMessage({
             title: 'Confirm delete',
-            value: `Are you sure you want to delete field ${field.name}?`,
+            value: `Are you sure you want to delete field ${props.field.name}?`,
         })
     }
 
     const handlePublicChange = () => {
         dispatch(CHANGE_FIELD_PUBLIC({
-            catalogueId: field.catalogueId,
-            fieldId: field.id,
-            public: !field.public,
+            catalogueId: props.field.catalogueId,
+            fieldId: props.field.id,
+            public: !props.field.public,
         }))
     }
 
@@ -92,13 +97,13 @@ const EditTextField = (props: Props) => {
                 <CheckBoxWithTitle
                     id="public"
                     title="Public"
-                    selected={field.public}
+                    selected={props.field.public}
                     onChange={handlePublicChange}
                 />
             </div>
             <Button
                 className={styles.deleteButton}
-                disabled={field.isDeleting}
+                disabled={props.fieldData.isDeleting}
                 onClick={handleDeleteField}
             >
                 Delete field
