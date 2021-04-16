@@ -121,7 +121,7 @@ export interface DeserializedCataloguePermisions {
 
 export interface DeserializedCatalogue {
     id: number,
-    createdBy: DeserializedUser,
+    createdBy: number,
     default: boolean,
     public: boolean,
     name: string,

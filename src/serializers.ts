@@ -56,7 +56,7 @@ export const cataloguePermissionsDeserializer = (permissions: T.CataloguePermisi
 
 export const catalogueDeserializer = (catalogue: T.Catalogue): T.DeserializedCatalogue => ({
     id: catalogue.id,
-    createdBy: userDeserializer(catalogue.created_by),
+    createdBy: catalogue.created_by.id,
     default: catalogue.default,
     public: catalogue.public,
     name: catalogue.name,

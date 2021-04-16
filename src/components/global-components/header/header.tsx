@@ -60,7 +60,7 @@ const Header = () => {
                             placeholderIcon={faFolderOpen}
                             url={catalogues[id]!.imageThumbnail}
                         />,
-                        url: `/${catalogues[id]!.createdBy.username}/catalogues/${catalogues[id]!.slug}`,
+                        url: `/${users[catalogues[id]!.createdBy]!.username}/catalogues/${catalogues[id]!.slug}`,
                     })),
                 },
             ]

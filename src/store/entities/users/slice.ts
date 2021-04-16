@@ -16,6 +16,9 @@ export const usersEntitiesSlice = createSlice({
         USERS_UPDATED(state, action: PayloadAction<User[]>) {
             usersAdapter.upsertMany(state, action.payload.map(userDeserializer))
         },
+        USERS_ADDED(state, action: PayloadAction<User[]>) {
+            usersAdapter.addMany(state, action.payload.map(userDeserializer))
+        },
         USER_UPDATED(state, action: PayloadAction<User>) {
             usersAdapter.upsertOne(state, userDeserializer(action.payload))
         },
@@ -39,6 +42,7 @@ export const usersEntitiesSlice = createSlice({
 
 export const {
     USERS_UPDATED,
+    USERS_ADDED,
     USER_UPDATED,
     USER_ADDED,
     USER_REMOVED,
