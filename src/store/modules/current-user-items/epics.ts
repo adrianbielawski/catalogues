@@ -1,7 +1,7 @@
 import { combineEpics } from "redux-observable"
 import { concat, of, defer, forkJoin, Observable, from, merge, iif } from 'rxjs'
 import {
-    catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck,
+    catchError, mergeMap, switchMap, retryWhen, defaultIfEmpty, filter, map, withLatestFrom, pluck, tap,
 } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import mime from 'mime-types'
@@ -11,13 +11,14 @@ import { retry$ } from "store/storeObservables"
 //Serializers
 import { itemFieldSerializer, itemRatingDeserializer } from "src/serializers"
 //Types
-import { DeserializedImage } from "src/globalTypes"
+import { DeserializedImage, Item, ItemCommentParent, User } from "src/globalTypes"
 import { RootState } from "store/storeConfig"
 //Actions
 import * as actions from "./slice"
 import * as authUserCataloguesActions from "store/modules/auth-user-catalogues/slice"
 import * as itemsActions from "store/entities/items/slice"
 import * as itemsCommentsActions from "store/entities/items-comments/slice"
+import * as usersActions from "store/entities/users/slice"
 
 export const refreshItemEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.REFRESH_CURRENT_USER_ITEM.match)),
@@ -33,6 +34,7 @@ export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
         defer(() => axiosInstance$.get(`/items/${action.payload}/`)).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
+                of(usersActions.USER_ADDED(response.data.map((i: Item) => i.created_by))),
                 of(itemsActions.ITEM_UPDATED(response.data)),
                 of(actions.FETCH_CURRENT_USER_ITEM_SUCCESS({
                     data: response.data,
@@ -59,6 +61,7 @@ export const fetchItemsEpic = (action$: Observable<Action>) => action$.pipe(
         })).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
+                of(usersActions.USERS_ADDED(response.data.results.map((i: Item) => i.created_by))),
                 of(itemsActions.ITEMS_UPDATED(response.data.results)),
                 of(actions.FETCH_CURRENT_USER_ITEMS_SUCCESS({
                     data: response.data,
@@ -253,13 +256,15 @@ export const fetchItemsCommentsEpic = (action$: Observable<Action>) => action$.p
             of(actions.FETCH_ITEMS_COMMENTS_START()),
             forkJoin<typeof requests, string>(requests).pipe(
                 defaultIfEmpty(),
-                mergeMap(data => concat(
-                    of(itemsCommentsActions.ITEMS_COMMENTS_UPDATED(
-                        //Create array of comments from data object
-                        Object.values(data).flat().map(list => list.results).filter(c => c.length > 0).flat()
-                    )),
-                    of(actions.FETCH_ITEMS_COMMENTS_SUCCESS(data)),
-                )),
+                mergeMap(data => {
+                    const comments = Object.values(data).flat().map(list => list.results).filter(c => c.length > 0).flat() as ItemCommentParent[]
+                    
+                    return concat(
+                        of(usersActions.USERS_ADDED(comments.map((c: ItemCommentParent) => c.created_by as User))),
+                        of(itemsCommentsActions.ITEMS_COMMENTS_UPDATED(comments)),
+                        of(actions.FETCH_ITEMS_COMMENTS_SUCCESS(data)),
+                    )
+                }),
                 catchError(() => of(actions.FETCH_ITEMS_COMMENTS_FAILURE()))
             )
         )
@@ -277,6 +282,7 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) => action$.pi
             }
         }).pipe(
             mergeMap(response => concat(
+                of(usersActions.USERS_ADDED(response.data.results.map((c: ItemCommentParent) => c.created_by))),
                 of(itemsCommentsActions.ITEMS_COMMENTS_UPDATED(response.data.results)),
                 of(actions.FETCH_ITEM_COMMENTS_SUCCESS({
                     itemId: action.payload.itemId,

@@ -10,15 +10,16 @@ import Column from '../column/column'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 
 const LatestFromFavourites = () => {
-    const latestFromFav = useTypedSelector(state => state.itemsData)
+    const items = useTypedSelector(state => state.entities.items.entities)
+    const itemsData = useTypedSelector(state => state.modules.currentUserItems.itemsData)
     
     const fetchLatestFromFav = (page: number) => {
     
     }
 
     const handleIntersecting = (isIntersecting: boolean) => {
-        if (isIntersecting && latestFromFav.next && latestFromFav.next > 2) {
-            fetchLatestFromFav(latestFromFav.next)
+        if (isIntersecting && itemsData.next && itemsData.next > 2) {
+            fetchLatestFromFav(itemsData.next)
         }
     }
 
@@ -29,12 +30,12 @@ const LatestFromFavourites = () => {
         fetchLatestFromFav(2)
     }
 
-    const items = latestFromFav.results.map((c, i) => {
-        const ref = i === latestFromFav.results.length - 2 ? thirdFromTheEndRef : null
+    const itemsComponents = itemsData.results.map((c, i) => {
+        const ref = i === itemsData.results.length - 2 ? thirdFromTheEndRef : null
         return (
             <CatalogueItem
                 className={styles.item}
-                item={c}
+                itemData={c}
                 isNarrow={true}
                 key={c.id}
                 ref={ref}
@@ -47,10 +48,12 @@ const LatestFromFavourites = () => {
             className={styles.latestFromFavourites}
             title="Latest from favourites"
         >
-            {latestFromFav.results.length > 0 && 
-                <ul>{items}</ul>
+            {itemsData.results.length > 0 && 
+                <ul>
+                    {itemsComponents}
+                </ul>
             }
-            {latestFromFav.next === 2 && (
+            {itemsData.next === 2 && (
                 <Button
                     className={styles.button}
                     onClick={handleSeeMoreClick}

@@ -6,6 +6,9 @@ import classNames from 'classnames/bind'
 import styles from './comment.scss'
 //Types
 import { DeserializedItemComment, LocationState } from 'src/globalTypes'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
+import { userSelector } from 'store/selectors'
 //Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
 //Components
@@ -30,12 +33,13 @@ const Comment: React.ForwardRefRenderFunction<
 > = (props, ref) => {
     const { comment } = props
     const history = useHistory<LocationState>()
+    const user = useTypedSelector(userSelector(comment.createdBy))
     const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
     const [clipText, setClipText] = useState(props.clipText)
     const [height, setHeight] = useState<'auto' | 35>(props.clipText ? 35 : 'auto')
     
     const handleUsernameClick = () => {
-        history.push(`/${comment.createdBy.username}`)
+        history.push(`/${user.username}`)
     }
 
     const handleCommentClick = () => {
@@ -59,7 +63,7 @@ const Comment: React.ForwardRefRenderFunction<
     const handleReply = () => {
         changeReplyTo({
             id: comment.id,
-            username: comment.createdBy.username,
+            username: user.username,
         })
     }
 
@@ -113,10 +117,10 @@ const Comment: React.ForwardRefRenderFunction<
             <div className={styles.parent}>
                 <div className={styles.commentContent}>
                     <AvatarWithName
-                        name={comment.createdBy.username}
+                        name={user.username}
                         placeholderIcon={faUser}
                         className={styles.avatar}
-                        url={comment.createdBy.imageThumbnail}
+                        url={user.imageThumbnail}
                         avatarClassName={styles.userImage}
                         onClick={handleUsernameClick}
                     />

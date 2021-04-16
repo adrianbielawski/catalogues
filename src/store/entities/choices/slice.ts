@@ -30,7 +30,7 @@ export const choicesEntitiesSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(CLEAR_APP_STATE, () => { })
+        builder.addCase(CLEAR_APP_STATE, () => choicesAdapter.getInitialState())
     }
 })
 

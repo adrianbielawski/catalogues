@@ -271,7 +271,7 @@ export interface ItemCommentParent {
 export interface DeserializedItemCommentParent {
     id: number,
     itemId: number,
-    createdBy: DeserializedItemCommentCreatedBy,
+    createdBy: number,
     createdAt: string,
     text: string,
     children: DeserializedItemCommentChild[],
@@ -297,7 +297,7 @@ export interface Item {
 
 export interface DeserializedItem {
     id: number,
-    createdBy: DeserializedUser,
+    createdBy: number,
     createdAt: string,
     modifiedAt: string,
     catalogueId: number,

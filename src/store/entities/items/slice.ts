@@ -89,7 +89,7 @@ export const itemsEntitiesSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(CLEAR_APP_STATE, () => { })
+        builder.addCase(CLEAR_APP_STATE, () => itemsAdapter.getInitialState())
     }
 })
 

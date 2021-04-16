@@ -4,7 +4,7 @@ import styles from './catalogueItem.scss'
 //Redux
 import { CHANGE_FAVOURITE_ITEM, CLEAR_ITEM_ERROR } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, currentUserCatalogueSelector, itemSelector } from 'store/selectors'
+import { catalogueSelector, currentUserCatalogueSelector, itemSelector, userSelector } from 'store/selectors'
 //Types
 import { DeserializedItemData } from 'src/globalTypes'
 //Hooks and utils
@@ -39,6 +39,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     const { itemData, isNarrow, className } = props
     const dispatch = useAppDispatch()
     const item = useTypedSelector(itemSelector(itemData.id))
+    const user = useTypedSelector(userSelector(item.createdBy))
     const catalogue = useTypedSelector(catalogueSelector(item.catalogueId))
     const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
     const itemRef = useRef<HTMLLIElement>()
@@ -92,8 +93,8 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 : <>
                     <ItemHeader
                         className={styles.itemHeader}
-                        userImage={item.createdBy.imageThumbnail}
-                        username={item.createdBy.username}
+                        userImage={user.imageThumbnail}
+                        username={user.username}
                         catalogueImage={catalogue.imageThumbnail}
                         catalogueName={catalogue.name}
                         slug={catalogue.slug}

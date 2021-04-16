@@ -119,17 +119,10 @@ export const itemRatingDeserializer = (rating: T.ItemRating) => ({
     currentUser: rating.current_user,
 })
 
-export const itemCommentCreatedByDeserializer = (createdBy: T.ItemCommentCreatedBy) => ({
-    id: createdBy.id,
-    username: createdBy.username,
-    image: createdBy.image,
-    imageThumbnail: createdBy.image_thumbnail,
-})
-
 export const itemCommentChildDeserializer = (comment: T.ItemCommentChild) => ({
     id: comment.id,
     itemId: comment.item_id,
-    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdBy: comment.created_by.id,
     createdAt: comment.created_at,
     text: comment.text,
 })
@@ -137,7 +130,7 @@ export const itemCommentChildDeserializer = (comment: T.ItemCommentChild) => ({
 export const itemCommentDeserializer = (comment: T.ItemCommentParent) => ({
     id: comment.id,
     itemId: comment.item_id,
-    createdBy: itemCommentCreatedByDeserializer(comment.created_by),
+    createdBy: comment.created_by.id,
     createdAt: comment.created_at,
     text: comment.text,
     children: comment.children?.map(itemCommentChildDeserializer) || [],
@@ -150,7 +143,7 @@ export const itemCommentDataDeserializer = (comment: T.ItemCommentParent) => ({
 
 export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
     id: item.id,
-    createdBy: userDeserializer(item.created_by),
+    createdBy: item.created_by.id,
     createdAt: item.created_at,
     modifiedAt: item.modified_at,
     catalogueId: item.catalogue_id,

@@ -36,7 +36,7 @@ export const usersEntitiesSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder.addCase(CLEAR_APP_STATE, () => { })
+        builder.addCase(CLEAR_APP_STATE, () => usersAdapter.getInitialState())
     }
 })
 
