@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation } from 'react-router-dom'
 import styles from './login.scss'
-//Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Types
 import { LocationState } from 'src/globalTypes'
-import { LOG_IN } from 'store/slices/authSlices/authSlices'
-//Custom Components
+//Redux
+import { LOG_IN } from 'store/modules/auth-user/slice'
+import { usersSelector } from 'store/selectors'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
@@ -13,10 +15,11 @@ import Input from 'components/global-components/input/input'
 
 const Login = () => {
     const dispatch = useAppDispatch()
-    const auth = useTypedSelector(state => state.auth)
-    const [isValid, setIsValid] = useState(false);
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const users = useTypedSelector(usersSelector())
+    const authUser = useTypedSelector(state => state.modules.authUser)
+    const [isValid, setIsValid] = useState(false)
     const emailInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
 
@@ -44,10 +47,10 @@ const Login = () => {
         history.push('/signup')
     }
 
-    if (auth.user) {
+    if (authUser.id) {
         return (
             <Redirect to={{
-                pathname: `/${auth.user.username}`
+                pathname: `/${users[authUser.id]!.username}`
             }} />
         )
     }
@@ -68,7 +71,7 @@ const Login = () => {
                     minLength={8}
                     required
                 />
-                {auth.isLoggingIn
+                {authUser.isLoggingIn
                     ? <Loader />
                     : <Button
                         type="submit"
@@ -77,7 +80,7 @@ const Login = () => {
                         Login
                     </Button>}
             </form>
-            {!auth.isLoggingIn &&
+            {!authUser.isLoggingIn &&
                 <p>
                     Don't have an account?
                     <span onClick={handleSignUp}>

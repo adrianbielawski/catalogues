@@ -17,7 +17,7 @@ export const fetchCurrentUserCataloguesEpic = (
     state$: Observable<RootState>
 ) => action$.pipe(
     filter(actions.FETCH_CURRENT_USER_CATALOGUES.match),
-    withLatestFrom(state$.pipe(pluck('currentUser', 'user', 'id'))),
+    withLatestFrom(state$.pipe(pluck('modules', 'currentUser', 'userId'))),
     switchMap(([_, id]) => concat(
         of(actions.FETCH_CURRENT_USER_CATALOGUES_START()),
         axiosInstance$.get('/catalogues/', {
@@ -47,7 +47,7 @@ export const fetchCurrentUserCatalogueFieldsEpic = (
                 //Set auth user fields and fetch choices if current user == auth user
                 //do not have to fetch fields and choices twice
                 iif(() =>
-                    state.auth.user?.id === state.currentUser.user?.id,
+                    state.modules.authUser.id === state.modules.currentUser.userId,
                     of(FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS({
                         data: response.data,
                         catalogueId: action.payload

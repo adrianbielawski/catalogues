@@ -1,50 +1,35 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import styles from './myAccount.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-//Custom hooks and utils
+//Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
-import { useFirstRender } from 'src/hooks/useFirstRender'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import {
-    CHANGE_USERNAME, CLEAR_MY_ACCOUNT_ERROR, TOGGLE_USERNAME_EDIT
-} from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
-import { VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
-//Custom components
+    CHANGE_USERNAME, CLEAR_AUTH_USER_ERROR, TOGGLE_USERNAME_EDIT, VALIDATE_USERNAME
+} from 'store/modules/auth-user/slice'
+import { userSelector } from 'store/selectors'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Components
 import EditableFieldWithConfirm from 'components/global-components/editable-field/editableFieldWithConfirm'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import ChangePassword from './change-password/changePassword'
-import ChangeUserImage from './change-password/change-image/changeUserImage'
+import ChangeUserImage from './change-image/changeUserImage'
 
 const MyAccount = () => {
     const dispatch = useAppDispatch()
-    const auth = useTypedSelector(state => state.auth)
-    const myAccount = useTypedSelector(state => state.settings.myAccount)
-    const firstRender = useFirstRender()
+    const authUser = useTypedSelector(state => state.modules.authUser)
+    const user = useTypedSelector(userSelector(authUser.id!))
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
 
-    useEffect(() => {
-        if (firstRender) {
-            return
-        }
-        const username = auth.user?.username
-        const referrer = location.state?.referrer
-
-        const pathname = `/${username}/settings/account/my-account`
-        referrer.params.username = username
-
-        history.push(pathname, { referrer })
-    }, [auth.user?.username])
-
     const handleEditUsername = () => {
-        dispatch(TOGGLE_USERNAME_EDIT(!myAccount.isEditingUsername))
+        dispatch(TOGGLE_USERNAME_EDIT(!authUser.isEditingUsername))
     }
 
     const validateUsername = (username: string) => {
-        if (username.toLowerCase() === auth.user?.username.toLowerCase()) {
+        if (username.toLowerCase() === user.username.toLowerCase()) {
             return false
         }
         return true
@@ -57,11 +42,15 @@ const MyAccount = () => {
     )
 
     const handleUsernameConfirm = (username: string) => {
-        dispatch(CHANGE_USERNAME(username))
+        dispatch(CHANGE_USERNAME({
+            name: username,
+            location,
+            history,
+        }))
     }
 
     const clearMyAccountError = () => {
-        dispatch(CLEAR_MY_ACCOUNT_ERROR())
+        dispatch(CLEAR_AUTH_USER_ERROR())
     }
 
     return (
@@ -73,11 +62,11 @@ const MyAccount = () => {
                 <li key={'username'}>
                     <EditableFieldWithConfirm
                         id={0}
-                        isEditing={myAccount.isEditingUsername}
-                        isSubmitting={myAccount.isSubmittingUsername}
+                        isEditing={authUser.isEditingUsername}
+                        isSubmitting={authUser.isSubmittingUsername}
                         title="User name"
-                        value={auth.user!.username}
-                        invalidInputMessage={auth.invalidUsernameMessage}
+                        value={user.username}
+                        invalidInputMessage={authUser.invalidUsernameMessage}
                         ref={usernameInputRef}
                         onEdit={handleEditUsername}
                         onConfirm={handleUsernameConfirm}
@@ -88,9 +77,9 @@ const MyAccount = () => {
                 </li>
             </ul>
             <MessageModal
-                show={myAccount.myAccountError.message.length !== 0}
-                title={myAccount.myAccountError.title}
-                message={myAccount.myAccountError.message}
+                show={authUser.authUserError !== null}
+                title={authUser.authUserError?.title}
+                message={authUser.authUserError?.message || ''}
                 onConfirm={clearMyAccountError}
             />
         </div>

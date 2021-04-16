@@ -2,9 +2,10 @@ import React, { useRef } from 'react'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import styles from './changeUserImage.scss'
 //Redux
+import { POST_USER_IMAGE } from 'store/modules/auth-user/slice'
+import { userSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { POST_USER_IMAGE } from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
-//Custom components
+//Components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import Avatar from 'components/global-components/avatar/avatar'
 import Loader from 'components/global-components/loader/loader'
@@ -12,8 +13,8 @@ import Loader from 'components/global-components/loader/loader'
 const ChangeUserImage = () => {
     const dispatch = useAppDispatch()
     const inputRef = useRef<HTMLInputElement>(null)
-    const auth = useTypedSelector(state => state.auth)
-    const myAccount = useTypedSelector(state => state.settings.myAccount)
+    const authUser = useTypedSelector(state => state.modules.authUser)
+    const user = useTypedSelector(userSelector(authUser.id!))
 
     const handleEdit = () => {
         inputRef.current?.click()
@@ -31,14 +32,14 @@ const ChangeUserImage = () => {
                 onEdit={handleEdit}
             />
             <div className={styles.imageWrapper}>
-                {myAccount.isPostingUserImage
+                {authUser.isPostingUserImage
                     ? (
                         <Loader size={35} />
                     ) : (
                         <Avatar
                             placeholderIcon={faUser}
                             className={styles.image}
-                            url={auth.user!.imageThumbnail}
+                            url={user.imageThumbnail}
                         />
                     )
                 }

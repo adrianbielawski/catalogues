@@ -4,8 +4,9 @@ import styles from './signup.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
+import { CLEAR_SIGNUP_MESSAGE, SIGN_UP, VALIDATE_USERNAME } from 'store/modules/auth-user/slice'
+import { usersSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { SIGN_UP, CLEAR_SIGNUP_MESSAGE, VALIDATE_USERNAME } from 'store/slices/authSlices/authSlices'
 //Custom hooks and utils
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 import { mergeRefs } from 'src/utils'
@@ -16,21 +17,22 @@ import Input from 'components/global-components/input/input'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 const Signup = () => {
-    const history = useHistory<LocationState>()
     const dispatch = useAppDispatch()
+    const history = useHistory<LocationState>()
+    const users = useTypedSelector(usersSelector())
+    const authUser = useTypedSelector(state => state.modules.authUser)
     const usernameInput = useRef<HTMLInputElement>(null)
     const emailInput = useRef<HTMLInputElement>(null)
     const passwordInput = useRef<HTMLInputElement>(null)
     const repeatPasswordInput = useRef<HTMLInputElement>(null)
-    const auth = useTypedSelector(state => state.auth)
     const [isValid, setIsValid] = useState(false)
 
     useEffect(() => {
-        if (auth.user) {
+        if (authUser.id) {
             return
         }
             validateUserInput()
-    }, [auth.invalidUsernameMessage])
+    }, [authUser.invalidUsernameMessage])
 
     const validateUsername = () => {
         return usernameInput.current!.checkValidity()
@@ -52,7 +54,7 @@ const Signup = () => {
             || !isEmailValid
             || !isPasswordValid
             || !isRepeatPasswordValid
-            || auth.invalidUsernameMessage.length !== 0
+            || authUser.invalidUsernameMessage.length !== 0
         ) {
             setIsValid(false)
         } else {
@@ -82,9 +84,9 @@ const Signup = () => {
         history.push('/')
     }
 
-    if (auth.user) {
+    if (authUser.id !== null) {
         return <Redirect to={{
-            pathname: `/${auth.user.username}`
+            pathname: `/${users[authUser.id]!.username}`
         }} />
     }
 
@@ -96,7 +98,7 @@ const Signup = () => {
                     ref={mergeRefs([usernameDebounceRef, usernameInput])}
                     minLength={2}
                     required
-                    invalidInputMessage={auth.invalidUsernameMessage}
+                    invalidInputMessage={authUser.invalidUsernameMessage}
                 />
                 <Input
                     type="email"
@@ -118,7 +120,7 @@ const Signup = () => {
                     minLength={8}
                     required
                 />
-                {auth.isSigningUp
+                {authUser.isSigningUp
                     ? <Loader />
                     : <Button
                         type="submit"
@@ -129,9 +131,9 @@ const Signup = () => {
                 }
             </form>
             <MessageModal
-                show={auth.signUpMessage.message.length !== 0}
-                title={auth.signUpMessage.title}
-                message={auth.signUpMessage.message}
+                show={authUser.signUpMessage !== null}
+                title={authUser.signUpMessage?.title}
+                message={authUser.signUpMessage?.message || ''}
                 onConfirm={clearError}
             />
         </div>

@@ -4,8 +4,8 @@ import { catchError, filter, mapTo, mergeMap, switchMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Slices
-import { LOG_OUT_SUCCESS } from "store/slices/authSlices/authSlices"
 import * as actions from "store/slices/appSlices/appSlice"
+import { LOG_OUT_SUCCESS } from "store/modules/auth-user/slice"
 
 export const fetchSwitchesEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_SWITCHES.match),

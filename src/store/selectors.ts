@@ -6,6 +6,15 @@ import { AuthUserCatalogueData, AuthUserFieldData } from "./modules/auth-user-ca
 
 type SelectorType<T> = Selector<RootState, T>
 
+//User
+export const userSelector = (id: number): SelectorType<T.DeserializedUser> => (
+    state => state.entities.users.entities[id]!
+)
+
+export const usersSelector = (): SelectorType<Dictionary<T.DeserializedUser>> => (
+    state => state.entities.users.entities
+)
+
 //Catalogues entities
 export const catalogueSelector = (id: number): SelectorType<T.DeserializedCatalogue> => (
     state => state.entities.catalogues.entities[id]!

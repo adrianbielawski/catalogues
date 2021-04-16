@@ -34,7 +34,7 @@ export const fetchAuthUserCataloguesEpic = (
     state$: Observable<RootState>
 ) => action$.pipe(
     filter(actions.FETCH_AUTH_USER_CATALOGUES.match),
-    withLatestFrom(state$.pipe(pluck('auth', 'user', 'id'))),
+    withLatestFrom(state$.pipe(pluck('modules', 'authUser', 'id'))),
     switchMap(([_, id]) => concat(
         of(actions.FETCH_AUTH_USER_CATALOGUES_START()),
         axiosInstance$.get('/catalogues/', {

@@ -2,11 +2,9 @@ import React, { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './changePassword.scss'
 //Redux
+import { CHANGE_PASSWORD, TOGGLE_PASSWORD_EDIT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import {
-    CHANGE_PASSWORD, TOGGLE_PASSWORD_EDIT,
-} from 'store/slices/settingsSlices/myAccountSlice/myAccountSlice'
-//Custom components
+//Components
 import Button from 'components/global-components/button/button'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import Input from 'components/global-components/input/input'
@@ -15,13 +13,13 @@ const cx = classNames.bind(styles)
 
 const ChangePassword = () => {
     const dispatch = useAppDispatch()
-    const myAccount = useTypedSelector(state => state.settings.myAccount)
+    const authUser = useTypedSelector(state => state.modules.authUser)
     const passwordInput = useRef<HTMLInputElement>(null)
     const repeatPasswordInput = useRef<HTMLInputElement>(null)
     const [arePasswordsValid, setArePasswordsValid] = useState(false)
 
     const handleEditPassword = () => {
-        dispatch(TOGGLE_PASSWORD_EDIT(!myAccount.isEditingPassword))
+        dispatch(TOGGLE_PASSWORD_EDIT(!authUser.isEditingPassword))
     }
 
     const validatePasswords = () => {
@@ -49,7 +47,7 @@ const ChangePassword = () => {
     const changePasswordClass = cx(
         'changePassword',
         {
-            active: myAccount.isEditingPassword
+            active: authUser.isEditingPassword
         },
     )
 
@@ -57,10 +55,10 @@ const ChangePassword = () => {
         <div className={changePasswordClass}>
             <EditableFieldTitle
                 title={'Password'}
-                isEditing={myAccount.isEditingPassword}
+                isEditing={authUser.isEditingPassword}
                 onEdit={handleEditPassword}
             />
-            {myAccount.isEditingPassword &&
+            {authUser.isEditingPassword &&
                 <div className={styles.content}>
                     <Input
                         type="password"

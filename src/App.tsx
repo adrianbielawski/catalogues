@@ -2,9 +2,9 @@ import React, { useEffect, Suspense } from 'react'
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styles from 'global-styles/app.scss'
 //Redux
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { GET_USER, INITIALIZED } from 'store/slices/authSlices/authSlices'
+import { GET_USER, INITIALIZED } from 'store/modules/auth-user/slice'
 import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/slices/appSlices/appSlice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Custom components
@@ -17,7 +17,7 @@ const App = () => {
   const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
   const app = useTypedSelector(state => state.app)
-  const isInitialized = useTypedSelector(state => state.auth.isInitialized)
+  const isInitialized = useTypedSelector(state => state.modules.authUser.isInitialized)
 
   const handleResize = () => {
     dispatch(CHANGE_SCREEN_SIZE({

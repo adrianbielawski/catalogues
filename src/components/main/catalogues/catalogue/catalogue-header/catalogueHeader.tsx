@@ -37,8 +37,11 @@ const CatalogueHeader = (props: Props) => {
     const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
     const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues.cataloguesData)
 
@@ -57,19 +60,19 @@ const CatalogueHeader = (props: Props) => {
     const NAV_ITEMS = [
         {
             id: 'User',
-            title: currentUser.user!.username,
+            title: currentUser!.username,
             icon: (
                 <Avatar
                     placeholderIcon={faUser}
                     className={styles.userImage}
-                    url={currentUser.user?.imageThumbnail}
+                    url={currentUser?.imageThumbnail}
                 />
             ),
-            url: `/${currentUser.user!.username}`
+            url: `/${currentUser!.username}`
         },
         {
             id: 'Catalogues',
-            title: `${currentUser.user?.username}'s catalogues`,
+            title: `${currentUser?.username}'s catalogues`,
             faIcon: faFolderOpen,
             children: currentUserCatalogues.map(c => ({
                 id: catalogues[c.id]!.name,
@@ -79,7 +82,7 @@ const CatalogueHeader = (props: Props) => {
                     placeholderIcon={faFolderOpen}
                     url={catalogues[c.id]!.imageThumbnail}
                 />,
-                url: `/${currentUser.user!.username}/catalogues/${catalogues[c.id]!.slug}`,
+                url: `/${currentUser!.username}/catalogues/${catalogues[c.id]!.slug}`,
             })),
         },
     ]
@@ -91,8 +94,8 @@ const CatalogueHeader = (props: Props) => {
     const catalogueNameClass = cx(
         'catalogueName',
         {
-            noJustify: user?.id === currentUser.user?.id,
-            increasedMargin: user?.id === currentUser.user?.id,
+            noJustify: authUser?.id === currentUser!.id,
+            increasedMargin: authUser?.id === currentUser!.id,
         }
     )
 
@@ -106,7 +109,7 @@ const CatalogueHeader = (props: Props) => {
     return (
         <NavContextProvider value={contextValue}>
             <ComponentHeader className={styles.catalogueHeader}>
-                {user?.id !== currentUser.user?.id &&
+                {authUser?.id !== currentUser!.id &&
                     <Nav
                         className={styles.nav}
                         show={show}
@@ -134,7 +137,7 @@ const CatalogueHeader = (props: Props) => {
                             <FontAwesomeIcon icon={faFilter} />
                         </TransparentButton>
                     }
-                    {user && (
+                    {authUser && (
                         <FavouriteIcon
                             className={styles.favouriteIcon}
                             active={props.catalogue.isFavourite}

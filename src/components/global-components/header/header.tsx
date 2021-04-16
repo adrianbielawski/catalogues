@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useHistory, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import {
     faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
@@ -11,7 +11,7 @@ import { LocationState } from 'src/globalTypes'
 //Context
 import { NavContext } from '../nav/nav-store/navStore'
 //Redux
-import { LOG_OUT } from 'store/slices/authSlices/authSlices'
+import { LOG_OUT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import Nav, { ItemType, ItemWithChildrenAndFaIcon } from '../nav/nav'
@@ -28,20 +28,21 @@ const contextValue = {
 
 const Header = () => {
     const dispatch = useAppDispatch()
-    const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const { show } = useContext(NavContext)
-    const user = useTypedSelector(state => state.auth.user)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const cataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.cataloguesData)
     const favouriteCatalogues = useTypedSelector(state => state.modules.authUserFavoirites.cataloguesIds)
+    const { show } = useContext(NavContext)
     const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
     const handleLogout = () => {
-        dispatch(LOG_OUT({ history }))
+        dispatch(LOG_OUT())
     }
 
-    const NAV_ITEMS: ItemType[] = user !== null ? [
+    const NAV_ITEMS: ItemType[] = authUser !== null ? [
         {
             id: 'Favourites',
             title: 'Favourites',
@@ -76,16 +77,16 @@ const Header = () => {
                     placeholderIcon={faFolderOpen}
                     url={catalogues[c.id]!.imageThumbnail}
                 />,
-                url: `/${user!.username}/catalogues/${catalogues[c.id]!.slug}`,
+                url: `/${authUser!.username}/catalogues/${catalogues[c.id]!.slug}`,
             })),
         },
         {
             id: 'User',
-            title: user.username,
+            title: authUser!.username,
             icon: <Avatar
                 className={styles.userImage}
                 placeholderIcon={faUser}
-                url={user?.imageThumbnail}
+                url={authUser!.imageThumbnail}
             />,
             children: [
                 {
@@ -94,7 +95,7 @@ const Header = () => {
                     icon: (
                         <SettingsIcon mainIcon={faUser} />
                     ),
-                    url: `/${user!.username}/settings/account/my-account`,
+                    url: `/${authUser!.username}/settings/account/my-account`,
                 },
                 {
                     id: 'Manage catalogues',
@@ -102,7 +103,7 @@ const Header = () => {
                     icon: (
                         <SettingsIcon mainIcon={faFolderOpen} />
                     ),
-                    url: `/${user!.username}/settings/account/manage-catalogues`,
+                    url: `/${authUser!.username}/settings/account/manage-catalogues`,
                 },
                 {
                     id: 'Logout',
@@ -121,26 +122,26 @@ const Header = () => {
         }
     ]
 
-    if (!user && (location.pathname === '/login' || location.pathname === '/')) {
+    if (!authUser && (location.pathname === '/login' || location.pathname === '/')) {
         const loginIndex = NAV_ITEMS.findIndex(item => item.id !== 'Login')
         NAV_ITEMS.splice(loginIndex, 1)
     }
 
-    if (user !== null && FAVOURITE_ITEMS) {
+    if (authUser !== null && FAVOURITE_ITEMS) {
         (NAV_ITEMS[0] as ItemWithChildrenAndFaIcon).children.push({
             id: 'Favourite items',
             title: 'Favourite items',
             faIcon: faTh,
-            url: `/${user.username}/favourite-items`,
+            url: `/${authUser!.username}/favourite-items`,
         })
     }
 
-    if (user !== null && USER_DASHBOARD) {
+    if (authUser !== null && USER_DASHBOARD) {
         NAV_ITEMS.unshift({
             id: 'User dashboard',
             title: 'User dashboard',
             faIcon: faHouseUser,
-            url: `/${user.username}`,
+            url: `/${authUser!.username}`,
         })
     }
 

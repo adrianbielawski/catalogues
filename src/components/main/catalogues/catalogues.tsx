@@ -26,8 +26,11 @@ const Catalogues = () => {
     const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
-    const user = useTypedSelector(state => state.auth.user)
-    const currentUser = useTypedSelector(state => state.currentUser.user)
+    const users = useTypedSelector(state => state.entities.users.entities)
+    const authUserData = useTypedSelector(state => state.modules.authUser)
+    const currentUserData = useTypedSelector(state => state.modules.currentUser)
+    const authUser = authUserData.id ? users[authUserData.id] : null
+    const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
     const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues)
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const app = useTypedSelector(state => state.app)
@@ -59,7 +62,7 @@ const Catalogues = () => {
     }
 
     const getNoCatalogueMessage = () => {
-        if (user?.username !== currentUser?.username) {
+        if (authUser?.username !== currentUser?.username) {
             return (
                 <p className={styles.noPublicCatalogues}>
                     {`${upperFirst(currentUser?.username)} has no public catalogues`}
@@ -84,7 +87,9 @@ const Catalogues = () => {
         return <Loader className={styles.loader} />
     }
 
-    const defaultCatalogueSlug = catalogues[currentUserCatalogues.defaultCatalogueId!]!.slug
+    const defaultCatalogueSlug = currentUserCatalogues.defaultCatalogueId
+        ? catalogues[currentUserCatalogues.defaultCatalogueId]!.slug
+        : null
 
     return (
         <FiltersBarBulkContextProvider
@@ -105,7 +110,7 @@ const Catalogues = () => {
                                     exact
                                     from="/:username/catalogues"
                                     to={{
-                                        pathname: `/:username/catalogues/${defaultCatalogueSlug}`,
+                                        pathname: `/:username/catalogues/${defaultCatalogueSlug || ''}`,
                                         state: location.state,
                                     }}
                                 />
