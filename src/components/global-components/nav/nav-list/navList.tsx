@@ -37,7 +37,7 @@ const NavList = (props: Props) => {
         showNestedList,
         removeNestedListId,
     } = useContext(NavContext)
-    const app = useTypedSelector(state => state.app)
+    const app = useTypedSelector(state => state.modules.app)
 
     const getItems = () => props.item.children.map(item => {
         const handleItemClick = () => {

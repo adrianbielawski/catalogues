@@ -1,5 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit"
-import * as T from './appTypes'
+import * as T from './types'
 
 type State = T.AppState
 

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as T from './appTypes'
-import * as reducers from './appReducers'
+import * as T from './types'
+import * as reducers from './reducers'
 
 const initialState: T.AppState = {
     screenHeight: window.innerHeight,

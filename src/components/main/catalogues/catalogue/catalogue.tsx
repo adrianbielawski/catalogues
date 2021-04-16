@@ -22,7 +22,7 @@ import Filters from 'components/global-components/filters-bar/filters/filters'
 const Catalogue = (props: HydratedRouteComponentProps) => {
     const dispatch = useAppDispatch()
     const { filtersContext } = useFiltersBarContext()
-    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
+    const smallViewport = useTypedSelector(state => state.modules.app.screenWidth.smallViewport)
     const [showFilters, setShowFilters] = useState(false)
     const catalogue = props.match.params.catalogue!
     const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))

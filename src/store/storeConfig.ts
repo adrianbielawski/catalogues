@@ -3,11 +3,10 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 //Slices
-import { appSlice } from 'store/slices/appSlices/appSlice'
 import { entities } from './entities'
 import { modules } from './modules'
 //Epics
-import { appEpics } from 'store/epics/appEpics'
+import { appEpics } from './modules/app/epics'
 import { authUserEpics } from './modules/auth-user/epics'
 import { authUserCataloguesIndexEpics } from 'store/modules/auth-user-catalogues/epics'
 import { authUserFavouritesEpics } from 'store/modules/auth-user-favourites/epics/authUserFavouritesEpics'
@@ -19,10 +18,10 @@ import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
 const rootEpic = combineEpics(
   appEpics,
   authUserEpics,
-  currentUserEpics,
   authUserCataloguesIndexEpics,
   authUserFavouritesEpics,
   authUserDashboardEpics,
+  currentUserEpics,
   currentUserCataloguesEpics,
   currentUserItemsEpics,
 )
@@ -31,7 +30,6 @@ const epicMiddleware = createEpicMiddleware()
 const rootReducer = combineReducers({
   entities: entities,
   modules: modules,
-  app: appSlice.reducer,
 })
 
 export const store = configureStore({

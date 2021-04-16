@@ -27,7 +27,7 @@ const defaultProps: Props = {
 const cx = classNames.bind(styles)
 
 const SideBar = (props: Props) => {
-    const app = useTypedSelector(state => state.app)
+    const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
 
     useEffect(() => {
         const body = document.getElementsByTagName('body')[0]
@@ -68,7 +68,7 @@ const SideBar = (props: Props) => {
         <div
             className={sideBarClass}
             style={{
-                '--height': `${app.screenHeight}px`,
+                '--height': `${screenHeight}px`,
             } as React.CSSProperties}
         >
             <div className={childrenWrapperClass} onClick={stopPropagation}>

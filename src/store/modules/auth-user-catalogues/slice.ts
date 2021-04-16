@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import * as T from './types'
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as cataloguesReducers from './reducers/cataloguesReducers'
 import * as fieldsReducers from './reducers/fieldsReducers'
 import * as fieldsChoicesReducers from './reducers/choicesReducers'

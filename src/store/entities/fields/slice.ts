@@ -5,7 +5,7 @@ import { FieldUpdated } from './types'
 //Serializers
 import { fieldDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const fieldsAdapter = createEntityAdapter<DeserializedField>({})
 

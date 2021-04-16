@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { CurrentUserState } from './types'
 import * as reducers from './reducers'
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import { LOG_IN } from 'store/modules/auth-user/slice'
 
 export const initialState: CurrentUserState = {

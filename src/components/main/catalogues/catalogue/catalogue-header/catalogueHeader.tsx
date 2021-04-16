@@ -36,7 +36,7 @@ const CatalogueHeader = (props: Props) => {
     const dispatch = useAppDispatch()
     const location = useLocation<LocationState>()
     const { show } = useContext(NavContext)
-    const smallViewport = useTypedSelector(state => state.app.screenWidth.smallViewport)
+    const smallViewport = useTypedSelector(state => state.modules.app.screenWidth.smallViewport)
     const users = useTypedSelector(state => state.entities.users.entities)
     const authUserData = useTypedSelector(state => state.modules.authUser)
     const currentUserData = useTypedSelector(state => state.modules.currentUser)

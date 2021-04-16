@@ -8,7 +8,7 @@ import ComponentHeader from 'components/global-components/component-header/compo
 
 const FavouriteItems = () => {
     const favouriteItemsRef = useRef<HTMLDivElement>(null)
-    const app = useTypedSelector(state => state.app)
+    const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
     const [minHeight, setMinHeight] = useState(0)
 
     useEffect(() => {
@@ -17,12 +17,12 @@ const FavouriteItems = () => {
         }
 
         getMinHeight()
-    }, [favouriteItemsRef.current, app.screenHeight])
+    }, [favouriteItemsRef.current, screenHeight])
 
 
     const getMinHeight = () => {
         const top = favouriteItemsRef.current!.getBoundingClientRect().top
-        const minHeight = app.screenHeight - top! - window.pageYOffset
+        const minHeight = screenHeight - top! - window.pageYOffset
         setMinHeight(minHeight)
     }
 

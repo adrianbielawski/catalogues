@@ -5,7 +5,7 @@ import { ItemCommentUpdated, ItemCommentChildAdded } from './types'
 //Serializers
 import { itemCommentChildDeserializer, itemCommentDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const itemsCommentsAdapter = createEntityAdapter<DeserializedItemCommentParent>({})
 

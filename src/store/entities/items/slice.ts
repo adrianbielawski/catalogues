@@ -5,7 +5,7 @@ import * as T from './types'
 //Serializers
 import { itemDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 export const getFieldValueById = (
     state: EntityState<DeserializedItem>,

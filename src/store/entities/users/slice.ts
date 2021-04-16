@@ -5,7 +5,7 @@ import { UserUpdatedPayload } from './types'
 //Serializers
 import { userDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const usersAdapter = createEntityAdapter<DeserializedUser>({})
 

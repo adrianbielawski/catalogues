@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import * as T from './types'
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as favCataloguesReducers from './reducers/authUserFavouritesReducers'
 
 const initialState: T.CurrentUserFavCataloguesState = {

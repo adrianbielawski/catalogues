@@ -5,7 +5,7 @@ import { FieldChoiceUpdated } from './types'
 //Serializers
 import { choiceDeserializer, choicesDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const choicesAdapter = createEntityAdapter<DeserializedChoice>({})
 

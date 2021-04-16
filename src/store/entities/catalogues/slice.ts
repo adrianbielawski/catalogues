@@ -5,7 +5,7 @@ import { CatalogueUpdated } from './types'
 //Serializers
 import { catalogueDeserializer } from 'src/serializers'
 //Actions
-import { CLEAR_APP_STATE } from 'store/slices/appSlices/appSlice'
+import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const cataloguesAdapter = createEntityAdapter<DeserializedCatalogue>({})
 

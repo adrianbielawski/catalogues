@@ -26,7 +26,7 @@ type Props = {
 
 const CommentsModal = (props: Props) => {
     const dispatch = useAppDispatch()
-    const screenWidth = useTypedSelector(state => state.app.screenWidth)
+    const screenWidth = useTypedSelector(state => state.modules.app.screenWidth)
     const item = useTypedSelector(itemSelector(props.itemId))
     const commentsData = useTypedSelector(itemCommentsDataSelector(props.itemId))
     const comments = useTypedSelector(commentsSelector())

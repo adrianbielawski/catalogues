@@ -37,7 +37,7 @@ const CatalogueItems = (props: Props) => {
     const dispatch = useAppDispatch()
     const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
     const itemsData = currentUserItems.itemsData
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))

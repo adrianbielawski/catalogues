@@ -3,8 +3,8 @@ import { concat, Observable, of } from 'rxjs'
 import { catchError, filter, mapTo, mergeMap, switchMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-//Slices
-import * as actions from "store/slices/appSlices/appSlice"
+//Actions
+import * as actions from "./slice"
 import { LOG_OUT_SUCCESS } from "store/modules/auth-user/slice"
 
 export const fetchSwitchesEpic = (action$: Observable<Action>) => action$.pipe(

@@ -23,7 +23,7 @@ type Props = {
 
 const EditItem = (props: Props) => {
     const dispatch = useAppDispatch()
-    const largeViewport = useTypedSelector(state => state.app.screenWidth.largeViewport)
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(props.itemId))
     const itemData = useTypedSelector(itemDataSelector(props.itemId))
     const catalogueData = useTypedSelector(currentUserCatalogueSelector(item.catalogueId))

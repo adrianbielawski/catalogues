@@ -3,7 +3,7 @@ import { axiosInstance$ } from "src/axiosInstance"
 import { concat, of, Observable } from 'rxjs'
 import { catchError, filter, mergeMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
-//Slices
+//Actions
 import * as actions from "store/modules/current-user/slice"
 import * as usersActions from "store/entities/users/slice"
 

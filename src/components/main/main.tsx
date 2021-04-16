@@ -21,7 +21,7 @@ import { useSwitches } from 'src/hooks/useSwitches'
 const Main = (props: HydratedRouteComponentProps) => {
     const dispatch = useDispatch()
     const history = useHistory()
-    const app = useTypedSelector(state => state.app)
+    const app = useTypedSelector(state => state.modules.app)
     const users = useTypedSelector(state => state.entities.users.entities)
     const authUserData = useTypedSelector(state => state.modules.authUser)
     const currentUserData = useTypedSelector(state => state.modules.currentUser)

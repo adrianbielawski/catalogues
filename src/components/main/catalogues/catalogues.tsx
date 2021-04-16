@@ -26,6 +26,7 @@ const Catalogues = () => {
     const dispatch = useAppDispatch()
     const cataloguesRef = useRef<HTMLDivElement>(null)
     const firstRender = useFirstRender()
+    const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
     const users = useTypedSelector(state => state.entities.users.entities)
     const authUserData = useTypedSelector(state => state.modules.authUser)
     const currentUserData = useTypedSelector(state => state.modules.currentUser)
@@ -33,7 +34,6 @@ const Catalogues = () => {
     const currentUser = currentUserData.userId ? users[currentUserData.userId] : null
     const currentUserCatalogues = useTypedSelector(state => state.modules.currentUserCatalogues)
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
-    const app = useTypedSelector(state => state.app)
     const [minHeight, setMinHeight] = useState(0)
 
     useEffect(() => {
@@ -48,12 +48,12 @@ const Catalogues = () => {
         }
 
         getMinHeight()
-    }, [cataloguesRef.current, app.screenHeight])
+    }, [cataloguesRef.current, screenHeight])
 
 
     const getMinHeight = () => {
         const top = cataloguesRef.current!.getBoundingClientRect().top
-        const minHeight = app.screenHeight - top! - window.pageYOffset
+        const minHeight = screenHeight - top! - window.pageYOffset
         setMinHeight(minHeight)
     }
 
