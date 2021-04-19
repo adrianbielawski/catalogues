@@ -135,19 +135,17 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             />
                         </div>
                     </div>
-                    {!itemData.isFetchingComments && (
-                        <ItemComments
-                            className={styles.itemComments}
-                            itemId={item.id}
-                            images={item.images}
-                            commentsData={itemData.commentsData}
-                            isPostingComment={itemData.isPostingComment}
-                            isFetchingComments={itemData.isFetchingComments}
-                            canComment={item.permissions.canComment}
-                            onAdd={props.onAddComment}
-                            onFetch={props.onFetchComments}
-                        />
-                    )}
+                    <ItemComments
+                        className={styles.itemComments}
+                        itemId={item.id}
+                        images={item.images}
+                        commentsData={itemData.commentsData}
+                        isPostingComment={itemData.isPostingComment}
+                        isFetchingComments={itemData.isFetchingComments}
+                        canComment={item.permissions.canComment}
+                        onAdd={props.onAddComment}
+                        onFetch={props.onFetchComments}
+                    />
                 </>
             }
             <ImagesPreview
