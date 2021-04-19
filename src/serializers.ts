@@ -1,4 +1,5 @@
 import * as T from 'src/globalTypes'
+import { listData } from './constants'
 
 export const userDeserializer = (user: T.User): T.DeserializedUser => ({
     id: user.id,
@@ -158,17 +159,10 @@ export const itemDeserializer = (item: T.Item): T.DeserializedItem => ({
 export const itemDataDeserializer = (item: T.Item): T.DeserializedItemData => ({
     id: item.id,
     commentsData: {
-        count: null,
-        pageSize: null,
-        startIndex: null,
-        endIndex: null,
-        current: null,
-        next: null,
-        previous: null,
-        results: [],
+        ...listData
     },
     isFetchingComments: true,
-    isPostingComment: true,
+    isPostingComment: false,
     isEditing: false,
     isSubmitting: false,
     isDeleting: false,

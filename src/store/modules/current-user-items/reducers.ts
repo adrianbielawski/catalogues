@@ -174,6 +174,7 @@ export const fetchItemsComments = {
                 itemCommentDataDeserializer,
                 itemData.commentsData.results,
             )
+            itemData.isFetchingComments = false
             itemData.commentsData.startIndex = 1
         }
     },

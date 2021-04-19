@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './itemComments.scss'
 //Types
-import { DeserializedCommentData, DeserializedListData } from 'src/globalTypes'
+import { DeserializedCommentData, DeserializedImage, DeserializedListData } from 'src/globalTypes'
 //Redux
-import { POST_ITEM_COMMENT } from 'store/modules/current-user-items/slice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { useTypedSelector } from 'store/storeConfig'
 import { commentsSelector } from 'store/selectors'
 //Components
 import Comment from './comment/comment'
@@ -21,14 +20,18 @@ const contextValue = {
 type Props = {
     itemId: number,
     commentsData: DeserializedListData<DeserializedCommentData>,
+    images: DeserializedImage[],
     canComment: boolean,
+    isPostingComment: boolean,
+    isFetchingComments: boolean,
     className?: string,
+    onAdd: (text: string, parentId?: number) => void,
+    onFetch: (page: number | null) => void,
 }
 
 const cx = classNames.bind(styles)
 
 const ItemComments = (props: Props) => {
-    const dispatch = useAppDispatch()
     const comments = useTypedSelector(commentsSelector())
     const [showAllComments, setShowAllComments] = useState(false)
     const commentsComponents = []
@@ -54,11 +57,7 @@ const ItemComments = (props: Props) => {
     }
 
     const handleAddComment = (text: string, parentId?: number) => {
-        dispatch(POST_ITEM_COMMENT({
-            itemId: props.itemId,
-            parentId,
-            text,
-        }))
+        props.onAdd(text, parentId)
     }
     const itemCommentsClass = cx(
         'itemComments',
@@ -82,14 +81,21 @@ const ItemComments = (props: Props) => {
                 {props.canComment && (
                     <AddComment
                         itemId={props.itemId}
+                        isPostingComment={props.isPostingComment}
                         onAdd={handleAddComment}
                     />
                 )}
                 <CommentsModal
                     show={showAllComments}
                     itemId={props.itemId}
+                    commentsData={props.commentsData}
+                    images={props.images}
                     canComment={props.canComment}
+                    isPostingComment={props.isPostingComment}
+                    isFetchingComments={props.isFetchingComments}
                     onClose={toggleShowAllComments}
+                    onAdd={props.onAdd}
+                    onFetch={props.onFetch}
                 />
             </div>
         </ItemCommentsContextProvider>

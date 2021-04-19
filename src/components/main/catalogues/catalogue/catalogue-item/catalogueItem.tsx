@@ -4,7 +4,7 @@ import styles from './catalogueItem.scss'
 //Redux
 import { CHANGE_FAVOURITE_ITEM, CLEAR_ITEM_ERROR } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, currentUserCatalogueSelector, itemSelector, userSelector } from 'store/selectors'
+import { catalogueSelector, itemSelector, userSelector } from 'store/selectors'
 //Types
 import { DeserializedItemData } from 'src/globalTypes'
 //Hooks and utils
@@ -13,7 +13,6 @@ import { useFirstRender } from 'src/hooks/useFirstRender'
 //Components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'
-import Loader from 'components/global-components/loader/loader'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import ImagesPreview from './images-preview/imagesPreview'
 import ItemData from './item-data/itemData'
@@ -28,21 +27,23 @@ type Props = {
     itemData: DeserializedItemData,
     isNarrow: boolean,
     className?: string,
+    onAddComment: (text: string, parentId?: number) => void,
+    onFetchComments: (page: number | null) => void,
 }
 
 const cx = classNames.bind(styles)
 
 const CatalogueItem: React.ForwardRefRenderFunction<
-    HTMLLIElement,
+    HTMLDivElement,
     Props
 > = (props, ref) => {
     const { itemData, isNarrow, className } = props
     const dispatch = useAppDispatch()
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const item = useTypedSelector(itemSelector(itemData.id))
     const user = useTypedSelector(userSelector(item.createdBy))
     const catalogue = useTypedSelector(catalogueSelector(item.catalogueId))
-    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
-    const itemRef = useRef<HTMLLIElement>()
+    const itemRef = useRef<HTMLDivElement>()
     const [showImagesPreview, setShowImagesPreview] = useState(false)
     const firstRender = useFirstRender()
 
@@ -67,7 +68,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         dispatch(CLEAR_ITEM_ERROR(item.id))
     }
 
-    const isImagesPreviewAllowed = item.images.length && !isNarrow
+    const isImagesPreviewAllowed = item.images.length && largeViewport
     const showImagesCounter = item.images.length > 1
     const error = itemData.itemError
 
@@ -80,7 +81,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
     )
 
     return (
-        <li className={itemClass} ref={mergeRefs([ref, itemRef])}>
+        <div className={itemClass} ref={mergeRefs([ref, itemRef])}>
             {itemData.isEditing
                 ? (
                     <EditItem
@@ -128,22 +129,22 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                 className={styles.itemData}
                                 item={item}
                             />
-                            {catalogueData.isFetchingFields
-                                ? <Loader />
-                                : (
-                                    <ItemFields
-                                        className={styles.itemFields}
-                                        item={item}
-                                    />
-                                )
-                            }
+                            <ItemFields
+                                className={styles.itemFields}
+                                item={item}
+                            />
                         </div>
                     </div>
                     <ItemComments
                         className={styles.itemComments}
                         itemId={item.id}
+                        images={item.images}
                         commentsData={itemData.commentsData}
+                        isPostingComment={itemData.isPostingComment}
+                        isFetchingComments={itemData.isFetchingComments}
                         canComment={item.permissions.canComment}
+                        onAdd={props.onAddComment}
+                        onFetch={props.onFetchComments}
                     />
                 </>
             }
@@ -158,7 +159,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 message={error?.message || ''}
                 onConfirm={clearError}
             />
-        </li>
+        </div>
     )
 }
 

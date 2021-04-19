@@ -1,66 +1,89 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './latestFromFavourites.scss'
 //Redux
-import { useTypedSelector } from 'store/storeConfig'
-//Custon hooks and utils
-import { useElementInView } from 'src/hooks/useElementInView'
-//Custom components
-import Button from 'components/global-components/button/button'
+import {
+    FETCH_LFF, FETCH_LFF_ITEM_COMMENTS, POST_LFF_ITEM_COMMENT
+} from 'store/modules/auth-user-dashboard/latestFromFavourites/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Components
 import Column from '../column/column'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
+import Loader from 'components/global-components/loader/loader'
+import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 
 const LatestFromFavourites = () => {
-    const items = useTypedSelector(state => state.entities.items.entities)
-    const itemsData = useTypedSelector(state => state.modules.currentUserItems.itemsData)
+    const dispatch = useAppDispatch()
+    const latestFromFavourites = useTypedSelector(state => state.modules.authUserDashboard.latestFromFavourites)
+    const itemsData = latestFromFavourites.itemsData
+
+    useEffect(() => {
+        fetchItems()
+    }, [])
     
-    const fetchLatestFromFav = (page: number) => {
-    
+    const fetchItems = () => {
+        dispatch(FETCH_LFF(itemsData.next || 1))
     }
 
-    const handleIntersecting = (isIntersecting: boolean) => {
-        if (isIntersecting && itemsData.next && itemsData.next > 2) {
-            fetchLatestFromFav(itemsData.next)
+    const itemsComponents = itemsData.results.map((item, i) => {
+        const handleAddComment = (text: string, parentId?: number) => {
+            dispatch(POST_LFF_ITEM_COMMENT({
+                itemId: item.id,
+                text,
+                parentId,
+            }))
         }
-    }
 
-    const thirdFromTheEndRef = useElementInView(handleIntersecting)
+        const handleFetchComments = (page: number | null) => {
+            dispatch(FETCH_LFF_ITEM_COMMENTS({
+                itemId: item.id,
+                page,
+            }))
+        }
 
+        let renderQty = itemsData.results.length
 
-    const handleSeeMoreClick = () => {
-        fetchLatestFromFav(2)
-    }
+        if (latestFromFavourites.isFetchingItems && itemsData.current) {
+            renderQty = itemsData.current * 10
+        }
+        if (latestFromFavourites.isFetchingData && !latestFromFavourites.isFetchingItems && itemsData.current) {
+            renderQty = (itemsData.current - 1) * 10
+        }
 
-    const itemsComponents = itemsData.results.map((c, i) => {
-        const ref = i === itemsData.results.length - 2 ? thirdFromTheEndRef : null
+        if (i >= renderQty) {
+            return
+        }
+
         return (
             <CatalogueItem
                 className={styles.item}
-                itemData={c}
+                itemData={item}
                 isNarrow={true}
-                key={c.id}
-                ref={ref}
+                key={item.id}
+                onAddComment={handleAddComment}
+                onFetchComments={handleFetchComments}
             />
         )
     })
+
+    if (latestFromFavourites.isFetchingData && !itemsData.results.length) {
+        return <Loader className={styles.loader} />
+    }
 
     return (
         <Column
             className={styles.latestFromFavourites}
             title="Latest from favourites"
         >
-            {itemsData.results.length > 0 && 
-                <ul>
-                    {itemsComponents}
-                </ul>
-            }
-            {itemsData.next === 2 && (
-                <Button
-                    className={styles.button}
-                    onClick={handleSeeMoreClick}
-                >
-                    See more
-                </Button>
-            )}
+            <PaginatedList
+                next={itemsData.next}
+                buttonChild="See more"
+                isFetching={latestFromFavourites.isFetchingData}
+                fetchOnButtonClick="once"
+                intersectingElement={3}
+                onLoadMore={fetchItems}
+            >
+                {itemsComponents}
+            </PaginatedList>
         </Column>
     )
 }
