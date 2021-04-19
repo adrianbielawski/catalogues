@@ -1,6 +1,7 @@
 import React from 'react'
 import { useHistory } from 'react-router'
 import moment from 'moment'
+import classNames from 'classnames/bind'
 import styles from './catalogueCard.scss'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
@@ -15,7 +16,10 @@ const BASE_URL = process.env.API_URL
 
 type Props = {
     catalogue: DeserializedCatalogue,
+    className?: string,
 }
+
+const cx = classNames.bind(styles)
 
 const CatalogueCard: React.ForwardRefRenderFunction<
     HTMLDivElement,
@@ -33,8 +37,13 @@ const CatalogueCard: React.ForwardRefRenderFunction<
         history.push(`/${user.username}`)
     }
 
+    const catalogueCardClass = cx(
+        'catalogueCard',
+        props.className,
+    )
+
     return (
-        <div className={styles.catalogueCard} ref={ref}>
+        <div className={catalogueCardClass} ref={ref}>
             <p
                 className={styles.header}
                 onClick={redirectToCatalogue}

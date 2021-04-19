@@ -107,7 +107,7 @@ export const fetchLFFFieldsEpic = (
     withLatestFrom(state$.pipe(pluck('entities', 'fields', 'entities'))),
     mergeMap(([action, fields]) => {
         const cataloguesIds = Array.from(new Set(Object.values(fields).map(f => f!.catalogueId)))
-        const filteredIds = action.payload.filter(id => !cataloguesIds.includes(id) && id !== 185)
+        const filteredIds = action.payload.filter(id => !cataloguesIds.includes(id))
 
         if (filteredIds.length === 0) {
             return of(actions.LFF_FIELDS_NOT_NEEDED())

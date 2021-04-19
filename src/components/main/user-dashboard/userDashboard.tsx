@@ -11,7 +11,7 @@ import Header from 'components/global-components/header/header'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import Columns from 'components/global-components/columns/columns'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import RecomendedCatalogues from './recomended-catalogues/recomendedCatalogues'
+import RecommendedCatalogues from './recommended-catalogues/recommendedCatalogues'
 import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
 
 const UserDashboard = () => {
@@ -50,8 +50,8 @@ const UserDashboard = () => {
 
     const COLUMNS = [
         {
-            title: 'Recomended catalogues',
-            component: <RecomendedCatalogues />
+            title: 'Recommended catalogues',
+            component: <RecommendedCatalogues />
         },
         {
             title: 'Latest from favourites',

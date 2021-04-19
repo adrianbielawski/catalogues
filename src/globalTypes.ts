@@ -148,8 +148,8 @@ export interface ChoiceFieldsData<C> extends FieldsData {
     choices: C[],
 }
 
-export interface RecomendedCatalogues extends ListData<Catalogue> { }
-export interface DeserializedRecomendedCatalogues extends DeserializedListData<DeserializedCatalogue> {
+export interface RecommendedCatalogues extends ListData<Catalogue> { }
+export interface DeserializedRecommendedCatalogues extends DeserializedListData<DeserializedCatalogue> {
     fetchingCatalogues: boolean,
 }
 

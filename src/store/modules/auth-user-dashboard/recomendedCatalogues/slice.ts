@@ -4,7 +4,7 @@ import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as reducers from './reducers'
 import { listData } from 'src/constants'
 
-const initialState: T.RecomendedCataloguesState = {
+const initialState: T.RecommendedCataloguesState = {
     cataloguesData: {
         ...listData
     },
@@ -13,10 +13,10 @@ const initialState: T.RecomendedCataloguesState = {
 }
 
 export const recomendedCataloguesSlice = createSlice({
-    name: 'RECOMENDED_CATALOGUES',
+    name: 'RECOMMENDED_CATALOGUES',
     initialState,
     reducers: {
-        ...reducers.fetchRecomendedCatalogues,
+        ...reducers.fetchRecommendedCatalogues,
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -24,5 +24,5 @@ export const recomendedCataloguesSlice = createSlice({
 })
 
 export const {
-    FETCH_RECOMENDED_CATALOGUES, FETCH_RECOMENDED_CATALOGUES_START, FETCH_RECOMENDED_CATALOGUES_SUCCESS, FETCH_RECOMENDED_CATALOGUES_FAILURE,
+    FETCH_RECOMMENDED_CATALOGUES, FETCH_RECOMMENDED_CATALOGUES_START, FETCH_RECOMMENDED_CATALOGUES_SUCCESS, FETCH_RECOMMENDED_CATALOGUES_FAILURE,
 } = recomendedCataloguesSlice.actions
