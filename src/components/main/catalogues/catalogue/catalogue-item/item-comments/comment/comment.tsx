@@ -28,7 +28,7 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Comment: React.ForwardRefRenderFunction<
-    HTMLLIElement,
+    HTMLDivElement,
     Props
 > = (props, ref) => {
     const { comment } = props
@@ -110,7 +110,7 @@ const Comment: React.ForwardRefRenderFunction<
     )
 
     return (
-        <li
+        <div
             className={commentClass}
             ref={ref}
         >
@@ -144,7 +144,7 @@ const Comment: React.ForwardRefRenderFunction<
                 </div>
             </div>
             {getChildren()}
-        </li>
+        </div>
     )
 }
 

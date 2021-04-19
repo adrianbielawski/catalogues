@@ -13,7 +13,7 @@ export const modules = combineReducers({
     authUser: authUserSlice.reducer,
     authUserCatalogues: authUserCataloguesSlice.reducer,
     authUserFavoirites: authUserFavouritesSlice.reducer,
-    authUserDashboard: authUserDashboardSlice.reducer,
+    authUserDashboard: authUserDashboardSlice,
     currentUser: currentUserSlice.reducer,
     currentUserCatalogues: currentUserCataloguesSlice.reducer,
     currentUserItems: currentUserItemsSlice.reducer,

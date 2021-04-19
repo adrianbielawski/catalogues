@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './recomendedCatalogues.scss'
 //Redux
-import { FETCH_RECOMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/slice'
+import { FETCH_RECOMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/recomendedCatalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Hooks and utils
 import { useElementInView } from 'src/hooks/useElementInView'
@@ -13,7 +13,7 @@ import Column from '../column/column'
 const RecomendedCatalogues = () => {
     const dispatch = useAppDispatch()
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
-    const recomended = useTypedSelector(state => state.modules.authUserDashboard.recomendedCataloguesData)
+    const recomended = useTypedSelector(state => state.modules.authUserDashboard.recomendedCatalogues.cataloguesData)
 
     const handleIntersecting = (isIntersecting: boolean) => {
         if (isIntersecting && recomended.next && recomended.next > 2) {

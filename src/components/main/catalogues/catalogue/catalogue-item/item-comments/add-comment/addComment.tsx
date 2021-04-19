@@ -6,9 +6,6 @@ import classNames from 'classnames/bind'
 import styles from './addComment.scss'
 //Utils
 import { confirmOnEnter } from 'src/utils'
-//Redux
-import { itemDataSelector } from 'store/selectors'
-import { useTypedSelector } from 'store/storeConfig'
 //Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
 //Components
@@ -17,6 +14,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 
 type Props = {
     itemId: number,
+    isPostingComment: boolean,
     className?: string,
     onAdd: (text: string, parentId?: number) => void
 }
@@ -25,7 +23,6 @@ const cx = classNames.bind(styles)
 
 const AddComment = (props: Props) => {
     const { replyTo, clearReplyTo } = useContext(ItemCommentsContext)
-    const isPosting = useTypedSelector(itemDataSelector(props.itemId)).isPostingComment
     const inputRef = useRef<HTMLInputElement>(null)
     const [comment, setComment] = useState('')
 
@@ -36,12 +33,12 @@ const AddComment = (props: Props) => {
     }, [replyTo])
 
     useEffect(() => {
-        if (!isPosting && inputRef.current) {
+        if (!props.isPostingComment && inputRef.current) {
             inputRef.current.value = ''
             setComment('')
             clearReplyTo()
         }
-    }, [isPosting])
+    }, [props.isPostingComment])
 
     const handleChange = () => {
         setComment(inputRef.current!.value)
@@ -67,6 +64,8 @@ const AddComment = (props: Props) => {
         props.className,
     )
 
+    const placeholder = replyTo?.id ? `Reply to ${replyTo.username}` : 'Add comment'
+
     return (
         <div className={addCommentClass}>
             <TransparentButton
@@ -79,7 +78,7 @@ const AddComment = (props: Props) => {
             </TransparentButton>
             <Input
                 className={styles.input}
-                placeholder={replyTo?.id ? `Reply to ${replyTo.username}` : 'Add comment'}
+                placeholder={placeholder}
                 ref={inputRef}
                 onChange={handleChange}
             />

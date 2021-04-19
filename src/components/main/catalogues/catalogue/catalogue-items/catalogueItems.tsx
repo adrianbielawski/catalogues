@@ -7,12 +7,11 @@ import styles from './catalogueItems.scss'
 import { LocationState } from 'src/globalTypes'
 //Redux
 import {
-    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, FETCH_CURRENT_USER_ITEMS
+    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, FETCH_CURRENT_USER_ITEMS, FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT
 } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector } from 'store/selectors'
+import { catalogueSelector, currentUserCatalogueSelector } from 'store/selectors'
 //Hooks
-import { useElementInView } from 'src/hooks/useElementInView'
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
 import { scrollTop } from 'src/utils'
@@ -21,11 +20,11 @@ import queryBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/
 //Components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
-import Button from 'components/global-components/button/button'
 import AddButton from 'components/global-components/add-button/addButton'
 import FixedAddButton from 'components/global-components/fixed-add-button/FixedAddButton'
 import NewItemModal from './new-item-modal/newItemModal'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 
 type Props = {
     catalogueId: number,
@@ -41,15 +40,8 @@ const CatalogueItems = (props: Props) => {
     const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
     const itemsData = currentUserItems.itemsData
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
+    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
     const filtersBarContext = useFiltersBarContext()
-
-    const handleIntersecting = (isIntersecting: boolean) => {
-        if (isIntersecting && itemsData.next && itemsData.next > 2) {
-            fetchItems()
-        }
-    }
-
-    const thirdFromTheEndRef = useElementInView(handleIntersecting)
 
     useEffect(() => {
         const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
@@ -77,7 +69,7 @@ const CatalogueItems = (props: Props) => {
 
     useEffect(() => {
         if (!filtersBarContext.filtersBar.isInitialized) return
-        fetchItems(1)
+        fetchItems()
         scrollTop()
     }, [
         filtersBarContext.searchContext.search,
@@ -107,18 +99,29 @@ const CatalogueItems = (props: Props) => {
         }))
     }
 
-    const handleMoreItemsClick = () => {
-        fetchItems()
-    }
+    const getItems = () => itemsData.results.map(itemData => {
+        const handleAddComment = (text: string, parentId?: number) => {
+            dispatch(POST_ITEM_COMMENT({
+                itemId: itemData.id,
+                text,
+                parentId,
+            }))
+        }
 
-    const getItems = () => itemsData.results.map((itemData, i) => {
-        const ref = i === itemsData.results.length - 2 ? thirdFromTheEndRef : null
+        const handleFetchComments = (page: number | null) => {
+            dispatch(FETCH_ITEM_COMMENTS({
+                itemId: itemData.id,
+                page,
+            }))
+        }
+
         return (
             <CatalogueItem
                 itemData={itemData}
                 isNarrow={!largeViewport}
                 key={itemData.id}
-                ref={ref}
+                onAddComment={handleAddComment}
+                onFetchComments={handleFetchComments}
             />
         )
     })
@@ -142,7 +145,7 @@ const CatalogueItems = (props: Props) => {
         if (currentUserItems.isCreatingNewItem) {
             return
         }
-        
+
         return (
             <div className={styles.noItemsFound}>
                 <p>No items found</p>
@@ -179,7 +182,10 @@ const CatalogueItems = (props: Props) => {
         },
     )
 
-    if (currentUserItems.isFetchingItems && !itemsData.results?.length) {
+    if (catalogueData.isFetchingFields
+        || catalogueData.isFetchingFieldsChoices
+        || (currentUserItems.isFetchingItems && !itemsData.results?.length)
+    ) {
         return <Loader className={styles.loader} />
     }
 
@@ -187,7 +193,6 @@ const CatalogueItems = (props: Props) => {
     const isItemInCatalogue = catalogue.itemsRanges.date.min
     const isSearchResult = isItemInCatalogue && location.search.length !== 0 && itemsData.results.length === 0
     const showAddItemButton = isItemInCatalogue && !currentUserItems.newItemId && !currentUserItems.isCreatingNewItem
-    const showButton = !currentUserItems.isFetchingItems && itemsData.next && itemsData.next === 2
 
     return (
         <div className={itemsClass}>
@@ -197,20 +202,16 @@ const CatalogueItems = (props: Props) => {
             }
             {!isItemInCatalogue && getNoItemsMessage()}
             {isSearchResult && getNoItemsFoundMessage()}
-            <ul>
+            <PaginatedList
+                next={itemsData.next}
+                buttonChild="See more"
+                isFetching={currentUserItems.isFetchingItems}
+                fetchOnButtonClick="once"
+                intersectingElement={3}
+                onLoadMore={fetchItems}
+            >
                 {getItems()}
-            </ul>
-            {currentUserItems.isFetchingItems &&
-                <Loader className={styles.loader} />
-            }
-            {showButton &&
-                <Button
-                    className={styles.seeMoreButton}
-                    onClick={handleMoreItemsClick}
-                >
-                    See more
-                </Button>
-            }
+            </PaginatedList>
             <NewItemModal />
             <MessageModal
                 show={error !== null}
