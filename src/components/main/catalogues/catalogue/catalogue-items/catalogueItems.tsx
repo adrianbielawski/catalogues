@@ -39,7 +39,7 @@ const CatalogueItems = (props: Props) => {
     const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
     const itemsData = currentUserItems.itemsData
-    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId!))
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
     const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
     const filtersBarContext = useFiltersBarContext()
 

@@ -24,12 +24,13 @@ const CommentChildren = (props: Props) => {
     }
 
     const children = props.children.map(child => (
-        <Comment
-            comment={child}
-            canComment={props.canComment}
-            isChild={true}
-            key={child.id}
-        />
+        <li key={child.id}>
+            <Comment
+                comment={child}
+                canComment={props.canComment}
+                isChild={true}
+            />
+        </li>
     ))
 
     const commentClass = cx(

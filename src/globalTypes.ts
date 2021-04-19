@@ -57,19 +57,17 @@ export interface DeserializedListData<R> {
 export interface User {
     id: number,
     username: string,
-    email: string,
+    email?: string,
     image: string,
     image_thumbnail: string,
-    is_anonymous: boolean,
 }
 
 export interface DeserializedUser {
     id: number,
     username: string,
-    email: string,
+    email?: string,
     image: string,
     imageThumbnail: string,
-    isAnonymous: boolean,
 }
 
 //Catalogues
@@ -242,27 +240,13 @@ export interface DeserializedItemRating {
     currentUser: number | null,
 }
 
-export interface ItemCommentCreatedBy {
-    id: number,
-    username: string,
-    image: string,
-    image_thumbnail: string,
-}
-
-export interface DeserializedItemCommentCreatedBy {
-    id: number,
-    username: string,
-    image: string,
-    imageThumbnail: string,
-}
-
 export type ItemCommentChild = Omit<ItemCommentParent, 'children'>
 export type DeserializedItemCommentChild = Omit<DeserializedItemCommentParent, 'children'>
 
 export interface ItemCommentParent {
     id: number,
     item_id: number,
-    created_by: ItemCommentCreatedBy,
+    created_by: User,
     created_at: string,
     text: string,
     children: ItemCommentChild[],
