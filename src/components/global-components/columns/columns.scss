@@ -23,20 +23,17 @@
     .columns {
         display: grid;
         min-width: 100%;
-        overflow: hidden;
-        height: unset;
-        min-height: calc(100vh - 95px);
         padding: 0;
         .column {
             grid-area: 1 / -1;
             min-width: 100%;
             height: unset;
-            min-height: calc(100% - 95px);
+            max-height: calc(100vh - 95px);
             margin: 0;
             .wrapper {
                 transition: .2s;
                 box-shadow: none;
-                transform: translate3d(calc((var(--offset) * 100%)), calc((var(--offset) * 100%)), 1);
+                transform: translate3d(calc((var(--offset) * 100%)), 0, 0);
                 min-height: 100%;
             }
         }

@@ -135,12 +135,11 @@ const Columns = (props: Props) => {
         <li
             className={styles.column}
             key={i}
-            style={{
-                '--count': `${count}`,
-                '--offset': `${getOffset(i)}`,
-            } as React.CSSProperties}
         >
-            <div className={wrapperClass}>
+            <div className={wrapperClass}
+            style={{
+                '--offset': `${getOffset(i)}`,
+            } as React.CSSProperties}>
                 {column.component}
             </div>
         </li>
@@ -150,9 +149,6 @@ const Columns = (props: Props) => {
         <ul
             className={columnsClass}
             ref={count > 1 ? columnsRef : null}
-            style={{
-                '--count': `${props.columns.length}`,
-            } as React.CSSProperties}
         >
             {COLUMNS}
         </ul>
