@@ -69,7 +69,7 @@ const CatalogueItems = (props: Props) => {
 
     useEffect(() => {
         if (!filtersBarContext.filtersBar.isInitialized) return
-        fetchItems()
+        fetchItems(1)
         scrollTop()
     }, [
         filtersBarContext.searchContext.search,
