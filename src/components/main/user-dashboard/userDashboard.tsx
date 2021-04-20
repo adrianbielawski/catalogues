@@ -13,6 +13,7 @@ import Columns from 'components/global-components/columns/columns'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import RecommendedCatalogues from './recommended-catalogues/recommendedCatalogues'
 import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
+import TopItems from './top-items/topItems'
 
 const UserDashboard = () => {
     const userDashboardRef = useRef<HTMLDivElement>(null)
@@ -56,6 +57,10 @@ const UserDashboard = () => {
         {
             title: 'Latest from favourites',
             component: <LatestFromFavourites />
+        },
+        {
+            title: 'Highest rated',
+            component: <TopItems />
         },
     ]
 
