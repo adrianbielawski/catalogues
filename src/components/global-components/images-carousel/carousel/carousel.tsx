@@ -98,7 +98,7 @@ const Carousel = (props: Props) => {
 
         let styles = {
             scale: i === current ? MAX_SCALE : MIN_SCALE,
-            offset: `${offset * (i - current)}px`,
+            offset: offset ? `${offset * (i - current)}px` : null,
         }
 
         if (swipeX) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
@@ -12,7 +12,7 @@ import PrimaryImageStar from '../primary-image-star/primaryImageStar'
 const BASE_URL = process.env.API_URL
 
 type Props = {
-    offset: string,
+    offset: string | null,
     scale: number,
     image: DeserializedImage,
     singleView?: boolean,
@@ -27,6 +27,15 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const CarouselItem = (props: Props) => {
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        if (props.offset) {
+            setMounted(true)
+        }
+    }, [props.offset])
+
+
     const onPrimaryChange = () => {
         if (props.onPrimaryChange !== undefined) {
             props.onPrimaryChange()
@@ -43,10 +52,15 @@ const CarouselItem = (props: Props) => {
     const carouselItemClass = cx(
         'carouselItem',
         {
+            mounted,
             singleView: props.singleView,
             withShadow: props.withShadow,
         }
     )
+
+    if (!props.offset) {
+        return null
+    }
 
     return (
         <div
