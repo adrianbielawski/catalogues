@@ -1,7 +1,8 @@
-import React, { PropsWithChildren, useEffect } from 'react'
+import React, { PropsWithChildren } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sideBar.scss'
 import { useTypedSelector } from 'store/storeConfig'
+import { useDisableScroll } from 'src/hooks/useDisableScroll'
 
 type SlideDirection = 'right' | 'left'
 
@@ -28,15 +29,7 @@ const cx = classNames.bind(styles)
 
 const SideBar = (props: Props) => {
     const screenHeight = useTypedSelector(state => state.modules.app.screenHeight)
-
-    useEffect(() => {
-        const body = document.getElementsByTagName('body')[0]
-        if (props.active) {
-            body.style.overflow = 'hidden'
-        } else {
-            body.style.overflow = ''
-        }
-    }, [props.active])
+    useDisableScroll(props.active)
 
     const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
         if (props.mobile) {

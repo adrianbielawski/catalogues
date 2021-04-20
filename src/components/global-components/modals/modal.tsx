@@ -1,7 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import classNames from 'classnames/bind';
-import styles from './modal.scss';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import classNames from 'classnames/bind'
+import styles from './modal.scss'
+//Hooks
+import { useDisableScroll } from 'src/hooks/useDisableScroll'
 
 type Props = {
     show: boolean,
@@ -13,6 +15,8 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Modal = (props: Props) => {
+    useDisableScroll(props.show)
+
     const modalClass = cx(
         'modal',
         props.className,
