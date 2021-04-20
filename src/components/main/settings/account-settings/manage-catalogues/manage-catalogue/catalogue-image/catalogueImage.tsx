@@ -1,5 +1,7 @@
 import React, { useRef } from 'react'
 import styles from './catalogueImage.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
@@ -9,8 +11,6 @@ import { authUserCatalogueSelector } from 'store/selectors'
 //Components
 import Loader from 'components/global-components/loader/loader'
 import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
-
-const BASE_URL = process.env.API_URL
 
 interface Event<T = EventTarget> {
     target: T;

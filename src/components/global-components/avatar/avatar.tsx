@@ -3,8 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './avatar.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-
-const BASE_URL = process.env.API_URL
+import { BASE_URL } from 'src/constants'
 
 type Props = {
     url?: string,

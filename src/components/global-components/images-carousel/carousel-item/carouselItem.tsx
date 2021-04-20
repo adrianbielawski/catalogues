@@ -3,13 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './carouselItem.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import PrimaryImageStar from '../primary-image-star/primaryImageStar'
-
-const BASE_URL = process.env.API_URL
 
 type Props = {
     offset: string | null,

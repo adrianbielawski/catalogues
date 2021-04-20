@@ -3,6 +3,8 @@ import { useHistory } from 'react-router'
 import moment from 'moment'
 import classNames from 'classnames/bind'
 import styles from './catalogueCard.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Redux
@@ -11,8 +13,6 @@ import { userSelector } from 'store/selectors'
 //Custom components
 import Avatar from '../avatar/avatar'
 import NoImageIcon from '../no-image-icon/noImageIcon'
-
-const BASE_URL = process.env.API_URL
 
 type Props = {
     catalogue: DeserializedCatalogue,
