@@ -65,7 +65,6 @@ export const fetchTopItemsItemsCommentsEpic = (action$: Observable<Action>) => a
     filter(actions.FETCH_TOP_ITEMS_SUCCESS.match),
     mergeMap(action => {
         const items = action.payload.results
-        console.log(items)
 
         const requests = Object.fromEntries(
             items.map(item => [

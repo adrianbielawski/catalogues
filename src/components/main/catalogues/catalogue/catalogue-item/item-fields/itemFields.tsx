@@ -7,25 +7,24 @@ import Field from './field/field'
 
 type Props = {
     item: DeserializedItem,
+    isNarrow: boolean,
     className?: string,
 }
 
 const ItemFields = (props: Props) => {
-    const maxHeight = 55
+    const maxHeight = props.isNarrow ? 55 : 106
     const itemsProps = { catalogueId: props.item.catalogueId }
 
     return (
         <div className={props.className}>
             <CollapsableList >
-                <>
-                    <CollapsableList.List
-                        items={props.item.fieldsValues}
-                        itemsProps={itemsProps}
-                        maxHeight={maxHeight}
-                        itemComponent={Field}
-                    />
-                    <CollapsableList.Button />
-                </>
+                <CollapsableList.List
+                    items={props.item.fieldsValues}
+                    itemsProps={itemsProps}
+                    maxHeight={maxHeight}
+                    itemComponent={Field}
+                />
+                <CollapsableList.Button />
             </CollapsableList>
         </div>
     )

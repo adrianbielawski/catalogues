@@ -30,16 +30,18 @@ export interface State {
     collapsedHeight: number,
     showButton: boolean,
     itemsInspected: boolean,
+    overflowInspected: boolean,
     dispatch: Dispatch<Action>,
 }
 
 export const initialState = {
-    showAllItems: false,
+    showAllItems: true,
     itemsInView: 0,
     totalHeight: 0,
     collapsedHeight: 0,
     showButton: false,
     itemsInspected: false,
+    overflowInspected: false,
     dispatch: () => null
 }
 
@@ -60,6 +62,8 @@ export const reducer = (state: Draft<State>, action: Action) => {
 
         case 'OVERFLOW_INSPECTED':
             state.showButton = state.collapsedHeight < state.totalHeight || action.hasOverflow
+            state.showAllItems = false
+            state.overflowInspected = true
             break
             
         default:

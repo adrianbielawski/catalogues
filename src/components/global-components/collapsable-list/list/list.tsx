@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useContext } from 'react'
-import styles from './list.scss'
+import React, { useEffect, useRef, useContext, useState } from 'react'
 //Contexts
 import { ListContext } from '../listStore'
 //Components
 import Item from '../item/item'
+import AnimateHeight from 'react-animate-height'
+import { clamp } from 'lodash'
 
 type ItemType = {}
 
@@ -15,14 +16,28 @@ type Props = {
 }
 
 const ITEM_MARGIN = 5
+const ITEM_HEIGHT = 21.34 + ITEM_MARGIN
 
 const List = (props: Props) => {
     const { dispatch, ...state } = useContext(ListContext)
     const listRef = useRef<HTMLUListElement>(null)
+    const [duration, setDuration] = useState(0)
 
     useEffect(() => {
         inspectItemsHeight()
     }, [props.items])
+
+    useEffect(() => {
+        if (state.overflowInspected) {
+            const newDuration = clamp(
+                Math.floor((state.totalHeight - state.collapsedHeight) * 3),
+                200,
+                400
+            )
+
+            setTimeout(() => setDuration(newDuration), 400)
+        }
+    }, [state.overflowInspected])
 
     useEffect(() => {
         if (state.itemsInspected) {
@@ -40,9 +55,9 @@ const List = (props: Props) => {
         for (let item of Array.from(items)) {
             totalHeight += item.getBoundingClientRect().height + ITEM_MARGIN
 
-            if (totalHeight <= props.maxHeight) {
+            if (collapsedHeight + ITEM_HEIGHT <= props.maxHeight) {
                 itemsInView++
-                collapsedHeight = totalHeight
+                collapsedHeight += ITEM_HEIGHT
             }
         }
 
@@ -81,23 +96,18 @@ const List = (props: Props) => {
             />
         ))
     }
-
-    const getDynamicStyles = () => {
-        if (state.showAllItems) {
-            return { maxHeight: state.totalHeight }
-        } else {
-            return { maxHeight: state.collapsedHeight }
-        }
-    }
-
     return (
-        <ul
-            className={styles.list}
-            style={getDynamicStyles()}
-            ref={listRef}
+        <AnimateHeight
+            height={state.showAllItems ? 'auto' : state.collapsedHeight}
+            duration={duration}
         >
-            {getItems()}
-        </ul>
+            <ul
+                style={{ height: state.totalHeight }}
+                ref={listRef}
+            >
+                {getItems()}
+            </ul>
+        </AnimateHeight>
     )
 }
 

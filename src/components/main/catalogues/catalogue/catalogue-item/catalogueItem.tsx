@@ -132,6 +132,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                             <ItemFields
                                 className={styles.itemFields}
                                 item={item}
+                                isNarrow={props.isNarrow}
                             />
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { useImmerReducer } from 'use-immer'
 //Contexts
 import { ListContext, reducer, initialState } from './listStore'
@@ -7,7 +7,7 @@ import List from './list/list'
 import Button from './button/button'
 
 type Props = {
-    children: React.ComponentType<any> | JSX.Element,
+    children: ReactNode,
     className?: string,
 }
 
