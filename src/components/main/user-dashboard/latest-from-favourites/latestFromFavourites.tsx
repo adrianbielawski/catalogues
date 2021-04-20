@@ -3,7 +3,7 @@ import styles from './latestFromFavourites.scss'
 //Redux
 import {
     FETCH_LFF, FETCH_LFF_ITEM_COMMENTS, POST_LFF_ITEM_COMMENT
-} from 'store/modules/auth-user-dashboard/latestFromFavourites/slice'
+} from 'store/modules/auth-user-dashboard/latest-from-favourites/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import Column from '../column/column'

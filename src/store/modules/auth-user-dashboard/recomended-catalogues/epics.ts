@@ -1,16 +1,12 @@
 import { combineEpics } from "redux-observable"
 import { concat, of, Observable, forkJoin } from 'rxjs'
-import { catchError, switchMap, filter, mergeMap, withLatestFrom, pluck, map, defaultIfEmpty } from 'rxjs/operators'
+import { catchError, switchMap, filter, mergeMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-//Types
-import { RootState } from "store/storeConfig"
 //Actions
 import * as actions from "./slice"
 import * as usersActions from "store/entities/users/slice"
 import * as cataloguesEntitiesActions from "store/entities/catalogues/slice"
-import * as fieldsEntitiesActions from "store/entities/fields/slice"
-import * as choicesEntitiesActions from "store/entities/choices/slice"
 import { Catalogue, User } from "src/globalTypes"
 
 export const fetchRecommendedCataloguesEpic = (action$: Observable<Action>) => action$.pipe(
@@ -37,6 +33,4 @@ export const fetchRecommendedCataloguesEpic = (action$: Observable<Action>) => a
 
 export const recomendedCataloguesEpics = combineEpics(
     fetchRecommendedCataloguesEpic,
-    // fetchRecommendedCataloguesFieldsEpic,
-    // fetchRecommendedCataloguesChoicesEpic,
 )

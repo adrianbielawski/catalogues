@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './recommendedCatalogues.scss'
 //Redux
-import { FETCH_RECOMMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/recomendedCatalogues/slice'
+import { FETCH_RECOMMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/recomended-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'

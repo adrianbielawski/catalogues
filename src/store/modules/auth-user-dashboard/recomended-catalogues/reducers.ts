@@ -1,6 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { networkError } from 'src/constants'
-import { Catalogue, Field, ListData } from 'src/globalTypes'
+import { Catalogue, ListData } from 'src/globalTypes'
 import { catalogueDeserializer, listDeserializer } from 'src/serializers'
 import * as T from './types'
 
