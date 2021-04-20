@@ -9,9 +9,9 @@ import { axiosInstance$ } from "src/axiosInstance"
 //Store observables
 import { retry$ } from "store/storeObservables"
 //Serializers
-import { itemFieldSerializer, itemRatingDeserializer } from "src/serializers"
+import { itemDeserializer, itemFieldSerializer, itemRatingDeserializer } from "src/serializers"
 //Types
-import { DeserializedImage, Item, ItemCommentParent, User } from "src/globalTypes"
+import { DeserializedImage, Item, ItemCommentParent } from "src/globalTypes"
 import { RootState } from "store/storeConfig"
 //Actions
 import * as actions from "./slice"
@@ -34,8 +34,11 @@ export const fetchItemEpic = (action$: Observable<Action>) => action$.pipe(
         defer(() => axiosInstance$.get(`/items/${action.payload}/`)).pipe(
             retryWhen(err => retry$(err)),
             mergeMap(response => concat(
-                of(usersActions.USER_ADDED(response.data.map((i: Item) => i.created_by))),
-                of(itemsActions.ITEM_UPDATED(response.data)),
+                of(usersActions.USER_ADDED(response.data.created_by)),
+                of(itemsActions.ITEM_UPDATED({
+                    id: response.data.id,
+                    changes: itemDeserializer(response.data)
+                })),
                 of(actions.FETCH_CURRENT_USER_ITEM_SUCCESS({
                     data: response.data,
                     itemId: action.payload,
