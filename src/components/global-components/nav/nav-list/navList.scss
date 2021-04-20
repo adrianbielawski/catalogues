@@ -10,6 +10,11 @@
     box-shadow: 1px 1px 4px $midLightGrey;
     min-width: 300px;
     box-sizing: border-box;
+    :first-child {
+        max-height: 100%;
+        overflow: scroll;
+        @include scrollY;
+    }
     &.left {
         right: unset;
         left: 5px;

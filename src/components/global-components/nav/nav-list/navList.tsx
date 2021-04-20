@@ -39,40 +39,50 @@ const NavList = (props: Props) => {
     } = useContext(NavContext)
     const app = useTypedSelector(state => state.modules.app)
 
-    const getItems = () => props.item.children.map(item => {
-        const handleItemClick = () => {
-            if ('onClick' in item && item.onClick) {
-                item.onClick()
-            }
-
-            if ('url' in item) {
-                history.push(item.url!, {
-                    referrer: {
-                        pathname: routerContext.match.path,
-                        params,
-                    }
-                })
-            }
-
-            if ('children' in item) {
-                showNestedList(item.id)
-                return
-            }
-
-            closeList()
+    const getItems = () => {
+        if (!props.item.children.length) {
+            return (
+                <p className={styles.noContent}>
+                    No content
+                </p>
+            )
         }
 
-        return (
-            <NavItem
-                className={styles.listItem}
-                item={item}
-                active={show && listId === item.id}
-                showTitle={true}
-                key={item.id}
-                onClick={handleItemClick}
-            />
-        )
-    })
+        return props.item.children.map(item => {
+            const handleItemClick = () => {
+                if ('onClick' in item && item.onClick) {
+                    item.onClick()
+                }
+
+                if ('url' in item) {
+                    history.push(item.url!, {
+                        referrer: {
+                            pathname: routerContext.match.path,
+                            params,
+                        }
+                    })
+                }
+
+                if ('children' in item) {
+                    showNestedList(item.id)
+                    return
+                }
+
+                closeList()
+            }
+
+            return (
+                <NavItem
+                    className={styles.listItem}
+                    item={item}
+                    active={show && listId === item.id}
+                    showTitle={true}
+                    key={item.id}
+                    onClick={handleItemClick}
+                />
+            )
+        })
+    }
 
     const navListClass = cx(
         'navList',
@@ -86,45 +96,36 @@ const NavList = (props: Props) => {
         : 'auto'
 
     return (
-        <div>
-            <AnimateHeight
-                className={navListClass}
-                height={show ? height : 0}
-            >
-                {listId ? (
-                    <div>
-                        <div className={styles.listHeader}>
-                            {nestedListId !== null && (
-                                <FontAwesomeIcon
-                                    icon={faArrowLeft}
-                                    className={styles.goBack}
-                                    onClick={removeNestedListId}
-                                />
-                            )}
-                            <div className={styles.wrapper}>
-                                <ItemIcon
-                                    className={styles.icon}
-                                    item={props.item}
-                                />
-                                <p>{props.item.title}</p>
-                            </div>
+        <AnimateHeight
+            className={navListClass}
+            height={show ? height : 0}
+        >
+            {listId ? (
+                <div>
+                    <div className={styles.listHeader}>
+                        {nestedListId !== null && (
+                            <FontAwesomeIcon
+                                icon={faArrowLeft}
+                                className={styles.goBack}
+                                onClick={removeNestedListId}
+                            />
+                        )}
+                        <div className={styles.wrapper}>
+                            <ItemIcon
+                                className={styles.icon}
+                                item={props.item}
+                            />
+                            <p>{props.item.title}</p>
                         </div>
-                        <ul>
-                            {props.item.children.length
-                                ? getItems()
-                                : (
-                                    <p className={styles.noContent}>
-                                        No content
-                                    </p>
-                                )
-                            }
-                        </ul>
                     </div>
-                ) : (
-                    <div></div>
-                )}
-            </AnimateHeight>
-        </div>
+                    <ul>
+                        {getItems()}
+                    </ul>
+                </div>
+            ) : (
+                <></>
+            )}
+        </AnimateHeight>
     )
 }
 
