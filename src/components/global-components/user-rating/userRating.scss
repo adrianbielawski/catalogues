@@ -11,6 +11,7 @@
 		padding: 0 2px;
 		color: $midLightGrey;
 		cursor: pointer;
+		@include resetTapHighlight;
 		&.active path {
 			stroke: $orange;
 			fill: $orange;
