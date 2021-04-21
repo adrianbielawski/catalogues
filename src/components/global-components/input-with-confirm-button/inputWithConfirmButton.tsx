@@ -32,6 +32,7 @@ const InputWithConfirmButton: React.ForwardRefRenderFunction<
         onConfirm(inputRef.current!.value)
         if (props.clearOnConfirm) {
             inputRef.current!.value = ''
+            inputRef.current?.focus()
         }
     }
     confirmOnEnter(inputRef, handleConfirm)
