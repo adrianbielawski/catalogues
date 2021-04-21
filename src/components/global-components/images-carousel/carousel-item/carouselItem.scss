@@ -9,10 +9,7 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
-
-    &.mounted {
-        transition: all 0.3s;
-    }
+    transition: all 0.3s;
 
     &.singleView {
         width: 100%;

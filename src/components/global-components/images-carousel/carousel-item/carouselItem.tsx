@@ -27,15 +27,6 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const CarouselItem = (props: Props) => {
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        if (props.offset) {
-            setMounted(true)
-        }
-    }, [props.offset])
-
-
     const onPrimaryChange = () => {
         if (props.onPrimaryChange !== undefined) {
             props.onPrimaryChange()
@@ -52,7 +43,6 @@ const CarouselItem = (props: Props) => {
     const carouselItemClass = cx(
         'carouselItem',
         {
-            mounted,
             singleView: props.singleView,
             withShadow: props.withShadow,
         }
