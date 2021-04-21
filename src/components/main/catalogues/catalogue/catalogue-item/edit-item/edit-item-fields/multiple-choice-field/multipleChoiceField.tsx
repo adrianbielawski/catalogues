@@ -9,7 +9,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import ChoiceList from 'components/global-components/choice-list/choiceList'
 import AddChoice from 'components/global-components/add-choice/addChoice'
-import Field from '../field/field'
+import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
     itemId: number,
@@ -36,7 +36,7 @@ const MultipleChoiceField = (props: Props) => {
         }))
     }
 
-    const getChoices = () => {
+    const getValue = () => {
         if (!props.fieldValue?.value) {
             return
         }
@@ -45,30 +45,30 @@ const MultipleChoiceField = (props: Props) => {
         )
         return values.join(', ')
     }
+    
+    const content = isEditing ? (
+        <>
+            <ChoiceList
+                className={styles.choiceList}
+                choices={fieldChoices}
+                defaultSortDir="asc"
+                defaultSearchValue=""
+                selected={props.fieldValue?.value as number[] || []}
+                multiple={true}
+                onChange={handleChange}
+            />
+            <AddChoice
+                field={props.field}
+            />
+        </>
+    ) : getValue()
 
     return (
-        <Field
-            className={styles.multipleChoiceField}
-            fieldName={props.field.name}
-            fieldValue={getChoices()}
+        <EditableField
+            title={props.field.name}
             isEditing={isEditing}
-            editComponent={
-                <>
-                    <ChoiceList
-                        className={styles.choiceList}
-                        choices={fieldChoices}
-                        defaultSortDir="asc"
-                        defaultSearchValue=""
-                        selected={props.fieldValue?.value as number[] || []}
-                        multiple={true}
-                        onChange={handleChange}
-                    />
-                    <AddChoice
-                        field={props.field}
-                    />
-                </>
-            }
             onEditClick={handleEdit}
+            content={content}
         />
     )
 }

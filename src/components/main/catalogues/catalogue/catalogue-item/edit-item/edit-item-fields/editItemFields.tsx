@@ -27,39 +27,43 @@ const EditItemFields = (props: Props) => {
         switch (field.type) {
             case 'short_text':
                 return (
-                    <TextField
-                        itemId={props.item.id}
-                        field={field}
-                        fieldValue={fieldValue}
-                        key={field.id}
-                    />
+                    <li key={field.id}>
+                        <TextField
+                            itemId={props.item.id}
+                            field={field}
+                            fieldValue={fieldValue}
+                        />
+                    </li>
                 )
             case 'long_text':
                 return (
-                    <LongTextField
-                        itemId={props.item.id}
-                        field={field}
-                        fieldValue={fieldValue}
-                        key={field.id}
-                    />
+                    <li key={field.id}>
+                        <LongTextField
+                            itemId={props.item.id}
+                            field={field}
+                            fieldValue={fieldValue}
+                        />
+                    </li>
                 )
             case 'single_choice':
                 return (
-                    <SingleChoiceField
-                        itemId={props.item.id}
-                        field={field}
-                        fieldValue={fieldValue}
-                        key={field.id}
-                    />
+                    <li key={field.id}>
+                        <SingleChoiceField
+                            itemId={props.item.id}
+                            field={field}
+                            fieldValue={fieldValue}
+                        />
+                    </li>
                 )
             case 'multiple_choice':
                 return (
-                    <MultipleChoiceField
-                        itemId={props.item.id}
-                        field={field}
-                        fieldValue={fieldValue}
-                        key={field.id}
-                    />
+                    <li key={field.id}>
+                        <MultipleChoiceField
+                            itemId={props.item.id}
+                            field={field}
+                            fieldValue={fieldValue}
+                        />
+                    </li>
                 )
         }
     })
