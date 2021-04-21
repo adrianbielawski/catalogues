@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
+import { createReduxEnhancer } from "@sentry/react"
 //Slices
 import { entities } from './entities'
 import { modules } from './modules'
@@ -14,6 +15,8 @@ import { authUserDashboardEpics } from 'store/modules/auth-user-dashboard/epics'
 import { currentUserEpics } from './modules/current-user/epics'
 import { currentUserCataloguesEpics } from 'store/modules/current-user-catalogues/epics'
 import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
+
+const sentryEnhancer = createReduxEnhancer()
 
 const rootEpic = combineEpics(
   appEpics,
@@ -41,7 +44,10 @@ export const store = configureStore({
         ignoredActionPaths: ['payload.history']
       },
     }),
-    epicMiddleware
+    epicMiddleware,
+  ],
+  enhancers: [
+    sentryEnhancer
   ]
 })
 
