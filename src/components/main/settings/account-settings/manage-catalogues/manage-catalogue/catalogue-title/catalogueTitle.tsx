@@ -10,6 +10,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueSelector } from 'store/selectors'
 //Components
 import EditableField from 'components/global-components/editable-field/editableField'
+import Input from 'components/global-components/input/input'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
 type Props = {
@@ -27,13 +28,14 @@ const CatalogueTitle = (props: Props) => {
 
     const validateName = (name: string) => {
         let message = ''
-        
+
         if (name.length < 1) {
             message = 'Minimum 1 characters'
         }
 
         authUserCatalogues.cataloguesData.forEach(c => {
-            if (catalogues[c.id]?.name.toLowerCase() === name.toLowerCase()) {
+            if (catalogues[c.id]?.name.toLowerCase() === name.toLowerCase()
+            && catalogues[c.id]?.id !== props.id) {
                 message = `Catalogue with name "${name}" already exists`
             }
         })
@@ -59,15 +61,22 @@ const CatalogueTitle = (props: Props) => {
         dispatch(CLEAR_CATALOGUE_ERROR(catalogues[props.id]!.id))
     }
 
+    const content = catalogueData.isEditingCatalogueName ? (
+        <Input
+            defaultValue={props.name}
+            invalidInputMessage={inputError}
+            autoFocus
+            ref={nameInputRef}
+        />
+    ) : props.name
+
     return (
         <div className={styles.catalogueTitle}>
             <EditableField
                 title="Name"
-                content={props.name}
+                content={content}
                 isEditing={catalogueData.isEditingCatalogueName}
-                invalidInputMessage={inputError}
                 onEditClick={handleEditName}
-                ref={nameInputRef}
             />
             <MessageModal
                 show={error !== null}

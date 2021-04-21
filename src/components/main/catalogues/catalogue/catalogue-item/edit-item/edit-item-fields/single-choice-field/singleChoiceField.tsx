@@ -9,7 +9,7 @@ import { fieldChoicesSelector } from 'store/selectors'
 //Components
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import ChoiceList from 'components/global-components/choice-list/choiceList'
-import Field from '../field/field'
+import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
     itemId: number,
@@ -35,29 +35,29 @@ const SingleChoiceField = (props: Props) => {
     }
 
     const selected = fieldChoices.filter(f => f.id === props.fieldValue?.value)[0]
+    
+    const content = isEditing ? (
+        <>
+            <ChoiceList
+                className={styles.choiceList}
+                choices={fieldChoices}
+                defaultSortDir="asc"
+                defaultSearchValue=""
+                selected={props.fieldValue?.value as number}
+                onChange={handleChange}
+            />
+            <AddChoice
+                field={props.field}
+            />
+        </>
+    ) : selected?.value
 
     return (
-        <Field
-            className={styles.singleChoiceField}
-            fieldName={props.field.name}
-            fieldValue={selected?.value}
+        <EditableField
+            title={props.field.name}
             isEditing={isEditing}
-            editComponent={
-                <>
-                    <ChoiceList
-                        className={styles.choiceList}
-                        choices={fieldChoices}
-                        defaultSortDir="asc"
-                        defaultSearchValue=""
-                        selected={props.fieldValue?.value as number}
-                        onChange={handleChange}
-                    />
-                    <AddChoice
-                        field={props.field}
-                    />
-                </>
-            }
             onEditClick={handleEdit}
+            content={content}
         />
     )
 }

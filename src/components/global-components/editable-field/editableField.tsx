@@ -1,54 +1,46 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
+import classNames from 'classnames/bind'
 import styles from './editableField.scss'
 //Custom components
-import Input from 'components/global-components/input/input'
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement>  {
+interface Props {
     title: string,
-    content: string,
+    content: ReactNode,
     isEditing: boolean,
-    invalidInputMessage?: string,
+    className?: string,
     onEditClick: () => void,
 }
 
-const EditableField: React.ForwardRefRenderFunction<
-    HTMLInputElement,
-    Props
-> = (props, ref) => {
-    const { title, content, isEditing, invalidInputMessage, onEditClick, ...rest } = props
+const cx = classNames.bind(styles)
+
+const EditableField = (props: Props) => {
+    const { title, content, isEditing, className, onEditClick } = props
 
     const handleEdit = () => {
-        props.onEditClick()
+        onEditClick()
     }
 
-    const getField = () => {
-        if (isEditing) {
-            return (
-                <Input
-                    defaultValue={content}
-                    invalidInputMessage={invalidInputMessage}
-                    ref={ref}
-                    { ...rest }
-                />
-            )
-        } else {
-            return content
-        }
-    }
+    const editableFieldClass = cx(
+        'editableField',
+        className,
+        {
+            active: isEditing
+        },
+    )
 
     return (
-        <div className={styles.editableField}>
+        <div className={editableFieldClass}>
             <EditableFieldTitle
                 title={title}
                 isEditing={isEditing}
                 onEdit={handleEdit}
             />
             < div className={styles.content}>
-                {getField()}
+                {content}
             </div>
         </div >
     )
 }
 
-export default React.forwardRef(EditableField)
+export default EditableField

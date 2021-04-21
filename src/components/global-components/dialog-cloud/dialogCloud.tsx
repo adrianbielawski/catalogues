@@ -9,7 +9,6 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const DialogCloud = (props: Props) => {
-
     const dialogCloudClass = cx(
         'dialogCloud',
         {

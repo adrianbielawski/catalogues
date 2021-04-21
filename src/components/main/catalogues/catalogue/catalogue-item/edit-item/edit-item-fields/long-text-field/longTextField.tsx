@@ -7,7 +7,7 @@ import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch } from 'store/storeConfig'
 //Components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
-import Field from '../field/field'
+import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
     itemId: number,
@@ -31,21 +31,22 @@ const LongTextField = (props: Props) => {
         }))
         setIsEditing(false)
     }
+    
+    const content = isEditing ? (
+        <TextareaWithConfirmButton
+            className={styles.textarea}
+            defaultValue={props.fieldValue?.value as string}
+            rows={4}
+            onConfirm={handleConfirm}
+        />
+    ) : props.fieldValue?.value
 
     return (
-        <Field
-            className={styles.longTextField}
-            fieldName={props.field.name}
-            fieldValue={props.fieldValue?.value}
+        <EditableField
+            title={props.field.name}
             isEditing={isEditing}
-            editComponent={
-                <TextareaWithConfirmButton
-                    defaultValue={props.fieldValue?.value as string}
-                    rows={4}
-                    onConfirm={handleConfirm}
-                />
-            }
             onEditClick={handleEdit}
+            content={content}
         />
     )
 }

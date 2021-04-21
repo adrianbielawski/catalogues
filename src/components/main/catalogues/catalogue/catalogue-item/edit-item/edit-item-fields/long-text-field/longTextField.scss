@@ -1,11 +1,9 @@
 @import "global-styles/variables_and_mixins";
 
-.longTextField {
-    textarea {
-        resize: none;
-        width: 100%;
-        font-size: 16px;
-        box-sizing: border-box;
-        @include scrollY;
-    }
+.textarea {
+    resize: none;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    @include scrollY;
 }

@@ -7,7 +7,7 @@ import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch } from 'store/storeConfig'
 //Components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
-import Field from '../field/field'
+import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
     itemId: number,
@@ -35,21 +35,21 @@ const TextField = (props: Props) => {
     const inputProps = {
         defaultValue: props.fieldValue?.value as string || ''
     }
+    
+    const content = isEditing ? (
+        <InputWithConfirmButton
+            className={styles.input}
+            inputProps={inputProps}
+            onConfirm={handleConfirm}
+        />
+    ) : props.fieldValue?.value
 
     return (
-        <Field
-            className={styles.textField}
-            fieldName={props.field.name}
-            fieldValue={props.fieldValue?.value}
+        <EditableField
+            title={props.field.name}
             isEditing={isEditing}
-            editComponent={
-                <InputWithConfirmButton
-                    className={styles.input}
-                    inputProps={inputProps}
-                    onConfirm={handleConfirm}
-                />
-            }
             onEditClick={handleEdit}
+            content={content}
         />
     )
 }
