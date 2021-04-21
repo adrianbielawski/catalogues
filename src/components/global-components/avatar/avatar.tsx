@@ -1,9 +1,12 @@
 import React from 'react'
-import classNames from 'classnames/bind'
-import styles from './avatar.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import classNames from 'classnames/bind'
+import styles from './avatar.scss'
+//Constants
 import { BASE_URL } from 'src/constants'
+//Hooka
+import { useImageLoader } from 'src/hooks/useImageLoader'
 
 type Props = {
     url?: string,
@@ -14,23 +17,28 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Avatar = (props: Props) => {
+    const image = useImageLoader(`${BASE_URL}${props.url || ''}`)
+
     const avatarClass = cx(
         'avatar',
         props.className,
+        {
+            loaded: image,
+        }
     )
 
     return (
         <div className={avatarClass}>
-            {props.url?.length && (
+            {props.url && (
                 <img
-                    src={`${BASE_URL}${props.url}`}
+                    src={image || ''}
                     className={styles.image}
                 />
             )}
-            {(!props.url?.length && props.placeholderIcon) && (
+            {(!image && props.placeholderIcon) && (
                 <FontAwesomeIcon
                     icon={props.placeholderIcon}
-                    className={styles.image}
+                    className={styles.placeholder}
                 />
             )}
         </div>

@@ -6,9 +6,19 @@
     align-items: center;
     border-radius: 50%;
     overflow: hidden;
+
+    .placeholder,
     .image {
         max-width: 100%;
         max-height: 100%;
         color: $midLightGrey;
+    }
+
+    .image {
+        opacity: 0;
+        transition: opacity .2s;
+    }
+    &.loaded .image {
+        opacity: 1;
     }
 }
