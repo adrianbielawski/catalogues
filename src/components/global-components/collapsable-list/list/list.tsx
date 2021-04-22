@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useContext, useState } from 'react'
+import { clamp } from 'lodash'
 //Contexts
 import { ListContext } from '../listStore'
 //Components
 import Item from '../item/item'
 import AnimateHeight from 'react-animate-height'
-import { clamp } from 'lodash'
 
 type ItemType = {}
 
@@ -28,6 +28,7 @@ const List = (props: Props) => {
     }, [props.items])
 
     useEffect(() => {
+        let timeout: ReturnType<typeof setTimeout>
         if (state.overflowInspected) {
             const newDuration = clamp(
                 Math.floor((state.totalHeight - state.collapsedHeight) * 3),
@@ -35,9 +36,12 @@ const List = (props: Props) => {
                 400
             )
 
-            setTimeout(() => setDuration(newDuration), 400)
+            timeout = setTimeout(() => setDuration(newDuration), newDuration)
         }
-    }, [state.overflowInspected])
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, [state.overflowInspected, state.totalHeight, state.totalHeight])
 
     useEffect(() => {
         if (state.itemsInspected) {
