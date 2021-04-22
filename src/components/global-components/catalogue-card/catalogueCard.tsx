@@ -3,8 +3,6 @@ import { useHistory } from 'react-router'
 import moment from 'moment'
 import classNames from 'classnames/bind'
 import styles from './catalogueCard.scss'
-//Constants
-import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Redux
@@ -13,6 +11,7 @@ import { userSelector } from 'store/selectors'
 //Custom components
 import Avatar from '../avatar/avatar'
 import NoImageIcon from '../no-image-icon/noImageIcon'
+import Image from 'components/global-components/image/image'
 
 type Props = {
     catalogue: DeserializedCatalogue,
@@ -50,15 +49,13 @@ const CatalogueCard: React.ForwardRefRenderFunction<
             >
                 {catalogue.name}
             </p>
-            <div
+            <Image
                 className={styles.image}
-                onClick={redirectToCatalogue}
-            >
-                {catalogue.imageThumbnail
-                    ? <img src={`${BASE_URL}${catalogue.imageThumbnail}`} />
-                    : <NoImageIcon size="6x" />
+                url={catalogue.imageThumbnail}
+                placeHolder={
+                    <NoImageIcon size="6x" />
                 }
-            </div>
+            />
             <div className={styles.meta}>
                 <div
                     className={styles.user}

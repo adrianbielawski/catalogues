@@ -3,16 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './carouselItem.scss'
-//Constants
-import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
-//Hoks
-import { useImageLoader } from 'src/hooks/useImageLoader'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import PrimaryImageStar from '../primary-image-star/primaryImageStar'
-import Loader from 'components/global-components/loader/loader'
+import Image from 'components/global-components/image/image'
 
 type Props = {
     offset: string | null,
@@ -33,10 +29,8 @@ const CarouselItem = (props: Props) => {
     const url = props.image.id.toString().startsWith('newImage')
         ? props.image.image
         : props.useThumbnails
-            ? `${BASE_URL}${props.image.imageThumbnail}`
-            : `${BASE_URL}${props.image.image}`
-
-    const image = useImageLoader(url)
+            ? `${props.image.imageThumbnail}`
+            : `${props.image.image}`
 
     const onPrimaryChange = () => {
         if (props.onPrimaryChange !== undefined) {
@@ -52,13 +46,6 @@ const CarouselItem = (props: Props) => {
         }
     )
 
-    const imageClass = cx(
-        'img',
-        {
-            loaded: image,
-        }
-    )
-
     if (!props.offset) {
         return null
     }
@@ -71,12 +58,10 @@ const CarouselItem = (props: Props) => {
                 '--scale': props.scale,
             } as React.CSSProperties}
         >
-            {!image && <Loader className={styles.loader} />}
-            <img
-                className={imageClass}
-                src={image || ''}
+            <Image
+                className={styles.image}
+                url={url}
                 onClick={props.onImageClick}
-                key={props.image.id}
             />
             {props.onRemove &&
                 <TransparentButton

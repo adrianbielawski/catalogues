@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import styles from './catalogueImage.scss'
 //Constants
-import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
@@ -9,7 +8,7 @@ import { POST_CATALOGUE_IMAGE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueSelector } from 'store/selectors'
 //Components
-import Loader from 'components/global-components/loader/loader'
+import Image from 'components/global-components/image/image'
 import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
 
 interface Event<T = EventTarget> {
@@ -41,21 +40,16 @@ const CatalogueImage = (props: Props) => {
         fileInputRef.current!.click()
     }
 
-    const image = props.url?.length
-        ? (
-            <img
-                src={`${BASE_URL}${props.url}`}
-                className={styles.image}
-            />
-        )
-        : <NoImageIcon size="6x" />
-
     return (
         <div className={styles.catalogueImage} onClick={handleClick}>
-            {catalogueData.isSubmittingImage
-                ? <Loader className={styles.loader} />
-                : image
-            }
+            <Image
+                className={styles.image}
+                url={props.url}
+                loading={catalogueData.isSubmittingImage}
+                placeHolder={
+                    <NoImageIcon size="6x" />
+                }
+            />
             <input
                 className={styles.input}
                 type="file"
