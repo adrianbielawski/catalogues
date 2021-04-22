@@ -7,38 +7,31 @@ import { useElementInView } from 'src/hooks/useElementInView'
 import Button from 'components/global-components/button/button'
 import Loader from 'components/global-components/loader/loader'
 
-type PropsWithAutoFetch = {
+type BasicProps = {
     children: ReactNode[],
     next: number | null,
-    fetchOnButtonClick?: false,
-    buttonChild?: never,
     isFetching: boolean,
-    intersectingElement: number,
     className?: string,
     onLoadMore: () => void,
 }
+
+type PropsWithAutoFetch = {
+    fetchOnButtonClick?: 'never',
+    buttonChild?: never,
+    intersectingElement: number,
+} & BasicProps
 
 type PropsWithFetchOnceOnClick = {
-    children: ReactNode[],
-    next: number | null,
-    fetchOnButtonClick: 'once',
+    fetchOnButtonClick?: 'once',
     buttonChild: ReactNode,
-    isFetching: boolean,
     intersectingElement: number,
-    className?: string,
-    onLoadMore: () => void,
-}
+} & BasicProps
 
 type PropsWithFetchOnClick = {
-    children: ReactNode[],
-    next: number | null,
-    fetchOnButtonClick: true,
+    fetchOnButtonClick?: 'allways',
     buttonChild: ReactNode,
-    isFetching: boolean,
     intersectingElement?: never,
-    className?: string,
-    onLoadMore: () => void,
-}
+} & BasicProps
 
 type Props = PropsWithAutoFetch | PropsWithFetchOnceOnClick | PropsWithFetchOnClick
 
@@ -48,7 +41,7 @@ const PaginatedList = (props: Props) => {
     let fetchOnClick = false
 
     if ((props.fetchOnButtonClick === 'once' && props.next === 2)
-        || props.fetchOnButtonClick === true
+        || props.fetchOnButtonClick === 'allways'
     ) {
         fetchOnClick = true
     }
@@ -103,6 +96,18 @@ const PaginatedList = (props: Props) => {
             }
         </div>
     )
+}
+
+PaginatedList.defaultProps = {
+    children: <></>,
+    next: null,
+    isFetching: false,
+    fetchOnButtonClick: 'allways',
+    buttonChild: undefined,
+    intersectingElement: 1,
+    className: undefined,
+    onLoadMore: () => { },
+
 }
 
 export default PaginatedList
