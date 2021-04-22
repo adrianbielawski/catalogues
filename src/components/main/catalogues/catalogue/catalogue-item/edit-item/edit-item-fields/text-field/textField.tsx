@@ -27,7 +27,7 @@ const TextField = (props: Props) => {
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
             fieldId: props.field.id,
-            value: input,
+            value: input.length > 0 ? input : null,
         }))
         setIsEditing(false)
     }

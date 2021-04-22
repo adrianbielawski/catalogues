@@ -9,7 +9,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { useDelay } from 'src/hooks/useDelay'
 //Components
 import Input from 'components/global-components/input/input'
-import ChoiceList from 'components/global-components/choice-list/choiceList'
+import ChoiceList, { SingleChoiceOnChange } from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
@@ -87,7 +87,7 @@ const FieldForm = (props: Props) => {
         setFieldName(input)
     }
 
-    const handleTypeChange = (choiceId: string | number) => {
+    const handleTypeChange = (choiceId: SingleChoiceOnChange) => {
         setFieldType(choiceId as string)
     }
 

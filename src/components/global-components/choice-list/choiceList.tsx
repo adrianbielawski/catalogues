@@ -15,14 +15,17 @@ type Sort = 'asc' | 'desc'
 
 type Id = number | string
 
+export type SingleChoiceOnChange = Id | null
+export type MultipleChoiceOnChange = Id[] | null
+
 type SingleChoiceProps<ChoiceType> = {
     choices: ChoiceType[],
-    selected: Id,
+    selected: Id | null,
     defaultSortDir?: Sort,
     defaultSearchValue?: string,
     multiple?: never,
     className?: string,
-    onChange: (choiceId: Id) => void,
+    onChange: (choiceId: Id | null) => void,
 }
 
 type MultipleChoiceProps<ChoiceType> = {
@@ -32,7 +35,7 @@ type MultipleChoiceProps<ChoiceType> = {
     defaultSearchValue?: string,
     multiple: true,
     className?: string,
-    onChange: (choicesIds: Id[]) => void,
+    onChange: (choicesIds: Id[] | null) => void,
 }
 
 type Props<ChoiceType> = SingleChoiceProps<ChoiceType> | MultipleChoiceProps<ChoiceType>
@@ -83,7 +86,7 @@ const ChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) =>
     const handleSelectAllChange = () => {
         if (props.multiple) {
             if (allChoicesSelected) {
-                props.onChange([])
+                props.onChange(null)
             } else {
                 props.onChange(visibleChoices.map(c => c.id))
             }
@@ -100,9 +103,9 @@ const ChoiceList = <ChoiceType extends BasicChoice>(props: Props<ChoiceType>) =>
                     selectedIds = selectedIds.filter(id => id !== choiceId)
                 }
 
-                props.onChange(selectedIds)
+                props.onChange(selectedIds.length > 0 ? selectedIds : null)
             } else {
-                props.onChange(choiceId)
+                props.onChange(isSelected ? choiceId : null)
             }
         }
 

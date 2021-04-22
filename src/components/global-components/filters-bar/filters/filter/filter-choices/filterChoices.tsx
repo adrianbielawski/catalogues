@@ -5,7 +5,7 @@ import { FilterWithChoices, SelectedChoiceFilterValue } from '../../filtersTypes
 //Context
 import { FiltersContext } from '../../filtersStore'
 //Custom components
-import ChoiceList from 'components/global-components/choice-list/choiceList'
+import ChoiceList, { MultipleChoiceOnChange } from 'components/global-components/choice-list/choiceList'
 
 type Props = {
     active: boolean,
@@ -20,7 +20,7 @@ const FilterChoices = (props: Props) => {
 
     const selectedChoices = selectedFilters![props.filter.id] as SelectedChoiceFilterValue[]
 
-    const handleChange = (selected: (number | string)[]) => {
+    const handleChange = (selected: MultipleChoiceOnChange) => {
         changeSelectedFilters(props.filter!.id, selected as string[])
     }
 

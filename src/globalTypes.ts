@@ -293,7 +293,7 @@ export interface DeserializedItem {
     removedImages: DeserializedImage[],
 }
 
-export type ItemFieldValue = string | number | number[]
+export type ItemFieldValue = string | number | number[] | null
 
 export interface ItemField {
     item_id: number,

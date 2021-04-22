@@ -8,7 +8,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { fieldChoicesSelector } from 'store/selectors'
 //Components
 import AddChoice from 'components/global-components/add-choice/addChoice'
-import ChoiceList from 'components/global-components/choice-list/choiceList'
+import ChoiceList, { SingleChoiceOnChange } from 'components/global-components/choice-list/choiceList'
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
@@ -26,11 +26,11 @@ const SingleChoiceField = (props: Props) => {
         setIsEditing(!isEditing)
     }
 
-    const handleChange = (choiceId: number | string) => {
+    const handleChange = (choiceId: SingleChoiceOnChange) => {
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
             fieldId: props.field.id,
-            value: choiceId as number,
+            value: choiceId,
         }))
     }
 
@@ -43,7 +43,7 @@ const SingleChoiceField = (props: Props) => {
                 choices={fieldChoices}
                 defaultSortDir="asc"
                 defaultSearchValue=""
-                selected={props.fieldValue?.value as number}
+                selected={props.fieldValue?.value as number | null}
                 onChange={handleChange}
             />
             <AddChoice

@@ -7,7 +7,7 @@ import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { fieldChoicesSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
-import ChoiceList from 'components/global-components/choice-list/choiceList'
+import ChoiceList, { MultipleChoiceOnChange } from 'components/global-components/choice-list/choiceList'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import EditableField from 'components/global-components/editable-field/editableField'
 
@@ -26,13 +26,11 @@ const MultipleChoiceField = (props: Props) => {
         setIsEditing(!isEditing)
     }
 
-    const handleChange = (selected: (number | string)[]) => {
-        const selectedChoices = selected.map(s => s as number)
-
+    const handleChange = (selected: MultipleChoiceOnChange) => {
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
             fieldId: props.field.id,
-            value: selectedChoices,
+            value: selected as number[] | null,
         }))
     }
 
