@@ -8,6 +8,7 @@
     width: 100%;
     &.active .content {
         min-width: 100%;
+        overflow: visible;
     }
     .title {
         margin-left: 21px;
@@ -21,7 +22,6 @@
         box-sizing: border-box;
         border: none;
         @include clipText;
-        overflow: visible;
     }
 }
 
