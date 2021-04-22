@@ -87,9 +87,9 @@ const Catalogues = () => {
         return <Loader className={styles.loader} />
     }
 
-    const defaultCatalogueSlug = currentUserCatalogues.defaultCatalogueId
+    const catalogueSlug = currentUserCatalogues.defaultCatalogueId
         ? catalogues[currentUserCatalogues.defaultCatalogueId]!.slug
-        : null
+        : catalogues[currentUserCatalogues.cataloguesData[0].id]!.slug
 
     return (
         <FiltersBarBulkContextProvider
@@ -110,7 +110,7 @@ const Catalogues = () => {
                                     exact
                                     from="/:username/catalogues"
                                     to={{
-                                        pathname: `/:username/catalogues/${defaultCatalogueSlug || ''}`,
+                                        pathname: `/:username/catalogues/${catalogueSlug || ''}`,
                                         state: location.state,
                                     }}
                                 />
