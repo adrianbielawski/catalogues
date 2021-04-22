@@ -3,7 +3,7 @@ import { generatePath, Redirect, Route, RouteComponentProps, RouteProps, useLoca
 import { useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
 import { DeserializedCatalogue } from './globalTypes'
-import { StaticContext, useHistory } from 'react-router'
+import { StaticContext, Switch, useHistory } from 'react-router'
 import * as H from 'history'
 
 type RenderProps = RouteComponentProps<any, StaticContext, unknown>
@@ -119,7 +119,7 @@ const CanonicalUrlWrapper = ({ children, match }: { children: ReactNode, match: 
         }
     }, [])
 
-    return <>{ children }</>
+    return <>{children}</>
 }
 
 export const RouteWithContext = (props: RouteWithContextProps) => {
@@ -190,27 +190,55 @@ export const PrivateRoute = (props: PrivateRouteProps) => {
 
     if (!authUserData.id) {
         return (
-            <Redirect to={{
-                pathname: `/`,
-                state: {
-                    referrer: {
-                        pathname: location.pathname
+            <Switch>
+                <Redirect
+                    exact
+                    from="/:username"
+                    to={{
+                        pathname: `/${currentUser?.username || ''}/catalogues`,
+                        state: {
+                            referrer: {
+                                pathname: location.pathname
+                            }
+                        }
+                    }}
+                />
+                <Redirect to={{
+                    pathname: `/`,
+                    state: {
+                        referrer: {
+                            pathname: location.pathname
+                        }
                     }
-                }
-            }} />
+                }} />
+            </Switch>
         )
     }
 
     if (authUserData.id !== currentUser?.id) {
         return (
-            <Redirect to={{
-                pathname: `/${authUser?.username || currentUser?.username || ''}`,
-                state: {
-                    referrer: {
-                        pathname: location.pathname
+            <Switch>
+                <Redirect
+                    exact
+                    from="/:username"
+                    to={{
+                        pathname: `/${currentUser?.username || ''}/catalogues`,
+                        state: {
+                            referrer: {
+                                pathname: location.pathname
+                            }
+                        }
+                    }}
+                />
+                <Redirect to={{
+                    pathname: `/${authUser?.username || currentUser?.username || ''}`,
+                    state: {
+                        referrer: {
+                            pathname: location.pathname
+                        }
                     }
-                }
-            }} />
+                }} />
+            </Switch>
         )
     }
 

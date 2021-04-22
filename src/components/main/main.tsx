@@ -61,7 +61,7 @@ const Main = (props: HydratedRouteComponentProps) => {
                     <Switch>
                         {USER_DASHBOARD
                             ? (
-                                <RouteWithContext exact path={"/:username"} component={UserDashboard} />
+                                <PrivateRouteWithContext exact path={"/:username"} component={UserDashboard} />
                             ) : (
                                 <Redirect
                                     exact
