@@ -4,6 +4,7 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+    @include resetTapHighlight;
     &.reversed {
         flex-direction: row-reverse;
         p {
