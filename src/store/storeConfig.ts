@@ -12,6 +12,7 @@ import { authUserEpics } from './modules/auth-user/epics'
 import { authUserCataloguesIndexEpics } from 'store/modules/auth-user-catalogues/epics'
 import { authUserFavouritesEpics } from 'store/modules/auth-user-favourites/epics/authUserFavouritesEpics'
 import { authUserDashboardEpics } from 'store/modules/auth-user-dashboard/epics'
+import { favouriteItemsEpics } from './modules/favourite-items/epics'
 import { currentUserEpics } from './modules/current-user/epics'
 import { currentUserCataloguesEpics } from 'store/modules/current-user-catalogues/epics'
 import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
@@ -24,6 +25,7 @@ const rootEpic = combineEpics(
   authUserCataloguesIndexEpics,
   authUserFavouritesEpics,
   authUserDashboardEpics,
+  favouriteItemsEpics,
   currentUserEpics,
   currentUserCataloguesEpics,
   currentUserItemsEpics,
