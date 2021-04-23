@@ -140,13 +140,14 @@ const FavouriteItems = () => {
         return <Loader className={styles.loader} />
     }
 
-    const noSearchResult = location.search.length !== 0 && itemsData.results.length === 0
-
     return (
         <div className={styles.items}>
-            {noSearchResult && (
+            {(itemsData.results.length === 0 && !favouriteItems.isFetchingData) && (
                 <p className={styles.noItemsFound}>
-                    No items found
+                    {location.search.length === 0
+                        ? 'You have no favourite items'
+                        : 'No items found'
+                    }
                 </p>
             )}
             <PaginatedList
