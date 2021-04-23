@@ -11,6 +11,8 @@ import { LocationState } from 'src/globalTypes'
 import Auth from 'components/auth/auth'
 import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
+import Homepage from 'components/homepage/homepage'
+import { useSwitches } from './hooks/useSwitches'
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -18,6 +20,7 @@ const App = () => {
   const location = useLocation<LocationState>()
   const app = useTypedSelector(state => state.modules.app)
   const isInitialized = useTypedSelector(state => state.modules.authUser.isInitialized)
+  const [HOMEPAGE] = useSwitches(['HOMEPAGE'])
 
   const handleResize = () => {
     dispatch(CHANGE_SCREEN_SIZE({
@@ -50,7 +53,7 @@ const App = () => {
     <div className={styles.app} style={{ minHeight: app.screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
-          <Route exact path="/" component={Auth} />
+          <Route exact path="/" component={HOMEPAGE ? Homepage : Auth} />
           <Route path={["/login", "/signup"]} component={Auth} />
           <Route path="/:username" component={Main} />
         </Switch>

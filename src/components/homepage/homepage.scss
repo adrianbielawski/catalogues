@@ -1,0 +1,67 @@
+@import "global-styles/variables_and_mixins";
+
+.homepage {
+    .homepageHeader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .title {
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+    }
+    .columns {
+        height: calc(100vh - 50px);
+        .column {
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: 2px 2px 6px -3px #7b7b7b;
+            height: 100%;
+            .columnHeader {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.3em;
+                font-weight: 700;
+                height: 40px;
+                border-bottom: 1px solid $midLightGrey;
+                padding: 5px;
+            }
+            .columnContent {
+                height: calc(100% - 40px);
+                padding: 5px;
+                @include scrollY;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .homepage {
+        .homepageHeader {
+            justify-content: space-between;
+            .title {
+                font-size: 1.1em;
+            }
+            .arrowButton {
+                font-size: 1.3em;
+                padding: 5px 10px;
+                &:enabled:active {
+                    color: $orange;
+                }
+            }
+        }
+        .columns {
+            max-height: calc(100vh - 95px);
+            .column {
+                .columnHeader {
+                    display: none;
+                }
+                .columnContent {
+                    height: unset;
+                    overflow: unset;
+                }
+            }
+        }
+    }
+}
