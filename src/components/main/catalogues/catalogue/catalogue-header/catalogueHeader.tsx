@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
@@ -7,7 +7,6 @@ import styles from './catalogueHeader.scss'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Context
-import { NavContext } from 'components/global-components/nav/nav-store/navStore'
 import NavContextProvider from 'components/global-components/nav/nav-store/navContextProvider'
 //Redux
 import { ADD_CATALOGUE_TO_FAVOURITE, DELETE_CATALOGUE_FROM_FAVOURITE } from 'store/modules/auth-user-catalogues/slice'
@@ -35,7 +34,6 @@ const cx = classNames.bind(styles)
 const CatalogueHeader = (props: Props) => {
     const dispatch = useAppDispatch()
     const location = useLocation<LocationState>()
-    const { show } = useContext(NavContext)
     const smallViewport = useTypedSelector(state => state.modules.app.screenWidth.smallViewport)
     const users = useTypedSelector(state => state.entities.users.entities)
     const authUserData = useTypedSelector(state => state.modules.authUser)
@@ -112,9 +110,8 @@ const CatalogueHeader = (props: Props) => {
                 {authUser?.id !== currentUser!.id &&
                     <Nav
                         className={styles.nav}
-                        show={show}
                         items={NAV_ITEMS}
-                        listOnLeft={true}
+                        position="left"
                     />
                 }
                 <div className={catalogueNameClass}>

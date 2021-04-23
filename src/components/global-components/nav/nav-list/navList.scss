@@ -10,54 +10,52 @@
     box-shadow: 1px 1px 4px $midLightGrey;
     min-width: 300px;
     box-sizing: border-box;
-    :first-child {
-        max-height: 100%;
-        overflow: scroll;
-        @include scrollY;
-    }
     &.left {
         right: unset;
         left: 5px;
     }
-    .listHeader {
-        display: flex;
-        align-items: center;
-        height: 50px;
-        border-bottom: 1px solid $lightGrey;
-        padding: 5px;
-        .goBack {
-            color: $grey;
-            font-size: 1.6em;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .wrapper {
+    .listWrapper {
+        @include scrollY;
+        .listHeader {
             display: flex;
-            flex: 1;
             align-items: center;
-            justify-content: center;
-            p {
-                font-size: 1.3em;
-                font-weight: 700;
-                margin-left: 3px;
+            height: 50px;
+            border-bottom: 1px solid $lightGrey;
+            padding: 5px;
+            .goBack {
+                color: $grey;
+                font-size: 1.6em;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            .wrapper {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                justify-content: center;
+                p {
+                    font-size: 1.3em;
+                    font-weight: 700;
+                    margin-left: 3px;
+                }
             }
         }
-    }
-    .listItem {
-        width: 100%;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        p {
-            margin-left: 10px;
+        .listItem {
+            width: 100%;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            p {
+                margin-left: 10px;
+                font-size: 1.2em;
+            }
+        }
+        .noContent {
+            margin: 10px;
+            text-align: center;
+            font-weight: 700;
             font-size: 1.2em;
         }
-    }
-    .noContent {
-        margin: 10px;
-        text-align: center;
-        font-weight: 700;
-        font-size: 1.2em;
     }
 }
 

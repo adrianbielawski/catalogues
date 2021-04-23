@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useLocation } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import {
@@ -8,8 +8,6 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import styles from './header.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
-//Context
-import { NavContext } from '../nav/nav-store/navStore'
 //Redux
 import { LOG_OUT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -35,7 +33,6 @@ const Header = () => {
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const cataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.cataloguesData)
     const favouriteCatalogues = useTypedSelector(state => state.modules.authUserFavoirites.cataloguesIds)
-    const { show } = useContext(NavContext)
     const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
 
     const handleLogout = () => {
@@ -149,7 +146,7 @@ const Header = () => {
         <NavContextProvider value={contextValue}>
             <div className={styles.header}>
                 <img className={styles.logo} src={icon} />
-                <Nav show={show} items={NAV_ITEMS} />
+                <Nav items={NAV_ITEMS} />
             </div>
         </NavContextProvider>
     )

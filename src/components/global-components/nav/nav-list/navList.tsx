@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import AnimateHeight from 'react-animate-height'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -13,14 +12,15 @@ import { RouterContext } from 'src/router'
 import { useTypedSelector } from 'store/storeConfig'
 //Context
 import { NavContext } from '../nav-store/navStore'
-//Custom components
+//Components
+import AnimateHeight from 'react-animate-height'
 import NavItem from '../nav-item/navItem'
 import ItemIcon from '../item-icon/itemIcon'
 
 interface Props {
-    show: boolean,
     item: ItemWithChildren,
-    listOnLeft?: boolean,
+    top: number,
+    position?: 'right' | 'left',
 }
 
 const cx = classNames.bind(styles)
@@ -38,6 +38,15 @@ const NavList = (props: Props) => {
         removeNestedListId,
     } = useContext(NavContext)
     const app = useTypedSelector(state => state.modules.app)
+    const [maxHeight, setMaxHeight] = useState(0)
+
+    useEffect(() => {
+        const top = app.screenWidth.smallViewport
+            ? props.top
+            : props.top + 10
+
+        setMaxHeight(app.screenHeight - top)
+    }, [props.top, app.screenHeight, app.screenWidth])
 
     const getItems = () => {
         if (!props.item.children.length) {
@@ -87,12 +96,12 @@ const NavList = (props: Props) => {
     const navListClass = cx(
         'navList',
         {
-            left: props.listOnLeft
+            left: props.position === 'left',
         },
     )
 
     const height = app.screenWidth.smallViewport
-        ? app.screenHeight - 44
+        ? maxHeight
         : 'auto'
 
     return (
@@ -100,31 +109,34 @@ const NavList = (props: Props) => {
             className={navListClass}
             height={show ? height : 0}
         >
-            {listId ? (
-                <div>
-                    <div className={styles.listHeader}>
-                        {nestedListId !== null && (
-                            <FontAwesomeIcon
-                                icon={faArrowLeft}
-                                className={styles.goBack}
-                                onClick={removeNestedListId}
-                            />
-                        )}
-                        <div className={styles.wrapper}>
-                            <ItemIcon
-                                className={styles.icon}
-                                item={props.item}
-                            />
-                            <p>{props.item.title}</p>
+            <div
+                className={styles.listWrapper}
+                style={{ maxHeight }}
+            >
+                {listId && (
+                    <>
+                        <div className={styles.listHeader}>
+                            {nestedListId !== null && (
+                                <FontAwesomeIcon
+                                    icon={faArrowLeft}
+                                    className={styles.goBack}
+                                    onClick={removeNestedListId}
+                                />
+                            )}
+                            <div className={styles.wrapper}>
+                                <ItemIcon
+                                    className={styles.icon}
+                                    item={props.item}
+                                />
+                                <p>{props.item.title}</p>
+                            </div>
                         </div>
-                    </div>
-                    <ul>
-                        {getItems()}
-                    </ul>
-                </div>
-            ) : (
-                <></>
-            )}
+                        <ul>
+                            {getItems()}
+                        </ul>
+                    </>
+                )}
+            </div>
         </AnimateHeight>
     )
 }

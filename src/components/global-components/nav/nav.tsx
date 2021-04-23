@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react'
+import React, { ReactNode, useContext, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.scss'
@@ -70,9 +70,8 @@ export type ItemType = ItemWithUrl | ItemWithChildren | ItemWithOnClick
 
 interface Props {
     items: ItemType[],
-    show: boolean,
     className?: string,
-    listOnLeft?: boolean,
+    position?: 'right' | 'left',
 }
 
 const cx = classNames.bind(styles)
@@ -80,6 +79,7 @@ const cx = classNames.bind(styles)
 const Nav = (props: Props) => {
     const history = useHistory<LocationState>()
     const params = useParams()
+    const navRef = useRef<HTMLElement>(null)
     const routerContext = useContext(RouterContext)
     const { show, listId, nestedListId, showList, closeList } = useContext(NavContext)
     const buildUrl = useUrlBuilder()
@@ -126,20 +126,34 @@ const Nav = (props: Props) => {
         )
     })
 
+    const getTop = () => {
+        if (!navRef.current) {
+            return 0
+        }
+        const navRect = navRef.current!.getBoundingClientRect()
+        const navPosition = navRect.y
+        const navHeight = navRect.height
+
+        return navPosition + navHeight
+    }
+
     const navClass = cx(
         'nav',
         props.className,
     )
 
     return (
-        <nav className={navClass}>
+        <nav
+            className={navClass}
+            ref={navRef}
+        >
             <ul className={styles.items}>
                 {items}
             </ul>
             <NavList
-                show={show}
                 item={getItemById() as ItemWithChildren}
-                listOnLeft={props.listOnLeft}
+                position={props.position}
+                top={getTop()}
             />
         </nav>
     )
