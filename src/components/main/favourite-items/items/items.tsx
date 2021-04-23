@@ -6,7 +6,7 @@ import styles from './items.scss'
 import { LocationState } from 'src/globalTypes'
 //Redux
 import {
-    CLEAR_FAVOURITE_ITEMS_ERROR,
+    CLEAR_FAVOURITE_ITEMS_ERROR, CLEAR_FAVOURITE_ITEMS_DATA,
     FETCH_FAVOURITE_ITEMS, FETCH_FAVOURITE_ITEM_COMMENTS, POST_FAVOURITE_ITEM_COMMENT
 } from 'store/modules/favourite-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -61,6 +61,12 @@ const FavouriteItems = () => {
         filtersBarContext.filtersContext.selectedFilters,
         filtersBarContext.filtersBar.isInitialized,
     ])
+
+    useEffect(() => {
+        return () => {
+            dispatch(CLEAR_FAVOURITE_ITEMS_DATA())
+        }
+    }, [])
 
     const fetchItems = (pageNum?: number) => {
         const query = queryBuilder(filtersBarContext)

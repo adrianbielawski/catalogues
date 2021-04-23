@@ -27,6 +27,9 @@ export const favouriteItemsSlice = createSlice({
         ...reducers.fetchFavouriteItemsChoices,
         ...reducers.fetchFavouriteItemComments,
         ...reducers.postFavouriteItemComment,
+        CLEAR_FAVOURITE_ITEMS_DATA() {
+            return initialState
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
@@ -43,7 +46,7 @@ export const favouriteItemsSlice = createSlice({
 })
 
 export const {
-    CLEAR_FAVOURITE_ITEMS_ERROR,
+    CLEAR_FAVOURITE_ITEMS_ERROR, CLEAR_FAVOURITE_ITEMS_DATA,
     FETCH_FAVOURITE_ITEMS, FETCH_FAVOURITE_ITEMS_START, FETCH_FAVOURITE_ITEMS_SUCCESS, FETCH_FAVOURITE_ITEMS_FAILURE,
     FETCH_FAVOURITE_ITEMS_COMMENTS, FETCH_FAVOURITE_ITEMS_COMMENTS_SUCCESS, FETCH_FAVOURITE_ITEMS_COMMENTS_FAILURE,
     FETCH_FAVOURITE_ITEMS_CATALOGUES, FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS, FETCH_FAVOURITE_ITEMS_CATALOGUES_FAILURE,
