@@ -1,7 +1,8 @@
 import queryString from 'query-string'
+import { trimStart } from 'lodash'
+//Types
 import { UseFiltersBarContextInterface } from 'components/global-components/filters-bar/filters-bar-context/filtersBarTypes'
 import { SelectedFilter } from 'components/global-components/filters-bar/filters/filtersTypes'
-import { trimStart } from 'lodash'
 
 
 const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {

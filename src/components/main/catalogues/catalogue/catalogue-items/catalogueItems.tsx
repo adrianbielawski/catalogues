@@ -15,8 +15,8 @@ import { catalogueSelector, currentUserCatalogueSelector } from 'store/selectors
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
 import { scrollTop } from 'src/utils'
-import filtersBarValuesBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/filtersBarValuesBuilder'
-import queryBuilder from 'components/main/catalogues/catalogue/filter-bar-utils/queryBuilder'
+import queryBuilder from 'components/global-components/filters-bar/builders/queryBuilder'
+import filtersBarValuesBuilder from 'components/global-components/filters-bar/builders/filtersBarValuesBuilder'
 //Components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'

@@ -1,7 +1,6 @@
 import queryString from 'query-string'
 import { UseFiltersBarContextInterface } from 'components/global-components/filters-bar/filters-bar-context/filtersBarTypes'
 import { Range } from 'components/global-components/filters-bar/filters/filtersTypes'
-import { Filter } from 'store/modules/current-user-items/types'
 import { QueryObj } from 'src/globalTypes'
 
 const queryBuilder = (context: UseFiltersBarContextInterface) => {
@@ -12,7 +11,7 @@ const queryBuilder = (context: UseFiltersBarContextInterface) => {
     queryObj['ordering'] = sort || ''
     queryObj['search'] = context.searchContext.search
 
-    const filters: Filter = {}
+    const filters: Record<string, string> = {}
     if (context.filtersContext.selectedFilters !== null) {
         Object.entries(context.filtersContext.selectedFilters).forEach(([id, values]) => {
             if (values === null) return
