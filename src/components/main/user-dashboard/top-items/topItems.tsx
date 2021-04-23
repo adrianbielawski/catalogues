@@ -56,6 +56,7 @@ const TopItems = () => {
                 className={styles.item}
                 itemData={item}
                 isNarrow={true}
+                editable={false}
                 key={item.id}
                 onAddComment={handleAddComment}
                 onFetchComments={handleFetchComments}

@@ -26,6 +26,7 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 type Props = {
     itemData: DeserializedItemData,
     isNarrow: boolean,
+    editable: boolean,
     className?: string,
     onAddComment: (text: string, parentId?: number) => void,
     onFetchComments: (page: number | null) => void,
@@ -82,7 +83,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
 
     return (
         <div className={itemClass} ref={mergeRefs([ref, itemRef])}>
-            {itemData.isEditing
+            {itemData.isEditing && props.editable
                 ? (
                     <EditItem
                         show={itemData.isEditing}
@@ -121,7 +122,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                         onChange={handleFavouriteChange}
                                     />
                                 )}
-                                {item.permissions.canEdit &&
+                                {(item.permissions.canEdit && props.editable) &&
                                     <EditItemButton itemId={item.id} />
                                 }
                             </div>

@@ -115,6 +115,7 @@ const FavouriteItems = () => {
                 className={styles.item}
                 itemData={item}
                 isNarrow={!screenWidth.largeViewport}
+                editable={false}
                 key={item.id}
                 onAddComment={handleAddComment}
                 onFetchComments={handleFetchComments}

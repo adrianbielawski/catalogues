@@ -119,6 +119,7 @@ const CatalogueItems = (props: Props) => {
             <CatalogueItem
                 itemData={itemData}
                 isNarrow={!largeViewport}
+                editable={true}
                 key={itemData.id}
                 onAddComment={handleAddComment}
                 onFetchComments={handleFetchComments}
