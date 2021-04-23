@@ -70,6 +70,10 @@ export const fetchFavouriteItemsCommentsEpic = (action$: Observable<Action>) => 
     mergeMap(action => {
         const items = action.payload.results
 
+        if (items.length === 0) {
+            return of(actions.FAVOURITE_ITEMS_COMMENTS_NOT_NEEDED())
+        }
+
         const requests = Object.fromEntries(
             items.map(item => [
                 item.id,

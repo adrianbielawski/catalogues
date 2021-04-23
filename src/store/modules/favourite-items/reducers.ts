@@ -50,6 +50,9 @@ export const fetchFavouriteItemsComments = {
         state.isFetchingData = false
         state.error = networkError
     },
+    FAVOURITE_ITEMS_COMMENTS_NOT_NEEDED(state: State) {
+        state.isFetchingData = false
+    },
 }
 
 export const fetchFavouriteItemsCatalogues = {
