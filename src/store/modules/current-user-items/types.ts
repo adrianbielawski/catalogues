@@ -15,16 +15,12 @@ export interface FetchItemSuccessPayload {
     itemId: number,
 }
 
-export interface Filter {
-    [filter: string]: string | number
-}
-
 export interface FetchItemsPayload {
     catalogueId: number,
     page: number,
     search?: string,
     sort?: number | string,
-    filters?: Filter,
+    filters?: Record<string, string | number>,
 }
 
 export interface FetchItemsSuccessPayload {

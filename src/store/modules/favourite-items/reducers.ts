@@ -8,7 +8,7 @@ import * as T from './types'
 type State = T.FavouriteItemsSliceState
 
 export const fetchFavouriteItems = {
-    FETCH_FAVOURITE_ITEMS(state: State, action: PayloadAction<number>) { },
+    FETCH_FAVOURITE_ITEMS(state: State, action: PayloadAction<T.FetchFavouriteItemsPayload>) { },
     FETCH_FAVOURITE_ITEMS_START(state: State) {
         state.isFetchingData = true
         state.isFetchingItems = true
@@ -48,7 +48,9 @@ export const fetchFavouriteItemsComments = {
 
 export const fetchFavouriteItemsCatalogues = {
     FETCH_FAVOURITE_ITEMS_CATALOGUES(state: State, action: PayloadAction<number>) { },
-    FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS(state: State, action: PayloadAction<number[]>) { },
+    FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS(state: State, action: PayloadAction<number[]>) {
+        state.cataloguesIds = Array.from(new Set(state.cataloguesIds.concat(action.payload)))
+    },
     FETCH_FAVOURITE_ITEMS_CATALOGUES_FAILURE(state: State) {
         state.isFetchingData = false
         state.error = networkError

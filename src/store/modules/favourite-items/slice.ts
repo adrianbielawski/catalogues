@@ -8,6 +8,7 @@ const initialState: T.FavouriteItemsSliceState = {
     itemsData: {
         ...listData
     },
+    cataloguesIds: [],
     isFetchingItems: true,
     isFetchingData: true,
     error: null,

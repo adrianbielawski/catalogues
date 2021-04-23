@@ -19,9 +19,13 @@ export const fetchFavouriteItemsEpic = (action$: Observable<Action>) => action$.
     filter(actions.FETCH_FAVOURITE_ITEMS.match),
     switchMap((action) => concat(
         of(actions.FETCH_FAVOURITE_ITEMS_START()),
-        axiosInstance$.get('/items/favourites/', {
+        axiosInstance$.get('/items/', {
             params: {
-                page: action.payload,
+                is_favourite: true,
+                page: action.payload.page,
+                search: action.payload.search,
+                ordering: action.payload.sort,
+                ...action.payload.filters
             }
         }).pipe(
             mergeMap(response => concat(

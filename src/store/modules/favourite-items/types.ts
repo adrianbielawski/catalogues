@@ -2,9 +2,17 @@ import * as T from "src/globalTypes"
 
 export interface FavouriteItemsSliceState {
     itemsData: T.DeserializedListData<T.DeserializedItemData>,
+    cataloguesIds: number[],
     isFetchingItems: boolean,
     isFetchingData: boolean,
     error: T.ErrorMessage | null,
+}
+
+export interface FetchFavouriteItemsPayload {
+    page: number,
+    search?: string,
+    sort?: number | string,
+    filters?: Record<string, string>,
 }
 
 export interface FetchItemsCommentsSuccessPayload {
