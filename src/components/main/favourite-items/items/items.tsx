@@ -6,6 +6,7 @@ import styles from './items.scss'
 import { LocationState } from 'src/globalTypes'
 //Redux
 import {
+    CLEAR_FAVOURITE_ITEMS_ERROR,
     FETCH_FAVOURITE_ITEMS, FETCH_FAVOURITE_ITEM_COMMENTS, POST_FAVOURITE_ITEM_COMMENT
 } from 'store/modules/favourite-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -19,6 +20,7 @@ import filtersBarValuesBuilder from 'components/global-components/filters-bar/bu
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
+import MessageModal from 'components/global-components/message-modal/messageModal'
 
 const FavouriteItems = () => {
     const dispatch = useAppDispatch()
@@ -120,6 +122,13 @@ const FavouriteItems = () => {
         )
     })
 
+    const clearError = () => {
+        dispatch(CLEAR_FAVOURITE_ITEMS_ERROR())
+        fetchItems(itemsData.current || 1)
+    }
+
+    const error = favouriteItems.error
+
     if (favouriteItems.isFetchingData && !getRenderQty()) {
         return <Loader className={styles.loader} />
     }
@@ -144,6 +153,12 @@ const FavouriteItems = () => {
             >
                 {itemsComponents}
             </PaginatedList>
+            <MessageModal
+                show={error !== null}
+                title={error?.title}
+                message={error?.message || ''}
+                onConfirm={clearError}
+            />
         </div>
     )
 }

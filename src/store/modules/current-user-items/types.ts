@@ -39,6 +39,11 @@ export interface ChangeFavouriteItem {
     isFavourite: boolean,
 }
 
+export interface ChangeFavouriteItemFailure {
+    itemId: number,
+    isFavourite: boolean,
+}
+
 export interface FetchItemCommentsPayload {
     itemId: number,
     page: number | null,

@@ -134,8 +134,8 @@ export const changeItemRating = {
 export const changeFavouriteItem = {
     CHANGE_FAVOURITE_ITEM(state: State, action: PayloadAction<T.ChangeFavouriteItem>) { },
     CHANGE_FAVOURITE_ITEM_SUCCESS(state: State) { },
-    CHANGE_FAVOURITE_ITEM_FAILURE(state: State, action: PayloadAction<number>) {
-        const itemData = getItemDataById(state, action.payload)
+    CHANGE_FAVOURITE_ITEM_FAILURE(state: State, action: PayloadAction<T.ChangeFavouriteItemFailure>) {
+        const itemData = getItemDataById(state, action.payload.itemId)
         itemData.itemError = networkError
     },
 }

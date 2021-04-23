@@ -7,6 +7,12 @@ import * as T from './types'
 
 type State = T.FavouriteItemsSliceState
 
+export const favouriteItems = {
+    CLEAR_FAVOURITE_ITEMS_ERROR(state: State) {
+        state.error = null
+    },
+}
+
 export const fetchFavouriteItems = {
     FETCH_FAVOURITE_ITEMS(state: State, action: PayloadAction<T.FetchFavouriteItemsPayload>) { },
     FETCH_FAVOURITE_ITEMS_START(state: State) {
@@ -77,6 +83,9 @@ export const fetchFavouriteItemsChoices = {
     FETCH_FAVOURITE_ITEMS_CHOICES_FAILURE(state: State) {
         state.isFetchingData = false
         state.error = networkError
+    },
+    FAVOURITE_ITEMS_CHOICES_NOT_NEEDED(state: State) {
+        state.isFetchingData = false
     },
 }
 

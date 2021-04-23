@@ -127,7 +127,7 @@ export const fetchFavouriteItemsFieldsEpic = (
             defaultIfEmpty(),
             mergeMap(response => concat(
                 of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
-                of(actions.FETCH_FAVOURITE_ITEMS_FIELDS_SUCCESS(response)),
+                of(actions.FETCH_FAVOURITE_ITEMS_FIELDS_SUCCESS(response.flat())),
             )),
             catchError(() => of(actions.FETCH_FAVOURITE_ITEMS_FIELDS_FAILURE()))
         )
@@ -140,6 +140,10 @@ export const fetchFavouriteItemsChoicesEpic = (action$: Observable<Action>) => a
         const fields = action.payload.flat().filter(f =>
             f.type === 'multiple_choice' || f.type === 'single_choice'
         )
+
+        if (fields.length === 0) {
+            return of(actions.FAVOURITE_ITEMS_CHOICES_NOT_NEEDED())
+        }
 
         const requests = fields.map(field =>
             axiosInstance$.get('/choices/', {

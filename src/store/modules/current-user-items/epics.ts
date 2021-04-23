@@ -232,7 +232,7 @@ export const changeFavouriteItemEpic = (action$: Observable<Action>) => action$.
                             isFavourite: !action.payload.isFavourite,
                         }
                     })),
-                    of(actions.CHANGE_FAVOURITE_ITEM_FAILURE(action.payload.itemId))
+                    of(actions.CHANGE_FAVOURITE_ITEM_FAILURE(action.payload))
                 ))
             )
         )

@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import * as T from './types'
 import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as reducers from './reducers'
-import { listData } from 'src/constants'
+import { listData, networkError } from 'src/constants'
+import { CHANGE_FAVOURITE_ITEM, CHANGE_FAVOURITE_ITEM_FAILURE } from '../current-user-items/slice'
 
 const initialState: T.FavouriteItemsSliceState = {
     itemsData: {
@@ -18,6 +19,7 @@ export const favouriteItemsSlice = createSlice({
     name: 'FAVOURITE_ITEMS',
     initialState,
     reducers: {
+        ...reducers.favouriteItems,
         ...reducers.fetchFavouriteItems,
         ...reducers.fetchFavouriteItemsComments,
         ...reducers.fetchFavouriteItemsCatalogues,
@@ -28,15 +30,25 @@ export const favouriteItemsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
+        builder.addCase(CHANGE_FAVOURITE_ITEM, (state, action) => {
+            if (!action.payload.isFavourite) {
+                const index = state.itemsData.results.findIndex(i => i.id === action.payload.itemId)
+                state.itemsData.results.splice(index, 1)
+            }
+        })
+        builder.addCase(CHANGE_FAVOURITE_ITEM_FAILURE, (state) => {
+            state.error = networkError
+        })
     },
 })
 
 export const {
+    CLEAR_FAVOURITE_ITEMS_ERROR,
     FETCH_FAVOURITE_ITEMS, FETCH_FAVOURITE_ITEMS_START, FETCH_FAVOURITE_ITEMS_SUCCESS, FETCH_FAVOURITE_ITEMS_FAILURE,
     FETCH_FAVOURITE_ITEMS_COMMENTS, FETCH_FAVOURITE_ITEMS_COMMENTS_SUCCESS, FETCH_FAVOURITE_ITEMS_COMMENTS_FAILURE,
     FETCH_FAVOURITE_ITEMS_CATALOGUES, FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS, FETCH_FAVOURITE_ITEMS_CATALOGUES_FAILURE,
     FETCH_FAVOURITE_ITEMS_FIELDS, FETCH_FAVOURITE_ITEMS_FIELDS_SUCCESS, FETCH_FAVOURITE_ITEMS_FIELDS_FAILURE, FAVOURITE_ITEMS_FIELDS_NOT_NEEDED,
-    FETCH_FAVOURITE_ITEMS_CHOICES, FETCH_FAVOURITE_ITEMS_CHOICES_SUCCESS, FETCH_FAVOURITE_ITEMS_CHOICES_FAILURE,
+    FETCH_FAVOURITE_ITEMS_CHOICES, FETCH_FAVOURITE_ITEMS_CHOICES_SUCCESS, FETCH_FAVOURITE_ITEMS_CHOICES_FAILURE, FAVOURITE_ITEMS_CHOICES_NOT_NEEDED,
     FETCH_FAVOURITE_ITEM_COMMENTS, FETCH_FAVOURITE_ITEM_COMMENTS_START, FETCH_FAVOURITE_ITEM_COMMENTS_SUCCESS, FETCH_FAVOURITE_ITEM_COMMENTS_FAILURE,
     POST_FAVOURITE_ITEM_COMMENT, POST_FAVOURITE_ITEM_COMMENT_START, POST_FAVOURITE_ITEM_COMMENT_SUCCESS, POST_FAVOURITE_ITEM_COMMENT_FAILURE,
 } = favouriteItemsSlice.actions
