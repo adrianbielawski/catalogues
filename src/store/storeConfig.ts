@@ -8,6 +8,7 @@ import { entities } from './entities'
 import { modules } from './modules'
 //Epics
 import { appEpics } from './modules/app/epics'
+import { homepageEpics } from './modules/homepage/epics'
 import { authUserEpics } from './modules/auth-user/epics'
 import { authUserCataloguesIndexEpics } from 'store/modules/auth-user-catalogues/epics'
 import { authUserFavouritesEpics } from 'store/modules/auth-user-favourites/epics/authUserFavouritesEpics'
@@ -21,6 +22,7 @@ const sentryEnhancer = createReduxEnhancer()
 
 const rootEpic = combineEpics(
   appEpics,
+  homepageEpics,
   authUserEpics,
   authUserCataloguesIndexEpics,
   authUserFavouritesEpics,

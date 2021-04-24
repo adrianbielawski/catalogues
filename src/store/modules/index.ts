@@ -8,9 +8,11 @@ import { favouriteItemsSlice } from "./favourite-items/slice"
 import { currentUserSlice } from "store/modules/current-user/slice"
 import { currentUserCataloguesSlice } from "store/modules/current-user-catalogues/slice"
 import { currentUserItemsSlice } from "./current-user-items/slice"
+import { homepageSlice } from "./homepage/slice"
 
 export const modules = combineReducers({
     app: appSlice.reducer,
+    homepage: homepageSlice,
     authUser: authUserSlice.reducer,
     authUserCatalogues: authUserCataloguesSlice.reducer,
     authUserFavoirites: authUserFavouritesSlice.reducer,
