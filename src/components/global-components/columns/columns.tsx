@@ -5,6 +5,7 @@ import { useSwipe } from 'src/hooks/useSwipe'
 
 export interface ColumnInterface {
     component: ReactNode,
+    title: string,
 }
 
 interface Coords {
@@ -121,26 +122,32 @@ const Columns = (props: Props) => {
         return offset
     }
 
-    const wrapperClass = cx(
-        'wrapper',
-        props.columnClassName,
-    )
-
     const columnsClass = cx(
         'columns',
         props.className,
     )
 
+    const columnClass = cx(
+        'column',
+        props.columnClassName,
+    )
+
     const COLUMNS = props.columns.map((column, i) => (
         <li
-            className={styles.column}
+            className={columnClass}
             key={i}
         >
-            <div className={wrapperClass}
-            style={{
-                '--offset': `${getOffset(i)}`,
-            } as React.CSSProperties}>
-                {column.component}
+            <div className={styles.wrapper}
+                style={{
+                    '--offset': `${getOffset(i)}`,
+                } as React.CSSProperties}
+            >
+                <div className={styles.columnContentWrapper}>
+                    <p className={styles.header}>
+                        {column.title}
+                    </p>
+                    {column.component}
+                </div>
             </div>
         </li>
     ))

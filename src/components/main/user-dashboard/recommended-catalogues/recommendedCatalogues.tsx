@@ -6,7 +6,6 @@ import { FETCH_RECOMMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
-import Column from '../column/column'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 import Loader from 'components/global-components/loader/loader'
 
@@ -33,7 +32,7 @@ const RecommendedCatalogues = () => {
                 last: i === cataloguesData.results.length - 1,
             }
         )
-        
+
         return (
             <CatalogueCard
                 className={catalogueCardClass}
@@ -42,28 +41,23 @@ const RecommendedCatalogues = () => {
             />
         )
     })
-    
+
     if (recommended.isFetchingCatalogues && !cataloguesData.results.length) {
         return <Loader className={styles.loader} />
     }
 
     return (
-        <Column
+        <PaginatedList
             className={styles.recommendedCatalogues}
-            title="Recommended catalogues"
+            next={cataloguesData.next}
+            buttonChild="See more"
+            isFetching={recommended.isFetchingCatalogues}
+            fetchOnButtonClick="once"
+            intersectingElement={3}
+            onLoadMore={fetchRecommended}
         >
-            <PaginatedList
-                className={styles.list}
-                next={cataloguesData.next}
-                buttonChild="See more"
-                isFetching={recommended.isFetchingCatalogues}
-                fetchOnButtonClick="once"
-                intersectingElement={3}
-                onLoadMore={fetchRecommended}
-            >
-                {cataloguesComponents}
-            </PaginatedList>
-        </Column>
+            {cataloguesComponents}
+        </PaginatedList>
     )
 }
 
