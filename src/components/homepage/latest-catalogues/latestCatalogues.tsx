@@ -48,7 +48,6 @@ const LatestCatalogues = () => {
 
     return (
         <PaginatedList
-            className={styles.recommendedCatalogues}
             next={cataloguesData.next}
             buttonChild="See more"
             isFetching={latestCatalogues.isFetchingCatalogues}

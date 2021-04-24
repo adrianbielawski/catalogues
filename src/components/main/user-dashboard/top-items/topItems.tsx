@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import classNames from 'classnames/bind'
 import styles from './topItems.scss'
 //Redux
 import { FETCH_TOP_ITEMS, FETCH_TOP_ITEM_COMMENTS, POST_TOP_ITEM_COMMENT } from 'store/modules/auth-user-dashboard/top-items/slice'
@@ -7,6 +8,8 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
+
+const cx = classNames.bind(styles)
 
 const TopItems = () => {
     const dispatch = useAppDispatch()
@@ -50,9 +53,16 @@ const TopItems = () => {
             return
         }
 
+        const itemClass = cx(
+            'item',
+            {
+                last: i === itemsData.results.length - 1,
+            }
+        )
+
         return (
             <CatalogueItem
-                className={styles.item}
+                className={itemClass}
                 itemData={item}
                 isNarrow={true}
                 editable={false}
@@ -69,7 +79,6 @@ const TopItems = () => {
 
     return (
         <PaginatedList
-            className={styles.topItems}
             next={itemsData.next}
             buttonChild="See more"
             isFetching={topItems.isFetchingData}

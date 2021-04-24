@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import classNames from 'classnames/bind'
 import styles from './latestFromFavourites.scss'
 //Redux
 import {
@@ -9,6 +10,8 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
+
+const cx = classNames.bind(styles)
 
 const LatestFromFavourites = () => {
     const dispatch = useAppDispatch()
@@ -51,10 +54,17 @@ const LatestFromFavourites = () => {
         if (i >= renderQty) {
             return
         }
+        
+        const itemClass = cx(
+            'item',
+            {
+                last: i === itemsData.results.length - 1,
+            }
+        )
 
         return (
             <CatalogueItem
-                className={styles.item}
+                className={itemClass}
                 itemData={item}
                 isNarrow={true}
                 editable={false}

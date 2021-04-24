@@ -1,10 +1,8 @@
-.latestItems {
-    .item {
-        margin: 0 0 10px 0;
-        border-radius: 0;
-        &.last {
-            margin: 0;
-        }
+.item {
+    margin: 0 0 10px 0;
+    border-radius: 0;
+    &.last {
+        margin: 0;
     }
 }
 

@@ -83,7 +83,6 @@ const LatestItems = () => {
 
     return (
         <PaginatedList
-            className={styles.latestItems}
             next={itemsData.next}
             buttonChild="See more"
             isFetching={latestItems.isFetchingData}

@@ -1,10 +1,8 @@
-.latestFromFavourites {
-    .item {
-        margin: 0 0 10px 0;
-        border-radius: 0;
-    }
-    .button {
-        margin: 15px auto;
+.item {
+    margin: 0 0 10px 0;
+    border-radius: 0;
+    &.last {
+        margin: 0;
     }
 }
 
