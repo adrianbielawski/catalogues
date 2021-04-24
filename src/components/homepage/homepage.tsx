@@ -11,6 +11,7 @@ import ComponentHeader from 'components/global-components/component-header/compo
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from 'components/global-components/loader/loader'
 import LatestCatalogues from './latest-catalogues/latestCatalogues'
+import LatestItems from './latest-items/latestItems'
 
 const Homepage = () => {
     const app = useTypedSelector(state => state.modules.app)
@@ -35,7 +36,7 @@ const Homepage = () => {
         },
         {
             title: 'Latest items',
-            component: <Loader />
+            component: <LatestItems />
         },
         {
             title: 'Highest rated',
