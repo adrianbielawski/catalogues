@@ -10,6 +10,7 @@ import Columns from 'components/global-components/columns/columns'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from 'components/global-components/loader/loader'
+import LatestCatalogues from './latest-catalogues/latestCatalogues'
 
 const Homepage = () => {
     const app = useTypedSelector(state => state.modules.app)
@@ -30,7 +31,7 @@ const Homepage = () => {
     const COLUMNS = [
         {
             title: 'Latest catalogues',
-            component: <Loader />
+            component: <LatestCatalogues />
         },
         {
             title: 'Latest items',
