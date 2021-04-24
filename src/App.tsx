@@ -13,6 +13,7 @@ import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
 import { useSwitches } from './hooks/useSwitches'
+import { RouteWithContext } from './router'
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -53,7 +54,7 @@ const App = () => {
     <div className={styles.app} style={{ minHeight: app.screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
-          <Route exact path="/" component={HOMEPAGE ? Homepage : Auth} />
+          <RouteWithContext exact path="/" component={HOMEPAGE ? Homepage : Auth} />
           <Route path={["/login", "/signup"]} component={Auth} />
           <Route path="/:username" component={Main} />
         </Switch>

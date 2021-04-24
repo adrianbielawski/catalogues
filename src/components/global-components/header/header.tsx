@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import {
@@ -17,6 +17,8 @@ import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
 import { useSwitches } from 'src/hooks/useSwitches'
+import { useParams } from 'react-router-dom'
+import { RouterContext, useUrlBuilder } from 'src/router'
 
 const contextValue = {
     show: false,
@@ -36,13 +38,24 @@ const Header = () => {
     const cataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.cataloguesData)
     const favouriteCatalogues = useTypedSelector(state => state.modules.authUserFavoirites.cataloguesIds)
     const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
+    const params = useParams()
+    const routerContext = useContext(RouterContext)
+    const buildUrl = useUrlBuilder()
 
     const handleLogout = () => {
         dispatch(LOG_OUT())
     }
 
     const handleLogoClick = () => {
-        history.push('/')
+        history.push('/', {
+            referrer: {
+                pathname: buildUrl({
+                    pathname: routerContext.match?.path,
+                    params,
+                }),
+                params,
+            },
+        })
     }
 
     const NAV_ITEMS: ItemType[] = authUser !== null ? [
