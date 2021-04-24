@@ -6,7 +6,6 @@ import {
 } from 'store/modules/auth-user-dashboard/latest-from-favourites/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
-import Column from '../column/column'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
@@ -19,7 +18,7 @@ const LatestFromFavourites = () => {
     useEffect(() => {
         fetchItems()
     }, [])
-    
+
     const fetchItems = () => {
         dispatch(FETCH_LFF(itemsData.next || 1))
     }
@@ -71,21 +70,16 @@ const LatestFromFavourites = () => {
     }
 
     return (
-        <Column
-            className={styles.latestFromFavourites}
-            title="Latest from favourites"
+        <PaginatedList
+            next={itemsData.next}
+            buttonChild="See more"
+            isFetching={latestFromFavourites.isFetchingData}
+            fetchOnButtonClick="once"
+            intersectingElement={3}
+            onLoadMore={fetchItems}
         >
-            <PaginatedList
-                next={itemsData.next}
-                buttonChild="See more"
-                isFetching={latestFromFavourites.isFetchingData}
-                fetchOnButtonClick="once"
-                intersectingElement={3}
-                onLoadMore={fetchItems}
-            >
-                {itemsComponents}
-            </PaginatedList>
-        </Column>
+            {itemsComponents}
+        </PaginatedList>
     )
 }
 

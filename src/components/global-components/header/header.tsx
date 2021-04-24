@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import icon from 'assets/img/icon.svg'
 import {
     faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
@@ -26,7 +26,9 @@ const contextValue = {
 
 const Header = () => {
     const dispatch = useAppDispatch()
+    const history = useHistory<LocationState>()
     const location = useLocation<LocationState>()
+    const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const users = useTypedSelector(state => state.entities.users.entities)
     const authUserData = useTypedSelector(state => state.modules.authUser)
     const authUser = authUserData.id ? users[authUserData.id] : null
@@ -37,6 +39,10 @@ const Header = () => {
 
     const handleLogout = () => {
         dispatch(LOG_OUT())
+    }
+
+    const handleLogoClick = () => {
+        history.push('/')
     }
 
     const NAV_ITEMS: ItemType[] = authUser !== null ? [
@@ -115,11 +121,11 @@ const Header = () => {
             id: 'Login',
             title: 'Login',
             faIcon: faSignInAlt,
-            url: '/'
+            url: '/login'
         }
     ]
 
-    if (!authUser && (location.pathname === '/login' || location.pathname === '/')) {
+    if (!authUser && (location.pathname === '/login')) {
         const loginIndex = NAV_ITEMS.findIndex(item => item.id !== 'Login')
         NAV_ITEMS.splice(loginIndex, 1)
     }
@@ -145,7 +151,17 @@ const Header = () => {
     return (
         <NavContextProvider value={contextValue}>
             <div className={styles.header}>
-                <img className={styles.logo} src={icon} />
+                <div
+                    className={styles.title}
+                    onClick={handleLogoClick}
+                >
+                    <img className={styles.logo} src={icon} />
+                    {(location.pathname === '/' && largeViewport) &&
+                        <h1>
+                            Catalogues
+                        </h1>
+                    }
+                </div>
                 <Nav items={NAV_ITEMS} />
             </div>
         </NavContextProvider>

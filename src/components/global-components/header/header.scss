@@ -12,13 +12,21 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .logo {
-        width: 40px;
-        height: 40px;
-        padding: 5px 0 5px 5px;
-        border-radius: 50%;
-        cursor: pointer;
-        @include resetTapHighlight;
+    .title {
+        display: flex;
+        .logo {
+            width: 40px;
+            height: 40px;
+            padding: 5px 0 5px 5px;
+            border-radius: 50%;
+            cursor: pointer;
+            @include resetTapHighlight;
+        }
+        h1 {
+            color: $darkGrey;
+            font-size: 36px;
+            margin-left: 10px;
+        }
     }
     .userImage {
         font-size: 1.7em;
@@ -28,5 +36,5 @@
     .catalogueImage {
         width: 30px;
         height: 30px;
-    }    
+    }
 }

@@ -1,7 +1,7 @@
 @import "global-styles/variables_and_mixins";
 
-.userDashboard {
-    .userDashboardHeader {
+.homepage {
+    .homepageHeader {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -11,13 +11,13 @@
         }
     }
     .columns {
-        height: calc(100vh - 95px);
+        height: calc(100vh - 50px);
     }
 }
 
 @media only screen and (max-width: 800px) {
-    .userDashboard {
-        .userDashboardHeader {
+    .homepage {
+        .homepageHeader {
             justify-content: space-between;
             .title {
                 font-size: 1.1em;
@@ -30,8 +30,11 @@
                 }
             }
         }
-        .column {
+        .columns {
             max-height: calc(100vh - 95px);
+            .column {
+                max-height: calc(100vh - 95px);
+            }
         }
     }
 }
