@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useCallback } from 'react'
 import classNames from 'classnames/bind'
 import styles from './paginatedList.scss'
 //Hooks
@@ -45,12 +45,15 @@ const PaginatedList = (props: Props) => {
     ) {
         fetchOnClick = true
     }
-    
-    const handleIntersecting = (isIntersecting: boolean) => {
-        if (isIntersecting && props.next && !fetchOnClick) {
-            props.onLoadMore()
-        }
-    }
+
+    const handleIntersecting = useCallback(
+        (isIntersecting: boolean) => {
+            if (isIntersecting && props.next && !fetchOnClick && !props.isFetching) {
+                props.onLoadMore()
+            }
+        },
+        [fetchOnClick, props.next, props.isFetching, props.onLoadMore]
+    )
 
     const intersectingElement = useElementInView(handleIntersecting)
 
@@ -59,7 +62,11 @@ const PaginatedList = (props: Props) => {
     }
 
     const getItems = () => props.children.map((child, i) => {
-        const ref = (!fetchOnClick && i === props.children.length - props.intersectingElement! - 1)
+        const withRef = !fetchOnClick
+            && props.next
+            && i === props.children.length - props.intersectingElement! - 1
+
+        const ref = (withRef)
             ? intersectingElement
             : null
 

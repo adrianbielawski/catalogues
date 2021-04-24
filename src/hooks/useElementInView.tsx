@@ -7,6 +7,24 @@ export const useElementInView = (
     const elementRef = useCallback(setElement, [])
     const observer = useRef<IntersectionObserver | null>()
 
+    const handleIntersect = useCallback(
+        (entries: IntersectionObserverEntry[]) => {
+            onIntersecting(entries[0].isIntersecting)
+        },
+        [onIntersecting]
+    )
+
+    const createObserver = useCallback(
+        (element: Element) => {
+            if (observer.current) {
+                observer.current.disconnect()
+            }
+            observer.current = new IntersectionObserver(handleIntersect)
+            observer.current.observe(element)
+        },
+        [handleIntersect]
+    )
+
     useEffect(() => {
         if (element) {
             createObserver(element)
@@ -16,19 +34,7 @@ export const useElementInView = (
                 observer.current.disconnect()
             }
         }
-    }, [element])
-
-    const handleIntersect = (entries: IntersectionObserverEntry[]) => {
-        onIntersecting(entries[0].isIntersecting)
-    }
-
-    const createObserver = (element: Element) => {
-        if (observer.current) {
-            observer.current.disconnect()
-        }
-        observer.current = new IntersectionObserver(handleIntersect)
-        observer.current.observe(element)
-    }
+    }, [element, createObserver])
 
     return elementRef
 }
