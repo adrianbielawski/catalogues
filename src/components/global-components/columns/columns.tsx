@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './columns.scss'
 import { useSwipe } from 'src/hooks/useSwipe'
@@ -75,7 +75,7 @@ const Columns = (props: Props) => {
                 props.onChange(current + diff)
             }
         },
-        [current, props.onChange]
+        [current, props.onChange, setCurrent]
     )
 
     const handleSwipeEnd = useCallback(
@@ -109,18 +109,22 @@ const Columns = (props: Props) => {
 
     let columnsRef = useSwipe(handleSwipe, handleSwipeEnd)
 
-    const getOffset = (i: number) => {
-        let offset = i - current
+    const columnsOffset = useMemo(
+        () => {
+            let offset = - current
 
-        if (!props.mobileView && count % 2 === 0) {
-            offset += .5
-        }
+            if (!props.mobileView && count % 2 === 0) {
+                offset += .5
+            }
 
-        if (swipe?.x) {
-            offset = offset + (swipe.x / window.innerWidth)
-        }
-        return offset
-    }
+            if (swipe?.x) {
+                offset = offset + (swipe.x / window.innerWidth)
+            }
+
+            return offset
+        },
+        [current, count, swipe, props.mobileView]
+    )
 
     const columnsClass = cx(
         'columns',
@@ -137,10 +141,11 @@ const Columns = (props: Props) => {
             className={columnClass}
             key={i}
         >
-            <div className={styles.wrapper}
-                style={{
-                    '--offset': `${getOffset(i)}`,
-                } as React.CSSProperties}
+            <div
+                className={styles.wrapper}
+                style={props.mobileView ? {
+                    transform: `translate3d(${i * 100}%, 0, 0)`
+                }: undefined}
             >
                 <div className={styles.columnContentWrapper}>
                     <p className={styles.header}>
@@ -153,12 +158,17 @@ const Columns = (props: Props) => {
     ))
 
     return (
-        <ul
-            className={columnsClass}
-            ref={count > 1 ? columnsRef : null}
-        >
-            {COLUMNS}
-        </ul>
+        <div className={styles.columnsWrapper}>
+            <ul
+                className={columnsClass}
+                ref={count > 1 ? columnsRef : null}
+                style={props.mobileView ? {
+                    transform: `translate3d(${columnsOffset * 100}%, 0, 0)`
+                }: undefined}
+            >
+                {COLUMNS}
+            </ul>
+        </div>
     )
 }
 
