@@ -9,9 +9,9 @@ import Header from 'components/global-components/header/header'
 import Columns from 'components/global-components/columns/columns'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
-import Loader from 'components/global-components/loader/loader'
 import LatestCatalogues from './latest-catalogues/latestCatalogues'
 import LatestItems from './latest-items/latestItems'
+import TopItems from 'components/main/user-dashboard/top-items/topItems'
 
 const Homepage = () => {
     const app = useTypedSelector(state => state.modules.app)
@@ -40,7 +40,7 @@ const Homepage = () => {
         },
         {
             title: 'Highest rated',
-            component: <Loader />
+            component: <TopItems />
         },
     ]
 
