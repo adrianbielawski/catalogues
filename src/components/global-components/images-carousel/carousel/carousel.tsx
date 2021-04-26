@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useResizeDetector } from 'react-resize-detector'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
@@ -12,6 +12,7 @@ import { DeserializedImage } from 'src/globalTypes'
 import ArrowButton from '../arrow-button/arrowButton'
 import ImagesCounter from '../images-counter/imagesCounter'
 import CarouselItem from '../carousel-item/carouselItem'
+import { usePrevious } from 'src/hooks/usePrevious'
 
 type Props = {
     images: DeserializedImage[],
@@ -40,6 +41,15 @@ const Carousel = (props: Props) => {
     const [width, setWidth] = useState(0)
     const onResize = useCallback(width => setWidth(width), [])
     useResizeDetector({ targetRef: currentRef, onResize })
+    const prevIds = usePrevious(props.images.map(i => i.id))
+
+    useEffect(() => {
+        if (props.images.length !== prevIds?.length) {
+            const newImage = props.images.filter(image => !prevIds?.includes(image.id))[0]
+            const newImageIndex = props.images.findIndex(i => i.id === newImage.id)
+            setCurrent(newImageIndex)
+        }
+    }, [props.images, prevIds])
 
     const changeCurrent = useCallback(
         (diff: number) => {
