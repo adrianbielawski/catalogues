@@ -29,7 +29,9 @@
       "assets/*": ["assets/*"],
       "src/*": ["src/*"],
       "hoc/*": ["src/hoc/*"]
-    }
+    },
+    "inlineSources": true,
+    "sourceRoot": "/"
   },
   "include": [
     "src",

@@ -14,6 +14,7 @@ import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
 import { useSwitches } from './hooks/useSwitches'
 import { RouteWithContext } from './router'
+import * as Sentry from "@sentry/react"
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -63,4 +64,4 @@ const App = () => {
   )
 }
 
-export default App
+export default Sentry.withProfiler(App)
