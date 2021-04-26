@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const promiseCache: Record<string, [Promise<string>, AbortController]> = {}
+const promiseCache: Record<string, [Promise<string | null>, AbortController]> = {}
 
 const getUrl = (url: string) => {
     if (!(url in promiseCache)) {
@@ -9,6 +9,10 @@ const getUrl = (url: string) => {
         const promise = fetch(url, { signal })
             .then(response => response.blob())
             .then(blob => URL.createObjectURL(blob))
+            .catch(() => {
+                delete promiseCache[url]
+                return null
+            })
         promiseCache[url] = [promise, controller]
     }
     return promiseCache[url]
