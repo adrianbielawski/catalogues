@@ -319,6 +319,10 @@ export type Image = {
     image_thumbnail: string,
     is_primary: boolean,
     item_id: number,
+    dimensions: {
+        width: number,
+        height: number,
+    }
 }
 
 export type SerializedImage = {
@@ -333,4 +337,8 @@ export type DeserializedImage = {
     imageThumbnail: string,
     isPrimary: boolean,
     itemId: number,
+    dimensions: {
+        width: number,
+        height: number,
+    } | null
 }

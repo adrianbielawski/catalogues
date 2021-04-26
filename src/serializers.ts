@@ -175,6 +175,10 @@ export const imageDeserializer = (image: T.Image): T.DeserializedImage => ({
     imageThumbnail: image.image_thumbnail,
     isPrimary: image.is_primary,
     itemId: image.item_id,
+    dimensions: {
+        width: image.dimensions.width,
+        height: image.dimensions.height,
+    }
 })
 
 export const imagesDeserializer = (images: T.Image[]): T.DeserializedImage[] => (

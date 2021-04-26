@@ -61,6 +61,10 @@ const CarouselItem = (props: Props) => {
             <Image
                 className={styles.image}
                 url={url}
+                dimensions={{
+                    width: props.image.dimensions?.width!,
+                    height: props.image.dimensions?.height!,
+                }}
                 onClick={props.onImageClick}
             />
             {props.onRemove &&

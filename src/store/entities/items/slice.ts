@@ -64,6 +64,7 @@ export const itemsEntitiesSlice = createSlice({
                     imageThumbnail: '',
                     isPrimary: item.images.length === 0,
                     itemId: item.id,
+                    dimensions: null,
                 })
             })
         },

@@ -10,6 +10,10 @@ import Loader from '../loader/loader'
 
 type Props = {
     url?: string,
+    dimensions?: {
+        width: number,
+        height: number,
+    }
     placeHolder?: ReactNode,
     loading?: boolean,
     onLoading?: 'loader' | 'placeholder' | 'none',
@@ -19,8 +23,8 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Image = (props: Props) => {
-    const { url, placeHolder, loading, onLoading, className, ...rest } = props
-    const image = url ? useImageLoader(`${BASE_URL}${url}`) : null
+    const { url, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
+    const image = !url?.startsWith('blob') ? useImageLoader(`${BASE_URL}${url}`) : url
 
     const placeholder = (onLoading === 'placeholder' && !image) || (!url && placeHolder)
         ? placeHolder
@@ -39,7 +43,13 @@ const Image = (props: Props) => {
     return (
         <div className={imageClass} {...rest}>
             {loader && <Loader className={styles.loader} />}
-            {url && <img src={image || ''} />}
+            {url &&
+                <img
+                    src={image || ''}
+                    width={props.dimensions?.width}
+                    height={props.dimensions?.height}
+                />
+            }
             {placeholder}
         </div>
     )
