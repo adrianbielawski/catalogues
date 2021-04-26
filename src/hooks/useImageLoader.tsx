@@ -22,11 +22,11 @@ export const useImageLoader = (url: string) => {
     const [image, setImage] = useState<string | null>(null)
 
     useEffect(() => {
-        let isCanceled = false
+        let isCancelled = false
         const [promise, controller] = getUrl(url)
 
         promise
-            .then(r => !isCanceled ? setImage(r) : null)
+            .then(r => !isCancelled ? setImage(r) : null)
             .catch(e => {
                 console.log(e)
                 return null
@@ -34,7 +34,7 @@ export const useImageLoader = (url: string) => {
 
         return () => {
             controller.abort()
-            isCanceled = true
+            isCancelled = true
         }
     }, [url])
 
