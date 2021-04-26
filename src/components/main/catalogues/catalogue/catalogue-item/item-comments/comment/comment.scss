@@ -9,26 +9,27 @@
         padding: 3px 10px;
         margin: 0 -10px;
     }
-    &.clipText .parent .commentContent .commentTextWrapper .parentCommentText {
+    &.clipText .parent .wrapper .parentText {
         @include clipText;
     }
     .parent {
-        .commentContent {
-            display: flex;
-            .avatar {
-                align-self: flex-start;
-                p {
-                    font-weight: 700;
-                }
+        .avatar {
+            display: inline-flex;
+            align-self: flex-start;
+            float: left;
+            margin-right: 10px;
+            p {
+                font-weight: 700;
             }
-            .userImage {
-                font-size: 1.7em;
-            }
-            .commentTextWrapper {
-                margin-left: 5px;
-                p {
-                    margin-top: 6.5px;
-                }
+        }
+        .userImage {
+            font-size: 1.7em;
+        }
+        .wrapper {
+            display: flow-root;
+            .text {
+                display: block;
+                margin-top: 6px;
             }
         }
         .info {

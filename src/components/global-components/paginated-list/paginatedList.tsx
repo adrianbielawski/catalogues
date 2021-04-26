@@ -109,7 +109,7 @@ PaginatedList.defaultProps = {
     children: <></>,
     next: null,
     isFetching: false,
-    fetchOnButtonClick: 'allways',
+    fetchOnButtonClick: 'never',
     buttonChild: undefined,
     intersectingElement: 1,
     className: undefined,

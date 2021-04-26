@@ -37,7 +37,7 @@ const Comment: React.ForwardRefRenderFunction<
     const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
     const [clipText, setClipText] = useState(props.clipText)
     const [height, setHeight] = useState<'auto' | 35>(props.clipText ? 35 : 'auto')
-    
+
     const handleUsernameClick = () => {
         history.push(`/${user.username}`)
     }
@@ -103,9 +103,10 @@ const Comment: React.ForwardRefRenderFunction<
             clipText: clipText,
         }
     )
-    const parentCommentTextClass = cx(
+    const textClass = cx(
+        'text',
         {
-            parentCommentText: !props.isChild
+            parentText: !props.isChild
         }
     )
 
@@ -115,27 +116,27 @@ const Comment: React.ForwardRefRenderFunction<
             ref={ref}
         >
             <div className={styles.parent}>
-                <div className={styles.commentContent}>
-                    <AvatarWithName
-                        name={user.username}
-                        placeholderIcon={faUser}
-                        className={styles.avatar}
-                        url={user.imageThumbnail}
-                        avatarClassName={styles.userImage}
-                        onClick={handleUsernameClick}
-                    />
-                    <AnimateHeight
-                        className={styles.commentTextWrapper}
-                        height={height}
-                        onAnimationEnd={handleAnimationEnd}
-                    >
-                        <p
-                            className={parentCommentTextClass}
-                            onClick={handleCommentClick}>
+                <AnimateHeight
+                    height={height}
+                    onAnimationEnd={handleAnimationEnd}
+                >
+                    <div className={styles.wrapper}>
+                        <AvatarWithName
+                            name={user.username}
+                            placeholderIcon={faUser}
+                            className={styles.avatar}
+                            url={user.imageThumbnail}
+                            avatarClassName={styles.userImage}
+                            onClick={handleUsernameClick}
+                        />
+                        <span
+                            className={textClass}
+                            onClick={handleCommentClick}
+                        >
                             {comment.text}
-                        </p>
-                    </AnimateHeight>
-                </div>
+                        </span>
+                    </div>
+                </AnimateHeight>
                 <div className={styles.info}>
                     {props.canComment && getReplyButton()}
                     <p className={styles.createdAt}>
