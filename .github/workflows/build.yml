@@ -56,6 +56,7 @@ jobs:
       uses: easingthemes/ssh-deploy@v2.0.7
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         REMOTE_HOST: "burek.it"
         REMOTE_USER: "catalogues"
         TARGET: "catalogues-fe"
