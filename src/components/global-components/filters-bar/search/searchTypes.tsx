@@ -1,13 +1,13 @@
 export const CHANGE_SEARCH = 'CHANGE_SEARCH'
 
-interface changeSearch {
+interface ChangeSearch {
     type: typeof CHANGE_SEARCH,
     value: SearchValue,
 }
 
 export type SearchValue = string
 
-export type Action = changeSearch
+export type Action = ChangeSearch
 
 export interface SearchInitialState {
     search: string,

@@ -46,17 +46,11 @@ export interface Choice {
     value: string,
 }
 
-export type FilterComponentMap = {
-    [key: string]: React.ComponentType<any>
-}
+export type FilterComponentMap = Record<string, React.ComponentType<any>>
 
-export interface SelectedFilter {
-    [filterId: string]: FilterValue,
-}
+export type SelectedFilter = Record<string, FilterValue>
 
-export interface ActiveFilter {
-    [filterId: string]: boolean,
-}
+export type ActiveFilter = Record<string, boolean>
 
 export interface FilterWithoutChoices {
     id: number | string,
