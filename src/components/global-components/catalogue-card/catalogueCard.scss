@@ -7,11 +7,16 @@
         justify-content: center;
         align-items: center;
         font-size: 1.3em;
+        line-height: 1.1em;
+        text-align: center;
         padding: 5px;
-        height: 35px;
+        min-height: 35px;
     }
     .image {
         min-height: 100px;
+        img {
+            transition: transform .3s ease-out;
+        }
     }
     .meta {
         padding: 5px;
@@ -19,16 +24,6 @@
         justify-content: space-between;
         align-items: center;
         .user {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            .avatar {
-                font-size: 1.7em;
-                min-width: 35px;
-                min-height: 35px;
-                width: 35px;
-                height: 35px;
-            }
             p {
                 font-weight: 700;
                 margin-left: 5px;
@@ -37,6 +32,23 @@
         .date {
             font-size: 0.8em;
             color: $midLightGrey;
+        }
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .catalogueCard {
+        .header,
+        .image {
+            &:hover {
+                color: $lightOrange;
+                cursor: pointer;
+            }
+        }
+        .image img {
+            &:hover {
+                transform: scale3d(1.1, 1.1, 1.1);
+            }
         }
     }
 }
