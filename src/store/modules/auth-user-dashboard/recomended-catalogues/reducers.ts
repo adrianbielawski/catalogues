@@ -1,4 +1,4 @@
-import { PayloadAction } from '@reduxjs/toolkit'
+import { current, PayloadAction } from '@reduxjs/toolkit'
 import { networkError } from 'src/constants'
 import { Catalogue, ListData, Salt } from 'src/globalTypes'
 import { catalogueDeserializer, listDeserializer } from 'src/serializers'
@@ -12,11 +12,12 @@ export const fetchRecommendedCatalogues = {
         state.isFetchingCatalogues = true
     },
     FETCH_RECOMMENDED_CATALOGUES_SUCCESS(state: State, action: PayloadAction<ListData<Catalogue> & Salt>) {
+        const prevResults = current(state).cataloguesData.results
         const list = listDeserializer(action.payload, catalogueDeserializer)
 
         state.cataloguesData = {
             ...list,
-            results: list.results.map(r => r.id),
+            results: prevResults.concat(list.results.map(r => r.id)),
             salt: action.payload.salt,
         }
 
