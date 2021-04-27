@@ -11,7 +11,7 @@ const queryBuilder = (context: UseFiltersBarContextInterface) => {
     queryObj['ordering'] = sort || ''
     queryObj['search'] = context.searchContext.search
 
-    const filters: Record<string, string> = {}
+    const filters: Record<string, string | number> = {}
     if (context.filtersContext.selectedFilters !== null) {
         Object.entries(context.filtersContext.selectedFilters).forEach(([id, values]) => {
             if (values === null) return

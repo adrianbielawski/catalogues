@@ -33,8 +33,8 @@ export type Action = ChangeSelectedFilters
 export type SelectedChoiceFilterValue = string
 
 export type Range = {
-    gte: string | null,
-    lte: string | null,
+    gte: string | number | null,
+    lte: string | number | null,
 }
 
 export type SelectedFilterValue = SelectedChoiceFilterValue[] | Range
@@ -61,9 +61,9 @@ export interface ActiveFilter {
 export interface FilterWithoutChoices {
     id: number | string,
     title: string,
-    type: string,
-    minVal: string,
-    maxVal: string,
+    type: 'date' | 'number' | 'starsRange',
+    minVal: string | number,
+    maxVal: string | number,
     choices?: never,
 }
 

@@ -12,7 +12,7 @@ export interface FetchFavouriteItemsPayload {
     page: number,
     search?: string,
     sort?: number | string,
-    filters?: Record<string, string>,
+    filters?: Record<string, string | number>,
 }
 
 export interface FetchItemsCommentsSuccessPayload {
