@@ -1,5 +1,5 @@
 import { combineEpics } from "redux-observable"
-import { concat, of, Observable, forkJoin } from 'rxjs'
+import { concat, of, Observable } from 'rxjs'
 import { catchError, switchMap, filter, mergeMap } from 'rxjs/operators'
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
@@ -15,7 +15,8 @@ export const fetchRecommendedCataloguesEpic = (action$: Observable<Action>) => a
         of(actions.FETCH_RECOMMENDED_CATALOGUES_START()),
         axiosInstance$.get('/catalogues/recommended/', {
             params: {
-                page: action.payload,
+                page: action.payload.page,
+                salt: action.payload.salt,
             }
         }).pipe(
             mergeMap(response => {

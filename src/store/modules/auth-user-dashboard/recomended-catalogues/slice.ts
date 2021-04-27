@@ -6,7 +6,8 @@ import { listData } from 'src/constants'
 
 const initialState: T.RecommendedCataloguesState = {
     cataloguesData: {
-        ...listData
+        ...listData,
+        salt: null,
     },
     isFetchingCatalogues: true,
     error: null,

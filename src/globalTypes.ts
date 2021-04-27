@@ -30,6 +30,10 @@ export interface QueryObj {
     [key: string]: number | string | string[]
 }
 
+export interface Salt {
+    salt: string | null,
+}
+
 //List data
 export interface ListData<R> {
     count: number,

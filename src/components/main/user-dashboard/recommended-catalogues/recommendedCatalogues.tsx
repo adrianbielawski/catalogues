@@ -22,7 +22,10 @@ const RecommendedCatalogues = () => {
     }, [])
 
     const fetchRecommended = () => {
-        dispatch(FETCH_RECOMMENDED_CATALOGUES(cataloguesData.next || 1))
+        dispatch(FETCH_RECOMMENDED_CATALOGUES({
+            page: cataloguesData.next || 1,
+            salt: cataloguesData.salt || undefined,
+        }))
     }
 
     const cataloguesComponents = cataloguesData.results.map((id, i) => {
