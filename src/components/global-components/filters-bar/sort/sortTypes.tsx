@@ -26,15 +26,11 @@ export interface SortContextInterface extends SortInitialState {
 export interface Option {
     id: string,
     title: string,
-    type: string,
+    type: 'number' | 'date' | 'text',
 }
 
 export type SortValue = Selected | undefined
 
-interface Selected {
-    [key: string]: number | string | null
-}
+type Selected = Record<string, number | string | null>
 
-export type SortMap = {
-    [key: string]: string[]
-}
+export type SortMap = Record<string, string[]>

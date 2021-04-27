@@ -28,7 +28,6 @@ const buildFilters = (
     catalogueFields: DeserializedField[],
     fieldsChoices: Dictionary<DeserializedChoice>
 ): FilterType[] => {
-    const choices: number[] = []
     const filteredFields = catalogueFields.filter(f =>
         (f!.type === 'multiple_choice' || f!.type === 'single_choice')
         && (fieldsData.find(d => d.id === f!.id) as CurrentUserChoiceFieldData).choices?.length
@@ -36,18 +35,18 @@ const buildFilters = (
 
     return [
         {
-            id: 'id',
-            title: 'id',
-            type: 'number',
-            minVal: itemsRanges.id.min || '1',
-            maxVal: itemsRanges.id.max || '9999999999',
-        },
-        {
             id: 'date',
             title: 'date',
             type: 'date',
             minVal: moment(itemsRanges.date.min || '2021-01-01').format('YYYY-MM-DD'),
             maxVal: moment().format('YYYY-MM-DD'),
+        },
+        {
+            id: 'rating',
+            title: 'rating',
+            type: 'starsRange',
+            minVal: 1,
+            maxVal: 5,
         },
         ...filteredFields.map(f => buildFilter(f, fieldsChoices))
     ]
