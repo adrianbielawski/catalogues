@@ -85,7 +85,11 @@ export const fetchTopItemsItemsCommentsEpic = (action$: Observable<Action>) => a
                     const comments = Object.values(data).flat().map(list =>
                         list.results).filter(c => c.length > 0).flat() as ItemCommentParent[]
 
-                    const users = comments.map((c: ItemCommentParent) => c.created_by as User)
+                    const users = comments.map(c => {
+                        const newUsers = c.children.map(ch => ch.created_by)
+                        newUsers.push(c.created_by)
+                        return newUsers
+                    }).flat()
 
                     return concat(
                         of(usersActions.USERS_ADDED(users)),
