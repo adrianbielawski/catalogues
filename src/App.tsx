@@ -15,7 +15,7 @@ import Auth from 'components/auth/auth'
 import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
-import SingleItem from 'components/main/single-item/singleItem'
+import SingleItem from 'components/single-item/singleItem'
 import { useSwitches } from './hooks/useSwitches'
 
 const App = () => {
