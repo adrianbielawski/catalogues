@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './singleChoiceField.scss'
 //Types
-import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData, DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -15,6 +15,7 @@ interface Props {
     itemId: number,
     field: DeserializedField,
     fieldValue: DeserializedItemField,
+    fieldData: AuthUserChoiceFieldData,
 }
 
 const SingleChoiceField = (props: Props) => {
@@ -48,6 +49,7 @@ const SingleChoiceField = (props: Props) => {
             />
             <AddChoice
                 field={props.field}
+                fieldData={props.fieldData}
             />
         </>
     ) : selected?.value

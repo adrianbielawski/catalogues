@@ -25,7 +25,7 @@ type Props = {
     isFetchingComments: boolean,
     onClose: () => void,
     onAdd: (text: string, parentId?: number) => void,
-    onFetch: (page: number | null) => void,
+    onFetch: (page: number) => void,
 }
 
 const CommentsModal = (props: Props) => {
@@ -33,7 +33,7 @@ const CommentsModal = (props: Props) => {
     const comments = useTypedSelector(commentsSelector())
 
     const fetchComments = () => {
-        props.onFetch(props.commentsData.next)
+        props.onFetch(props.commentsData.next!)
     }
 
     const handleAddComment = (text: string, parentId?: number) => {

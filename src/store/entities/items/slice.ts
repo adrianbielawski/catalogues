@@ -31,6 +31,9 @@ export const itemsEntitiesSlice = createSlice({
         ITEMS_UPDATED(state, action: PayloadAction<Item[]>) {
             itemsAdapter.upsertMany(state, action.payload.map(itemDeserializer))
         },
+        UPSERT_ITEM(state, action: PayloadAction<Item>) {
+            itemsAdapter.upsertOne(state, itemDeserializer(action.payload))
+        },
         ITEM_UPDATED(state, action: PayloadAction<T.ItemUpdated>) {
             itemsAdapter.updateOne(state, {
                 id: action.payload.id,
@@ -96,6 +99,7 @@ export const itemsEntitiesSlice = createSlice({
 
 export const {
     ITEMS_UPDATED,
+    UPSERT_ITEM,
     ITEM_UPDATED,
     ITEM_ADDED,
     ITEM_REMOVED,

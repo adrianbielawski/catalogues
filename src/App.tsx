@@ -1,5 +1,6 @@
 import React, { useEffect, Suspense } from 'react'
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import * as Sentry from "@sentry/react"
 import styles from 'global-styles/app.scss'
 //Redux
 import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/modules/app/slice'
@@ -7,14 +8,15 @@ import { GET_USER, INITIALIZED } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Types
 import { LocationState } from 'src/globalTypes'
+//Router
+import { RouteWithContext } from './router'
 //Custom components
 import Auth from 'components/auth/auth'
 import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
+import SingleItem from 'components/main/single-item/singleItem'
 import { useSwitches } from './hooks/useSwitches'
-import { RouteWithContext } from './router'
-import * as Sentry from "@sentry/react"
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -48,16 +50,34 @@ const App = () => {
   }, [])
 
   if (!isInitialized || app.fetchingSwitches) {
-    return <Loader className={styles.loader}/>
+    return <Loader className={styles.loader} />
   }
 
   return (
-    <div className={styles.app} style={{ minHeight: app.screenHeight }}>
+    <div
+      className={styles.app}
+      style={{ minHeight: app.screenHeight }}
+    >
       <Suspense fallback={<Loader />}>
         <Switch>
-          <RouteWithContext exact path="/" component={HOMEPAGE ? Homepage : Auth} />
-          <Route path={["/login", "/signup"]} component={Auth} />
-          <Route path="/:username" component={Main} />
+          <RouteWithContext
+            exact
+            path="/"
+            component={HOMEPAGE ? Homepage : Auth}
+          />
+          <Route
+            path={["/login", "/signup"]}
+            component={Auth}
+          />
+          <RouteWithContext
+            path={"/item/:itemId"}
+            component={SingleItem}
+            canonical={true}
+          />
+          <Route
+            path="/:username"
+            component={Main}
+          />
         </Switch>
       </Suspense>
     </div>

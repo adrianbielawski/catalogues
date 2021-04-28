@@ -4,10 +4,11 @@ import { size } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Types
-import { LocationState } from 'src/globalTypes'
+import { DeserializedItem, LocationState } from 'src/globalTypes'
 //Redux
 import {
-    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, FETCH_CURRENT_USER_ITEMS, FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT
+    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, DELETE_ITEM, FETCH_CURRENT_USER_ITEMS, FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT,
+    REFRESH_CURRENT_USER_ITEM, SAVE_ITEM, TOGGLE_EDIT_ITEM,
 } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, currentUserCatalogueSelector } from 'store/selectors'
@@ -115,12 +116,32 @@ const CatalogueItems = (props: Props) => {
             }))
         }
 
+        const handleEditItem = () => {
+            dispatch(TOGGLE_EDIT_ITEM(itemData.id))
+        }
+
+        const handleEditConfirm = (item: DeserializedItem) => {
+            dispatch(SAVE_ITEM(item))
+        }
+    
+        const handleEditCancel = (isNew: boolean) => {
+            if (isNew) {
+                dispatch(DELETE_ITEM(itemData.id))
+            } else {
+                dispatch(REFRESH_CURRENT_USER_ITEM(itemData.id))
+            }
+        }
+
         return (
             <CatalogueItem
                 itemData={itemData}
+                catalogueData={catalogueData}
                 isNarrow={!largeViewport}
                 editable={true}
                 key={itemData.id}
+                onEdit={handleEditItem}
+                onSave={handleEditConfirm}
+                onEditCancel={handleEditCancel}
                 onAddComment={handleAddComment}
                 onFetchComments={handleFetchComments}
             />

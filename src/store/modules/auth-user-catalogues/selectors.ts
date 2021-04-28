@@ -1,4 +1,5 @@
-import { AuthUserCataloguesState, AuthUserFieldData, AuthUserChoiceData, AuthUserChoiceFieldData } from "./types"
+import { AuthUserCataloguesState } from "./types"
+import { AuthUserFieldData, AuthUserChoiceData, AuthUserChoiceFieldData } from "src/globalTypes"
 
 export const getCatalogueDataById = (
     state: AuthUserCataloguesState,

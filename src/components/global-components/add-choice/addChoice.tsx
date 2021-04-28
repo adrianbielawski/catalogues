@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import styles from './addChoice.scss'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
 import { CLEAR_FIELD_ERROR, POST_FIELD_CHOICE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { authUserFieldDataSelector } from 'store/selectors'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
@@ -14,12 +12,12 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 
 type Props = {
     field: DeserializedField,
+    fieldData: AuthUserChoiceFieldData,
 }
 
 const AddChoice = (props: Props) => {
     const dispatch = useAppDispatch()
     const choices = useTypedSelector(state => state.entities.choices.entities)
-    const fieldData = useTypedSelector(authUserFieldDataSelector(props.field.catalogueId, props.field.id)) as AuthUserChoiceFieldData
     const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
     const [inputError, setInputError] = useState('')
 
@@ -30,7 +28,7 @@ const AddChoice = (props: Props) => {
     const validateInput = (name: string) => {
         let error = null
 
-        if (fieldData.choices.find(c => choices[c.id]?.value.toLowerCase() === name.toLowerCase())) {
+        if (props.fieldData.choices.find(c => choices[c.id]?.value.toLowerCase() === name.toLowerCase())) {
             error = `Choice with name "${name}" already exists`
         }
 
@@ -69,7 +67,7 @@ const AddChoice = (props: Props) => {
         }))
     }
 
-    const error = fieldData.fieldError
+    const error = props.fieldData.fieldError
 
     const inputProps = {
         placeholder: "New choice name",

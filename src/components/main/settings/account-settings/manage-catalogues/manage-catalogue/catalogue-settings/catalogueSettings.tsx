@@ -8,7 +8,7 @@ import {
     CHANGE_DEFAULT_CATALOGUE, CHANGE_PUBLIC_CATALOGUE, DELETE_CATALOGUE
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { authUserCatalogueSelector } from 'store/selectors'
+import { authUserCatalogueDataSelector } from 'store/selectors'
 //Components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import Button from 'components/global-components/button/button'
@@ -23,7 +23,7 @@ type Props = {
 
 const CatalogueSettings = (props: Props) => {
     const dispatch = useAppDispatch()
-    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogue.id))
+    const catalogueData = useTypedSelector(authUserCatalogueDataSelector(props.catalogue.id))
     const [message, setMessage] = useState<ProtectedMessage | null>(null)
 
     const handleChangeDefault = () => {

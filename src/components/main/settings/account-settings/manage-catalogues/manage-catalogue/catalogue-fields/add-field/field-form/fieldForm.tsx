@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './fieldForm.scss'
 //Redux
 import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
-import { authUserFieldsDataSelector, authUserCatalogueSelector } from 'store/selectors'
+import { authUserFieldsDataSelector, authUserCatalogueDataSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Hooks
 import { useDelay } from 'src/hooks/useDelay'
@@ -44,7 +44,7 @@ const FieldForm = (props: Props) => {
     const dispatch = useAppDispatch()
     const fields = useTypedSelector(state => state.entities.fields.entities)
     const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.catalogueId))
-    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogueId))
+    const catalogueData = useTypedSelector(authUserCatalogueDataSelector(props.catalogueId))
     const nameInputRef = useRef<HTMLInputElement>(null)
     const [fieldType, setFieldType] = useState('')
     const [fieldName, setFieldName] = useState('')

@@ -20,6 +20,9 @@ const Field = (props: Props) => {
     let value = props.item.value
 
     if (field.type === 'multiple_choice') {
+        if (value === null) {
+            return null
+        }
         const values = (value as number[]).map(id =>
             fieldChoices.find(c => c.id === id)?.value
         )

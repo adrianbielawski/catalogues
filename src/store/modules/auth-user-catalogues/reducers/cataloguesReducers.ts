@@ -8,7 +8,7 @@ const networkError = {
     message: 'Something went wrong. Plaese try again.',
 }
 
-const createCatalogueData = (id: number) => ({
+export const createCatalogueData = (id: number) => ({
     id: id,
     fieldsData: [],
     isFetchingFields: false,

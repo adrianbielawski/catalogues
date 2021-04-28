@@ -3,7 +3,7 @@ import styles from './manageCatalogue.scss'
 //Redux
 import { FETCH_AUTH_USER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, authUserCatalogueSelector } from 'store/selectors'
+import { catalogueSelector, authUserCatalogueDataSelector } from 'store/selectors'
 //Components
 import CatalogueTitle from './catalogue-title/catalogueTitle'
 import CatalogueFields from './catalogue-fields/catalogueFields'
@@ -17,7 +17,7 @@ type Props = {
 const ManageCatalogue = (props: Props) => {
     const dispatch = useAppDispatch()
     const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
-    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogueId))
+    const catalogueData = useTypedSelector(authUserCatalogueDataSelector(props.catalogueId))
 
     useEffect(() => {
         dispatch(FETCH_AUTH_USER_CATALOGUE_FIELDS(props.catalogueId))

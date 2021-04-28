@@ -1,10 +1,9 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { DeserializedItem } from 'src/globalTypes'
+import { AuthUserChoiceFieldData, AuthUserFieldData, DeserializedItem } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
-import { currentUserFieldsDataSelector } from 'store/selectors'
 //Components
 import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
@@ -14,13 +13,13 @@ import IconWithTitle from 'components/global-components/icon-with-title/iconWith
 
 type Props = {
     item: DeserializedItem,
+    fieldsData: AuthUserFieldData[],
 }
 
 const EditItemFields = (props: Props) => {
     const fields = useTypedSelector(state => state.entities.fields.entities)
-    const authUserFields = useTypedSelector(currentUserFieldsDataSelector(props.item.catalogueId))
 
-    const fieldsComponents = authUserFields.map(fieldData => {
+    const fieldsComponents = props.fieldsData.map(fieldData => {
         const field = fields[fieldData.id]!
         const fieldValue = props.item.fieldsValues.filter(v => v.fieldId === field.id)[0]
 
@@ -52,6 +51,7 @@ const EditItemFields = (props: Props) => {
                             itemId={props.item.id}
                             field={field}
                             fieldValue={fieldValue}
+                            fieldData={fieldData as AuthUserChoiceFieldData}
                         />
                     </li>
                 )
@@ -62,6 +62,7 @@ const EditItemFields = (props: Props) => {
                             itemId={props.item.id}
                             field={field}
                             fieldValue={fieldValue}
+                            fieldData={fieldData as AuthUserChoiceFieldData}
                         />
                     </li>
                 )

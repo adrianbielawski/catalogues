@@ -144,6 +144,44 @@ export interface CatalogueData<F> {
 
 }
 
+export type CurrentUserCatalogueData = CatalogueData<CurrentUserFieldData>
+
+export type CurrentUserChoiceFieldData = ChoiceFieldsData<number>
+
+export type CurrentUserTextFieldData = FieldsData
+
+export type CurrentUserFieldData = CurrentUserChoiceFieldData | CurrentUserTextFieldData
+
+export interface AuthUserCatalogueData extends CatalogueData<AuthUserFieldData> {
+    isEditingCatalogueName: boolean,
+    isSubmittingCatalogueName: boolean,
+    isAddFieldFormActive: boolean,
+    isSubmittingNewField: boolean,
+    isDeletingCatalogue: boolean,
+    isSubmittingImage: boolean,
+    catalogueError: ErrorMessage | null,
+}
+
+export interface AuthUserChoiceData {
+    id: number,
+    isDeleting: boolean,
+}
+
+export interface AuthUserChoiceFieldData extends AuthUserTextFieldData, ChoiceFieldsData<AuthUserChoiceData> {
+    isFetchingChoices: boolean,
+    isPostingChoice: boolean,
+}
+
+export interface AuthUserTextFieldData extends FieldsData {
+    isChangingName: boolean,
+    isDeleting: boolean,
+    isEditing: boolean,
+    isSubmitting: boolean,
+    fieldError: ErrorMessage | null,
+}
+
+export type AuthUserFieldData = AuthUserChoiceFieldData | AuthUserTextFieldData
+
 export interface FieldsData {
     id: number,
 }

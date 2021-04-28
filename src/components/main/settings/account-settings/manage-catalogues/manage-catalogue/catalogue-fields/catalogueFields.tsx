@@ -1,7 +1,7 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserChoiceFieldData } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'

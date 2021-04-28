@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styles from './multipleChoiceField.scss'
 //Types
-import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
+import { AuthUserChoiceFieldData, DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { fieldChoicesSelector } from 'store/selectors'
@@ -15,6 +15,7 @@ interface Props {
     itemId: number,
     field: DeserializedField,
     fieldValue: DeserializedItemField,
+    fieldData: AuthUserChoiceFieldData,
 }
 
 const MultipleChoiceField = (props: Props) => {
@@ -57,6 +58,7 @@ const MultipleChoiceField = (props: Props) => {
             />
             <AddChoice
                 field={props.field}
+                fieldData={props.fieldData}
             />
         </>
     ) : getValue()

@@ -2,7 +2,6 @@ import { Dictionary, Selector } from "@reduxjs/toolkit"
 import { RootState } from "./storeConfig"
 import * as T from "src/globalTypes"
 import { CurrentUserCatalogueData, CurrentUserFieldData } from "./modules/current-user-catalogues/types"
-import { AuthUserCatalogueData, AuthUserFieldData } from "./modules/auth-user-catalogues/types"
 
 type SelectorType<T> = Selector<RootState, T>
 
@@ -58,19 +57,19 @@ export const currentUserFieldsDataSelector = (catalogueId: number): SelectorType
 )
 
 //Auth user
-export const authUserCatalogueSelector = (id: number): SelectorType<AuthUserCatalogueData> => (
+export const authUserCatalogueDataSelector = (id: number): SelectorType<T.AuthUserCatalogueData> => (
     state => state.modules.authUserCatalogues.cataloguesData.filter(c => c.id === id)[0]
 )
 
 export const authUserFieldDataSelector = (
     catalogueId: number,
     fieldId: number
-): SelectorType<AuthUserFieldData> => (
+): SelectorType<T.AuthUserFieldData> => (
     state => state.modules.authUserCatalogues.cataloguesData.filter(f =>
         f.id === catalogueId)[0].fieldsData.filter(f => f.id === fieldId)[0]
 )
 
-export const authUserFieldsDataSelector = (catalogueId: number): SelectorType<AuthUserFieldData[]> => (
+export const authUserFieldsDataSelector = (catalogueId: number): SelectorType<T.AuthUserFieldData[]> => (
     state => state.modules.authUserCatalogues.cataloguesData.filter(f =>
         f.id === catalogueId)[0].fieldsData
 )
