@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense } from 'react'
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import * as Sentry from "@sentry/react"
 import styles from 'global-styles/app.scss'
 //Redux
@@ -16,7 +16,6 @@ import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
 import SingleItem from 'components/single-item/singleItem'
-import { useSwitches } from './hooks/useSwitches'
 
 const App = () => {
   const dispatch = useAppDispatch()
@@ -24,7 +23,6 @@ const App = () => {
   const location = useLocation<LocationState>()
   const app = useTypedSelector(state => state.modules.app)
   const isInitialized = useTypedSelector(state => state.modules.authUser.isInitialized)
-  const [HOMEPAGE] = useSwitches(['HOMEPAGE'])
 
   const handleResize = () => {
     dispatch(CHANGE_SCREEN_SIZE({
@@ -60,10 +58,18 @@ const App = () => {
     >
       <Suspense fallback={<Loader />}>
         <Switch>
+          <Redirect
+            exact
+            from="/"
+            to={{
+              pathname: `/discover`,
+              state: location.state,
+            }}
+          />
           <RouteWithContext
             exact
-            path="/"
-            component={HOMEPAGE ? Homepage : Auth}
+            path="/discover"
+            component={Homepage}
           />
           <Route
             path={["/login", "/signup"]}
