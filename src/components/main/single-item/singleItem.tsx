@@ -113,6 +113,7 @@ const Item = (props: HydratedRouteComponentProps) => {
                         catalogueData={singleItem.catalogueData!}
                         isNarrow={!screenWidth.largeViewport}
                         editable={true}
+                        largeImage={screenWidth.largeViewport}
                         key={itemId}
                         onEdit={handleEditItem}
                         onSave={handleEditConfirm}

@@ -28,6 +28,7 @@ type EditableItemProps = {
     catalogueData: AuthUserCatalogueData | CurrentUserCatalogueData,
     isNarrow: boolean,
     editable: true,
+    largeImage?: boolean,
     className?: string,
     onEdit: () => void,
     onSave: (item: DeserializedItem) => void,
@@ -41,6 +42,7 @@ type ItemProps = {
     catalogueData?: CurrentUserCatalogueData,
     isNarrow: boolean,
     editable: false,
+    largeImage?: boolean,
     className?: string,
     onEdit?: never,
     onSave?: never,
@@ -106,6 +108,13 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     )
 
+    const carouselWrapperClass = cx(
+        'carouselWrapper',
+        {
+            large: props.largeImage && !isNarrow,
+        }
+    )
+
     return (
         <div className={itemClass} ref={mergeRefs([ref, itemRef])}>
             {itemData.isEditing && props.editable
@@ -131,7 +140,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                         slug={catalogue.slug}
                     />
                     <div className={styles.wrapper}>
-                        <div className={styles.carouselWrapper}>
+                        <div className={carouselWrapperClass}>
                             <ImagesCarousel
                                 images={item.images}
                                 useThumbnails={true}
