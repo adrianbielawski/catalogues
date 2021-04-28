@@ -9,6 +9,7 @@ import { currentUserSlice } from "store/modules/current-user/slice"
 import { currentUserCataloguesSlice } from "store/modules/current-user-catalogues/slice"
 import { currentUserItemsSlice } from "./current-user-items/slice"
 import { homepageSlice } from "./homepage/slice"
+import { singleItemSlice } from "./single-item/slice"
 
 export const modules = combineReducers({
     app: appSlice.reducer,
@@ -21,4 +22,5 @@ export const modules = combineReducers({
     currentUser: currentUserSlice.reducer,
     currentUserCatalogues: currentUserCataloguesSlice.reducer,
     currentUserItems: currentUserItemsSlice.reducer,
+    singleItem: singleItemSlice.reducer,
 })

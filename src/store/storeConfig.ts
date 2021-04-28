@@ -17,6 +17,7 @@ import { favouriteItemsEpics } from './modules/favourite-items/epics'
 import { currentUserEpics } from './modules/current-user/epics'
 import { currentUserCataloguesEpics } from 'store/modules/current-user-catalogues/epics'
 import { currentUserItemsEpics } from 'store/modules/current-user-items/epics'
+import { singleItemEpics } from './modules/single-item/epics'
 
 const sentryEnhancer = createReduxEnhancer()
 
@@ -31,6 +32,7 @@ const rootEpic = combineEpics(
   currentUserEpics,
   currentUserCataloguesEpics,
   currentUserItemsEpics,
+  singleItemEpics,
 )
 const epicMiddleware = createEpicMiddleware()
 
