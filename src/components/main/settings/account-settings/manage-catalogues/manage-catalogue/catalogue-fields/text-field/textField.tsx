@@ -4,8 +4,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './textField.scss'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserTextFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserTextFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
 import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch } from 'store/storeConfig'

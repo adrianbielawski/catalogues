@@ -5,8 +5,7 @@ import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from '
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserTextFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserTextFieldData, DeserializedField } from 'src/globalTypes'
 //Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 //Components

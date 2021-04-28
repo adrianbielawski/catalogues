@@ -5,8 +5,7 @@ import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choices.scss'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserChoiceData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserChoiceData, AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
 import { REMOVE_FIELD_CHOICE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -20,6 +19,7 @@ from 'components/global-components/protected-confirm-message-modal/protectedConf
 
 type Props = {
     field: DeserializedField,
+    fieldData: AuthUserChoiceFieldData,
     choices: AuthUserChoiceData[],
     className: string,
 }
@@ -115,6 +115,7 @@ const Choices = (props: Props) => {
             </ul>
             <AddChoice
                 field={props.field}
+                fieldData={props.fieldData}
             />
             <ProtectedConfirmMessageModal
                 show={protectedMessage !== null}

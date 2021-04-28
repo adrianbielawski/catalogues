@@ -10,6 +10,7 @@ import TransparentButton from 'components/global-components/transparent-button/t
 
 type Props = {
     itemId: number,
+    onClick: () => void,
 }
 
 const EditItemButton = (props: Props) => {
@@ -20,7 +21,7 @@ const EditItemButton = (props: Props) => {
     }
 
     return (
-        <TransparentButton className={styles.editButton} onClick={handleEdit}>
+        <TransparentButton className={styles.editButton} onClick={props.onClick}>
             <FontAwesomeIcon icon={faEdit} />
         </TransparentButton>
     )

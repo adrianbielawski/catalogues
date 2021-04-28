@@ -8,8 +8,8 @@ const networkError = {
     message: 'Something went wrong. Plaese try again.',
 }
 
-const createFieldData = (field: Field) => {
-    if ('choices' in field) {
+export const createFieldData = (field: Field) => {
+    if (field.type === 'multiple_choice' || field.type === 'single_choice') {
         return {
             id: field.id,
             choices: [],

@@ -6,7 +6,7 @@ import { CHANGE_FAVOURITE_ITEM, CLEAR_ITEM_ERROR } from 'store/modules/current-u
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector, userSelector } from 'store/selectors'
 //Types
-import { DeserializedItemData } from 'src/globalTypes'
+import { AuthUserCatalogueData, CurrentUserCatalogueData, DeserializedItem, DeserializedItemData } from 'src/globalTypes'
 //Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
@@ -23,14 +23,33 @@ import FavouriteIcon from 'components/global-components/favourite-icon/favourite
 import ItemHeader from './item-header/itemHeader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 
-type Props = {
+type EditableItemProps = {
     itemData: DeserializedItemData,
+    catalogueData: AuthUserCatalogueData | CurrentUserCatalogueData,
     isNarrow: boolean,
-    editable: boolean,
+    editable: true,
     className?: string,
+    onEdit: () => void,
+    onSave: (item: DeserializedItem) => void,
+    onEditCancel: (isNew: boolean) => void,
     onAddComment: (text: string, parentId?: number) => void,
-    onFetchComments: (page: number | null) => void,
+    onFetchComments: (page: number) => void,
 }
+
+type ItemProps = {
+    itemData: DeserializedItemData,
+    catalogueData?: CurrentUserCatalogueData,
+    isNarrow: boolean,
+    editable: false,
+    className?: string,
+    onEdit?: never,
+    onSave?: never,
+    onEditCancel?: never,
+    onAddComment: (text: string, parentId?: number) => void,
+    onFetchComments: (page: number) => void,
+}
+
+type Props = ItemProps | EditableItemProps
 
 const cx = classNames.bind(styles)
 
@@ -65,6 +84,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }))
     }
 
+    const handleEdit = () => {
+        if (props.onEdit) {
+            props.onEdit()
+        }
+    }
+
     const clearError = () => {
         dispatch(CLEAR_ITEM_ERROR(item.id))
     }
@@ -88,8 +113,12 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                     <EditItem
                         show={itemData.isEditing}
                         itemId={item.id}
+                        itemData={itemData}
+                        catalogueData={props.catalogueData as AuthUserCatalogueData}
                         isItemNew={false}
                         className={styles.editItem}
+                        onSave={props.onSave}
+                        onCancel={props.onEditCancel}
                     />
                 )
                 : <>
@@ -123,7 +152,10 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                     />
                                 )}
                                 {(item.permissions.canEdit && props.editable) &&
-                                    <EditItemButton itemId={item.id} />
+                                    <EditItemButton
+                                        itemId={item.id}
+                                        onClick={handleEdit}
+                                    />
                                 }
                             </div>
                             <ItemData

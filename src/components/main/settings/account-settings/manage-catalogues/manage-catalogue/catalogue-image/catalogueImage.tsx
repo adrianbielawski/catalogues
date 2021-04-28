@@ -6,7 +6,7 @@ import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
 import { POST_CATALOGUE_IMAGE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { authUserCatalogueSelector } from 'store/selectors'
+import { authUserCatalogueDataSelector } from 'store/selectors'
 //Components
 import Image from 'components/global-components/image/image'
 import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
@@ -22,7 +22,7 @@ type Props = {
 
 const CatalogueImage = (props: Props) => {
     const dispatch = useAppDispatch()
-    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.catalogue.id))
+    const catalogueData = useTypedSelector(authUserCatalogueDataSelector(props.catalogue.id))
     const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleImageChange = (e: Event<HTMLInputElement>) => {

@@ -4,8 +4,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './choiceField.scss'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
 import { CLEAR_FIELD_ERROR, TOGGLE_FIELD_EDIT } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch } from 'store/storeConfig'

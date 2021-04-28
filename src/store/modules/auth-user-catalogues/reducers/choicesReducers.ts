@@ -1,13 +1,14 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import * as T from '../types'
 import { getCatalogueDataById, getChoiceDataById, getFieldDataById } from '../selectors'
+import { AuthUserChoiceData, AuthUserChoiceFieldData } from 'src/globalTypes'
 
 const networkError = {
     title: 'Network error',
     message: 'Something went wrong. Plaese try again.',
 }
 
-const createChoice = (id: number) => ({
+export const createChoice = (id: number) => ({
     id,
     isDeleting: false,
 })
@@ -22,18 +23,18 @@ export const fetchFieldChoicesReducers = {
     FETCH_FIELD_CHOICES(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) { },
     FETCH_FIELD_CHOICES_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const { catalogueId, fieldId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.isFetchingChoices = true
     },
     FETCH_FIELD_CHOICES_SUCCESS(state: State, action: PayloadAction<T.FetchFieldChoicesPayload>) {
         const { catalogueId, fieldId, data } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.choices = data.map(c => createChoice(c.id))
         field.isFetchingChoices = false
     },
     FETCH_FIELD_CHOICES_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const { catalogueId, fieldId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.isFetchingChoices = false
     },
 }
@@ -51,7 +52,7 @@ export const fetchFieldsChoicesReducers = {
         catalogue.isInitialized = true
 
         for (const id in data) {
-            const field = getFieldDataById(state, catalogueId, parseInt(id)) as T.AuthUserChoiceFieldData
+            const field = getFieldDataById(state, catalogueId, parseInt(id)) as AuthUserChoiceFieldData
             field.choices = data[id].map(c => createChoice(c.id))
         }
     },
@@ -65,18 +66,18 @@ export const postFieldChoiceReducers = {
     POST_FIELD_CHOICE(state: State, action: PayloadAction<T.PostChoicePayload>) { },
     POST_FIELD_CHOICE_START(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const { catalogueId, fieldId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.isPostingChoice = true
     },
     POST_FIELD_CHOICE_SUCCESS(state: State, action: PayloadAction<T.PostChoiceSuccessPayload>) {
         const { catalogueId, fieldId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.choices.push(createChoice(action.payload.choice.id))
         field.isPostingChoice = false
     },
     POST_FIELD_CHOICE_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const { catalogueId, fieldId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.isPostingChoice = false
         field.fieldError = networkError
     },
@@ -86,21 +87,21 @@ export const removeFieldChoiceReducers = {
     REMOVE_FIELD_CHOICE(state: State, action: PayloadAction<T.RemoveChoicePayload>) { },
     REMOVE_FIELD_CHOICE_START(state: State, action: PayloadAction<T.RemoveChoicePayload>) {
         const { catalogueId, fieldId, choiceId } = action.payload
-        const choice = getChoiceDataById(state, catalogueId, fieldId, choiceId) as T.AuthUserChoiceData
+        const choice = getChoiceDataById(state, catalogueId, fieldId, choiceId) as AuthUserChoiceData
         choice.isDeleting = true
     },
     REMOVE_FIELD_CHOICE_SUCCESS(state: State, action: PayloadAction<T.RemoveChoicePayload>) {
         const { catalogueId, fieldId, choiceId } = action.payload
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.choices = field.choices.filter(c => c.id !== choiceId)
     },
     REMOVE_FIELD_CHOICE_FAILURE(state: State, action: PayloadAction<T.RemoveChoicePayload>) {
         const { catalogueId, fieldId, choiceId } = action.payload
         
-        const choice = getChoiceDataById(state, catalogueId, fieldId, choiceId) as T.AuthUserChoiceData
+        const choice = getChoiceDataById(state, catalogueId, fieldId, choiceId) as AuthUserChoiceData
         choice.isDeleting = false
 
-        const field = getFieldDataById(state, catalogueId, fieldId) as T.AuthUserChoiceFieldData
+        const field = getFieldDataById(state, catalogueId, fieldId) as AuthUserChoiceFieldData
         field.fieldError = networkError
     },
 }

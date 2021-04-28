@@ -7,7 +7,7 @@ import {
     CHANGE_CATALOGUE_NAME, CLEAR_CATALOGUE_ERROR, TOGGLE_CATALOGUE_NAME_EDIT
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { authUserCatalogueSelector } from 'store/selectors'
+import { authUserCatalogueDataSelector } from 'store/selectors'
 //Components
 import EditableField from 'components/global-components/editable-field/editableField'
 import Input from 'components/global-components/input/input'
@@ -22,7 +22,7 @@ const CatalogueTitle = (props: Props) => {
     const dispatch = useAppDispatch()
     const [inputError, setInputError] = useState('')
     const authUserCatalogues = useTypedSelector(state => state.modules.authUserCatalogues)
-    const catalogueData = useTypedSelector(authUserCatalogueSelector(props.id))
+    const catalogueData = useTypedSelector(authUserCatalogueDataSelector(props.id))
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const error = catalogueData.catalogueError
 

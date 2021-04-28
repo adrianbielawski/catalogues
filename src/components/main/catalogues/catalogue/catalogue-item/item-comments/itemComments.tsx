@@ -26,7 +26,7 @@ type Props = {
     isFetchingComments: boolean,
     className?: string,
     onAdd: (text: string, parentId?: number) => void,
-    onFetch: (page: number | null) => void,
+    onFetch: (page: number) => void,
 }
 
 const cx = classNames.bind(styles)

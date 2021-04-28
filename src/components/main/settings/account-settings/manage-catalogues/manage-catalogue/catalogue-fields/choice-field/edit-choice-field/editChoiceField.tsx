@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import styles from './editChoiceField.scss'
 //Types
-import { DeserializedField } from 'src/globalTypes'
-import { AuthUserChoiceFieldData } from 'store/modules/auth-user-catalogues/types'
+import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
 import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -106,6 +105,7 @@ const EditChoiceField = (props: Props) => {
                 field={props.field}
                 choices={props.fieldData.choices}
                 className={styles.choices}
+                fieldData={props.fieldData}
             />
             <Button
                 className={styles.deleteButton}
