@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router'
+import { useParams } from 'react-router-dom'
 import icon from 'assets/img/icon.svg'
 import {
     faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
@@ -11,14 +12,13 @@ import { LocationState } from 'src/globalTypes'
 //Redux
 import { LOG_OUT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+//Router
+import { RouterContext, useUrlBuilder } from 'src/router'
 //Components
-import Nav, { ItemType, ItemWithChildrenAndFaIcon } from '../nav/nav'
+import Nav, { ItemType } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
-import { useSwitches } from 'src/hooks/useSwitches'
-import { useParams } from 'react-router-dom'
-import { RouterContext, useUrlBuilder } from 'src/router'
 
 const contextValue = {
     show: false,
@@ -37,7 +37,6 @@ const Header = () => {
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const cataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.cataloguesData)
     const favouriteCatalogues = useTypedSelector(state => state.modules.authUserFavoirites.cataloguesIds)
-    const [FAVOURITE_ITEMS, USER_DASHBOARD] = useSwitches(['FAVOURITE_ITEMS', 'USER_DASHBOARD'])
     const params = useParams()
     const routerContext = useContext(RouterContext)
     const buildUrl = useUrlBuilder()
@@ -60,6 +59,12 @@ const Header = () => {
 
     const NAV_ITEMS: ItemType[] = authUser !== null ? [
         {
+            id: 'User dashboard',
+            title: 'User dashboard',
+            faIcon: faHouseUser,
+            url: `/${authUser!.username}`,
+        },
+        {
             id: 'Favourites',
             title: 'Favourites',
             faIcon: faHeart,
@@ -78,7 +83,12 @@ const Header = () => {
                         />,
                         url: `/${users[catalogues[id]!.createdBy]!.username}/catalogues/${catalogues[id]!.slug}`,
                     })),
-                },
+                }, {
+                    id: 'Favourite items',
+                    title: 'Favourite items',
+                    faIcon: faTh,
+                    url: `/${authUser!.username}/favourite-items`,
+                }
             ]
         },
         {
@@ -141,24 +151,6 @@ const Header = () => {
     if (!authUser && (location.pathname === '/login')) {
         const loginIndex = NAV_ITEMS.findIndex(item => item.id !== 'Login')
         NAV_ITEMS.splice(loginIndex, 1)
-    }
-
-    if (authUser !== null && FAVOURITE_ITEMS) {
-        (NAV_ITEMS[0] as ItemWithChildrenAndFaIcon).children.push({
-            id: 'Favourite items',
-            title: 'Favourite items',
-            faIcon: faTh,
-            url: `/${authUser!.username}/favourite-items`,
-        })
-    }
-
-    if (authUser !== null && USER_DASHBOARD) {
-        NAV_ITEMS.unshift({
-            id: 'User dashboard',
-            title: 'User dashboard',
-            faIcon: faHouseUser,
-            url: `/${authUser!.username}`,
-        })
     }
 
     return (
