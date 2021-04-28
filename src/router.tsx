@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect, ComponentType, createContext } from 'react'
 import { generatePath, Redirect, Route, RouteComponentProps, RouteProps, useLocation } from 'react-router-dom'
 import { useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, catalogueSelectorBySlug } from 'store/selectors'
-import { DeserializedCatalogue } from './globalTypes'
+import { catalogueSelector, catalogueSelectorBySlug, itemSelector } from 'store/selectors'
+import { DeserializedCatalogue, DeserializedItem } from './globalTypes'
 import { StaticContext, Switch, useHistory } from 'react-router'
 import * as H from 'history'
 
@@ -23,12 +23,15 @@ type PrivateRouteProps = PrivateRoutePropsWithComponent | PrivateRoutePropsWithR
 export type DehydratedParams = {
     username?: string,
     slug?: string,
+    itemId?: number,
 }
 
 export interface HydratedParams {
     username?: string,
     slug?: string,
     catalogue?: DeserializedCatalogue,
+    itemId?: number,
+    item?: DeserializedItem,
 }
 
 interface Match {
@@ -66,23 +69,29 @@ const useParamHydrator = () => {
     const currentUser = state.entities.users.entities[currentUserData.userId!]!
 
     const hydrate = (params: DehydratedParams): HydratedParams => {
-        const hydrated: HydratedParams = {}
+        const hydrated: HydratedParams = params
         if (params.username !== undefined) {
             hydrated.username = currentUser.username
         }
         if (params.slug !== undefined) {
             hydrated.catalogue = catalogueSelectorBySlug(params.slug)(state)
         }
+        if (params.itemId !== undefined) {
+            hydrated.item = itemSelector(params.itemId)(state)
+        }
         return hydrated
     }
 
     const dehydrate = (params: HydratedParams): DehydratedParams => {
-        const dehydrated: DehydratedParams = {}
+        const dehydrated: DehydratedParams = params
         if (params.username !== undefined) {
             dehydrated.username = currentUser.username
         }
         if (params.catalogue !== undefined) {
             dehydrated.slug = catalogueSelector(params.catalogue.id)(state)?.slug
+        }
+        if (params.item !== undefined) {
+            dehydrated.itemId = itemSelector(params.item.id)(state)?.id
         }
         return dehydrated
     }
