@@ -30,7 +30,7 @@ const FavouriteItems = (props: Props) => {
             )
             filtersContext.changeFilters(filters)
         }
-    }, [favouriteItems.isFetchingData])
+    }, [favouriteItems.isFetchingData, favouriteItems.cataloguesIds, catalogues])
 
     return (
         <SideBar

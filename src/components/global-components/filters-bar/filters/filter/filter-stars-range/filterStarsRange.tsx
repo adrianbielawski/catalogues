@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useContext } from 'react'
 import styles from './filterStarsRange.scss'
 //Types
 import { FilterWithoutChoices, Range } from '../../filtersTypes'
@@ -18,12 +18,6 @@ const FilterRange = (props: Props) => {
     const gte = selectedRange?.gte as number
     const lte = selectedRange?.lte as number
     const selected = (gte && lte) ? [gte, lte] : []
-
-    useEffect(() => {
-        if (!props.active) {
-            changeSelectedFilters(props.filter.id, null)
-        }
-    }, [props.active])
 
     const handleChange = (newSelected: number[]) => {
         let newRange: Range | null = newSelected.length > 0
