@@ -46,7 +46,7 @@ const Header = () => {
     }
 
     const handleLogoClick = () => {
-        history.push('/', {
+        history.push('/discover', {
             referrer: {
                 pathname: buildUrl({
                     pathname: routerContext.match?.path,
