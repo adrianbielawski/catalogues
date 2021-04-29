@@ -2,10 +2,8 @@
 
 .singleItem {
     .content {
-        padding: 20px 0;
-
+        padding: 20px 5%;
         .item {
-            width: 95%;
             max-width: 950px;
             margin: 0 auto;
         }
@@ -20,4 +18,12 @@
 
 .loader {
     margin: 30px auto;
+}
+
+@media only screen and (max-width: 640px) {
+    .singleItem {
+        .content {
+            padding: 0;
+        }
+    }
 }
