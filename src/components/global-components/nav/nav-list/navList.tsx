@@ -48,6 +48,10 @@ const NavList = (props: Props) => {
         setMaxHeight(app.screenHeight - top)
     }, [props.top, app.screenHeight, app.screenWidth])
 
+    const handleListClick = (e: React.MouseEvent) => {
+        e.stopPropagation()
+    }
+
     const getItems = () => {
         if (!props.item.children.length) {
             return (
@@ -58,7 +62,8 @@ const NavList = (props: Props) => {
         }
 
         return props.item.children.map(item => {
-            const handleItemClick = () => {
+            const handleItemClick = (e: React.MouseEvent) => {
+                e.stopPropagation()
                 if ('onClick' in item && item.onClick) {
                     item.onClick()
                 }
@@ -112,6 +117,7 @@ const NavList = (props: Props) => {
             <div
                 className={styles.listWrapper}
                 style={{ maxHeight }}
+                onClick={handleListClick}
             >
                 {listId && (
                     <>

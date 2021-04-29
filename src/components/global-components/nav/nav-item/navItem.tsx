@@ -11,7 +11,7 @@ interface Props {
     active?: boolean,
     className?: string,
     showTitle?: boolean,
-    onClick: () => void,
+    onClick: (e: React.MouseEvent) => void,
 }
 
 const cx = classNames.bind(styles)

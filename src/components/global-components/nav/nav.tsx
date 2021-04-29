@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useRef } from 'react'
+import React, { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.scss'
@@ -83,6 +83,24 @@ const Nav = (props: Props) => {
     const routerContext = useContext(RouterContext)
     const { show, listId, nestedListId, showList, closeList } = useContext(NavContext)
     const buildUrl = useUrlBuilder()
+
+    const handleCloseList = useCallback(
+        (e: MouseEvent) => {
+            if (!navRef.current?.contains(e.target as Node)) {
+                closeList()
+            }
+        },
+        [closeList]
+    )
+
+    useEffect(() => {
+        if (show) {
+            window.addEventListener('click', handleCloseList, { passive: false })
+        }
+        return () => {
+            window.removeEventListener('click', handleCloseList)
+        }
+    }, [show, close])
 
     const getItemById = () => {
         const item = props.items.filter(i => i.id === listId)[0]
