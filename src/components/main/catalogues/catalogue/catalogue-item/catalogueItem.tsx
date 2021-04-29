@@ -22,6 +22,7 @@ import ItemComments from './item-comments/itemComments'
 import FavouriteIcon from 'components/global-components/favourite-icon/favouriteIcon'
 import ItemHeader from './item-header/itemHeader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import ShareButton from 'components/global-components/share-button/shareButton'
 
 type EditableItemProps = {
     itemData: DeserializedItemData,
@@ -96,6 +97,10 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         dispatch(CLEAR_ITEM_ERROR(item.id))
     }
 
+    const shareData = {
+        title: 'Catalogues',
+        url: `https://catalogues.adrian.bielaw.ski/item/${item.id}`,
+    }
     const isImagesPreviewAllowed = item.images.length && largeViewport
     const showImagesCounter = item.images.length > 1
     const error = itemData.itemError
@@ -160,6 +165,10 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                                         onChange={handleFavouriteChange}
                                     />
                                 )}
+                                <ShareButton
+                                    className={styles.shareButton}
+                                    data={shareData}
+                                />
                                 {(item.permissions.canEdit && props.editable) &&
                                     <EditItemButton
                                         itemId={item.id}

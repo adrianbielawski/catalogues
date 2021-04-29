@@ -26,12 +26,13 @@
                 display: flex;
                 align-items: center;
                 margin: 0 5px 5px;
-                .favouriteIcon {
+                .favouriteIcon,
+                .shareButton  {
                     margin-left: 10px;
                 }
             }
             .itemData,
-            .itemFields {
+            .itemFields{
                 margin: 0 5px 15px;
             }
         }
