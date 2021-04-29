@@ -13,6 +13,7 @@ module.exports = merge(common, {
   },
   devServer: {
     historyApiFallback: true,
+    https: true,
   },
   devtool: 'cheap-module-eval-source-map',
   plugins: [
@@ -23,7 +24,7 @@ module.exports = merge(common, {
     }),
     new DefinePlugin({
         'process.env.PUBLIC_URL': JSON.stringify(basename),
-        'process.env.API_URL': JSON.stringify('http://192.168.1.10:8000'),
+        'process.env.API_URL': JSON.stringify('https://192.168.1.10:8000'),
         'process.env.WS_URL': JSON.stringify('ws://192.168.1.10:8000'),
     })
   ],

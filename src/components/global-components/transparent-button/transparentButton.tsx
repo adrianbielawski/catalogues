@@ -7,7 +7,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     children: React.ComponentType<any> | string | HTMLElement | JSX.Element,
     loading?: boolean,
     className?: string,
-    onClick: (e: React.MouseEvent) => void,
+    onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
 const cx = classNames.bind(styles)
