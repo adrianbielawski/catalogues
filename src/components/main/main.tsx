@@ -5,8 +5,6 @@ import styles from './main.scss'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux
-import { FETCH_AUTH_USER_CATALOGUES } from 'store/modules/auth-user-catalogues/slice'
-import { FETCH_FAVOURITE_CATALOGUES } from 'store/modules/auth-user-favourites/slice'
 import { CLEAR_CURRENT_USER_ERROR, GET_CURRENT_USER } from 'store/modules/current-user/slice'
 import { useTypedSelector } from 'store/storeConfig'
 //Components
@@ -34,14 +32,6 @@ const Main = (props: HydratedRouteComponentProps) => {
         }
         dispatch(GET_CURRENT_USER(username))
     }, [username])
-
-    useEffect(() => {
-        if (!authUser) {
-            return
-        }
-        dispatch(FETCH_AUTH_USER_CATALOGUES())
-        dispatch(FETCH_FAVOURITE_CATALOGUES())
-    }, [authUser?.id])
 
     const handleCloseMessage = () => {
         dispatch(CLEAR_CURRENT_USER_ERROR())

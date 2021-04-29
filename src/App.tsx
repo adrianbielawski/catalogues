@@ -16,13 +16,15 @@ import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
 import Homepage from 'components/homepage/homepage'
 import SingleItem from 'components/single-item/singleItem'
+import { FETCH_AUTH_USER_CATALOGUES } from 'store/modules/auth-user-catalogues/slice'
+import { FETCH_FAVOURITE_CATALOGUES } from 'store/modules/auth-user-favourites/slice'
 
 const App = () => {
   const dispatch = useAppDispatch()
   const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
   const app = useTypedSelector(state => state.modules.app)
-  const isInitialized = useTypedSelector(state => state.modules.authUser.isInitialized)
+  const authUser = useTypedSelector(state => state.modules.authUser)
 
   const handleResize = () => {
     dispatch(CHANGE_SCREEN_SIZE({
@@ -47,7 +49,15 @@ const App = () => {
     dispatch(FETCH_SWITCHES())
   }, [])
 
-  if (!isInitialized || app.fetchingSwitches) {
+  useEffect(() => {
+      if (!authUser) {
+          return
+      }
+      dispatch(FETCH_AUTH_USER_CATALOGUES())
+      dispatch(FETCH_FAVOURITE_CATALOGUES())
+  }, [authUser?.id])
+
+  if (!authUser.isInitialized || app.fetchingSwitches) {
     return <Loader className={styles.loader} />
   }
 
