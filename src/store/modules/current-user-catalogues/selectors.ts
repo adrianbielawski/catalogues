@@ -1,4 +1,5 @@
-import { CurrentUserCataloguesState, CurrentUserFieldData } from "./types"
+import { CurrentUserFieldData } from "src/globalTypes"
+import { CurrentUserCataloguesState } from "./types"
 
 export const getCatalogueDataById = (
     state: CurrentUserCataloguesState,

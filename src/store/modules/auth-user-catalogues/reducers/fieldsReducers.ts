@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { Field } from 'src/globalTypes'
+import { AuthUserChoiceFieldData, Field } from 'src/globalTypes'
 import * as T from '../types'
 import { getCatalogueDataById, getFieldDataById } from '../selectors'
 
@@ -9,29 +9,20 @@ const networkError = {
 }
 
 export const createFieldData = (field: Field) => {
-    if (field.type === 'multiple_choice' || field.type === 'single_choice') {
-        return {
-            id: field.id,
-            choices: [],
-            isFetchingChoices: true,
-            isPostingChoice: false,
-            isRemovingChoice: false,
-            isChangingName: false,
-            isDeleting: false,
-            isEditing: false,
-            isSubmitting: false,
-            fieldError: null,
-        }
-    } else {
-        return {
-            id: field.id,
-            isChangingName: false,
-            isDeleting: false,
-            isEditing: false,
-            isSubmitting: false,
-            fieldError: null,
-        }
+    const newField = {
+        id: field.id,
+        isChangingName: false,
+        isDeleting: false,
+        isEditing: false,
+        isSubmitting: false,
+        fieldError: null,
     }
+
+    if (field.type === 'multiple_choice' || field.type === 'single_choice') {
+        (newField as AuthUserChoiceFieldData).choices = []
+    }
+
+    return newField
 }
 
 type State = T.AuthUserCataloguesState

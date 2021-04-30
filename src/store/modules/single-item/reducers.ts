@@ -3,7 +3,7 @@ import { networkError } from 'src/constants'
 import { AuthUserChoiceFieldData, Choice, DeserializedItem, Field, Item, ItemCommentParent, ListData } from 'src/globalTypes'
 import { itemCommentDataDeserializer, itemDataDeserializer, listDeserializer } from 'src/serializers'
 import { createCatalogueData } from '../auth-user-catalogues/reducers/cataloguesReducers'
-import { createChoice } from '../auth-user-catalogues/reducers/choicesReducers'
+import { createChoiceData } from '../auth-user-catalogues/reducers/choicesReducers'
 import { createFieldData } from '../auth-user-catalogues/reducers/fieldsReducers'
 import { getFieldDataById, getItemCommentDataById } from './selectors'
 import { initialState } from './slice'
@@ -93,7 +93,7 @@ export const fetchSingleItemChoices = {
     FETCH_SINGLE_ITEM_CHOICES_SUCCESS(state: State, action: PayloadAction<Record<number, Choice[]>>) {
         for (const id in action.payload) {
             const field = getFieldDataById(state, parseInt(id)) as AuthUserChoiceFieldData
-            field.choices = action.payload[id].map(c => createChoice(c.id))
+            field.choices = action.payload[id].map(c => createChoiceData(c.id))
             field.isFetchingChoices = false
         }
 

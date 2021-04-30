@@ -1,7 +1,6 @@
 import { Dictionary, Selector } from "@reduxjs/toolkit"
 import { RootState } from "./storeConfig"
 import * as T from "src/globalTypes"
-import { CurrentUserCatalogueData, CurrentUserFieldData } from "./modules/current-user-catalogues/types"
 
 type SelectorType<T> = Selector<RootState, T>
 
@@ -39,19 +38,19 @@ export const fieldChoicesSelector = (fieldId: number): SelectorType<T.Deserializ
 )
 
 //Current user
-export const currentUserCatalogueSelector = (id: number): SelectorType<CurrentUserCatalogueData> => (
+export const currentUserCatalogueSelector = (id: number): SelectorType<T.CurrentUserCatalogueData> => (
     state => state.modules.currentUserCatalogues.cataloguesData.filter(c => c.id === id)[0]
 )
 
 export const currentUserFieldDataSelector = (
     catalogueId: number,
     fieldId: number
-): SelectorType<CurrentUserFieldData> => (
+): SelectorType<T.CurrentUserFieldData> => (
     state => state.modules.currentUserCatalogues.cataloguesData.filter(c =>
         c.id === catalogueId)[0].fieldsData.filter(f => f.id === fieldId)[0]
 )
 
-export const currentUserFieldsDataSelector = (catalogueId: number): SelectorType<CurrentUserFieldData[]> => (
+export const currentUserFieldsDataSelector = (catalogueId: number): SelectorType<T.CurrentUserFieldData[]> => (
     state => state.modules.currentUserCatalogues.cataloguesData.filter(c =>
         c.id === catalogueId)[0].fieldsData
 )

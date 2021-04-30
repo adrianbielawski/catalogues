@@ -35,8 +35,6 @@ export const authUserCataloguesSlice = createSlice({
         ...fieldsReducers.deleteCatalogueFieldReducers,
         ...fieldsReducers.changeFieldNameReducers,
         ...fieldsReducers.changePublicFieldReducers,
-        ...fieldsChoicesReducers.fieldChoicesReducers,
-        ...fieldsChoicesReducers.fetchFieldChoicesReducers,
         ...fieldsChoicesReducers.fetchFieldsChoicesReducers,
         ...fieldsChoicesReducers.postFieldChoiceReducers,
         ...fieldsChoicesReducers.removeFieldChoiceReducers,
@@ -68,9 +66,7 @@ export const {
     CHANGE_FIELD_NAME, CHANGE_FIELD_NAME_START, CHANGE_FIELD_NAME_SUCCESS, CHANGE_FIELD_NAME_FAILURE,
     CHANGE_FIELD_PUBLIC, CHANGE_FIELD_PUBLIC_SUCCESS, CHANGE_FIELD_PUBLIC_FAILURE,
     //Choices reducers
-    REFRESH_FIELD_CHOICES,
-    FETCH_FIELD_CHOICES, FETCH_FIELD_CHOICES_START, FETCH_FIELD_CHOICES_SUCCESS, FETCH_FIELD_CHOICES_FAILURE,
     FETCH_FIELDS_CHOICES, FETCH_FIELDS_CHOICES_START, FETCH_FIELDS_CHOICES_SUCCESS, FETCH_FIELDS_CHOICES_FAILURE,
-    POST_FIELD_CHOICE, POST_FIELD_CHOICE_START, POST_FIELD_CHOICE_SUCCESS, POST_FIELD_CHOICE_FAILURE,
-    REMOVE_FIELD_CHOICE, REMOVE_FIELD_CHOICE_START, REMOVE_FIELD_CHOICE_SUCCESS, REMOVE_FIELD_CHOICE_FAILURE,
+    POST_FIELD_CHOICE, POST_FIELD_CHOICE_SUCCESS, POST_FIELD_CHOICE_FAILURE,
+    REMOVE_FIELD_CHOICE, REMOVE_FIELD_CHOICE_SUCCESS, REMOVE_FIELD_CHOICE_FAILURE,
 } = authUserCataloguesSlice.actions

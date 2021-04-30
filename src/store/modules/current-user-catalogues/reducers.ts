@@ -1,20 +1,19 @@
 import { PayloadAction } from '@reduxjs/toolkit'
-import { Catalogue, Field } from 'src/globalTypes'
+import { Catalogue, CurrentUserChoiceFieldData, Field } from 'src/globalTypes'
 import { getCatalogueDataById, getFieldDataById } from './selectors'
 import * as T from './types'
 
 const getCatalogueFieldData = (field: Field) => {
-    if ('choices' in field) {
-        return {
-            id: field.id,
-            choices: [],
-            isFetchingChoices: true,
-        }
-    } else {
-        return {
-            id: field.id,
-        }
+    const newField = {
+        id: field.id,
     }
+
+    if ('choices' in field) {
+        (newField as CurrentUserChoiceFieldData).isFetchingChoices = false;
+        (newField as CurrentUserChoiceFieldData).choices = [];
+    }
+
+    return newField
 }
 
 type State = T.CurrentUserCataloguesState
@@ -74,7 +73,7 @@ export const fetchFieldsChoicesReducers = {
         const data = action.payload.data
 
         for (const id in data) {
-            const field = getFieldDataById(state, action.payload.catalogueId, parseInt(id)) as T.CurrentUserChoiceFieldData
+            const field = getFieldDataById(state, action.payload.catalogueId, parseInt(id)) as CurrentUserChoiceFieldData
             field.choices = data[id].map(c => c.id)
         }
     },

@@ -1,4 +1,4 @@
-import { CatalogueData, Choice, ChoiceFieldsData, Field, FieldsData } from "src/globalTypes";
+import { Choice, CurrentUserCatalogueData, Field } from "src/globalTypes";
 
 export interface CurrentUserCataloguesState {
     cataloguesData: CurrentUserCatalogueData[],
@@ -6,13 +6,13 @@ export interface CurrentUserCataloguesState {
     isFetchingCatalogues: boolean,
 }
 
-export type CurrentUserCatalogueData = CatalogueData<CurrentUserFieldData>
+// export type CurrentUserCatalogueData = CatalogueData<CurrentUserFieldData>
 
-export type CurrentUserChoiceFieldData = ChoiceFieldsData<number>
+// export type CurrentUserChoiceFieldData = ChoiceFieldsData<number>
 
-export type CurrentUserTextFieldData = FieldsData
+// export type CurrentUserTextFieldData = FieldsData
 
-export type CurrentUserFieldData = CurrentUserChoiceFieldData | CurrentUserTextFieldData
+// export type CurrentUserFieldData = CurrentUserChoiceFieldData | CurrentUserTextFieldData
 
 //Payloads
 export interface CatalogueAndFieldIdPayload {

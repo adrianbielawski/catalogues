@@ -188,6 +188,7 @@ export interface FieldsData {
 
 export interface ChoiceFieldsData<C> extends FieldsData {
     choices: C[],
+    isFetchingChoices: boolean,
 }
 
 export interface RecommendedCatalogues extends ListData<Catalogue> { }

@@ -1,8 +1,7 @@
 import { Dictionary } from "@reduxjs/toolkit"
 import moment from "moment"
-import { DeserializedChoice, DeserializedField, ItemsRanges } from "src/globalTypes"
+import { CurrentUserChoiceFieldData, CurrentUserFieldData, DeserializedChoice, DeserializedField, ItemsRanges } from "src/globalTypes"
 import { Choice, FilterType } from "components/global-components/filters-bar/filters/filtersTypes"
-import { CurrentUserChoiceFieldData, CurrentUserFieldData } from "store/modules/current-user-catalogues/types"
 
 const buildFilterChoice = (choice: DeserializedChoice): Choice => ({
     id: choice.value,
