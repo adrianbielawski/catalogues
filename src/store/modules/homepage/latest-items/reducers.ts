@@ -3,9 +3,16 @@ import { networkError } from 'src/constants'
 import { Field, Item, ListData } from 'src/globalTypes'
 import { itemCommentDataDeserializer, itemDataDeserializer, listDeserializer } from 'src/serializers'
 import { getItemCommentDataById, getItemCommentsDataById, getItemDataById } from './selectors'
+import { initialState } from './slice'
 import * as T from './types'
 
 type State = T.LatestItemsState
+
+export const latestItems = {
+    CLEAR_LATEST_ITEMS(state: State) {
+        Object.assign(state, initialState)
+    },
+}
 
 export const fetchLatestItems = {
     FETCH_LATEST_ITEMS(state: State, action: PayloadAction<number>) { },
@@ -14,7 +21,7 @@ export const fetchLatestItems = {
         state.isFetchingItems = true
     },
     FETCH_LATEST_ITEMS_SUCCESS(state: State, action: PayloadAction<ListData<Item>>) {
-        const prevResults = action.payload.current === 1 ? [] : current(state).itemsData.results
+        const prevResults = current(state).itemsData?.results || []
         const itemsData = listDeserializer(action.payload, itemDataDeserializer, prevResults)
         state.itemsData = { ...itemsData }
         state.isFetchingItems = false

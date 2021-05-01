@@ -1,11 +1,18 @@
 import { current, PayloadAction } from '@reduxjs/toolkit'
 import { networkError } from 'src/constants'
-import { Field, Item, ListData } from 'src/globalTypes'
+import { DeserializedItemData, Field, Item, ListData } from 'src/globalTypes'
 import { itemCommentDataDeserializer, itemDataDeserializer, listDeserializer } from 'src/serializers'
+import { initialState } from './slice'
 import { getItemCommentDataById, getItemCommentsDataById, getItemDataById } from './selectors'
 import * as T from './types'
 
 type State = T.LatestFromFavouritesState
+
+export const LFF = {
+    CLEAR_LFF(state: State) {
+        Object.assign(state, initialState)
+    },
+}
 
 export const fetchLFF = {
     FETCH_LFF(state: State, action: PayloadAction<number>) { },
@@ -14,7 +21,7 @@ export const fetchLFF = {
         state.isFetchingItems = true
     },
     FETCH_LFF_SUCCESS(state: State, action: PayloadAction<ListData<Item>>) {
-        const prevResults = action.payload.current === 1 ? [] : current(state).itemsData.results
+        const prevResults = current(state).itemsData?.results || []
         const itemsData = listDeserializer(action.payload, itemDataDeserializer, prevResults)
         state.itemsData = { ...itemsData }
         state.isFetchingItems = false
@@ -30,11 +37,12 @@ export const fetchLFFItemsComments = {
     FETCH_LFF_ITEMS_COMMENTS_SUCCESS(state: State, action: PayloadAction<T.FetchLFFItemsCommentsSuccessPayload>) {
         const data = action.payload
         for (const id in data) {
-            const itemData = getItemDataById(state, parseInt(id))
+            const itemData = getItemDataById(state, parseInt(id)) || {} as DeserializedItemData
+            console.log(itemData)
             itemData.commentsData = listDeserializer(
                 data[id],
                 itemCommentDataDeserializer,
-                itemData.commentsData.results,
+                itemData.commentsData?.results || [],
             )
         itemData.isFetchingComments = false
         itemData.commentsData.startIndex = 1
@@ -81,11 +89,11 @@ export const fetchLFFChoices = {
 export const fetchLFFItemComments = {
     FETCH_LFF_ITEM_COMMENTS(state: State, action: PayloadAction<T.FetchLFFItemCommentsPayload>) { },
     FETCH_LFF_ITEM_COMMENTS_START(state: State, action: PayloadAction<number>) {
-        const itemData = getItemDataById(state, action.payload)
+        const itemData = getItemDataById(state, action.payload)!
         itemData.isFetchingComments = true
     },
     FETCH_LFF_ITEM_COMMENTS_SUCCESS(state: State, action: PayloadAction<T.FetchLFFItemCommentsSuccessPayload>) {
-        const itemData = getItemDataById(state, action.payload.itemId)
+        const itemData = getItemDataById(state, action.payload.itemId)!
         itemData.isFetchingComments = false
         itemData.commentsData = listDeserializer(
             action.payload.data,
@@ -95,7 +103,7 @@ export const fetchLFFItemComments = {
         itemData.commentsData.startIndex = 1
     },
     FETCH_LFF_ITEM_COMMENTS_FAILURE(state: State, action: PayloadAction<number>) {
-        const itemData = getItemDataById(state, action.payload)
+        const itemData = getItemDataById(state, action.payload)!
         itemData.isFetchingComments = false
     },
 }
@@ -103,16 +111,16 @@ export const fetchLFFItemComments = {
 export const postLFFItemComment = {
     POST_LFF_ITEM_COMMENT(state: State, action: PayloadAction<T.PostLFFItemCommentPayload>) { },
     POST_LFF_ITEM_COMMENT_START(state: State, action: PayloadAction<number>) {
-        const itemData = getItemDataById(state, action.payload)
+        const itemData = getItemDataById(state, action.payload)!
         itemData.isPostingComment = true
     },
     POST_LFF_ITEM_COMMENT_SUCCESS(state: State, action: PayloadAction<T.PostLFFItemCommentSuccessPayload>) {
-        const itemData = getItemDataById(state, action.payload.item_id)
-        const commentsData = getItemCommentsDataById(state, action.payload.item_id)
+        const itemData = getItemDataById(state, action.payload.item_id)!
+        const commentsData = getItemCommentsDataById(state, action.payload.item_id)!
         const parentId = action.payload.parent_id
 
         if (parentId) {
-            const parentComment = getItemCommentDataById(state, action.payload.item_id, parentId)
+            const parentComment = getItemCommentDataById(state, action.payload.item_id, parentId)!
             parentComment.children.unshift(action.payload.id)
         } else {
             commentsData.results.unshift({
@@ -125,7 +133,7 @@ export const postLFFItemComment = {
         itemData.isPostingComment = false
     },
     POST_LFF_ITEM_COMMENT_FAILURE(state: State, action: PayloadAction<number>) {
-        const itemData = getItemDataById(state, action.payload)
+        const itemData = getItemDataById(state, action.payload)!
         itemData.isPostingComment = false
         itemData.itemError = networkError
     },

@@ -4,16 +4,7 @@ import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as reducers from './reducers'
 
 const initialState: T.CurrentUserItemsState = {
-    itemsData: {
-        count: null,
-        pageSize: null,
-        startIndex: null,
-        endIndex: null,
-        current: null,
-        next: null,
-        previous: null,
-        results: [],
-    },
+    itemsData: null,
     catalogueId: null,
     isFetchingItems: true,
     isCreatingNewItem: false,

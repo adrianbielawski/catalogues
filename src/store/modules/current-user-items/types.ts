@@ -1,7 +1,7 @@
 import * as T from "src/globalTypes";
 
 export interface CurrentUserItemsState {
-    itemsData: T.DeserializedListData<T.DeserializedItemData>,
+    itemsData: T.DeserializedListData<T.DeserializedItemData> | null,
     catalogueId: number | null,
     isFetchingItems: boolean,
     isCreatingNewItem: boolean,

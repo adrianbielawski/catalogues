@@ -13,7 +13,7 @@ type State = T.SingleItemSliceState
 
 export const singleItems = {
     CLEAR_SINGLE_ITEM_DATA(state: State) {
-        state = initialState
+        Object.assign(state, initialState)
     },
     CLEAR_SINGLE_ITEM_ERROR(state: State) {
         state.error = null

@@ -1,7 +1,7 @@
 import * as T from "src/globalTypes"
 
 export interface FavouriteItemsSliceState {
-    itemsData: T.DeserializedListData<T.DeserializedItemData>,
+    itemsData: T.DeserializedListData<T.DeserializedItemData> | null,
     cataloguesIds: number[],
     isFetchingItems: boolean,
     isFetchingData: boolean,

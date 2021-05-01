@@ -2,7 +2,9 @@ import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './recommendedCatalogues.scss'
 //Redux
-import { FETCH_RECOMMENDED_CATALOGUES } from 'store/modules/auth-user-dashboard/recomended-catalogues/slice'
+import {
+    CLEAR_RECOMENDED_CATALOGUES, FETCH_RECOMMENDED_CATALOGUES
+} from 'store/modules/auth-user-dashboard/recomended-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
@@ -15,37 +17,43 @@ const RecommendedCatalogues = () => {
     const dispatch = useAppDispatch()
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const recommended = useTypedSelector(state => state.modules.authUserDashboard.recomendedCatalogues)
-    const cataloguesData = recommended.cataloguesData
+    const cataloguesData = recommended.cataloguesData!
 
     useEffect(() => {
         fetchRecommended()
+
+        return () => {
+            dispatch(CLEAR_RECOMENDED_CATALOGUES())
+        }
     }, [])
 
     const fetchRecommended = () => {
         dispatch(FETCH_RECOMMENDED_CATALOGUES({
-            page: cataloguesData.next || 1,
-            salt: cataloguesData.salt || undefined,
+            page: cataloguesData?.next || 1,
+            salt: cataloguesData?.salt || undefined,
         }))
     }
 
-    const cataloguesComponents = cataloguesData.results.map((id, i) => {
-        const catalogueCardClass = cx(
-            'catalogueCard',
-            {
-                last: i === cataloguesData.results.length - 1,
-            }
-        )
+    const cataloguesComponents = () => {
+        return cataloguesData.results.map((id, i) => {
+            const catalogueCardClass = cx(
+                'catalogueCard',
+                {
+                    last: i === cataloguesData.results.length - 1,
+                }
+            )
 
-        return (
-            <CatalogueCard
-                className={catalogueCardClass}
-                catalogue={catalogues[id]!}
-                key={id}
-            />
-        )
-    })
+            return (
+                <CatalogueCard
+                    className={catalogueCardClass}
+                    catalogue={catalogues[id]!}
+                    key={id}
+                />
+            )
+        })
+    }
 
-    if (recommended.isFetchingCatalogues && !cataloguesData.results.length) {
+    if (!cataloguesData || recommended.isFetchingCatalogues && !cataloguesData.results.length) {
         return <Loader className={styles.loader} />
     }
 
@@ -58,7 +66,7 @@ const RecommendedCatalogues = () => {
             intersectingElement={3}
             onLoadMore={fetchRecommended}
         >
-            {cataloguesComponents}
+            {cataloguesComponents()}
         </PaginatedList>
     )
 }

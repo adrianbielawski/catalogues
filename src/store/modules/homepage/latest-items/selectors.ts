@@ -7,7 +7,7 @@ export const getItemDataById = (
     state: State,
     itemId: number,
 ): DeserializedItemData => (
-    state.itemsData.results.filter(i => i.id === itemId)[0]
+    state.itemsData!.results.filter(i => i.id === itemId)[0]
 )
 
 export const getItemCommentsDataById = (

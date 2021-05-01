@@ -61,7 +61,7 @@ export const fetchTopItemsCataloguesEpic = (
     })
 )
 
-export const fetchTopItemsItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
+export const fetchTopItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_TOP_ITEMS_SUCCESS.match),
     mergeMap(action => {
         const items = action.payload.results
@@ -214,7 +214,7 @@ export const fetchTopItemCommentsEpic = (action$: Observable<Action>) => action$
 
 export const topItemsEpics = combineEpics(
     fetchTopItemsEpic,
-    fetchTopItemsItemsCommentsEpic,
+    fetchTopItemsCommentsEpic,
     fetchTopItemsCataloguesEpic,
     fetchTopItemsFieldsEpic,
     fetchTopItemsChoicesEpic,

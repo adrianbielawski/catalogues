@@ -84,7 +84,7 @@ const CatalogueItems = (props: Props) => {
         let page = 1
 
         if (currentUserItems.catalogueId === props.catalogueId) {
-            page = pageNum || itemsData.next || 1
+            page = pageNum || itemsData!.next || 1
         }
 
         const query = queryBuilder(filtersBarContext)
@@ -100,7 +100,7 @@ const CatalogueItems = (props: Props) => {
         }))
     }
 
-    const getItems = () => itemsData.results.map(itemData => {
+    const getItems = () => itemsData!.results.map(itemData => {
         const handleAddComment = (text: string, parentId?: number) => {
             dispatch(POST_ITEM_COMMENT({
                 itemId: itemData.id,
@@ -197,19 +197,20 @@ const CatalogueItems = (props: Props) => {
         dispatch(CLEAR_ITEMS_DATA_ERROR())
     }
 
-    const itemsClass = cx(
-        'items',
-        {
-            showingAll: itemsData.next === null
-        },
-    )
-
-    if (catalogueData.isFetchingFields
+    if (!itemsData
+        ||catalogueData.isFetchingFields
         || catalogueData.isFetchingFieldsChoices
         || (currentUserItems.isFetchingItems && !itemsData.results?.length)
     ) {
         return <Loader className={styles.loader} />
     }
+
+    const itemsClass = cx(
+        'items',
+        {
+            showingAll: itemsData!.next === null
+        },
+    )
 
     const error = currentUserItems.itemsDataError
     const isItemInCatalogue = catalogue.itemsRanges.date.min

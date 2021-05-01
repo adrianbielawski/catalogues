@@ -2,21 +2,19 @@ import { createSlice } from '@reduxjs/toolkit'
 import * as T from './types'
 import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as reducers from './reducers'
-import { listData } from 'src/constants'
 
-const initialState: T.LatestFromFavouritesState = {
-    itemsData: {
-        ...listData
-    },
+export const initialState: T.LatestFromFavouritesState = {
+    itemsData: null,
     isFetchingItems: true,
     isFetchingData: true,
     error: null,
 }
 
 export const latestFromFavouritesSlice = createSlice({
-    name: 'USER_DASHBOARD',
+    name: 'LFF',
     initialState,
     reducers: {
+        ...reducers.LFF,
         ...reducers.fetchLFF,
         ...reducers.fetchLFFItemsComments,
         ...reducers.fetchLFFCatalogues,
@@ -31,6 +29,7 @@ export const latestFromFavouritesSlice = createSlice({
 })
 
 export const {
+    CLEAR_LFF,
     FETCH_LFF, FETCH_LFF_START, FETCH_LFF_SUCCESS, FETCH_LFF_FAILURE,
     FETCH_LFF_ITEMS_COMMENTS, FETCH_LFF_ITEMS_COMMENTS_SUCCESS, FETCH_LFF_ITEMS_COMMENTS_FAILURE,
     FETCH_LFF_CATALOGUES, FETCH_LFF_CATALOGUES_SUCCESS, FETCH_LFF_CATALOGUES_FAILURE,

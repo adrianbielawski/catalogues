@@ -16,7 +16,7 @@ const cx = classNames.bind(styles)
 const LatestItems = () => {
     const dispatch = useAppDispatch()
     const latestItems = useTypedSelector(state => state.modules.homepage.latestItems)
-    const itemsData = latestItems.itemsData
+    const itemsData = latestItems.itemsData!
 
     useEffect(() => {
         fetchItems()
@@ -77,7 +77,7 @@ const LatestItems = () => {
         )
     })
 
-    if (latestItems.isFetchingData && !itemsData.results.length) {
+    if (!itemsData || latestItems.isFetchingData && !itemsData.results.length) {
         return <Loader className={styles.loader} />
     }
 

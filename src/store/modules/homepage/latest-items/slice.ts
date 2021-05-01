@@ -2,12 +2,9 @@ import { createSlice } from '@reduxjs/toolkit'
 import * as T from './types'
 import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 import * as reducers from './reducers'
-import { listData } from 'src/constants'
 
-const initialState: T.LatestItemsState = {
-    itemsData: {
-        ...listData
-    },
+export const initialState: T.LatestItemsState = {
+    itemsData: null,
     isFetchingItems: true,
     isFetchingData: true,
     error: null,
@@ -17,6 +14,7 @@ export const latestItemsSlice = createSlice({
     name: 'LATEST_ITEMS',
     initialState,
     reducers: {
+        ...reducers.latestItems,
         ...reducers.fetchLatestItems,
         ...reducers.fetchLatestItemsComments,
         ...reducers.fetchLatestItemsCatalogues,
@@ -31,6 +29,7 @@ export const latestItemsSlice = createSlice({
 })
 
 export const {
+    CLEAR_LATEST_ITEMS,
     FETCH_LATEST_ITEMS, FETCH_LATEST_ITEMS_START, FETCH_LATEST_ITEMS_SUCCESS, FETCH_LATEST_ITEMS_FAILURE,
     FETCH_LATEST_ITEMS_COMMENTS, FETCH_LATEST_ITEMS_COMMENTS_SUCCESS, FETCH_LATEST_ITEMS_COMMENTS_FAILURE,
     FETCH_LATEST_ITEMS_CATALOGUES, FETCH_LATEST_ITEMS_CATALOGUES_SUCCESS, FETCH_LATEST_ITEMS_CATALOGUES_FAILURE,

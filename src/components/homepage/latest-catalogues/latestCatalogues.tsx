@@ -15,7 +15,7 @@ const LatestCatalogues = () => {
     const dispatch = useAppDispatch()
     const catalogues = useTypedSelector(state => state.entities.catalogues.entities)
     const latestCatalogues = useTypedSelector(state => state.modules.homepage.latestCatalogues)
-    const cataloguesData = latestCatalogues.cataloguesData
+    const cataloguesData = latestCatalogues.cataloguesData!
 
     useEffect(() => {
         fetchCatalogues()
@@ -42,7 +42,7 @@ const LatestCatalogues = () => {
         )
     })
 
-    if (latestCatalogues.isFetchingCatalogues && !cataloguesData.results.length) {
+    if (!cataloguesData || latestCatalogues.isFetchingCatalogues && !cataloguesData.results.length) {
         return <Loader className={styles.loader} />
     }
 

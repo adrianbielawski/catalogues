@@ -1,7 +1,7 @@
 import * as T from "src/globalTypes"
 
 export interface LatestItemsState {
-    itemsData: T.DeserializedListData<T.DeserializedItemData>,
+    itemsData: T.DeserializedListData<T.DeserializedItemData> | null,
     isFetchingItems: boolean,
     isFetchingData: boolean,
     error: T.ErrorMessage | null,

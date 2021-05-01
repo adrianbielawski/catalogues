@@ -78,11 +78,11 @@ export const itemSelector = (itemId: number): SelectorType<T.DeserializedItem> =
     state => state.entities.items.entities[itemId]!
 )
 
-export const itemDataSelector = (itemId: number): SelectorType<T.DeserializedItemData> => (
-    state => state.modules.currentUserItems.itemsData.results.filter(i => i.id == itemId)[0]
+export const itemDataSelector = (itemId: number): SelectorType<T.DeserializedItemData | undefined> => (
+    state => state.modules.currentUserItems.itemsData?.results.filter(i => i.id == itemId)[0]
 )
 
-export const itemsDataSelector = (): SelectorType<T.DeserializedListData<T.DeserializedItemData>> => (
+export const itemsDataSelector = (): SelectorType<T.DeserializedListData<T.DeserializedItemData> | null> => (
     state => state.modules.currentUserItems.itemsData
 )
 
@@ -100,15 +100,15 @@ export const commentChildrenSelector = (commentId: number): SelectorType<T.Deser
 
 export const itemCommentsDataSelector = (
     itemId: number
-): SelectorType<T.DeserializedListData<T.DeserializedCommentData>> => (
-    state => state.modules.currentUserItems.itemsData.results.filter(i =>
+): SelectorType<T.DeserializedListData<T.DeserializedCommentData> | undefined> => (
+    state => state.modules.currentUserItems.itemsData?.results.filter(i =>
         i.id == itemId)[0].commentsData
 )
 
 export const itemCommentDataSelector = (
     itemId: number,
     commentId: number,
-): SelectorType<T.DeserializedCommentData> => (
-    state => state.modules.currentUserItems.itemsData.results.filter(i =>
+): SelectorType<T.DeserializedCommentData | undefined> => (
+    state => state.modules.currentUserItems.itemsData?.results.filter(i =>
         i.id == itemId)[0].commentsData.results.filter(c => c.id === commentId)[0]
 )

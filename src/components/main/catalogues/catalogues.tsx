@@ -89,7 +89,7 @@ const Catalogues = () => {
 
     const catalogueSlug = currentUserCatalogues.defaultCatalogueId
         ? catalogues[currentUserCatalogues.defaultCatalogueId]!.slug
-        : catalogues[currentUserCatalogues.cataloguesData[0].id]!.slug
+        : catalogues[currentUserCatalogues.cataloguesData[0]?.id]!.slug
 
     return (
         <FiltersBarBulkContextProvider

@@ -2,9 +2,16 @@ import { current, PayloadAction } from '@reduxjs/toolkit'
 import { networkError } from 'src/constants'
 import { catalogueDeserializer, listDeserializer } from 'src/serializers'
 import { Catalogue, ListData } from 'src/globalTypes'
+import { initialState } from './slice'
 import * as T from './types'
 
 type State = T.LatestCataloguesState
+
+export const latestCatalogues = {
+    CLEAR_LATEST_CATALOGUES(state: State) {
+        Object.assign(state, initialState)
+    },
+}
 
 export const fetchLatestCatalogues = {
     FETCH_LATEST_CATALOGUES(state: State, action: PayloadAction<number>) { },
@@ -12,7 +19,7 @@ export const fetchLatestCatalogues = {
         state.isFetchingCatalogues = true
     },
     FETCH_LATEST_CATALOGUES_SUCCESS(state: State, action: PayloadAction<ListData<Catalogue>>) {
-        const prevResults = current(state).cataloguesData.results
+        const prevResults = current(state).cataloguesData?.results || []
         const list = listDeserializer(action.payload, catalogueDeserializer)
 
         state.cataloguesData = {

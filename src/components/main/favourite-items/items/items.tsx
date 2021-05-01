@@ -28,7 +28,7 @@ const FavouriteItems = () => {
     const filtersBarContext = useFiltersBarContext()
     const screenWidth = useTypedSelector(state => state.modules.app.screenWidth)
     const favouriteItems = useTypedSelector(state => state.modules.favouriteItems)
-    const itemsData = favouriteItems.itemsData
+    const itemsData = favouriteItems.itemsData!
 
     useEffect(() => {
         const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
@@ -94,40 +94,42 @@ const FavouriteItems = () => {
         return renderQty
     }
 
-    const itemsComponents = itemsData.results.map((item, i) => {
-        const handleAddComment = (text: string, parentId?: number) => {
-            dispatch(POST_FAVOURITE_ITEM_COMMENT({
-                itemId: item.id,
-                text,
-                parentId,
-            }))
-        }
+    const itemsComponents = () => {
+        return itemsData.results.map((item, i) => {
+            const handleAddComment = (text: string, parentId?: number) => {
+                dispatch(POST_FAVOURITE_ITEM_COMMENT({
+                    itemId: item.id,
+                    text,
+                    parentId,
+                }))
+            }
 
-        const handleFetchComments = (page: number | null) => {
-            dispatch(FETCH_FAVOURITE_ITEM_COMMENTS({
-                itemId: item.id,
-                page,
-            }))
-        }
+            const handleFetchComments = (page: number | null) => {
+                dispatch(FETCH_FAVOURITE_ITEM_COMMENTS({
+                    itemId: item.id,
+                    page,
+                }))
+            }
 
-        const renderQty = getRenderQty()
+            const renderQty = getRenderQty()
 
-        if (i >= renderQty) {
-            return
-        }
+            if (i >= renderQty) {
+                return
+            }
 
-        return (
-            <CatalogueItem
-                className={styles.item}
-                itemData={item}
-                isNarrow={!screenWidth.largeViewport}
-                editable={false}
-                key={item.id}
-                onAddComment={handleAddComment}
-                onFetchComments={handleFetchComments}
-            />
-        )
-    })
+            return (
+                <CatalogueItem
+                    className={styles.item}
+                    itemData={item}
+                    isNarrow={!screenWidth.largeViewport}
+                    editable={false}
+                    key={item.id}
+                    onAddComment={handleAddComment}
+                    onFetchComments={handleFetchComments}
+                />
+            )
+        })
+    }
 
     const clearError = () => {
         dispatch(CLEAR_FAVOURITE_ITEMS_ERROR())
@@ -136,7 +138,7 @@ const FavouriteItems = () => {
 
     const error = favouriteItems.error
 
-    if (favouriteItems.isFetchingData && !getRenderQty()) {
+    if (!itemsData || favouriteItems.isFetchingData && !getRenderQty()) {
         return <Loader className={styles.loader} />
     }
 
@@ -159,7 +161,7 @@ const FavouriteItems = () => {
                 intersectingElement={3}
                 onLoadMore={fetchItems}
             >
-                {itemsComponents}
+                {itemsComponents()}
             </PaginatedList>
             <MessageModal
                 show={error !== null}

@@ -23,6 +23,10 @@ const NewItemModal = () => {
         dispatch(DELETE_ITEM(item.id))
     }
 
+    if (!itemData) {
+        return null
+    }
+
     return (
         <AnimatedModal
             show={currentUserItems.newItemId !== null}
