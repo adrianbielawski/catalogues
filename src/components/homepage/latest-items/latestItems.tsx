@@ -23,59 +23,61 @@ const LatestItems = () => {
     }, [])
 
     const fetchItems = () => {
-        dispatch(FETCH_LATEST_ITEMS(itemsData.next || 1))
+        dispatch(FETCH_LATEST_ITEMS(itemsData?.next || 1))
     }
 
-    const itemsComponents = itemsData.results.map((item, i) => {
-        const handleAddComment = (text: string, parentId?: number) => {
-            dispatch(POST_LATEST_ITEM_COMMENT({
-                itemId: item.id,
-                text,
-                parentId,
-            }))
-        }
-
-        const handleFetchComments = (page: number | null) => {
-            dispatch(FETCH_LATEST_ITEM_COMMENTS({
-                itemId: item.id,
-                page,
-            }))
-        }
-
-        let renderQty = itemsData.results.length
-
-        if (latestItems.isFetchingItems && itemsData.current) {
-            renderQty = itemsData.current * 10
-        }
-        if (latestItems.isFetchingData
-            && !latestItems.isFetchingItems
-            && itemsData.current
-        ) {
-            renderQty = (itemsData.current - 1) * 10
-        }
-
-        if (i >= renderQty) {
-            return
-        }
-        const itemClass = cx(
-            'item',
-            {
-                last: i === itemsData.results.length - 1,
+    const itemsComponents = () => {
+        return itemsData.results.map((item, i) => {
+            const handleAddComment = (text: string, parentId?: number) => {
+                dispatch(POST_LATEST_ITEM_COMMENT({
+                    itemId: item.id,
+                    text,
+                    parentId,
+                }))
             }
-        )
 
-        return (
-            <CatalogueItem
-                className={itemClass}
-                itemData={item}
-                isNarrow={true}
-                editable={false}
-                key={item.id}
-                onAddComment={handleAddComment}
-                onFetchComments={handleFetchComments}
-            />
-        )
-    })
+            const handleFetchComments = (page: number | null) => {
+                dispatch(FETCH_LATEST_ITEM_COMMENTS({
+                    itemId: item.id,
+                    page,
+                }))
+            }
+
+            let renderQty = itemsData.results.length
+
+            if (latestItems.isFetchingItems && itemsData.current) {
+                renderQty = itemsData.current * 10
+            }
+            if (latestItems.isFetchingData
+                && !latestItems.isFetchingItems
+                && itemsData.current
+            ) {
+                renderQty = (itemsData.current - 1) * 10
+            }
+
+            if (i >= renderQty) {
+                return
+            }
+            const itemClass = cx(
+                'item',
+                {
+                    last: i === itemsData.results.length - 1,
+                }
+            )
+
+            return (
+                <CatalogueItem
+                    className={itemClass}
+                    itemData={item}
+                    isNarrow={true}
+                    editable={false}
+                    key={item.id}
+                    onAddComment={handleAddComment}
+                    onFetchComments={handleFetchComments}
+                />
+            )
+        })
+    }
 
     if (!itemsData || latestItems.isFetchingData && !itemsData.results.length) {
         return <Loader className={styles.loader} />
@@ -90,7 +92,7 @@ const LatestItems = () => {
             intersectingElement={3}
             onLoadMore={fetchItems}
         >
-            {itemsComponents}
+            {itemsComponents()}
         </PaginatedList>
     )
 }

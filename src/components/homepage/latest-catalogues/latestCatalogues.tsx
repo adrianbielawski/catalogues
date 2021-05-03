@@ -22,25 +22,27 @@ const LatestCatalogues = () => {
     }, [])
 
     const fetchCatalogues = () => {
-        dispatch(FETCH_LATEST_CATALOGUES(cataloguesData.next || 1))
+        dispatch(FETCH_LATEST_CATALOGUES(cataloguesData?.next || 1))
     }
 
-    const cataloguesComponents = cataloguesData.results.map((id, i) => {
-        const catalogueCardClass = cx(
-            'catalogueCard',
-            {
-                last: i === cataloguesData.results.length - 1,
-            }
-        )
+    const cataloguesComponents = () => {
+        return cataloguesData.results.map((id, i) => {
+            const catalogueCardClass = cx(
+                'catalogueCard',
+                {
+                    last: i === cataloguesData.results.length - 1,
+                }
+            )
 
-        return (
-            <CatalogueCard
-                className={catalogueCardClass}
-                catalogue={catalogues[id]!}
-                key={id}
-            />
-        )
-    })
+            return (
+                <CatalogueCard
+                    className={catalogueCardClass}
+                    catalogue={catalogues[id]!}
+                    key={id}
+                />
+            )
+        })
+    }
 
     if (!cataloguesData || latestCatalogues.isFetchingCatalogues && !cataloguesData.results.length) {
         return <Loader className={styles.loader} />
@@ -55,7 +57,7 @@ const LatestCatalogues = () => {
             intersectingElement={3}
             onLoadMore={fetchCatalogues}
         >
-            {cataloguesComponents}
+            {cataloguesComponents()}
         </PaginatedList>
     )
 }

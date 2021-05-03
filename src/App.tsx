@@ -50,7 +50,7 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-      if (!authUser) {
+      if (!authUser.id) {
           return
       }
       dispatch(FETCH_AUTH_USER_CATALOGUES())

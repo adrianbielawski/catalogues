@@ -38,7 +38,6 @@ export const fetchLFFItemsComments = {
         const data = action.payload
         for (const id in data) {
             const itemData = getItemDataById(state, parseInt(id)) || {} as DeserializedItemData
-            console.log(itemData)
             itemData.commentsData = listDeserializer(
                 data[id],
                 itemCommentDataDeserializer,
