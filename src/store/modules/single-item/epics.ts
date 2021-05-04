@@ -25,6 +25,7 @@ export const fetchSingleItemEpic = (action$: Observable<Action>) => action$.pipe
         of(actions.FETCH_SINGLE_ITEM_START()),
         axiosInstance$.get(`/items/${action.payload}/`).pipe(
             mergeMap(response => concat(
+                of(usersEntitiesActions.USER_ADDED(response.data.created_by)),
                 of(itemsEntitiesActions.UPSERT_ITEM(response.data)),
                 of(actions.FETCH_SINGLE_ITEM_SUCCESS(response.data)),
             )),
@@ -109,9 +110,9 @@ export const fetchSingleItemFieldsEpic = (
     mergeMap(([action, fields]) => {
         const exists = Object.values(fields).find(f => f?.id === action.payload)
 
-        // if (exists) {
-        //     return of(actions.SINGLE_ITEM_FIELDS_NOT_NEEDED())
-        // }
+        if (exists) {
+            return of(actions.SINGLE_ITEM_FIELDS_NOT_NEEDED())
+        }
 
         return axiosInstance$.get('/fields/', {
             params: { catalogue_id: action.payload }
@@ -132,9 +133,9 @@ export const fetchSingleItemChoicesEpic = (action$: Observable<Action>) => actio
             f.type === 'multiple_choice' || f.type === 'single_choice'
         )
 
-        // if (fields.length === 0) {
-        //     return of(actions.SINGLE_ITEM_CHOICES_NOT_NEEDED())
-        // }
+        if (fields.length === 0) {
+            return of(actions.SINGLE_ITEM_CHOICES_NOT_NEEDED())
+        }
 
         const requests = Object.fromEntries(
             fields.map(field => [
