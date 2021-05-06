@@ -65,7 +65,7 @@ export const fetchCatalogueFieldsReducers = {
         const { catalogueId, data } = action.payload
         const catalogue = getCatalogueDataById(state, catalogueId)
         catalogue.isFetchingFields = false
-        catalogue.fieldsData = data.map(createFieldData)
+        catalogue.fieldsData = data.sort((a, b) => a.position - b.position).map(createFieldData)
     },
     FETCH_AUTH_USER_CATALOGUE_FIELDS_FAILURE(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueDataById(state, action.payload)
@@ -136,6 +136,20 @@ export const changePublicFieldReducers = {
     CHANGE_FIELD_PUBLIC(state: State, action: PayloadAction<T.ChangePublicFieldPayload>) { },
     CHANGE_FIELD_PUBLIC_SUCCESS(state: State) { },
     CHANGE_FIELD_PUBLIC_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
+        const { catalogueId, fieldId } = action.payload
+        const field = getFieldDataById(state, catalogueId, fieldId)
+        field.fieldError = networkError
+    },
+}
+
+export const reorderFieldsReducers = {
+    REORDER_CATALOGUE_FIELDS(state: State, action: PayloadAction<T.ReorderCatalogueFieldsPayload>) {
+        const { catalogueId, fieldsData } = action.payload
+        const catalogueData = getCatalogueDataById(state, catalogueId)
+        catalogueData.fieldsData = fieldsData
+    },
+    REORDER_CATALOGUE_FIELDS_SUCCESS(state: State, action: PayloadAction<number>) { },
+    REORDER_CATALOGUE_FIELDS_FAILURE(state: State, action: PayloadAction<T.CatalogueAndFieldIdPayload>) {
         const { catalogueId, fieldId } = action.payload
         const field = getFieldDataById(state, catalogueId, fieldId)
         field.fieldError = networkError

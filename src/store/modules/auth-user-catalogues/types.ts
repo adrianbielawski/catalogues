@@ -1,4 +1,4 @@
-import { AuthUserCatalogueData, Choice, Field } from "src/globalTypes";
+import { AuthUserCatalogueData, AuthUserFieldData, Choice, Field } from "src/globalTypes";
 
 export interface AuthUserCataloguesState {
     cataloguesData: AuthUserCatalogueData[],
@@ -82,4 +82,9 @@ export interface PostChoiceSuccessPayload extends CatalogueAndFieldIdPayload {
 
 export interface RemoveChoicePayload extends CatalogueAndFieldIdPayload {
     choiceId: number,
+}
+
+export interface ReorderCatalogueFieldsPayload extends CatalogueAndFieldIdPayload {
+    newPosition: number,
+    fieldsData: AuthUserFieldData[],
 }

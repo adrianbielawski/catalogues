@@ -35,6 +35,7 @@ export const authUserCataloguesSlice = createSlice({
         ...fieldsReducers.deleteCatalogueFieldReducers,
         ...fieldsReducers.changeFieldNameReducers,
         ...fieldsReducers.changePublicFieldReducers,
+        ...fieldsReducers.reorderFieldsReducers,
         ...fieldsChoicesReducers.fetchFieldsChoicesReducers,
         ...fieldsChoicesReducers.postFieldChoiceReducers,
         ...fieldsChoicesReducers.removeFieldChoiceReducers,
@@ -65,6 +66,7 @@ export const {
     DELETE_CATALOGUE_FIELD, DELETE_CATALOGUE_FIELD_START, DELETE_CATALOGUE_FIELD_SUCCESS, DELETE_CATALOGUE_FIELD_FAILURE,
     CHANGE_FIELD_NAME, CHANGE_FIELD_NAME_START, CHANGE_FIELD_NAME_SUCCESS, CHANGE_FIELD_NAME_FAILURE,
     CHANGE_FIELD_PUBLIC, CHANGE_FIELD_PUBLIC_SUCCESS, CHANGE_FIELD_PUBLIC_FAILURE,
+    REORDER_CATALOGUE_FIELDS, REORDER_CATALOGUE_FIELDS_SUCCESS, REORDER_CATALOGUE_FIELDS_FAILURE,
     //Choices reducers
     FETCH_FIELDS_CHOICES, FETCH_FIELDS_CHOICES_START, FETCH_FIELDS_CHOICES_SUCCESS, FETCH_FIELDS_CHOICES_FAILURE,
     POST_FIELD_CHOICE, POST_FIELD_CHOICE_SUCCESS, POST_FIELD_CHOICE_FAILURE,
