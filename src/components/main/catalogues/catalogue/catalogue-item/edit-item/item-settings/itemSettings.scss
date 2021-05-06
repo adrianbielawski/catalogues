@@ -1,7 +1,7 @@
 @import "global-styles/variables_and_mixins";
 
 .itemSettings {
-    padding: 5px;
+    padding: 5px 10px;
     .deleteButton:hover {
         background: $red;
         color: #000;

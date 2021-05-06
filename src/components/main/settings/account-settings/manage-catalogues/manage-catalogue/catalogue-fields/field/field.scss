@@ -1,0 +1,32 @@
+@import "global-styles/variables_and_mixins";
+
+.field {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fff;
+    padding-right: 10px;
+    margin: 0 3px 3px 0;
+    &.grabbed {
+        box-shadow: 2px 2px 3px $midLightGrey;
+    }
+    .grabbable {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 35px;
+        height: 30px;
+        color: $darkGrey;
+        cursor: pointer;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .field {
+        .grabbable {
+            &:hover {
+                color: $lightOrange;
+            }
+        }
+    }
+}
