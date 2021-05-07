@@ -1,6 +1,9 @@
 import React from 'react'
+import { cloneDeep } from 'lodash'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
+//Redux
+import { useTypedSelector } from 'store/storeConfig'
 //Components
 import CollapsableList from 'components/global-components/collapsable-list/collapsableList'
 import Field from './field/field'
@@ -12,15 +15,18 @@ type Props = {
 }
 
 const ItemFields = (props: Props) => {
+    const fields = useTypedSelector(state => state.entities.fields.entities)
     const maxHeight = props.isNarrow ? 55 : 106
-    const itemsProps = { catalogueId: props.item.catalogueId }
+
+    const items = cloneDeep(props.item.fieldsValues).sort(
+        (a, b) => fields[a.fieldId]!.position - fields[b.fieldId]!.position
+    )
 
     return (
         <div className={props.className}>
             <CollapsableList >
                 <CollapsableList.List
-                    items={props.item.fieldsValues}
-                    itemsProps={itemsProps}
+                    items={items}
                     maxHeight={maxHeight}
                     itemComponent={Field}
                 />

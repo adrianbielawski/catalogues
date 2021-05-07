@@ -8,9 +8,6 @@ import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
 
 type Props = {
     item: DeserializedItemField,
-    itemProps: {
-        catalogueId: number,
-    },
 }
 
 const Field = (props: Props) => {

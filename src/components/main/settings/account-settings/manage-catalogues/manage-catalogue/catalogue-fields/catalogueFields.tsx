@@ -1,57 +1,46 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { AuthUserChoiceFieldData } from 'src/globalTypes'
+import { AuthUserFieldData } from 'src/globalTypes'
 //Redux
-import { useTypedSelector } from 'store/storeConfig'
+import { REORDER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'
 //Components
-import TextField from '../catalogue-fields/text-field/textField'
-import ChoiceField from '../catalogue-fields/choice-field/choiceField'
 import AddField from './add-field/addField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
+import Field from './field/field'
+import OrderableList, { OnDropParams } from '@adrianbielawski/orderable-list'
 
 type Props = {
     catalogueId: number,
 }
 
 const CatalogueFields = (props: Props) => {
+    const dispatch = useAppDispatch()
     const fieldsData = useTypedSelector(authUserFieldsDataSelector(props.catalogueId))
-    const catalogueFields = useTypedSelector(state => state.entities.fields.entities)
 
-    const fields = fieldsData.map(fieldData => {
-        const field = catalogueFields[fieldData.id]!
-        switch (field.type) {
-            case 'short_text':
-            case 'long_text':
-                return (
-                    <TextField
-                        field={field}
-                        fieldData={fieldData}
-                        key={field.id}
-                    />
-                )
-            case 'single_choice':
-            case 'multiple_choice':
-                return (
-                    <ChoiceField
-                        field={field}
-                        fieldData={fieldData as AuthUserChoiceFieldData}
-                        key={field.id}
-                    />
-                )
-        }
-    })
+    const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
+        dispatch(REORDER_CATALOGUE_FIELDS({
+            catalogueId: props.catalogueId,
+            fieldId: params.item.id,
+            newPosition: params.newPosition,
+            fieldsData: params.newItems,
+        }))
+    }
 
     return (
         <IconWithTitle
             title={'Catalogue fields'}
             icon={faListAlt}
         >
-            <>
-                {fields}
-                <AddField catalogueId={props.catalogueId} />
-            </>
+            <OrderableList
+                items={fieldsData}
+                itemComponent={Field}
+                onDrop={handleDrop}
+                scrollTopAt={80}
+            />
+            <AddField catalogueId={props.catalogueId} />
         </IconWithTitle>
     )
 }

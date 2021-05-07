@@ -35,6 +35,7 @@ export const fetchCatalogueFieldEpic = (action$: Observable<Action>) => action$.
 export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) => merge(
     action$.pipe(filter(actions.CREATE_CATALOGUE_FIELD_SUCCESS.match)),
     action$.pipe(filter(actions.DELETE_CATALOGUE_FIELD_SUCCESS.match)),
+    action$.pipe(filter(actions.REORDER_CATALOGUE_FIELDS_SUCCESS.match)),
 ).pipe(
     map(action => actions.FETCH_AUTH_USER_CATALOGUE_FIELDS(action.payload))
 )
@@ -166,6 +167,23 @@ export const changePublicFieldEpic = (action$: Observable<Action>) => action$.pi
     ))
 )
 
+export const reorderCatalogueFieldsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.REORDER_CATALOGUE_FIELDS.match),
+    switchMap(action => concat(
+        defer(() => axiosInstance$.patch(`/fields/${action.payload.fieldId}/`, {
+            position: action.payload.newPosition,
+        })).pipe(
+            map(() => actions.REORDER_CATALOGUE_FIELDS_SUCCESS(action.payload.catalogueId)),
+            catchError(() =>
+                of(actions.REORDER_CATALOGUE_FIELDS_FAILURE({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                }))
+            )
+        )
+    ))
+)
+
 export const authUserCataloguesFieldsEpics = combineEpics(
     refreshCatalogueFieldEpic,
     fetchCatalogueFieldEpic,
@@ -175,4 +193,5 @@ export const authUserCataloguesFieldsEpics = combineEpics(
     deleteCatalogueFieldEpic,
     changeFieldNameEpic,
     changePublicFieldEpic,
+    reorderCatalogueFieldsEpic,
 )
