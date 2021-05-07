@@ -10,7 +10,7 @@ type ItemType = {}
 
 type Props = {
     items: ItemType[],
-    itemsProps: {},
+    itemsProps?: {},
     itemComponent: React.ComponentType<any>,
     maxHeight: number,
 }

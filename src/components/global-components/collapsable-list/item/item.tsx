@@ -6,7 +6,7 @@ import { ListContext } from '../listStore'
 
 type Props = {
     item: {},
-    itemProps: {},
+    itemProps?: {},
     itemComponent: React.ComponentType<any>,
 }
 
