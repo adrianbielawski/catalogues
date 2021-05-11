@@ -44,7 +44,7 @@ const LatestCatalogues = () => {
         })
     }
 
-    if (!cataloguesData || latestCatalogues.isFetchingCatalogues) {
+    if (!cataloguesData || latestCatalogues.isFetchingCatalogues && !cataloguesData.results.length) {
         return <Loader className={styles.loader} />
     }
 

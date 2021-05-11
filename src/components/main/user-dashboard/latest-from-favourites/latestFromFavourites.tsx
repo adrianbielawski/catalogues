@@ -81,7 +81,7 @@ const LatestFromFavourites = () => {
         })
     }
 
-    if (!itemsData || latestFromFavourites.isFetchingData) {
+    if (!itemsData || latestFromFavourites.isFetchingData && !itemsData.results.length) {
         return <Loader className={styles.loader} />
     }
 

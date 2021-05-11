@@ -81,7 +81,7 @@ const TopItems = () => {
         })
     }
 
-    if (!itemsData || topItems.isFetchingData) {
+    if (!itemsData || topItems.isFetchingData && !itemsData.results.length) {
         return <Loader className={styles.loader} />
     }
 

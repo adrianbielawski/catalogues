@@ -79,7 +79,7 @@ const LatestItems = () => {
         })
     }
 
-    if (!itemsData || latestItems.isFetchingData) {
+    if (!itemsData || latestItems.isFetchingData && !itemsData.results.length) {
         return <Loader className={styles.loader} />
     }
 
