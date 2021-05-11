@@ -20,7 +20,7 @@ export const fetchFavouriteItems = {
         state.isFetchingItems = true
     },
     FETCH_FAVOURITE_ITEMS_SUCCESS(state: State, action: PayloadAction<ListData<Item>>) {
-        const prevResults = current(state).itemsData?.results || []
+        const prevResults = action.payload.current === 1 ? [] : current(state).itemsData?.results
         const itemsData = listDeserializer(action.payload, itemDataDeserializer, prevResults)
         state.itemsData = { ...itemsData }
         state.isFetchingItems = false
