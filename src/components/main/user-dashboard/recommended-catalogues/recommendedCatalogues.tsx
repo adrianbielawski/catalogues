@@ -53,8 +53,12 @@ const RecommendedCatalogues = () => {
         })
     }
 
-    if (!cataloguesData || recommended.isFetchingCatalogues && !cataloguesData.results.length) {
+    if (!cataloguesData || recommended.isFetchingCatalogues) {
         return <Loader className={styles.loader} />
+    }
+
+    if (!recommended.isFetchingCatalogues && !cataloguesData.results.length) {
+        return <p className={styles.noContent}>No content</p>
     }
 
     return (
