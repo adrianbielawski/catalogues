@@ -10,6 +10,7 @@ import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
 import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
+import DateField from './date-field/dateField'
 
 type Props = {
     item: DeserializedItem,
@@ -36,6 +37,9 @@ const EditItemFields = (props: Props) => {
                 break
             case 'long_text':
                 fieldComponent = <LongTextField {...fieldProps} />
+                break
+            case 'date':
+                fieldComponent = <DateField {...fieldProps} />
                 break
             case 'single_choice':
                 fieldComponent = (

@@ -1,0 +1,25 @@
+@import "global-styles/variables_and_mixins";
+
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    .input {
+        font-size: .9em;
+        font-weight: 700;
+        color: $darkGrey;
+        border: 1px solid $orange;
+        &::-webkit-calendar-picker-indicator:focus {
+            color: $orange;
+        }
+        &::-webkit-datetime-edit-day-field:focus,
+        &::-webkit-datetime-edit-month-field:focus,
+        &::-webkit-datetime-edit-year-field:focus {
+            background: $lightGrey;
+            color: $orange;
+        }
+    }
+    .button {
+        margin-left: 10px;
+        font-size: 1.2em;
+    }
+}
