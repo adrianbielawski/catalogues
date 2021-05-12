@@ -28,6 +28,10 @@ const FIELD_TYPES = [
         value: 'Date',
     },
     {
+        id: 'media',
+        value: 'URL',
+    },
+    {
         id: 'single_choice',
         value: 'Single choice',
     },
