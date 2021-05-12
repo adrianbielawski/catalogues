@@ -5,7 +5,7 @@ import { HydratedRouteComponentProps } from 'src/router'
 //Redux
 import { FETCH_CURRENT_USER_CATALOGUE_FIELDS } from 'store/modules/current-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { currentUserCatalogueSelector, fieldsSelector } from 'store/selectors'
+import { authUserCatalogueDataSelector, currentUserCatalogueSelector, fieldsSelector } from 'store/selectors'
 //Hooks and utils
 import { scrollTop } from 'src/utils'
 //Filters context
@@ -24,11 +24,16 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
     const { filtersContext } = useFiltersBarContext()
     const smallViewport = useTypedSelector(state => state.modules.app.screenWidth.smallViewport)
     const [showFilters, setShowFilters] = useState(false)
+    const authUserId = useTypedSelector(state => state.modules.authUser.id)
+    const currentUserId = useTypedSelector(state => state.modules.currentUser.userId)
     const catalogue = props.match.params.catalogue!
-    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
+    const catalogueDataSelector = authUserId === currentUserId
+        ? authUserCatalogueDataSelector
+        : currentUserCatalogueSelector
+    const catalogueData = useTypedSelector(catalogueDataSelector(catalogue.id))
     const catalogueFields = useTypedSelector(fieldsSelector(catalogueData.fieldsData.map(f => f.id)))
     const choices = useTypedSelector(state => state.entities.choices.entities)
-    
+
     useEffect(() => {
         dispatch(FETCH_CURRENT_USER_CATALOGUE_FIELDS(catalogue.id))
     }, [catalogue.id])
@@ -80,8 +85,8 @@ const Catalogue = (props: HydratedRouteComponentProps) => {
                 }
                 <div className={styles.mainContent}>
                     <CatalogueItems
-                        catalogueId={catalogue.id}
-                        key={catalogue.id}
+                        catalogueData={catalogueData}
+                        key={catalogueData.id}
                     />
                 </div>
             </div>

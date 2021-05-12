@@ -4,14 +4,14 @@ import { size } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.scss'
 //Types
-import { DeserializedItem, LocationState } from 'src/globalTypes'
+import { AuthUserFieldData, CatalogueData, CurrentUserFieldData, DeserializedItem, LocationState } from 'src/globalTypes'
 //Redux
 import {
-    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, DELETE_ITEM, FETCH_CURRENT_USER_ITEMS, FETCH_ITEM_COMMENTS, POST_ITEM_COMMENT,
-    REFRESH_CURRENT_USER_ITEM, SAVE_ITEM, TOGGLE_EDIT_ITEM,
+    ADD_ITEM, CLEAR_ITEMS_DATA, CLEAR_ITEMS_DATA_ERROR, DELETE_ITEM, FETCH_CURRENT_USER_ITEMS, FETCH_ITEM_COMMENTS,
+    POST_ITEM_COMMENT, REFRESH_CURRENT_USER_ITEM, SAVE_ITEM, TOGGLE_EDIT_ITEM,
 } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-import { catalogueSelector, currentUserCatalogueSelector } from 'store/selectors'
+import { catalogueSelector } from 'store/selectors'
 //Hooks
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 //Utils
@@ -28,7 +28,7 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 
 type Props = {
-    catalogueId: number,
+    catalogueData: CatalogueData<AuthUserFieldData | CurrentUserFieldData>,
 }
 
 const cx = classNames.bind(styles)
@@ -40,8 +40,7 @@ const CatalogueItems = (props: Props) => {
     const largeViewport = useTypedSelector(state => state.modules.app.screenWidth.largeViewport)
     const currentUserItems = useTypedSelector(state => state.modules.currentUserItems)
     const itemsData = currentUserItems.itemsData
-    const catalogue = useTypedSelector(catalogueSelector(props.catalogueId))
-    const catalogueData = useTypedSelector(currentUserCatalogueSelector(catalogue.id))
+    const catalogue = useTypedSelector(catalogueSelector(props.catalogueData.id))
     const filtersBarContext = useFiltersBarContext()
 
     useEffect(() => {
@@ -66,7 +65,7 @@ const CatalogueItems = (props: Props) => {
         return () => {
             dispatch(CLEAR_ITEMS_DATA())
         }
-    }, [props.catalogueId])
+    }, [props.catalogueData.id])
 
     useEffect(() => {
         if (!filtersBarContext.filtersBar.isInitialized) return
@@ -83,7 +82,7 @@ const CatalogueItems = (props: Props) => {
     const fetchItems = (pageNum?: number) => {
         let page = 1
 
-        if (currentUserItems.catalogueId === props.catalogueId) {
+        if (currentUserItems.catalogueId === props.catalogueData.id) {
             page = pageNum || itemsData!.next || 1
         }
 
@@ -92,7 +91,7 @@ const CatalogueItems = (props: Props) => {
         history.push({ search: query.query })
 
         dispatch(FETCH_CURRENT_USER_ITEMS({
-            catalogueId: props.catalogueId,
+            catalogueId: props.catalogueData.id,
             page,
             search: query.search,
             sort: query.sort,
@@ -123,7 +122,7 @@ const CatalogueItems = (props: Props) => {
         const handleEditConfirm = (item: DeserializedItem) => {
             dispatch(SAVE_ITEM(item))
         }
-    
+
         const handleEditCancel = (isNew: boolean) => {
             if (isNew) {
                 dispatch(DELETE_ITEM(itemData.id))
@@ -135,7 +134,7 @@ const CatalogueItems = (props: Props) => {
         return (
             <CatalogueItem
                 itemData={itemData}
-                catalogueData={catalogueData}
+                catalogueData={props.catalogueData}
                 isNarrow={!largeViewport}
                 editable={true}
                 key={itemData.id}
@@ -198,8 +197,8 @@ const CatalogueItems = (props: Props) => {
     }
 
     if (!itemsData
-        ||catalogueData.isFetchingFields
-        || catalogueData.isFetchingFieldsChoices
+        || props.catalogueData.isFetchingFields
+        || props.catalogueData.isFetchingFieldsChoices
         || (currentUserItems.isFetchingItems && !itemsData.results?.length)
     ) {
         return <Loader className={styles.loader} />
