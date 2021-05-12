@@ -42,6 +42,7 @@ const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
         switch (field.type) {
             case 'short_text':
             case 'long_text':
+            case 'date':
                 return (
                     <EditTextField
                         field={field}
