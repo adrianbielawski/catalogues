@@ -24,6 +24,10 @@ const FIELD_TYPES = [
         value: 'Long text',
     },
     {
+        id: 'date',
+        value: 'Date',
+    },
+    {
         id: 'single_choice',
         value: 'Single choice',
     },

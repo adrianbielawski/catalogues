@@ -7,6 +7,7 @@ import { authUserCatalogueDataSelector } from 'store/selectors'
 //Components
 import AddButton from 'components/global-components/add-button/addButton'
 import FieldForm from './field-form/fieldForm'
+import AnimateHeight from 'react-animate-height'
 
 type Props = {
     catalogueId: number,
@@ -21,7 +22,7 @@ const AddField = (props: Props) => {
     }
 
     return (
-        <div className={styles.addField}>
+        <AnimateHeight height={catalogue.isAddFieldFormActive ? "auto" : 46}>
             {!catalogue.isAddFieldFormActive
                 ?
                 <AddButton
@@ -35,7 +36,7 @@ const AddField = (props: Props) => {
                     active={catalogue.isAddFieldFormActive}
                 />
             }
-        </div>
+        </AnimateHeight>
     )
 }
 
