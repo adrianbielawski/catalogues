@@ -2,12 +2,10 @@
 
 .fieldForm {
     margin: 20px 0 0 0px;
-    max-height: 0;
     opacity: 0;
     overflow: hidden;
     transition: all 0.2s ease-out;
     &.active {
-        max-height: 250px;
         opacity: 1;
         overflow: unset;
     }
