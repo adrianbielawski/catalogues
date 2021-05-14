@@ -5,7 +5,7 @@ import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Types
 import { RootState } from "store/storeConfig"
-import { ItemCommentParent, User } from "src/globalTypes"
+import { Item, ItemCommentParent } from "src/globalTypes"
 //Actions
 import * as actions from "./slice"
 import * as usersActions from "store/entities/users/slice"
@@ -24,10 +24,15 @@ export const fetchTopItemsEpic = (action$: Observable<Action>) => action$.pipe(
                 page: action.payload,
             }
         }).pipe(
-            mergeMap(response => concat(
-                of(itemsEntitiesActions.ITEMS_UPDATED(response.data.results)),
-                of(actions.FETCH_TOP_ITEMS_SUCCESS(response.data)),
-            )),
+            mergeMap(response => {
+                const users = (response.data.results as Item[]).map(item => item.created_by)
+
+                return concat(
+                    of(usersActions.USERS_ADDED(users)),
+                    of(itemsEntitiesActions.ITEMS_UPDATED(response.data.results)),
+                    of(actions.FETCH_TOP_ITEMS_SUCCESS(response.data)),
+                )
+            }),
             catchError(() => of(actions.FETCH_TOP_ITEMS_FAILURE()))
         )
     ))
