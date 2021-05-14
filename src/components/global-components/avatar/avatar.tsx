@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import classNames from 'classnames/bind'
 import styles from './avatar.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Components
 import Image from 'components/global-components/image/image'
 
@@ -32,6 +34,7 @@ const Avatar = (props: Props) => {
         <Image
             className={styles.image}
             url={props.url}
+            baseUrl={BASE_URL}
             onLoading={'placeholder'}
             placeHolder={placeholder}
         />
