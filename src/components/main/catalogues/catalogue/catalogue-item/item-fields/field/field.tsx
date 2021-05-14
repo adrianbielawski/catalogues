@@ -1,13 +1,13 @@
 import React from 'react'
 import styles from './field.scss'
 //Types
-import { DeserializedItemField } from 'src/globalTypes'
+import { DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
 
 type Props = {
-    item: DeserializedItemField,
+    item: DeserializedItemField<DeserializedItemFieldValue>,
 }
 
 const Field = (props: Props) => {
@@ -28,6 +28,10 @@ const Field = (props: Props) => {
 
     if (field.type === 'single_choice') {
         value = fieldChoices.find(f => f.id === value)?.value || ''
+    }
+
+    if ((value as DeserializedMediaFieldValue).url !== undefined) {
+        value = (value as DeserializedMediaFieldValue).url
     }
 
     return (
