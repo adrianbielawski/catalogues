@@ -26,7 +26,7 @@ const Image = (props: Props) => {
     const { url, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
     const image = !url?.startsWith('blob') ? useImageLoader(`${BASE_URL}${url}`) : url
 
-    const placeholder = (onLoading === 'placeholder' && !image) || (!url && placeHolder)
+    const placeholder = image === undefined || (onLoading === 'placeholder' && !image) || (!url && placeHolder)
         ? placeHolder
         : null
 
