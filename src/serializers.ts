@@ -95,15 +95,57 @@ export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[]
 )
 
 //Item
-export const itemFieldDeserializer = (field: T.ItemField): T.DeserializedItemField => ({
-    itemId: field.item_id,
-    fieldId: field.field_id,
-    value: field.value,
+export const mediaFieldDeserializer = (value: T.MediaFieldValue): T.DeserializedMediaFieldValue => ({
+    url: value.url,
+    type: value.type,
+    service: value.service,
+    id: value.id,
+    title: value.title,
+    thumbnailUrl: value.thumbnail_url,
 })
 
-export const itemFieldSerializer = (field: T.DeserializedItemField): T.SerializedItemField => ({
+export const mediaFieldSerializer = (value: T.DeserializedMediaFieldValue): T.MediaFieldValue => ({
+    url: value.url,
+    type: value.type,
+    service: value.service,
+    id: value.id,
+    title: value.title,
+    thumbnail_url: value.thumbnailUrl,
+})
+
+export const itemFieldValueDeserializer = (value: T.ItemFieldValue): T.DeserializedItemFieldValue => {
+    if (value === null) {
+        return null
+    }
+    if ((value as T.MediaFieldValue).url !== undefined) {
+        return mediaFieldDeserializer(value as T.MediaFieldValue)
+    }
+    return value as T.BasicFieldValue
+}
+
+export const itemFieldValueSerializer = (value: T.DeserializedItemFieldValue): T.ItemFieldValue => {
+    if (value === null) {
+        return null
+    }
+    if ((value as T.DeserializedMediaFieldValue).url !== undefined) {
+        return (value as T.DeserializedMediaFieldValue).url
+    }
+    return value as T.BasicFieldValue
+}
+
+export const itemFieldDeserializer = (
+    field: T.ItemField<T.ItemFieldValue>
+): T.DeserializedItemField<T.DeserializedItemFieldValue> => ({
+    itemId: field.item_id,
+    fieldId: field.field_id,
+    value: itemFieldValueDeserializer(field.value),
+})
+
+export const itemFieldSerializer = (
+    field: T.DeserializedItemField<T.DeserializedItemFieldValue>
+): T.SerializedItemField<T.ItemFieldValue> => ({
     field_id: field.fieldId,
-    value: field.value,
+    value: itemFieldValueSerializer(field.value),
 })
 
 export const itemPermissionsDeserializer = (permissions: T.ItemPermisions): T.DeserializedItemPermisions => ({
