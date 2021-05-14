@@ -1,5 +1,5 @@
 import { current, PayloadAction } from '@reduxjs/toolkit'
-import { DeserializedItem, DeserializedItemData, DeserializedItemField, Item } from 'src/globalTypes'
+import { DeserializedItem, DeserializedItemData, DeserializedItemField, DeserializedItemFieldValue, Item } from 'src/globalTypes'
 import { itemCommentDataDeserializer, itemDataDeserializer, listDeserializer } from 'src/serializers'
 import { getItemCommentDataById, getItemCommentsDataById, getItemDataById } from './selectors'
 import * as T from './types'
@@ -86,7 +86,7 @@ export const editItem = {
         const itemData = getItemDataById(state, action.payload)
         itemData!.isEditing = !itemData!.isEditing
     },
-    CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<DeserializedItemField>) { },
+    CHANGE_ITEM_FIELD_VALUE(state: State, action: PayloadAction<DeserializedItemField<DeserializedItemFieldValue>>) { },
 }
 
 export const saveItem = {

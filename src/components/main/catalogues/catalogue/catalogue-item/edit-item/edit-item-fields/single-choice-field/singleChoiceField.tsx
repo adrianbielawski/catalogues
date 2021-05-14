@@ -14,7 +14,7 @@ import EditableField from 'components/global-components/editable-field/editableF
 interface Props {
     itemId: number,
     field: DeserializedField,
-    fieldValue: DeserializedItemField,
+    fieldValue: DeserializedItemField<number | null>,
     fieldData: AuthUserChoiceFieldData,
 }
 
@@ -44,7 +44,7 @@ const SingleChoiceField = (props: Props) => {
                 choices={fieldChoices}
                 defaultSortDir="asc"
                 defaultSearchValue=""
-                selected={props.fieldValue?.value as number | null}
+                selected={props.fieldValue?.value}
                 onChange={handleChange}
             />
             <AddChoice

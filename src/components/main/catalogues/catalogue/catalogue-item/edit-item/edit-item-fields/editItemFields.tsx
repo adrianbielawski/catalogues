@@ -1,7 +1,9 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
-import { AuthUserChoiceFieldData, AuthUserFieldData, DeserializedItem } from 'src/globalTypes'
+import {
+    AuthUserChoiceFieldData, AuthUserFieldData, DeserializedItem, DeserializedItemField, DeserializedMediaFieldValue
+} from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Components
@@ -11,6 +13,7 @@ import SingleChoiceField from './single-choice-field/singleChoiceField'
 import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 import DateField from './date-field/dateField'
+import MediaField from './media-field/mediaField'
 
 type Props = {
     item: DeserializedItem,
@@ -28,23 +31,46 @@ const EditItemFields = (props: Props) => {
         const fieldProps = {
             itemId: props.item.id,
             field,
-            fieldValue
         }
 
         switch (field.type) {
             case 'short_text':
-                fieldComponent = <TextField {...fieldProps} />
+                fieldComponent = (
+                    <TextField
+                        {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<string>}
+                    />
+                )
                 break
             case 'long_text':
-                fieldComponent = <LongTextField {...fieldProps} />
+                fieldComponent = (
+                    <LongTextField
+                        {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<string>}
+                    />
+                )
                 break
             case 'date':
-                fieldComponent = <DateField {...fieldProps} />
+                fieldComponent = (
+                    <DateField
+                        {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<string>}
+                    />
+                )
+                break
+            case 'media':
+                fieldComponent = (
+                    <MediaField
+                        {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<DeserializedMediaFieldValue>}
+                    />
+                )
                 break
             case 'single_choice':
                 fieldComponent = (
                     <SingleChoiceField
                         {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<number | null>}
                         fieldData={fieldData as AuthUserChoiceFieldData}
                     />
                 )
@@ -53,6 +79,7 @@ const EditItemFields = (props: Props) => {
                 fieldComponent = (
                     <MultipleChoiceField
                         {...fieldProps}
+                        fieldValue={fieldValue as DeserializedItemField<number[] | null>}
                         fieldData={fieldData as AuthUserChoiceFieldData}
                     />
                 )

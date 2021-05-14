@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, EntityState, PayloadAction } from '@reduxjs/toolkit'
 //Types
-import { Item, DeserializedItem, DeserializedItemField } from 'src/globalTypes'
+import { Item, DeserializedItem, DeserializedItemField, DeserializedItemFieldValue } from 'src/globalTypes'
 import * as T from './types'
 //Serializers
 import { itemDeserializer } from 'src/serializers'
@@ -11,14 +11,14 @@ export const getFieldValueById = (
     state: EntityState<DeserializedItem>,
     itemId: number,
     fieldId: number | string,
-): DeserializedItemField => (
+): DeserializedItemField<DeserializedItemFieldValue> => (
     getFieldsValuesById(state, itemId).filter(f => f.fieldId === fieldId)[0]
 )
 
 export const getFieldsValuesById = (
     state: EntityState<DeserializedItem>,
     itemId: number,
-): DeserializedItemField[] => (
+): DeserializedItemField<DeserializedItemFieldValue>[] => (
     state.entities[itemId]!.fieldsValues
 )
 
@@ -46,7 +46,7 @@ export const itemsEntitiesSlice = createSlice({
         ITEM_REMOVED(state, action: PayloadAction<number>) {
             itemsAdapter.removeOne(state, action.payload)
         },
-        CHANGE_ITEM_FIELD_VALUE(state, action: PayloadAction<DeserializedItemField>) {
+        CHANGE_ITEM_FIELD_VALUE(state, action: PayloadAction<DeserializedItemField<DeserializedItemFieldValue>>) {
             const newField = action.payload
             const fieldValue = getFieldValueById(state, newField.itemId, newField.fieldId)
             

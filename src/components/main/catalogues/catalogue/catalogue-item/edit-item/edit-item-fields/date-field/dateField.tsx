@@ -14,7 +14,7 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 interface Props {
     itemId: number,
     field: DeserializedField,
-    fieldValue?: DeserializedItemField,
+    fieldValue?: DeserializedItemField<string>,
 }
 
 const DateField = (props: Props) => {
