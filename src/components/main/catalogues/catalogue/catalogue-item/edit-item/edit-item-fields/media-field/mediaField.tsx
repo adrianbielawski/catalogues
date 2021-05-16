@@ -40,7 +40,7 @@ const MediaField = (props: Props) => {
     }
 
     const inputProps = {
-        defaultValue: props.fieldValue?.value.url || ''
+        defaultValue: props.fieldValue?.value?.url || ''
     }
 
     const content = isEditing ? (
@@ -50,7 +50,7 @@ const MediaField = (props: Props) => {
             inputProps={inputProps}
             onConfirm={handleConfirm}
         />
-    ) : props.fieldValue?.value.url
+    ) : props.fieldValue?.value?.url
 
     return (
         <EditableField
