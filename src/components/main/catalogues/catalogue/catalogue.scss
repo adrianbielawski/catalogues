@@ -12,10 +12,20 @@
         }
         .mainContent {
             flex-grow: 1;
-            max-width: 100%;
+            max-width: calc(100% - 250px);
         }
         .loader {
             margin: 0 auto;
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .catalogue {
+        .wrapper {
+            .mainContent {
+                max-width: 100%;
+            }
         }
     }
 }
