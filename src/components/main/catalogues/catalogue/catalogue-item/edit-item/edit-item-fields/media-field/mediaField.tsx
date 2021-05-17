@@ -29,11 +29,7 @@ const MediaField = (props: Props) => {
             fieldId: props.field.id,
             value: input.length > 0 ? {
                 url: input,
-                type: '',
-                service: '',
-                id: '',
-                title: '',
-                thumbnailUrl: '',
+                type: 'link',
             } : null,
         }))
         setIsEditing(false)

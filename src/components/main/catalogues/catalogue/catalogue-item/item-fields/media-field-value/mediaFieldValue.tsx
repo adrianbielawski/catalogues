@@ -7,7 +7,7 @@ import YT from 'assets/img/youtube.png'
 import FB from 'assets/img/facebook.png'
 import Vimeo from 'assets/img/vimeo.png'
 //Types
-import { DeserializedMediaFieldValue } from 'src/globalTypes'
+import { DeserializedMediaFieldValue, MediaFieldType } from 'src/globalTypes'
 //Components
 import Image from 'components/global-components/image/image'
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
@@ -19,29 +19,36 @@ type Props = {
 
 type Service = {
     image: string,
-    internalPlayer: boolean,
+    internalPlayer?: MediaFieldType[],
 }
 
 const servicesMap: Record<string, Service> = {
     youtube: {
         image: YT,
-        internalPlayer: true
+        internalPlayer: ['video']
     },
-    facebook:  {
+    facebook: {
         image: FB,
-        internalPlayer: false
     },
-    vimeo:  {
+    vimeo: {
         image: Vimeo,
-        internalPlayer: true
+        internalPlayer: ['video']
     },
 }
 
 const MediaFieldValue = (props: Props) => {
     const [showPlayer, setShowPlayer] = useState(false)
 
+    const internalPlayer = props.fieldValue.service
+        ? servicesMap[props.fieldValue.service]?.internalPlayer?.includes(props.fieldValue.type)
+        : false
+
+    const image = props.fieldValue.service
+        ? servicesMap[props.fieldValue.service]?.image
+        : undefined
+
     const handleMediaFieldClick = () => {
-        if (servicesMap[props.fieldValue.service].internalPlayer) {
+        if (internalPlayer) {
             setShowPlayer(true)
         } else {
             window.open(props.fieldValue.url, '_blank')
@@ -51,8 +58,6 @@ const MediaFieldValue = (props: Props) => {
     const handleClosePlayer = () => {
         setShowPlayer(false)
     }
-
-    const image = servicesMap[props.fieldValue.service].image
 
     const placeholder = (
         <FontAwesomeIcon
@@ -72,19 +77,24 @@ const MediaFieldValue = (props: Props) => {
                 placeHolder={placeholder}
             />
             <p className={styles.title}>
-                {props.fieldValue.title}
+                {props.fieldValue.title
+                    ? props.fieldValue.title
+                    : props.fieldValue.url
+                }
             </p>
-            <AnimatedModal
-                show={showPlayer}
-                className={styles.mediaPlayerModal}
-                onClose={handleClosePlayer}
-            >
-                <MediaPlayer
-                    className={styles.mediaPlayer}
-                    url={props.fieldValue.url}
-                    thumbnailUrl={props.fieldValue.thumbnailUrl}
-                />
-            </AnimatedModal>
+            {internalPlayer && (
+                <AnimatedModal
+                    show={showPlayer}
+                    className={styles.mediaPlayerModal}
+                    onClose={handleClosePlayer}
+                >
+                    <MediaPlayer
+                        className={styles.mediaPlayer}
+                        url={props.fieldValue.url}
+                        thumbnailUrl={props.fieldValue.thumbnailUrl}
+                    />
+                </AnimatedModal>
+            )}
         </div>
     )
 }

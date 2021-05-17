@@ -336,22 +336,24 @@ export interface DeserializedItem {
     removedImages: DeserializedImage[],
 }
 
+export type MediaFieldType = 'video' | 'link' 
+
 export type MediaFieldValue = {
     url: string,
-    type: string,
-    service: string,
-    id: string,
-    title: string,
-    thumbnail_url: string,
+    type: MediaFieldType,
+    service?: string,
+    id?: string,
+    title?: string,
+    thumbnail_url?: string,
 }
 
 export type DeserializedMediaFieldValue = {
     url: string,
-    type: string,
-    service: string,
-    id: string,
-    title: string,
-    thumbnailUrl: string,
+    type: MediaFieldType,
+    service?: string,
+    id?: string,
+    title?: string,
+    thumbnailUrl?: string,
 }
 
 export type BasicFieldValue = string | number | number[] | null
