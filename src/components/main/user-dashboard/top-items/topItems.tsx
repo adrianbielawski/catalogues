@@ -15,6 +15,8 @@ const cx = classNames.bind(styles)
 
 const TopItems = () => {
     const dispatch = useAppDispatch()
+    const authUser = useTypedSelector(state => state.modules.authUser)
+    const isFetchingCataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.isFetchingCataloguesData)
     const topItems = useTypedSelector(state => state.modules.authUserDashboard.topItems)
     const itemsData = topItems.itemsData!
 
@@ -81,7 +83,10 @@ const TopItems = () => {
         })
     }
 
-    if (!itemsData || topItems.isFetchingData && !itemsData.results.length) {
+    if (!itemsData
+        || topItems.isFetchingData && !itemsData.results.length
+        || authUser.id && isFetchingCataloguesData        
+    ) {
         return <Loader className={styles.loader} />
     }
 

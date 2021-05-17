@@ -74,6 +74,14 @@ export const fetchCatalogueFieldsReducers = {
     },
 }
 
+export const fetchCataloguesFieldsReducers = {
+    FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS(state: State, action: PayloadAction<Field[]>) { },
+    AUTH_USER_CATALOGUES_FIELDS_NOT_NEEDED(state: State) {
+        state.isFetchingCataloguesData = false
+    },
+    FETCH_AUTH_USER_CATALOGUES_FIELDS_FAILURE(state: State) { },
+}
+
 export const createCatalogueFieldReducers = {
     TOGGLE_ADD_FIELD(state: State, action: PayloadAction<number>) {
         const catalogue = getCatalogueDataById(state, action.payload)

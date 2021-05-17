@@ -57,6 +57,7 @@ export const fetchAuthUserCataloguesReducers = {
     FETCH_AUTH_USER_CATALOGUES(state: State) { },
     FETCH_AUTH_USER_CATALOGUES_START(state: State) {
         state.isFetchingCatalogues = true
+        state.isFetchingCataloguesData = true
     },
     FETCH_AUTH_USER_CATALOGUES_SUCCESS(state: State, action: PayloadAction<Catalogue[]>) {
         state.cataloguesData = action.payload.map(c => {

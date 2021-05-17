@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import styles from './latestItems.scss'
 //Redux
 import {
-    FETCH_LATEST_ITEMS, FETCH_LATEST_ITEM_COMMENTS, POST_LATEST_ITEM_COMMENT
+    CLEAR_LATEST_ITEMS, FETCH_LATEST_ITEMS, FETCH_LATEST_ITEM_COMMENTS, POST_LATEST_ITEM_COMMENT
 } from 'store/modules/homepage/latest-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
@@ -15,11 +15,17 @@ const cx = classNames.bind(styles)
 
 const LatestItems = () => {
     const dispatch = useAppDispatch()
+    const authUser = useTypedSelector(state => state.modules.authUser)
+    const isFetchingCataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.isFetchingCataloguesData)
     const latestItems = useTypedSelector(state => state.modules.homepage.latestItems)
     const itemsData = latestItems.itemsData!
 
     useEffect(() => {
         fetchItems()
+
+        return () => {
+            dispatch(CLEAR_LATEST_ITEMS())
+        }
     }, [])
 
     const fetchItems = () => {
@@ -79,7 +85,10 @@ const LatestItems = () => {
         })
     }
 
-    if (!itemsData || latestItems.isFetchingData && !itemsData.results.length) {
+    if (!itemsData
+        || latestItems.isFetchingData && !itemsData.results.length
+        || authUser.id && isFetchingCataloguesData    
+    ) {
         return <Loader className={styles.loader} />
     }
 

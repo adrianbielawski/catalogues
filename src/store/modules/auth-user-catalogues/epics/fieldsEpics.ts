@@ -1,8 +1,8 @@
 import { combineEpics } from "redux-observable"
 import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
-import { concat, of, defer, Observable, merge } from 'rxjs'
-import { catchError, mergeMap, switchMap, filter, map } from 'rxjs/operators'
+import { concat, of, defer, Observable, merge, forkJoin } from 'rxjs'
+import { catchError, mergeMap, switchMap, filter, map, defaultIfEmpty } from 'rxjs/operators'
 //Actions
 import * as actions from "../slice"
 import * as fieldsEntitiesActions from "store/entities/fields/slice"
@@ -57,6 +57,29 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) => action$
             catchError(() => of(actions.FETCH_AUTH_USER_CATALOGUE_FIELDS_FAILURE(action.payload)))
         )
     ))
+)
+
+export const fetchCataloguesFieldsEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_AUTH_USER_CATALOGUES_SUCCESS.match),
+    mergeMap(action => {
+        const requests = action.payload.map(catalogue =>
+            axiosInstance$.get('/fields/', {
+                params: { catalogue_id: catalogue.id }
+            }).pipe(map(response => response.data))
+        )
+
+        if (requests.length === 0) {
+            return of(actions.AUTH_USER_CATALOGUES_FIELDS_NOT_NEEDED())
+        }
+
+        return forkJoin(requests).pipe(
+            mergeMap(response => concat(
+                of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
+                of(actions.FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS(response.flat())),
+            )),
+            catchError(() => of(actions.FETCH_AUTH_USER_CATALOGUES_FIELDS_FAILURE()))
+        )
+    })
 )
 
 export const createCatalogueFieldEpic = (action$: Observable<Action>) => action$.pipe(
@@ -189,6 +212,7 @@ export const authUserCataloguesFieldsEpics = combineEpics(
     fetchCatalogueFieldEpic,
     refreshCatalogueFieldsEpic,
     fetchCatalogueFieldsEpic,
+    fetchCataloguesFieldsEpic,
     createCatalogueFieldEpic,
     deleteCatalogueFieldEpic,
     changeFieldNameEpic,

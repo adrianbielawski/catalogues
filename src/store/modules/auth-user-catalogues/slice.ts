@@ -10,6 +10,7 @@ const initialState: T.AuthUserCataloguesState = {
     defaultCatalogueId: null,
     newCatalogueId: null,
     isFetchingCatalogues: true,
+    isFetchingCataloguesData: true,
     isCreatingNewCatalogue: false,
 }
 
@@ -31,12 +32,14 @@ export const authUserCataloguesSlice = createSlice({
         ...fieldsReducers.fieldsReducers,
         ...fieldsReducers.fetchCatalogueFieldReducers,
         ...fieldsReducers.fetchCatalogueFieldsReducers,
+        ...fieldsReducers.fetchCataloguesFieldsReducers,
         ...fieldsReducers.createCatalogueFieldReducers,
         ...fieldsReducers.deleteCatalogueFieldReducers,
         ...fieldsReducers.changeFieldNameReducers,
         ...fieldsReducers.changePublicFieldReducers,
         ...fieldsReducers.reorderFieldsReducers,
         ...fieldsChoicesReducers.fetchFieldsChoicesReducers,
+        ...fieldsChoicesReducers.fetchCataloguesChoicesReducers,
         ...fieldsChoicesReducers.postFieldChoiceReducers,
         ...fieldsChoicesReducers.removeFieldChoiceReducers,
     },
@@ -62,6 +65,7 @@ export const {
     TOGGLE_FIELD_EDIT, CLEAR_FIELD_ERROR, REFRESH_CATALOGUE_FIELD,
     FETCH_CATALOGUE_FIELD, FETCH_CATALOGUE_FIELD_SUCCESS, FETCH_CATALOGUE_FIELD_FAILURE,
     FETCH_AUTH_USER_CATALOGUE_FIELDS, FETCH_AUTH_USER_CATALOGUE_FIELDS_START, FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS, FETCH_AUTH_USER_CATALOGUE_FIELDS_FAILURE,
+    FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS, AUTH_USER_CATALOGUES_FIELDS_NOT_NEEDED, FETCH_AUTH_USER_CATALOGUES_FIELDS_FAILURE,
     TOGGLE_ADD_FIELD, CREATE_CATALOGUE_FIELD, CREATE_CATALOGUE_FIELD_START, CREATE_CATALOGUE_FIELD_SUCCESS, CREATE_CATALOGUE_FIELD_FAILURE,
     DELETE_CATALOGUE_FIELD, DELETE_CATALOGUE_FIELD_START, DELETE_CATALOGUE_FIELD_SUCCESS, DELETE_CATALOGUE_FIELD_FAILURE,
     CHANGE_FIELD_NAME, CHANGE_FIELD_NAME_START, CHANGE_FIELD_NAME_SUCCESS, CHANGE_FIELD_NAME_FAILURE,
@@ -69,6 +73,7 @@ export const {
     REORDER_CATALOGUE_FIELDS, REORDER_CATALOGUE_FIELDS_SUCCESS, REORDER_CATALOGUE_FIELDS_FAILURE,
     //Choices reducers
     FETCH_FIELDS_CHOICES, FETCH_FIELDS_CHOICES_START, FETCH_FIELDS_CHOICES_SUCCESS, FETCH_FIELDS_CHOICES_FAILURE,
+    FETCH_AUTH_USER_CATALOGUES_CHOICES_SUCCESS, AUTH_USER_CATALOGUES_CHOICES_NOT_NEEDED, FETCH_AUTH_USER_CATALOGUES_CHOICES_FAILURE,
     POST_FIELD_CHOICE, POST_FIELD_CHOICE_SUCCESS, POST_FIELD_CHOICE_FAILURE,
     REMOVE_FIELD_CHOICE, REMOVE_FIELD_CHOICE_SUCCESS, REMOVE_FIELD_CHOICE_FAILURE,
 } = authUserCataloguesSlice.actions

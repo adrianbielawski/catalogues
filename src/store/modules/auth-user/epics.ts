@@ -61,6 +61,7 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                     localStorage.setItem('token', response.data.key)
                 }),
                 of(usersActions.USER_ADDED(response.data.user)),
+                of(actions.LOG_IN_SUCCESS(response.data.user.id)),
                 defer(() => {
                     const { pathname } = action.payload.location.state?.referrer || {
                         pathname: `/${response.data.user.username}/catalogues`
@@ -68,7 +69,6 @@ export const logInEpic = (action$: Observable<Action>) => action$.pipe(
                     
                     action.payload.history.push(pathname)
                 }),
-                of(actions.LOG_IN_SUCCESS(response.data.user.id)),
             )),
             catchError(error => of(actions.LOG_IN_FAILURE(getErrorMessage(error))))
         )

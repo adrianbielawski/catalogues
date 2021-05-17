@@ -5,6 +5,7 @@ export interface AuthUserCataloguesState {
     defaultCatalogueId: number | null,
     newCatalogueId: number | null,
     isFetchingCatalogues: boolean,
+    isFetchingCataloguesData: boolean,
     isCreatingNewCatalogue: boolean,
 }
 

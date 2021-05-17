@@ -1,7 +1,7 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import * as T from '../types'
 import { getCatalogueDataById, getFieldDataById } from '../selectors'
-import { AuthUserChoiceFieldData } from 'src/globalTypes'
+import { AuthUserChoiceFieldData, Choice } from 'src/globalTypes'
 
 const networkError = {
     title: 'Network error',
@@ -36,6 +36,16 @@ export const fetchFieldsChoicesReducers = {
         const catalogue = getCatalogueDataById(state, action.payload)
         catalogue.isFetchingFieldsChoices = false
     },
+}
+
+export const fetchCataloguesChoicesReducers = {
+    FETCH_AUTH_USER_CATALOGUES_CHOICES_SUCCESS(state: State) {
+        state.isFetchingCataloguesData = false
+    },
+    AUTH_USER_CATALOGUES_CHOICES_NOT_NEEDED(state: State) {
+        state.isFetchingCataloguesData = false
+    },
+    FETCH_AUTH_USER_CATALOGUES_CHOICES_FAILURE(state: State) { },
 }
 
 export const postFieldChoiceReducers = {

@@ -39,6 +39,32 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) => merge(
     )
 }))
 
+export const fetchAuthUserCataloguesChoicesEpic = (action$: Observable<Action>) => merge(
+    action$.pipe(filter(actions.FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS.match)),
+).pipe(mergeMap(action => {
+    const fields = action.payload.filter(f =>
+        f.type === 'multiple_choice' || f.type === 'single_choice'
+    )
+
+    if (fields.length === 0) {
+        return of(actions.AUTH_USER_CATALOGUES_CHOICES_NOT_NEEDED())
+    }
+
+    const requests = fields.map(field =>
+        axiosInstance$.get('/choices/', {
+            params: { field_id: field.id }
+        }).pipe(map(response => response.data))
+    )
+
+    return forkJoin(requests).pipe(
+        mergeMap(data => concat(
+            of(choicesEntitiesActions.CHOICES_UPDATED(data.flat())),
+            of(actions.FETCH_AUTH_USER_CATALOGUES_CHOICES_SUCCESS()),
+        )),
+        catchError(() => of(actions.FETCH_AUTH_USER_CATALOGUES_CHOICES_FAILURE()))
+    )
+}))
+
 export const postFieldChoiceEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.POST_FIELD_CHOICE.match),
     mergeMap(action => concat(
@@ -77,6 +103,7 @@ export const removeFieldChoiceEpic = (action$: Observable<Action>) => action$.pi
 
 export const authUserChoicesEpics = combineEpics(
     fetchFieldsChoicesEpic,
+    fetchAuthUserCataloguesChoicesEpic,
     postFieldChoiceEpic,
     removeFieldChoiceEpic,
 )
