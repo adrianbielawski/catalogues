@@ -69,7 +69,7 @@ const AddChoice = (props: Props) => {
 
     const error = props.fieldData.fieldError
 
-    const inputProps = {
+    const inputAttributes = {
         placeholder: "New choice name",
         onChange: handleChange
     }
@@ -83,7 +83,7 @@ const AddChoice = (props: Props) => {
             {isAddChoiceActive
                 ? (
                     <InputWithConfirmButton
-                        inputProps={inputProps}
+                        { ...inputAttributes }
                         buttonProps={buttonProps}
                         clearOnConfirm={true}
                         invalidInputMessage={inputError}

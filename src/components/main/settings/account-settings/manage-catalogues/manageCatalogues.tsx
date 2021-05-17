@@ -55,7 +55,7 @@ const ManageCatalogues = () => {
         validateName(e.target.value)
     }
 
-    const inputProps = {
+    const inputAttributes = {
         placeholder: "New catalogue name",
         className: styles.newCatalogueInput,
         onChange: handleNameChange,
@@ -75,7 +75,7 @@ const ManageCatalogues = () => {
                 {addingCatalogue
                     ? (
                         <InputWithConfirmButton
-                            inputProps={inputProps}
+                            { ...inputAttributes }
                             invalidInputMessage={inputError}
                             ref={inputRef}
                             onConfirm={handleAddCatalogue}

@@ -32,14 +32,14 @@ const TextField = (props: Props) => {
         setIsEditing(false)
     }
 
-    const inputProps = {
+    const inputAttributes = {
         defaultValue: props.fieldValue?.value as string || ''
     }
     
     const content = isEditing ? (
         <InputWithConfirmButton
             className={styles.input}
-            inputProps={inputProps}
+            { ...inputAttributes }
             onConfirm={handleConfirm}
         />
     ) : props.fieldValue?.value

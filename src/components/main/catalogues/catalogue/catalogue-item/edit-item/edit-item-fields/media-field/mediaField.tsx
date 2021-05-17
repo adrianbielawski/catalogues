@@ -35,15 +35,15 @@ const MediaField = (props: Props) => {
         setIsEditing(false)
     }
 
-    const inputProps = {
-        defaultValue: props.fieldValue?.value?.url || ''
+    const inputAttributes = {
+        defaultValue: props.fieldValue?.value?.url || '',
+        type: 'url',
     }
 
     const content = isEditing ? (
         <InputWithConfirmButton
-            type="url"
             className={styles.input}
-            inputProps={inputProps}
+            { ...inputAttributes }
             onConfirm={handleConfirm}
         />
     ) : props.fieldValue?.value?.url
