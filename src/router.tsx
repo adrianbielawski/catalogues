@@ -74,7 +74,7 @@ const useParamHydrator = () => {
             hydrated.username = currentUser.username
         }
         if (params.slug !== undefined) {
-            hydrated.catalogue = catalogueSelectorBySlug(params.slug)(state)
+            hydrated.catalogue = catalogueSelectorBySlug(params.slug, currentUser.id)(state)
         }
         if (params.itemId !== undefined) {
             hydrated.item = itemSelector(params.itemId)(state)

@@ -18,8 +18,8 @@ export const catalogueSelector = (id: number): SelectorType<T.DeserializedCatalo
     state => state.entities.catalogues.entities[id]!
 )
 
-export const catalogueSelectorBySlug = (slug: string): SelectorType<T.DeserializedCatalogue> => (
-    state => Object.values(state.entities.catalogues.entities).filter(c => c!.slug === slug)[0]!
+export const catalogueSelectorBySlug = (slug: string, id: number): SelectorType<T.DeserializedCatalogue> => (
+    state => Object.values(state.entities.catalogues.entities).filter(c => c!.slug === slug && c!.createdBy === id)[0]!
 )
 
 //Fields entities
