@@ -12,7 +12,7 @@ import EditableField from 'components/global-components/editable-field/editableF
 interface Props {
     itemId: number,
     field: DeserializedField,
-    fieldValue?: DeserializedItemField,
+    fieldValue?: DeserializedItemField<string>,
 }
 
 const TextField = (props: Props) => {
@@ -32,14 +32,14 @@ const TextField = (props: Props) => {
         setIsEditing(false)
     }
 
-    const inputProps = {
+    const inputAttributes = {
         defaultValue: props.fieldValue?.value as string || ''
     }
     
     const content = isEditing ? (
         <InputWithConfirmButton
             className={styles.input}
-            inputProps={inputProps}
+            { ...inputAttributes }
             onConfirm={handleConfirm}
         />
     ) : props.fieldValue?.value

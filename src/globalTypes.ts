@@ -316,7 +316,7 @@ export interface Item {
     modified_at: string,
     catalogue_id: number,
     permissions: ItemPermisions,
-    values: ItemField[],
+    values: ItemField<ItemFieldValue>[],
     images: Image[],
     rating: ItemRating,
     is_favourite: boolean,
@@ -331,28 +331,50 @@ export interface DeserializedItem {
     permissions: DeserializedItemPermisions,
     rating: DeserializedItemRating,
     isFavourite: boolean,
-    fieldsValues: DeserializedItemField[],
+    fieldsValues: DeserializedItemField<DeserializedItemFieldValue>[],
     images: DeserializedImage[],
     removedImages: DeserializedImage[],
 }
 
-export type ItemFieldValue = string | number | number[] | null
+export type MediaFieldType = 'video' | 'link' 
 
-export interface ItemField {
+export type MediaFieldValue = {
+    url: string,
+    type: MediaFieldType,
+    service?: string,
+    id?: string,
+    title?: string,
+    thumbnail_url?: string,
+}
+
+export type DeserializedMediaFieldValue = {
+    url: string,
+    type: MediaFieldType,
+    service?: string,
+    id?: string,
+    title?: string,
+    thumbnailUrl?: string,
+}
+
+export type BasicFieldValue = string | number | number[] | null
+export type ItemFieldValue = BasicFieldValue | MediaFieldValue
+export type DeserializedItemFieldValue = BasicFieldValue | DeserializedMediaFieldValue
+
+export interface ItemField<T> {
     item_id: number,
     field_id: number,
-    value: ItemFieldValue,
+    value: T,
 }
 
-export interface SerializedItemField {
+export interface SerializedItemField<T> {
     field_id: number,
-    value: ItemFieldValue,
+    value: T,
 }
 
-export interface DeserializedItemField {
+export interface DeserializedItemField<T> {
     itemId: number,
     fieldId: number,
-    value: ItemFieldValue,
+    value: T,
 }
 
 //Image

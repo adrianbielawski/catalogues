@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 
-const promiseCache: Record<string, [Promise<string | null>, AbortController]> = {}
+const promiseCache: Record<string, [Promise<string | undefined>, AbortController]> = {}
 
 const getUrl = (url: string) => {
     if (!(url in promiseCache)) {
@@ -11,7 +11,7 @@ const getUrl = (url: string) => {
             .then(blob => URL.createObjectURL(blob))
             .catch(() => {
                 delete promiseCache[url]
-                return null
+                return undefined
             })
         promiseCache[url] = [promise, controller]
     }
@@ -19,7 +19,7 @@ const getUrl = (url: string) => {
 }
 
 export const useImageLoader = (url: string) => {
-    const [image, setImage] = useState<string | null>(null)
+    const [image, setImage] = useState<string | null | undefined>(null)
 
     useEffect(() => {
         let isCancelled = false

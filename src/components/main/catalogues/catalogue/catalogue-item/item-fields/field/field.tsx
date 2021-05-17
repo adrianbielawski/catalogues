@@ -1,13 +1,15 @@
 import React from 'react'
 import styles from './field.scss'
 //Types
-import { DeserializedItemField } from 'src/globalTypes'
+import { DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
+//Components
+import MediaFieldValue from '../media-field-value/mediaFieldValue'
 
 type Props = {
-    item: DeserializedItemField,
+    item: DeserializedItemField<DeserializedItemFieldValue>,
 }
 
 const Field = (props: Props) => {
@@ -15,6 +17,7 @@ const Field = (props: Props) => {
     const fieldChoices = useTypedSelector(fieldChoicesSelector(field.id))
 
     let value = props.item.value
+    let valueComponent = <p>{value}</p>
 
     if (field.type === 'multiple_choice') {
         if (value === null) {
@@ -23,18 +26,32 @@ const Field = (props: Props) => {
         const values = (value as number[]).map(id =>
             fieldChoices.find(c => c.id === id)?.value
         )
-        value = values.join(', ')
+        const displayedValue = values.join(', ')
+        valueComponent = <p>{displayedValue}</p>
     }
 
     if (field.type === 'single_choice') {
-        value = fieldChoices.find(f => f.id === value)?.value || ''
+        const displayedValue = fieldChoices.find(f => f.id === value)?.value || ''
+        valueComponent = <p>{displayedValue}</p>
+    }
+
+    if (field.type === 'media') {
+        valueComponent = (
+            <MediaFieldValue
+                fieldValue={value as DeserializedMediaFieldValue}
+            />
+        )
     }
 
     return (
-        <p className={styles.field}>
-            <span className={styles.name}>{field.name}:</span>
-            <span>{value}</span>
-        </p>
+        <div className={styles.field}>
+            <p className={styles.name}>
+                {field.name}:
+            </p>
+            <div className={styles.value}>
+                {valueComponent}
+            </div>
+        </div>
     )
 }
 

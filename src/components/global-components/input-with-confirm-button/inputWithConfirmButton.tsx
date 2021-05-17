@@ -9,7 +9,7 @@ import DialogCloud from '../dialog-cloud/dialogCloud'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
     loading?: boolean,
-    inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
+    // inputProps?: React.InputHTMLAttributes<HTMLInputElement>,
     buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>,
     clearOnConfirm?: boolean,
     invalidInputMessage?: string,
@@ -23,14 +23,14 @@ const InputWithConfirmButton: React.ForwardRefRenderFunction<
     Props
 > = (props, ref) => {
     const inputRef = useRef<HTMLInputElement>(null)
-    const { loading, inputProps, buttonProps, invalidInputMessage, onConfirm } = props
+    const { loading, buttonProps, clearOnConfirm, invalidInputMessage, onConfirm, ...rest } = props
 
     const handleConfirm = () => {
         if (invalidInputMessage && invalidInputMessage?.length !== 0) {
             return
         }
         onConfirm(inputRef.current!.value)
-        if (props.clearOnConfirm) {
+        if (clearOnConfirm) {
             inputRef.current!.value = ''
             inputRef.current?.focus()
         }
@@ -49,7 +49,7 @@ const InputWithConfirmButton: React.ForwardRefRenderFunction<
             <DialogCloud message={invalidInputMessage || ''} />
             <input
                 ref={mergeRefs([inputRef, ref])}
-                {...inputProps}
+                {...rest}
                 autoFocus
             />
             <ConfirmButton

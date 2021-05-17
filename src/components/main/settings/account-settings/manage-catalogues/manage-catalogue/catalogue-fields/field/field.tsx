@@ -43,6 +43,7 @@ const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
             case 'short_text':
             case 'long_text':
             case 'date':
+            case 'media':
                 return (
                     <EditTextField
                         field={field}

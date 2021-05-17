@@ -46,10 +46,14 @@ const ChangeUsername = () => {
         }))
     }
 
+    const inputAttributes = {
+        defaultValue: user.username
+    }
+
     const content = authUser.isEditingUsername ? (
         <InputWithConfirmButton
             loading={delayCompleated}
-            inputProps={{ defaultValue: user.username }}
+            { ...inputAttributes }
             buttonProps={{ disabled: authUser.invalidUsernameMessage?.length !== 0 }}
             invalidInputMessage={authUser.invalidUsernameMessage}
             onConfirm={handleUsernameConfirm}

@@ -4,6 +4,8 @@ import moment from 'moment'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueCard.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Redux
@@ -53,6 +55,7 @@ const CatalogueCard: React.ForwardRefRenderFunction<
             <Image
                 className={styles.image}
                 url={catalogue.imageThumbnail}
+                baseUrl={BASE_URL}
                 placeHolder={
                     <NoImageIcon size="6x" />
                 }

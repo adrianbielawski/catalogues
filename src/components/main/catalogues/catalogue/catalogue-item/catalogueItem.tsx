@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItem.scss'
 //Redux
-import { CHANGE_FAVOURITE_ITEM, CLEAR_ITEM_ERROR } from 'store/modules/current-user-items/slice'
+import { CHANGE_FAVOURITE_ITEM, REFRESH_CURRENT_USER_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector, userSelector } from 'store/selectors'
 //Types
@@ -93,8 +93,8 @@ const CatalogueItem: React.ForwardRefRenderFunction<
         }
     }
 
-    const clearError = () => {
-        dispatch(CLEAR_ITEM_ERROR(item.id))
+    const refreshItem = () => {
+        dispatch(REFRESH_CURRENT_USER_ITEM(item.id))
     }
 
     const shareData = {
@@ -209,7 +209,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<
                 show={error !== null}
                 title={error?.title}
                 message={error?.message || ''}
-                onConfirm={clearError}
+                onConfirm={refreshItem}
             />
         </div>
     )

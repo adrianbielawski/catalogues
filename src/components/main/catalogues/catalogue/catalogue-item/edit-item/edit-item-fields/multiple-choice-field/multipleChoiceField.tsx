@@ -14,7 +14,7 @@ import EditableField from 'components/global-components/editable-field/editableF
 interface Props {
     itemId: number,
     field: DeserializedField,
-    fieldValue: DeserializedItemField,
+    fieldValue: DeserializedItemField<number[] | null>,
     fieldData: AuthUserChoiceFieldData,
 }
 

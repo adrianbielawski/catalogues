@@ -1,21 +1,21 @@
 import React, { useState } from 'react'
-import styles from './longTextField.scss'
+import styles from './mediaField.scss'
 //Types
-import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
+import { DeserializedField, DeserializedItemField, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch } from 'store/storeConfig'
 //Components
-import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
+import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
     itemId: number,
     field: DeserializedField,
-    fieldValue?: DeserializedItemField<string>,
+    fieldValue?: DeserializedItemField<DeserializedMediaFieldValue>,
 }
 
-const LongTextField = (props: Props) => {
+const MediaField = (props: Props) => {
     const dispatch = useAppDispatch()
     const [isEditing, setIsEditing] = useState(false)
 
@@ -27,19 +27,26 @@ const LongTextField = (props: Props) => {
         dispatch(CHANGE_ITEM_FIELD_VALUE({
             itemId: props.itemId,
             fieldId: props.field.id,
-            value: input.length > 0 ? input : null,
+            value: input.length > 0 ? {
+                url: input,
+                type: 'link',
+            } : null,
         }))
         setIsEditing(false)
     }
-    
+
+    const inputAttributes = {
+        defaultValue: props.fieldValue?.value?.url || '',
+        type: 'url',
+    }
+
     const content = isEditing ? (
-        <TextareaWithConfirmButton
-            className={styles.textarea}
-            defaultValue={props.fieldValue?.value as string}
-            rows={4}
+        <InputWithConfirmButton
+            className={styles.input}
+            { ...inputAttributes }
             onConfirm={handleConfirm}
         />
-    ) : props.fieldValue?.value
+    ) : props.fieldValue?.value?.url
 
     return (
         <EditableField
@@ -51,4 +58,4 @@ const LongTextField = (props: Props) => {
     )
 }
 
-export default LongTextField
+export default MediaField

@@ -3,6 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './carouselItem.scss'
+//Constants
+import { BASE_URL } from 'src/constants'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Custom components
@@ -61,6 +63,7 @@ const CarouselItem = (props: Props) => {
             <Image
                 className={styles.image}
                 url={url}
+                baseUrl={BASE_URL}
                 dimensions={{
                     width: props.image.dimensions?.width!,
                     height: props.image.dimensions?.height!,

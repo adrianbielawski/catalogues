@@ -41,7 +41,7 @@ const List = (props: Props) => {
         return () => {
             clearTimeout(timeout)
         }
-    }, [state.overflowInspected, state.totalHeight, state.totalHeight])
+    }, [state.overflowInspected, state.totalHeight])
 
     useEffect(() => {
         if (state.itemsInspected) {
@@ -106,7 +106,6 @@ const List = (props: Props) => {
             duration={duration}
         >
             <ul
-                style={{ height: state.totalHeight }}
                 ref={listRef}
             >
                 {getItems()}

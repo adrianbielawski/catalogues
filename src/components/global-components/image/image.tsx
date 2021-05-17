@@ -1,8 +1,6 @@
 import React, { ReactNode } from 'react'
 import classNames from 'classnames/bind'
 import styles from './image.scss'
-//Constants
-import { BASE_URL } from 'src/constants'
 //Hooks
 import { useImageLoader } from 'src/hooks/useImageLoader'
 //Custom components
@@ -10,6 +8,7 @@ import Loader from '../loader/loader'
 
 type Props = {
     url?: string,
+    baseUrl?: string,
     dimensions?: {
         width: number,
         height: number,
@@ -23,10 +22,10 @@ type Props = {
 const cx = classNames.bind(styles)
 
 const Image = (props: Props) => {
-    const { url, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
-    const image = !url?.startsWith('blob') ? useImageLoader(`${BASE_URL}${url}`) : url
+    const { url, baseUrl, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
+    const image = !url?.startsWith('blob') ? useImageLoader(`${baseUrl || ''}${url}`) : url
 
-    const placeholder = (onLoading === 'placeholder' && !image) || (!url && placeHolder)
+    const placeholder = image === undefined || (onLoading === 'placeholder' && !image) || (!url && placeHolder)
         ? placeHolder
         : null
 

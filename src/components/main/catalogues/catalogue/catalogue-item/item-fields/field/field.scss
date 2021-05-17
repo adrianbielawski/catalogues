@@ -1,6 +1,11 @@
 .field {
     .name {
+        display: inline;
         font-weight: 700;
         padding-right: 5px;
+    }
+    .value,
+    .value>* {
+        display: inline;
     }
 }

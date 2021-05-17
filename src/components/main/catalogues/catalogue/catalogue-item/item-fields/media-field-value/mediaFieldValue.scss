@@ -1,0 +1,40 @@
+@import "global-styles/variables_and_mixins";
+
+.mediaField {
+    .icon {
+        color: $darkGrey;
+    }
+    .image {
+        display: inline-flex;
+        vertical-align: bottom;
+        max-width: 50px;
+        height: 1.3em;
+        width: unset;
+        padding-right: 5px;
+    }
+    .title {
+        display: inline;
+        overflow-wrap: anywhere;
+    }
+}
+
+.mediaPlayerModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .mediaPlayer {
+        width: 90vw;
+        height: 90vh;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .mediaField {
+        &:hover {
+            cursor: pointer;
+            .title {
+                color: $lightOrange;
+            }
+        }
+    }
+}
