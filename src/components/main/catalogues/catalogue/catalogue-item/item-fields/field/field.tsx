@@ -7,6 +7,7 @@ import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
 //Components
 import MediaFieldValue from '../media-field-value/mediaFieldValue'
+import GeoFieldValue from '../geo-field-value/geoFieldValue'
 
 type Props = {
     item: DeserializedItemField<DeserializedItemFieldValue>,
@@ -44,12 +45,11 @@ const Field = (props: Props) => {
     }
 
     if (field.type === 'geo_point') {
-        const address = (value as DeserializedGeoField).address
-        const displayedValue = address
-            ? `${address.displayName || 'unknown address'}`
-            : null
-
-        valueComponent = <p>{displayedValue}</p>
+        valueComponent = (
+            <GeoFieldValue
+                fieldValue={value as DeserializedGeoField}
+            />
+        )
     }
 
     return (
