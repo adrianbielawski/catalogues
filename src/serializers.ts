@@ -95,6 +95,21 @@ export const choicesDeserializer = (choices: T.Choice[]): T.DeserializedChoice[]
 )
 
 //Item
+export const geoFieldAddressDeserializer = (address: T.GeoFieldAddress): T.DeserializedGeoFieldAddress => ({
+    city: address.city,
+    country: address.country,
+    countryCode: address.country_code,
+    displayName: address.display_name,
+    state: address.state,
+    stateDistrict: address.state_district,
+})
+
+export const geoFieldDeserializer = (value: T.GeoField): T.DeserializedGeoField => ({
+    address: geoFieldAddressDeserializer(value.address),
+    latitude: value.latitude,
+    longitude: value.longitude,
+})
+
 export const mediaFieldDeserializer = (value: T.MediaFieldValue): T.DeserializedMediaFieldValue => ({
     url: value.url,
     type: value.type,
@@ -120,15 +135,27 @@ export const itemFieldValueDeserializer = (value: T.ItemFieldValue): T.Deseriali
     if ((value as T.MediaFieldValue).url !== undefined) {
         return mediaFieldDeserializer(value as T.MediaFieldValue)
     }
+    
+    if ((value as T.GeoField).address !== undefined) {
+        return geoFieldDeserializer(value as T.GeoField)
+    }
     return value as T.BasicFieldValue
 }
 
-export const itemFieldValueSerializer = (value: T.DeserializedItemFieldValue): T.ItemFieldValue => {
+export const itemFieldValueSerializer = (value: T.DeserializedItemFieldValue): T.SerializedItemFieldValue => {
     if (value === null) {
         return null
     }
     if ((value as T.DeserializedMediaFieldValue).url !== undefined) {
         return (value as T.DeserializedMediaFieldValue).url
+    }
+    if ((value as T.DeserializedGeoField).address !== undefined) {
+        const v = (value as T.DeserializedGeoField)
+
+        return {
+            latitude: v.latitude,
+            longitude: v.longitude,
+        }
     }
     return value as T.BasicFieldValue
 }
@@ -143,7 +170,7 @@ export const itemFieldDeserializer = (
 
 export const itemFieldSerializer = (
     field: T.DeserializedItemField<T.DeserializedItemFieldValue>
-): T.SerializedItemField<T.ItemFieldValue> => ({
+): T.SerializedItemField<T.SerializedItemFieldValue> => ({
     field_id: field.fieldId,
     value: itemFieldValueSerializer(field.value),
 })

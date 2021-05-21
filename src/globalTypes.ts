@@ -336,7 +336,42 @@ export interface DeserializedItem {
     removedImages: DeserializedImage[],
 }
 
-export type MediaFieldType = 'video' | 'link' 
+export type GeoFieldAddress = {
+    city?: string,
+    country?: string,
+    country_code?: string,
+    display_name: string,
+    state?: string,
+    state_district?: string,
+}
+
+export type DeserializedGeoFieldAddress = {
+    city?: string,
+    country?: string,
+    countryCode?: string,
+    displayName: string,
+    state?: string,
+    stateDistrict?: string,
+}
+
+export type SerializedGeoField = {
+    latitude: number,
+    longitude: number
+}
+
+export type GeoField = {
+    address: GeoFieldAddress,
+    latitude: number,
+    longitude: number
+}
+
+export type DeserializedGeoField = {
+    address?: DeserializedGeoFieldAddress | null,
+    latitude: number,
+    longitude: number
+}
+
+export type MediaFieldType = 'video' | 'link'
 
 export type MediaFieldValue = {
     url: string,
@@ -357,8 +392,9 @@ export type DeserializedMediaFieldValue = {
 }
 
 export type BasicFieldValue = string | number | number[] | null
-export type ItemFieldValue = BasicFieldValue | MediaFieldValue
-export type DeserializedItemFieldValue = BasicFieldValue | DeserializedMediaFieldValue
+export type ItemFieldValue = BasicFieldValue | MediaFieldValue | GeoField
+export type SerializedItemFieldValue = BasicFieldValue | MediaFieldValue | SerializedGeoField
+export type DeserializedItemFieldValue = BasicFieldValue | DeserializedMediaFieldValue | DeserializedGeoField
 
 export interface ItemField<T> {
     item_id: number,
