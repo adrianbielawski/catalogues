@@ -75,7 +75,18 @@ module.exports = {
             {
               test: /\.js$/,
               enforce: 'pre',
+              exclude: /node_modules/,
               use: ['source-map-loader']
+            },
+            {
+              test: /\.m?js$/,
+              include: /react-leaflet/,
+              use: {
+                loader: 'babel-loader',
+                options: {
+                  presets: ['@babel/preset-env']
+                }
+              }
             }
         ]
     },
