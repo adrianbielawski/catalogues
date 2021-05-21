@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './field.scss'
 //Types
-import { DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
+import { DeserializedGeoField, DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
@@ -41,6 +41,15 @@ const Field = (props: Props) => {
                 fieldValue={value as DeserializedMediaFieldValue}
             />
         )
+    }
+
+    if (field.type === 'geo_point') {
+        const address = (value as DeserializedGeoField).address
+        const displayedValue = address
+            ? `${address.displayName || 'unknown address'}`
+            : null
+
+        valueComponent = <p>{displayedValue}</p>
     }
 
     return (
