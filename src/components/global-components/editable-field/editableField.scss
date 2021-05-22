@@ -7,7 +7,7 @@
     margin: 5px auto;
     width: 100%;
     &.active .content {
-        min-width: 98%;
+        width: 100%;
         overflow: visible;
     }
     .title {
@@ -18,7 +18,7 @@
     .content {
         font-size: 18px;
         color: $darkGrey;
-        margin-left: 5px;
+        margin: 0 5px;
         box-sizing: border-box;
         border: none;
         @include clipText;

@@ -32,6 +32,10 @@ const FIELD_TYPES = [
         value: 'URL',
     },
     {
+        id: 'geo_point',
+        value: 'Location',
+    },
+    {
         id: 'single_choice',
         value: 'Single choice',
     },

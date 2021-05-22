@@ -2,7 +2,8 @@ import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 //Types
 import {
-    AuthUserChoiceFieldData, AuthUserFieldData, DeserializedItem, DeserializedItemField, DeserializedMediaFieldValue
+    AuthUserChoiceFieldData, AuthUserFieldData, DeserializedGeoField, DeserializedItem, DeserializedItemField,
+    DeserializedMediaFieldValue,
 } from 'src/globalTypes'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
@@ -14,6 +15,7 @@ import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 import DateField from './date-field/dateField'
 import MediaField from './media-field/mediaField'
+import GeoField from './geo-field/geoField'
 
 type Props = {
     item: DeserializedItem,
@@ -63,6 +65,14 @@ const EditItemFields = (props: Props) => {
                     <MediaField
                         {...fieldProps}
                         fieldValue={fieldValue as DeserializedItemField<DeserializedMediaFieldValue>}
+                    />
+                )
+                break
+            case 'geo_point':
+                fieldComponent = (
+                    <GeoField
+                        {...fieldProps}
+                        fieldValue={fieldValue?.value as DeserializedGeoField}
                     />
                 )
                 break
