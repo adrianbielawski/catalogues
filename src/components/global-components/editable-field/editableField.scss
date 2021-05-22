@@ -8,7 +8,6 @@
     width: 100%;
     &.active .content {
         width: 100%;
-        overflow: visible;
     }
     .title {
         margin-left: 21px;
@@ -28,7 +27,7 @@
 @media only screen and (max-width: 800px) {
     .editableField {
         .content {
-            max-width: 230px;
+            width: 100%;
         }
     }
 }
