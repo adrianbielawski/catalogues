@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMapMarkerAlt, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
 import styles from './geoFieldValue.scss'
 //Types
 import { DeserializedGeoField } from 'src/globalTypes'
@@ -9,7 +9,7 @@ import { useTypedSelector } from 'store/storeConfig'
 //Components
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 import Map from 'components/global-components/map/map'
-import TransparentButton from 'components/global-components/transparent-button/transparentButton'
+import ModalHeader from 'components/global-components/modals/modal-header/modalHeader'
 
 type Props = {
     fieldValue: DeserializedGeoField,
@@ -54,17 +54,11 @@ const GeoFieldValue = (props: Props) => {
             >
                 <div className={styles.mapWrapper}>
                     {!largeViewport && (
-                        <div className={styles.header}>
-                            <TransparentButton
-                                className={styles.closeButton}
-                                onClick={handleCloseMap}
-                            >
-                                <FontAwesomeIcon
-                                    className={styles.close}
-                                    icon={faTimes}
-                                />
-                            </TransparentButton>
-                        </div>
+                        <ModalHeader
+                            className={styles.header}
+                            buttonClassName={styles.closeButton}
+                            onClose={handleCloseMap}
+                        />
                     )}
                     <Map
                         className={styles.map}
