@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestCatalogues.scss'
 //Redux
-import { FETCH_LATEST_CATALOGUES } from 'store/modules/homepage/latest-catalogues/slice'
+import { CLEAR_LATEST_CATALOGUES, FETCH_LATEST_CATALOGUES } from 'store/modules/homepage/latest-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
@@ -19,6 +19,10 @@ const LatestCatalogues = () => {
 
     useEffect(() => {
         fetchCatalogues()
+
+        return () => {
+            dispatch(CLEAR_LATEST_CATALOGUES())
+        }
     }, [])
 
     const fetchCatalogues = () => {
