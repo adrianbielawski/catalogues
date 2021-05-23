@@ -23,7 +23,9 @@ const cx = classNames.bind(styles)
 
 const Image = (props: Props) => {
     const { url, baseUrl, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
-    const image = !url?.startsWith('blob') ? useImageLoader(`${baseUrl || ''}${url}`) : url
+    const image = url && !url?.startsWith('blob')
+        ? useImageLoader(`${baseUrl || ''}${url}`)
+        : url
 
     const placeholder = image === undefined || (onLoading === 'placeholder' && !image) || (!url && placeHolder)
         ? placeHolder

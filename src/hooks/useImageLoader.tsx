@@ -22,6 +22,10 @@ export const useImageLoader = (url: string) => {
     const [image, setImage] = useState<string | null | undefined>(null)
 
     useEffect(() => {
+        if (!url) {
+            return
+        }
+        
         let isCancelled = false
         const [promise, controller] = getUrl(url)
 
