@@ -55,6 +55,7 @@ $lightOrange: #d19c39;
 @mixin clipText {
     -webkit-line-clamp: 1;
     overflow: hidden;
+    overflow-wrap: anywhere;
     display: -webkit-box;
     -webkit-box-orient: vertical;
 }

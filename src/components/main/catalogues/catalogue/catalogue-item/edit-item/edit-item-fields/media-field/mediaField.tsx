@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styles from './mediaField.scss'
 //Types
 import { DeserializedField, DeserializedItemField, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux
@@ -42,7 +41,6 @@ const MediaField = (props: Props) => {
 
     const content = isEditing ? (
         <InputWithConfirmButton
-            className={styles.input}
             { ...inputAttributes }
             onConfirm={handleConfirm}
         />

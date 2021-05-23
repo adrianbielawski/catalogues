@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styles from './textField.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
@@ -38,7 +37,6 @@ const TextField = (props: Props) => {
     
     const content = isEditing ? (
         <InputWithConfirmButton
-            className={styles.input}
             { ...inputAttributes }
             onConfirm={handleConfirm}
         />
