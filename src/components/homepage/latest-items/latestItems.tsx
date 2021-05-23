@@ -21,15 +21,15 @@ const LatestItems = () => {
     const itemsData = latestItems.itemsData!
 
     useEffect(() => {
-        fetchItems()
+        fetchItems(1)
 
         return () => {
             dispatch(CLEAR_LATEST_ITEMS())
         }
     }, [])
 
-    const fetchItems = () => {
-        dispatch(FETCH_LATEST_ITEMS(itemsData?.next || 1))
+    const fetchItems = (page?: number) => {
+        dispatch(FETCH_LATEST_ITEMS(page || itemsData?.next || 1))
     }
 
     const itemsComponents = () => {

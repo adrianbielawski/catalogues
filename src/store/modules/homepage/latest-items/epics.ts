@@ -5,7 +5,7 @@ import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Types
 import { RootState } from "store/storeConfig"
-import { ItemCommentParent, User } from "src/globalTypes"
+import { ItemCommentParent } from "src/globalTypes"
 //Actions
 import * as actions from "./slice"
 import * as usersActions from "store/entities/users/slice"

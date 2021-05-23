@@ -20,16 +20,16 @@ const RecommendedCatalogues = () => {
     const cataloguesData = recommended.cataloguesData!
 
     useEffect(() => {
-        fetchRecommended()
+        fetchRecommended(1)
 
         return () => {
             dispatch(CLEAR_RECOMENDED_CATALOGUES())
         }
     }, [])
 
-    const fetchRecommended = () => {
+    const fetchRecommended = (page?: number) => {
         dispatch(FETCH_RECOMMENDED_CATALOGUES({
-            page: cataloguesData?.next || 1,
+            page: page || cataloguesData?.next || 1,
             salt: cataloguesData?.salt || undefined,
         }))
     }

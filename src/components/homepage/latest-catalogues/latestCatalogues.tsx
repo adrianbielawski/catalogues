@@ -18,15 +18,15 @@ const LatestCatalogues = () => {
     const cataloguesData = latestCatalogues.cataloguesData!
 
     useEffect(() => {
-        fetchCatalogues()
+        fetchCatalogues(1)
 
         return () => {
             dispatch(CLEAR_LATEST_CATALOGUES())
         }
     }, [])
 
-    const fetchCatalogues = () => {
-        dispatch(FETCH_LATEST_CATALOGUES(cataloguesData?.next || 1))
+    const fetchCatalogues = (page?: number) => {
+        dispatch(FETCH_LATEST_CATALOGUES(page || cataloguesData?.next || 1))
     }
 
     const cataloguesComponents = () => {

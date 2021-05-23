@@ -19,15 +19,15 @@ const LatestFromFavourites = () => {
     const itemsData = latestFromFavourites.itemsData!
 
     useEffect(() => {
-        fetchItems()
+        fetchItems(1)
 
         return () => {
             dispatch(CLEAR_LFF())
         }
     }, [])
 
-    const fetchItems = () => {
-        dispatch(FETCH_LFF(itemsData?.next || 1))
+    const fetchItems = (page?: number) => {
+        dispatch(FETCH_LFF(page || itemsData?.next || 1))
     }
 
     const itemsComponents = () => {
