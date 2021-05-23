@@ -40,7 +40,7 @@ const Carousel = (props: Props) => {
     const currentRef = useRef<HTMLLIElement>(null)
     const [width, setWidth] = useState(0)
     const onResize = useCallback(width => setWidth(width), [])
-    useResizeDetector({ targetRef: currentRef, onResize })
+    useResizeDetector({ targetRef: currentRef, refreshMode: 'debounce', refreshRate: 0, onResize })
     const prevIds = usePrevious(props.images.map(i => i.id))
 
     useEffect(() => {
