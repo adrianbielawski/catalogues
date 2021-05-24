@@ -57,6 +57,8 @@
         li {
             grid-area: 1 / -1;
             display: flex;
+            justify-content: center;
+            align-items: center;
             width: 39.75%;
             min-height: 0;
             height: 100%;

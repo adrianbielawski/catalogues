@@ -8,6 +8,9 @@
         width: 100%;
         min-height: 150px;
         max-height: 600px;
+        img {
+            max-height: 600px;
+        }
     }
     .contentWrapper {
         display: flex;
