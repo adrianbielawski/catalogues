@@ -6,13 +6,13 @@ import styles from './carousel.scss'
 //Hooks and utils
 import { mod } from 'src/utils'
 import { useSwipe } from '@adrianbielawski/use-swipe'
+import { usePrevious } from 'src/hooks/usePrevious'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Custom components
 import ArrowButton from '../arrow-button/arrowButton'
 import ImagesCounter from '../images-counter/imagesCounter'
 import CarouselItem from '../carousel-item/carouselItem'
-import { usePrevious } from 'src/hooks/usePrevious'
 
 type Props = {
     images: DeserializedImage[],
@@ -44,7 +44,7 @@ const Carousel = (props: Props) => {
     const prevIds = usePrevious(props.images.map(i => i.id))
 
     useEffect(() => {
-        if (props.images.length !== prevIds?.length) {
+        if (prevIds && props.images.length > prevIds.length) {
             const newImage = props.images.filter(image => !prevIds?.includes(image.id))[0]
             const newImageIndex = props.images.findIndex(i => i.id === newImage.id)
             setCurrent(newImageIndex)
