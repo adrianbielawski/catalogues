@@ -31,7 +31,7 @@ const Image = (props: Props) => {
         ? placeHolder
         : null
 
-    const loader = url && onLoading === 'loader' && (!image || loading)
+    const loader = url && onLoading === 'loader' && (image === null || loading)
 
     const imageClass = cx(
         'image',
@@ -43,6 +43,7 @@ const Image = (props: Props) => {
 
     return (
         <div className={imageClass} {...rest}>
+            {placeholder}
             {loader && <Loader className={styles.loader} />}
             {url &&
                 <img
@@ -51,7 +52,6 @@ const Image = (props: Props) => {
                     height={props.dimensions?.height}
                 />
             }
-            {placeholder}
         </div>
     )
 }

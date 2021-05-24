@@ -11,6 +11,7 @@ import { DeserializedImage } from 'src/globalTypes'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import PrimaryImageStar from '../primary-image-star/primaryImageStar'
 import Image from 'components/global-components/image/image'
+import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
 
 type Props = {
     offset: string | null,
@@ -68,6 +69,7 @@ const CarouselItem = (props: Props) => {
                     width: props.image.dimensions?.width!,
                     height: props.image.dimensions?.height!,
                 }}
+                placeHolder={<NoImageIcon className={styles.noImageIcon} size="6x"/>}
                 onClick={props.onImageClick}
             />
             {props.onRemove &&
