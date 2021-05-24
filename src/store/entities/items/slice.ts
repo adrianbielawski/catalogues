@@ -76,7 +76,7 @@ export const itemsEntitiesSlice = createSlice({
             const removedImage = item.images[action.payload.index]
     
             if (removedImage.isPrimary && item.images.length > 1) {
-                let newPrimaryIndex = action.payload.index + 1
+                let newPrimaryIndex = mod(item.images.length, action.payload.index + 1)
                 item.images[newPrimaryIndex].isPrimary = true
             }
     
