@@ -5,11 +5,20 @@ import styles from './addImage.scss'
 import AddButton from 'components/global-components/add-button/addButton'
 
 type Props = {
-    onAdd: (images: string[]) => void,
+    onAdd: (images: NewImage[]) => void,
     className?: string,
 }
+
 interface Event<T = EventTarget> {
     target: T;
+}
+
+export type NewImage = {
+    url: string,
+    dimensions: {
+        width: number,
+        height: number,
+    }
 }
 
 const cx = classNames.bind(styles)
@@ -20,8 +29,28 @@ const AddImage = (props: Props) => {
     const handleImageChange = (e: Event<HTMLInputElement>) => {
         if (e.target.files !== null && e.target.files.length > 0) {
             const files = Object.values(e.target.files)
-            const images = files.map(f => URL.createObjectURL(f))
-            props.onAdd(images)
+
+            const getImage = async (f: File) => {
+                const url = URL.createObjectURL(f)
+                const img = new Image
+                img.src = url
+                await img.decode()
+
+                return {
+                    url,
+                    dimensions: {
+                        width: img.width,
+                        height: img.height,
+                    }
+                }
+            }
+
+            Promise.all(files.map(f =>
+                getImage(f)
+            )).then(image => {
+                props.onAdd(image)
+            })
+
         }
     }
 

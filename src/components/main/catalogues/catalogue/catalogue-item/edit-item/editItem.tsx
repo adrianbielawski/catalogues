@@ -10,7 +10,7 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'
 //Components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
-import AddImage from './add-image/addImage'
+import AddImage, { NewImage } from './add-image/addImage'
 import Button from 'components/global-components/button/button'
 import EditItemFields from './edit-item-fields/editItemFields'
 import ItemSettings from './item-settings/itemSettings'
@@ -47,7 +47,7 @@ const EditItem = (props: Props) => {
         }))
     }
 
-    const handleAddImage = (images: string[]) => {
+    const handleAddImage = (images: NewImage[]) => {
         dispatch(ADD_IMAGES_TO_STATE({
             itemId: item.id,
             images

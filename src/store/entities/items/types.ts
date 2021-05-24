@@ -1,3 +1,5 @@
+import { NewImage } from "components/main/catalogues/catalogue/catalogue-item/edit-item/add-image/addImage";
+
 export interface ItemUpdated {
     id: number,
     changes: any,
@@ -5,7 +7,7 @@ export interface ItemUpdated {
 
 export interface AddImagesToStatePayload {
     itemId: number,
-    images: string[],
+    images: NewImage[],
 }
 
 export interface ImagePayload {

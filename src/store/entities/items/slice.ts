@@ -2,6 +2,8 @@ import { createEntityAdapter, createSlice, EntityState, PayloadAction } from '@r
 //Types
 import { Item, DeserializedItem, DeserializedItemField, DeserializedItemFieldValue } from 'src/globalTypes'
 import * as T from './types'
+//Utils
+import { mod } from 'src/utils'
 //Serializers
 import { itemDeserializer } from 'src/serializers'
 //Actions
@@ -63,11 +65,11 @@ export const itemsEntitiesSlice = createSlice({
             action.payload.images.forEach((image, i) => {
                 item.images.push({
                     id: `newImage_${i}_${Date.now()}`,
-                    image,
+                    image: image.url,
                     imageThumbnail: '',
                     isPrimary: item.images.length === 0,
                     itemId: item.id,
-                    dimensions: null,
+                    dimensions: image.dimensions,
                 })
             })
         },
