@@ -1,15 +1,11 @@
 @import "global-styles/variables_and_mixins";
 
-.filterWrapper {
-    margin-left: 13px;
-    max-height: 0;
-    width: 0;
+.content {
+    margin-left: 8px;
     opacity: 0;
     transition: all 0.2s ease-out;
     overflow: hidden;
     &.active {
-        max-height: 265px;
-        width: auto;
         opacity: 1;
     }
 }

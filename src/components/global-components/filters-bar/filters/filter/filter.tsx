@@ -9,7 +9,7 @@ import { FilterType } from '../filtersTypes'
 import { filterComponentMap } from '../filtersMaps'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
-import FilterWrapper from './filter-wrapper/filterWrapper'
+import ContentWrapper from '../../content-wrapper/contentWrapper'
 
 type Props = {
     filter: FilterType,
@@ -41,9 +41,9 @@ const Filter = (props: Props) => {
                 selected={isActive}
                 onChange={handleChange}
             />
-            <FilterWrapper active={isActive}>
+            <ContentWrapper active={isActive}>
                 <FilterComponent filter={props.filter} active={isActive} />
-            </FilterWrapper>
+            </ContentWrapper>
         </li>
     )
 }

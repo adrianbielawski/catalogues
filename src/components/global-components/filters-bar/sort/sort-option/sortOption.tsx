@@ -6,8 +6,8 @@ import { SortContext } from '../sortStore'
 import { Option } from '../sortTypes'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
-import SortWrapper from '../sort-wrapper/sortWrapper'
 import SortChoice from '../sort-choice/sortChoice'
+import ContentWrapper from '../../content-wrapper/contentWrapper'
 
 type Props = {
     option: Option,
@@ -16,7 +16,6 @@ type Props = {
 const SortOption = (props: Props) => {
     const { activeOption, setActiveOption } = useContext(SortContext)
     const SortChoiceRef = useRef<HTMLDivElement>(null)
-    const sortChoiceH = SortChoiceRef.current?.getBoundingClientRect().height
 
     const isActive = activeOption === props.option.id
 
@@ -33,9 +32,9 @@ const SortOption = (props: Props) => {
                 selected={isActive}
                 onChange={handleChange}
             />
-            <SortWrapper active={isActive} maxHeight={sortChoiceH} >
+            <ContentWrapper active={isActive}>
                 <SortChoice option={props.option} ref={SortChoiceRef} />
-            </SortWrapper>
+            </ContentWrapper>
         </li>
     )
 }
