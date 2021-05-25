@@ -32,9 +32,9 @@ export const favouriteItemsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(CLEAR_APP_STATE, () => initialState)
         builder.addCase(CHANGE_FAVOURITE_ITEM, (state, action) => {
-            if (!action.payload.isFavourite) {
-                const index = state.itemsData!.results.findIndex(i => i.id === action.payload.itemId)
-                state.itemsData!.results.splice(index, 1)
+            if (state.itemsData && !action.payload.isFavourite) {
+                const index = state.itemsData.results.findIndex(i => i.id === action.payload.itemId)
+                state.itemsData.results.splice(index, 1)
             }
         })
         builder.addCase(CHANGE_FAVOURITE_ITEM_FAILURE, (state) => {
