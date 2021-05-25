@@ -23,9 +23,8 @@ const cx = classNames.bind(styles)
 
 const Image = (props: Props) => {
     const { url, baseUrl, dimensions, placeHolder, loading, onLoading, className, ...rest } = props
-    const image = url && !url?.startsWith('blob')
-        ? useImageLoader(`${baseUrl || ''}${url}`)
-        : url
+    const fullUrl = url && !url?.startsWith('blob') ? `${baseUrl || ''}${url}` : url
+    const image = useImageLoader(fullUrl || null)
 
     const placeholder = image === undefined || (onLoading === 'placeholder' && !image) || (!url && placeHolder)
         ? placeHolder
@@ -48,8 +47,8 @@ const Image = (props: Props) => {
             {url &&
                 <img
                     src={image || ''}
-                    width={props.dimensions?.width}
-                    height={props.dimensions?.height}
+                    width={dimensions?.width}
+                    height={dimensions?.height}
                 />
             }
         </div>
