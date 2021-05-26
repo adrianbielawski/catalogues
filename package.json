@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@adrianbielawski/orderable-list": "^0.1.7",
+    "@adrianbielawski/orderable-list": "^0.1.9",
     "@adrianbielawski/use-swipe": "^0.1.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
