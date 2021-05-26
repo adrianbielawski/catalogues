@@ -94,8 +94,8 @@ const Catalogues = () => {
     }
 
     const catalogueSlug = currentUserCatalogues.defaultCatalogueId
-        ? catalogues[currentUserCatalogues.defaultCatalogueId]!.slug
-        : catalogues[currentUserCatalogues.cataloguesData[0]?.id]!.slug
+        ? catalogues[currentUserCatalogues.defaultCatalogueId]?.slug
+        : catalogues[currentUserCatalogues.cataloguesData[0]?.id]?.slug
 
     return (
         <FiltersBarBulkContextProvider
@@ -107,7 +107,7 @@ const Catalogues = () => {
                 ref={cataloguesRef}
             >
                 <Header />
-                {currentUserCatalogues.cataloguesData.length === 0
+                {currentUserCatalogues.cataloguesData.length === 0 || !catalogueSlug
                     ? getNoCatalogueMessage()
                     : (
                         <Suspense fallback={<Loader />}>
