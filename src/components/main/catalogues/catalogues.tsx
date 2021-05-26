@@ -7,7 +7,7 @@ import { LocationState } from 'src/globalTypes'
 //Context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
 //Redux
-import { FETCH_CURRENT_USER_CATALOGUES } from 'store/modules/current-user-catalogues/slice'
+import { FETCH_CURRENT_USER_CATALOGUES, CLEAR_CURRENT_USER_CATALOGUES_DATA } from 'store/modules/current-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 //Router
 import { RouteWithContext } from 'src/router'
@@ -41,6 +41,12 @@ const Catalogues = () => {
             dispatch(FETCH_CURRENT_USER_CATALOGUES())
         }
     }, [currentUser])
+
+    useEffect(() => {
+        return () => {
+            dispatch(CLEAR_CURRENT_USER_CATALOGUES_DATA())
+        }
+    }, [])
 
     useEffect(() => {
         if (cataloguesRef.current === null) {
