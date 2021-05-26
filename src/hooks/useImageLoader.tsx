@@ -34,7 +34,7 @@ const getUrl = (url: string) => {
     return cacheItem
 }
 
-export const useImageLoader = (url: string| null) => {
+export const useImageLoader = (url: string | null) => {
     const [image, setImage] = useState<string | null | undefined>(null)
 
     useEffect(() => {
@@ -55,9 +55,10 @@ export const useImageLoader = (url: string| null) => {
 
         return () => {
             cacheItem.refCount--
+            isCancelled = true
+            
             if (cacheItem.refCount === 0) {
                 controller!.abort()
-                isCancelled = true
             }
         }
     }, [url, image])
