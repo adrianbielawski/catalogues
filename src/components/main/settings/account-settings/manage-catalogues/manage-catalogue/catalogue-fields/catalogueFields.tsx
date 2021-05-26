@@ -1,5 +1,6 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
+import styles from './catalogueFields.scss'
 //Types
 import { AuthUserFieldData } from 'src/globalTypes'
 //Redux
@@ -35,6 +36,7 @@ const CatalogueFields = (props: Props) => {
             icon={faListAlt}
         >
             <OrderableList
+                className={styles.fields}
                 items={fieldsData}
                 itemComponent={Field}
                 onDrop={handleDrop}
