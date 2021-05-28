@@ -54,6 +54,12 @@ Desktop | Tablet | Smartphone
 ------- | ------ | ---------
 ![favourite_items](./assets/readme/favourite_items.jpg) | ![favourite_items_tablet](./assets/readme/favourite_items_tablet.jpg) | ![favourite_items_smartphone](./assets/readme/favourite_items_smartphone.jpg)
 
+#### Single item
+
+Share items you like to your friends and they can view it in single item view.
+
+![single_item](./assets/readme/single_item.jpg)
+
 #### Large images carousel
 
 Simple click on image. Desktop only.
