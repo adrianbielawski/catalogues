@@ -1,0 +1,37 @@
+@import "global-styles/variables_and_mixins";
+
+.favouriteItemsContent {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 100%;
+    .favouriteItemsHeader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        div {
+            display: flex;
+            flex: 1;
+        }
+        .title {
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+        .actions {
+            justify-content: flex-end;
+            .filtersButton {
+                margin-right: 10px;
+                font-size: 1.3em;
+                color: $grey;
+                &.active {
+                    color: $orange;
+                }
+            }
+        }
+    }
+    .content {
+        display: flex;
+        flex-grow: 1;
+    }
+}
