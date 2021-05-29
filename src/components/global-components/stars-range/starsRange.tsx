@@ -19,9 +19,7 @@ const StarsRange = (props: Props) => {
     const starsRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (props.selected.length === 0) {
-            setSelected([])
-        }
+        setSelected(props.selected)
     }, [props.selected])
 
     useEffect(() => {

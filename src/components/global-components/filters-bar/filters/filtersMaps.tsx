@@ -6,7 +6,7 @@ import { FilterComponentMap } from './filtersTypes'
 export const filterComponentMap: FilterComponentMap = {
     'number': FilterRange,
     'date': FilterRange,
-    'starsRange': FilterStarsRange,
+    'rating': FilterStarsRange,
     'multiple_choice': FilterChoices,
     'single_choice': FilterChoices,
 }

@@ -55,7 +55,7 @@ export type ActiveFilter = Record<string, boolean>
 export interface FilterWithoutChoices {
     id: number | string,
     title: string,
-    type: 'date' | 'number' | 'starsRange',
+    type: 'date' | 'number' | 'rating',
     minVal: string | number,
     maxVal: string | number,
     choices?: never,

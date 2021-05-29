@@ -31,7 +31,7 @@ const buildFilters = (
         {
             id: 'rating',
             title: 'rating',
-            type: 'starsRange',
+            type: 'rating',
             minVal: 1,
             maxVal: 5,
         },
