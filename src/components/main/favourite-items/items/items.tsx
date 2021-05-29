@@ -81,19 +81,6 @@ const FavouriteItems = () => {
         }))
     }
 
-    const getRenderQty = () => {
-        let renderQty = itemsData.results.length
-
-        if (favouriteItems.isFetchingItems && itemsData.current) {
-            renderQty = itemsData.current * 10
-        }
-        if (favouriteItems.isFetchingData && !favouriteItems.isFetchingItems && itemsData.current) {
-            renderQty = (itemsData.current - 1) * 10
-        }
-
-        return renderQty
-    }
-
     const itemsComponents = () => {
         return itemsData.results.map((item, i) => {
             const handleAddComment = (text: string, parentId?: number) => {
@@ -109,12 +96,6 @@ const FavouriteItems = () => {
                     itemId: item.id,
                     page,
                 }))
-            }
-
-            const renderQty = getRenderQty()
-
-            if (i >= renderQty) {
-                return
             }
 
             return (
@@ -138,13 +119,13 @@ const FavouriteItems = () => {
 
     const error = favouriteItems.error
 
-    if (!itemsData || favouriteItems.isFetchingData && !getRenderQty()) {
+    if (!itemsData || favouriteItems.isFetchingItems && !itemsData.results.length) {
         return <Loader className={styles.loader} />
     }
 
     return (
         <div className={styles.items}>
-            {(itemsData.results.length === 0 && !favouriteItems.isFetchingData) && (
+            {(itemsData.results.length === 0) && (
                 <p className={styles.noItemsFound}>
                     {location.search.length === 0
                         ? 'You have no favourite items'

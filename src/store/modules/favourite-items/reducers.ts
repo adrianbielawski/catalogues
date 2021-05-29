@@ -1,6 +1,8 @@
 import { current, PayloadAction } from '@reduxjs/toolkit'
 import { networkError } from 'src/constants'
-import { DeserializedCommentData, DeserializedItemData, DeserializedListData, Field, Item, ListData } from 'src/globalTypes'
+import {
+    DeserializedCatalogue, DeserializedCommentData, DeserializedItemData, DeserializedListData, Field, Item, ListData
+} from 'src/globalTypes'
 import { itemCommentDataDeserializer, itemDataDeserializer, listDeserializer } from 'src/serializers'
 import { getItemCommentDataById, getItemCommentsDataById, getItemDataById } from './selectors'
 import * as T from './types'
@@ -16,7 +18,6 @@ export const favouriteItems = {
 export const fetchFavouriteItems = {
     FETCH_FAVOURITE_ITEMS(state: State, action: PayloadAction<T.FetchFavouriteItemsPayload>) { },
     FETCH_FAVOURITE_ITEMS_START(state: State) {
-        state.isFetchingData = true
         state.isFetchingItems = true
     },
     FETCH_FAVOURITE_ITEMS_SUCCESS(state: State, action: PayloadAction<ListData<Item>>) {
@@ -26,7 +27,6 @@ export const fetchFavouriteItems = {
         state.isFetchingItems = false
     },
     FETCH_FAVOURITE_ITEMS_FAILURE(state: State) {
-        state.isFetchingData = false
         state.error = networkError
     },
 }
@@ -47,21 +47,17 @@ export const fetchFavouriteItemsComments = {
         }
     },
     FETCH_FAVOURITE_ITEMS_COMMENTS_FAILURE(state: State) {
-        state.isFetchingData = false
         state.error = networkError
     },
-    FAVOURITE_ITEMS_COMMENTS_NOT_NEEDED(state: State) {
-        state.isFetchingData = false
-    },
+    FAVOURITE_ITEMS_COMMENTS_NOT_NEEDED(state: State) { },
 }
 
-export const fetchFavouriteItemsCatalogues = {
-    FETCH_FAVOURITE_ITEMS_CATALOGUES(state: State, action: PayloadAction<number>) { },
-    FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS(state: State, action: PayloadAction<number[]>) {
-        state.cataloguesIds = Array.from(new Set(state.cataloguesIds.concat(action.payload)))
+export const fetchFavouriteItemsData = {
+    FETCH_FAVOURITE_ITEMS_DATA(state: State) { },
+    FETCH_FAVOURITE_ITEMS_DATA_SUCCESS(state: State, action: PayloadAction<DeserializedCatalogue[]>) {
+        state.cataloguesIds = action.payload.map(c => c.id)
     },
-    FETCH_FAVOURITE_ITEMS_CATALOGUES_FAILURE(state: State) {
-        state.isFetchingData = false
+    FETCH_FAVOURITE_ITEMS_DATA_FAILURE(state: State) {
         state.error = networkError
     },
 }
@@ -70,25 +66,23 @@ export const fetchFavouriteItemsFields = {
     FETCH_FAVOURITE_ITEMS_FIELDS(state: State, action: PayloadAction<number>) { },
     FETCH_FAVOURITE_ITEMS_FIELDS_SUCCESS(state: State, action: PayloadAction<Field[]>) { },
     FETCH_FAVOURITE_ITEMS_FIELDS_FAILURE(state: State) {
-        state.isFetchingData = false
         state.error = networkError
     },
     FAVOURITE_ITEMS_FIELDS_NOT_NEEDED(state: State) {
-        state.isFetchingData = false
+        state.isFetchingFavItemsData = false
     },
 }
 
 export const fetchFavouriteItemsChoices = {
     FETCH_FAVOURITE_ITEMS_CHOICES(state: State, action: PayloadAction<number>) { },
     FETCH_FAVOURITE_ITEMS_CHOICES_SUCCESS(state: State, action: PayloadAction<Field[]>) {
-        state.isFetchingData = false
+        state.isFetchingFavItemsData = false
     },
     FETCH_FAVOURITE_ITEMS_CHOICES_FAILURE(state: State) {
-        state.isFetchingData = false
         state.error = networkError
     },
     FAVOURITE_ITEMS_CHOICES_NOT_NEEDED(state: State) {
-        state.isFetchingData = false
+        state.isFetchingFavItemsData = false
     },
 }
 

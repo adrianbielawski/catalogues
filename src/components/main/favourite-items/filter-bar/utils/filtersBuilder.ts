@@ -13,7 +13,7 @@ const buildFilters = (
         title: 'catalogue',
         type: 'multiple_choice',
         choices: cataloguesIds.map(id => ({
-            id,
+            id: id.toString(),
             value: catalogues[id]!.name
         })),
         choicesSortDir: 'asc',

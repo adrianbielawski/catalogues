@@ -5,7 +5,7 @@ import { Action } from "@reduxjs/toolkit"
 import { axiosInstance$ } from "src/axiosInstance"
 //Types
 import { RootState } from "store/storeConfig"
-import { ItemCommentParent, User } from "src/globalTypes"
+import { ItemCommentParent } from "src/globalTypes"
 //Actions
 import * as actions from "./slice"
 import * as usersEntitiesActions from "store/entities/users/slice"
@@ -35,34 +35,6 @@ export const fetchFavouriteItemsEpic = (action$: Observable<Action>) => action$.
             catchError(() => of(actions.FETCH_FAVOURITE_ITEMS_FAILURE()))
         )
     ))
-)
-
-export const fetchFavouriteItemsCataloguesEpic = (
-    action$: Observable<Action>,
-    state$: Observable<RootState>
-) => action$.pipe(
-    filter(actions.FETCH_FAVOURITE_ITEMS_SUCCESS.match),
-    withLatestFrom(state$.pipe(pluck('entities', 'catalogues', 'ids'))),
-    switchMap(([action, ids]) => {
-        const allIds = Array.from(new Set(action.payload.results.map(c => c.catalogue_id)))
-        const filteredIds = allIds.filter(id => !ids.includes(id))
-
-        if (filteredIds.length === 0) {
-            return of(actions.FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS(allIds))
-        }
-
-        const requests = filteredIds.map(id =>
-            axiosInstance$.get(`/catalogues/${id}/`).pipe(map(response => response.data))
-        )
-
-        return forkJoin(requests).pipe(
-            mergeMap(response => concat(
-                of(cataloguesEntitiesActions.CATALOGUES_UPDATED(response)),
-                of(actions.FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS(allIds)),
-            )),
-            catchError(() => of(actions.FETCH_FAVOURITE_ITEMS_CATALOGUES_FAILURE()))
-        )
-    })
 )
 
 export const fetchFavouriteItemsCommentsEpic = (action$: Observable<Action>) => action$.pipe(
@@ -110,15 +82,28 @@ export const fetchFavouriteItemsCommentsEpic = (action$: Observable<Action>) => 
     }),
 )
 
+export const fetchFavouriteItemsDataEpic = (action$: Observable<Action>) => action$.pipe(
+    filter(actions.FETCH_FAVOURITE_ITEMS_DATA.match),
+    switchMap(() => 
+        axiosInstance$.get(`/catalogues/with-favourite-items/`).pipe(
+            mergeMap(response => concat(
+                of(cataloguesEntitiesActions.CATALOGUES_UPDATED(response.data)),
+                of(actions.FETCH_FAVOURITE_ITEMS_DATA_SUCCESS(response.data)),
+            )),
+            catchError(() => of(actions.FETCH_FAVOURITE_ITEMS_DATA_FAILURE()))
+        )
+    )
+)
+
 export const fetchFavouriteItemsFieldsEpic = (
     action$: Observable<Action>,
     state$: Observable<RootState>
 ) => action$.pipe(
-    filter(actions.FETCH_FAVOURITE_ITEMS_CATALOGUES_SUCCESS.match),
+    filter(actions.FETCH_FAVOURITE_ITEMS_DATA_SUCCESS.match),
     withLatestFrom(state$.pipe(pluck('entities', 'fields', 'entities'))),
     mergeMap(([action, fields]) => {
         const cataloguesIds = Array.from(new Set(Object.values(fields).map(f => f!.catalogueId)))
-        const filteredIds = action.payload.filter(id => !cataloguesIds.includes(id))
+        const filteredIds = action.payload.filter(c => !cataloguesIds.includes(c.id)).map(c => c.id)
 
         if (filteredIds.length === 0) {
             return of(actions.FAVOURITE_ITEMS_FIELDS_NOT_NEEDED())
@@ -226,7 +211,7 @@ export const fetchFavouriteItemCommentsEpic = (action$: Observable<Action>) => a
 export const favouriteItemsEpics = combineEpics(
     fetchFavouriteItemsEpic,
     fetchFavouriteItemsCommentsEpic,
-    fetchFavouriteItemsCataloguesEpic,
+    fetchFavouriteItemsDataEpic,
     fetchFavouriteItemsFieldsEpic,
     fetchFavouriteItemsChoicesEpic,
     postFavouriteItemCommentEpic,
