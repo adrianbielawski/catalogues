@@ -15,8 +15,10 @@ export const reducer = (state: Draft<SortInitialState>, action: Action) => {
     switch (action.type) {
         case CHANGE_SORT:
             if (action.value === undefined) {
+                state.activeOption = null
                 state.selected = {}
             } else {
+                state.activeOption = Object.keys(action.value)[0]
                 state.selected = action.value
             }
             break
