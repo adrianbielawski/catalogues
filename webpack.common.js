@@ -1,8 +1,10 @@
 const path = require('path');
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const { ProvidePlugin } = require('webpack');
 
 const plugins = [
     new FaviconsWebpackPlugin("./assets/img/icon.svg"),
+    new ProvidePlugin({ process: 'process/browser' }),
 ];
 
 module.exports = {
@@ -28,6 +30,7 @@ module.exports = {
             'node_modules'
         ],
         extensions: ['.tsx', '.ts', '.js'],
+        fallback: { path: require.resolve('path-browserify') }
     },
     module: {
         rules: [

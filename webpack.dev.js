@@ -28,6 +28,6 @@ module.exports = merge(common, {
     historyApiFallback: true,
     https: true,
   },
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval-cheap-module-source-map',
   plugins
 });
