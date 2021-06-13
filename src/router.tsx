@@ -137,7 +137,7 @@ export const RouteWithContext = (props: RouteWithContextProps) => {
 
     return <Route path={path} render={(props) => {
         const { match } = props
-        match.params = hydrate(match.params)
+        match.params = hydrate(match.params) as any
 
         let component = (
             <RouterContext.Provider value={{ match }}>
