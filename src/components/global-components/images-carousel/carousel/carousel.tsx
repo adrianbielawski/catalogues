@@ -5,7 +5,7 @@ import { clamp } from 'lodash'
 import styles from './carousel.scss'
 //Hooks and utils
 import { mod } from 'src/utils'
-import { useSwipe } from '@adrianbielawski/use-swipe'
+import useSwipe from '@adrianbielawski/use-swipe'
 import { usePrevious } from 'src/hooks/usePrevious'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
