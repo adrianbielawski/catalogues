@@ -114,18 +114,16 @@ export const deleteCatalogueFieldEpic = (action$: Observable<Action>) => action$
                 of(fieldsEntitiesActions.FIELD_REMOVED(response.data)),
                 of(actions.DELETE_CATALOGUE_FIELD_SUCCESS(action.payload.catalogueId)),
             )),
-            catchError(() =>
-                mergeMap(() => concat(
-                    of(actions.REFRESH_CATALOGUE_FIELD({
-                        catalogueId: action.payload.catalogueId,
-                        fieldId: action.payload.fieldId,
-                    })),
-                    of(actions.DELETE_CATALOGUE_FIELD_FAILURE({
-                        catalogueId: action.payload.catalogueId,
-                        fieldId: action.payload.fieldId,
-                    }))
-                )),
-            )
+            catchError(() => concat(
+                of(actions.REFRESH_CATALOGUE_FIELD({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                })),
+                of(actions.DELETE_CATALOGUE_FIELD_FAILURE({
+                    catalogueId: action.payload.catalogueId,
+                    fieldId: action.payload.fieldId,
+                }))
+            ))
         )
     ))
 )
