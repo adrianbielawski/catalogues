@@ -1,6 +1,10 @@
 const path = require('path');
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
+const plugins = [
+    new FaviconsWebpackPlugin("./assets/img/icon.svg"),
+];
+
 module.exports = {
     entry: {
         app: './src/index.tsx',
@@ -28,8 +32,8 @@ module.exports = {
     module: {
         rules: [
             {
-              test: /\.(ts|tsx)$/,
-              loader: "ts-loader",
+                test: /\.(ts|tsx)$/,
+                loader: "ts-loader",
             },
             {
                 test: /\.html$/,
@@ -62,35 +66,33 @@ module.exports = {
                 ]
             },
             {
-              test: /\.svg$/,
-              use: [
-                {
-                  loader: 'svg-url-loader',
-                  options: {
-                    limit: 10000,
-                  },
-                },
-              ],
+                test: /\.svg$/,
+                use: [
+                    {
+                        loader: 'svg-url-loader',
+                        options: {
+                            limit: 10000,
+                        },
+                    },
+                ],
             },
             {
-              test: /\.js$/,
-              enforce: 'pre',
-              exclude: /node_modules/,
-              use: ['source-map-loader']
+                test: /\.js$/,
+                enforce: 'pre',
+                exclude: /node_modules/,
+                use: ['source-map-loader']
             },
             {
-              test: /\.m?js$/,
-              include: /react-leaflet/,
-              use: {
-                loader: 'babel-loader',
-                options: {
-                  presets: ['@babel/preset-env']
+                test: /\.m?js$/,
+                include: /react-leaflet/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
                 }
-              }
             }
         ]
     },
-    plugins: [
-        new FaviconsWebpackPlugin("./assets/img/icon.svg"),
-    ],
+    plugins,
 };
