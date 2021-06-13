@@ -34,7 +34,8 @@ const queryBuilder = (context: UseFiltersBarContextInterface) => {
 
     const query = queryString.stringify(queryObj, {
         arrayFormat: 'comma',
-        skipEmptyString: true
+        skipEmptyString: true,
+        skipNull: true,
     })
 
     return {
