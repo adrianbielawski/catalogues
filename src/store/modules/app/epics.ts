@@ -9,14 +9,12 @@ import { LOG_OUT_SUCCESS } from "store/modules/auth-user/slice"
 
 export const fetchSwitchesEpic = (action$: Observable<Action>) => action$.pipe(
     filter(actions.FETCH_SWITCHES.match),
-    switchMap(() => concat(
-        of(actions.FETCH_SWITCHES_START()),
-        axiosInstance$.get('/switches/').pipe(
-            mergeMap(response => of(actions.FETCH_SWITCHES_SUCCESS(response.data)),
-            ),
-            catchError(() => of(actions.FETCH_SWITCHES_FAILURE()))
-        ))
-    )
+    switchMap(() => axiosInstance$.get('/switches/').pipe(
+        mergeMap(response =>
+            of(actions.FETCH_SWITCHES_SUCCESS(response.data)),
+        ),
+        catchError(() => of(actions.FETCH_SWITCHES_FAILURE()))
+    ))
 )
 
 export const clearAppStateEpic = (action$: Observable<Action>) => action$.pipe(

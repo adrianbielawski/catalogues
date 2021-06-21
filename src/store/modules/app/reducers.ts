@@ -16,8 +16,7 @@ export const changeScreenSize = {
 }
 
 export const fetchSwitches = {
-    FETCH_SWITCHES(state: State) { },
-    FETCH_SWITCHES_START(state: State) {
+    FETCH_SWITCHES(state: State) {
         state.fetchingSwitches = true
     },
     FETCH_SWITCHES_SUCCESS(state: State, action: PayloadAction<string[]>) {
