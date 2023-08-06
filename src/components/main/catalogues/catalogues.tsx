@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
 import { upperFirst } from 'lodash'
-import styles from './catalogues.scss'
+import styles from './catalogues.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Context

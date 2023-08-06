@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './geoField.scss'
+import styles from './geoField.module.scss'
 //Types
 import { DeserializedField, DeserializedGeoField, DeserializedItemField } from 'src/globalTypes'
 //Redux

@@ -102,7 +102,7 @@ export const fetchTopItemsCommentsEpic = (action$: Observable<Action>) => action
                         of(actions.FETCH_TOP_ITEMS_COMMENTS_SUCCESS(data)),
                     )
                 }),
-                catchError(() => of(actions.FETCH_TOP_ITEMS_COMMENTS_FAILURE()))
+                catchError((e) => of(actions.FETCH_TOP_ITEMS_COMMENTS_FAILURE()))
             )
         )
     }),

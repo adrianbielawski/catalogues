@@ -1,0 +1,11 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.mapWrapper {
+    .map {
+        width: 100%;
+        height: 100%;
+    }
+    a {
+        @include resetTapHighlight;
+    }
+}

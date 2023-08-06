@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regStar } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './primaryImageStar.scss'
+import styles from './primaryImageStar.module.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 

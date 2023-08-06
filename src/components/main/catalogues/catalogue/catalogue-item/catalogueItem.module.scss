@@ -1,0 +1,61 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.item {
+    box-shadow: 1px 1px 2px $midLightGrey;
+    background: #fff;
+    border-radius: 5px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    .wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        .carouselWrapper {
+            width: 220px;
+            height: 220px;
+            &.large {
+                width: 400px;
+                height: 400px;
+            }
+        }
+        .itemContent {
+            margin-top: 5px;
+            flex: 1;
+            .ratingWrapper {
+                display: flex;
+                align-items: center;
+                margin: 0 5px 5px;
+                .favouriteIcon,
+                .shareButton {
+                    margin-left: 10px;
+                }
+            }
+            .itemData,
+            .itemFields {
+                margin: 0 5px 15px;
+            }
+        }
+    }
+    &.narrow {
+        border-radius: unset;
+        .carouselWrapper {
+            width: 100%;
+            min-height: 150px;
+            height: auto;
+            max-height: 600px;
+        }
+    }
+    .itemComments {
+        margin: 0 5px 5px;
+    }
+    .editItem {
+        width: 100%;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .item .wrapper .carouselWrapper img:hover {
+        cursor: zoom-in;
+    }
+}

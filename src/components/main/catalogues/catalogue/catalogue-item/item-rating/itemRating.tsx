@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './itemRating.scss'
+import styles from './itemRating.module.scss'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 //Redux

@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './favouriteIcon.scss'
+import styles from './favouriteIcon.module.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 

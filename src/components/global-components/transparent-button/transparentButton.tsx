@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './transparentButton.scss'
+import styles from './transparentButton.module.scss'
 import Loader from '../loader/loader'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -20,7 +20,7 @@ const TransparentButton = (props: Props) => {
     )
 
     return (
-        <button className={transparentButtonClass} onClick={onClick} { ...rest }>
+        <button className={transparentButtonClass} onClick={onClick} {...rest}>
             {loading
                 ? <Loader size={25} />
                 : props.children

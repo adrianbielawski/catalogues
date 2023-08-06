@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ReactAnimateHeight from 'react-animate-height'
 import classNames from 'classnames/bind'
-import styles from './commentChildren.scss'
+import styles from './commentChildren.module.scss'
 //Types
 import { DeserializedItemCommentChild } from 'src/globalTypes'
 //Components

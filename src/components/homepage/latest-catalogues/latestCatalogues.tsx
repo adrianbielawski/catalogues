@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
-import styles from './latestCatalogues.scss'
+import styles from './latestCatalogues.module.scss'
 //Redux
 import { CLEAR_LATEST_CATALOGUES, FETCH_LATEST_CATALOGUES } from 'store/modules/homepage/latest-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

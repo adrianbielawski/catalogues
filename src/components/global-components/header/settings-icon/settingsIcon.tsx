@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './settingsIcon.scss'
+import styles from './settingsIcon.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons'
 

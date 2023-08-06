@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Redirect, useHistory } from 'react-router-dom'
-import styles from './signup.scss'
+import styles from './signup.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
@@ -31,7 +31,7 @@ const Signup = () => {
         if (authUser.id) {
             return
         }
-            validateUserInput()
+        validateUserInput()
     }, [authUser.invalidUsernameMessage])
 
     const validateUsername = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './editTextField.scss'
+import styles from './editTextField.module.scss'
 //Redux
 import { CHANGE_FIELD_NAME, CHANGE_FIELD_PUBLIC, DELETE_CATALOGUE_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

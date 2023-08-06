@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './singleChoiceField.scss'
+import styles from './singleChoiceField.module.scss'
 //Types
 import { AuthUserChoiceFieldData, DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
@@ -36,7 +36,7 @@ const SingleChoiceField = (props: Props) => {
     }
 
     const selected = fieldChoices.filter(f => f.id === props.fieldValue?.value)[0]
-    
+
     const content = isEditing ? (
         <>
             <ChoiceList

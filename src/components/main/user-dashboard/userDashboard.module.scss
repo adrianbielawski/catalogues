@@ -1,0 +1,37 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.userDashboard {
+    .userDashboardHeader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .title {
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+    }
+    .columns {
+        height: calc(100vh - 95px);
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .userDashboard {
+        .userDashboardHeader {
+            justify-content: space-between;
+            .title {
+                font-size: 1.1em;
+            }
+            .arrowButton {
+                font-size: 1.3em;
+                padding: 5px 10px;
+                &:enabled:active {
+                    color: $orange;
+                }
+            }
+        }
+        .column {
+            max-height: calc(100vh - 95px);
+        }
+    }
+}

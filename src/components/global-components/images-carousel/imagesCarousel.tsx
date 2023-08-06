@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './imagesCarousel.scss'
+import styles from './imagesCarousel.module.scss'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Components
@@ -30,7 +30,7 @@ const ImagesCarousel = (props: Props) => {
     }
 
     if (!count) {
-        return <NoImageIcon className={styles.noImageIcon} size="6x"/>
+        return <NoImageIcon className={styles.noImageIcon} size="6x" />
     }
 
     if (count === 1) {

@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './newItemModal.scss'
+import styles from './newItemModal.module.scss'
 //Redux
 import { DELETE_ITEM, SAVE_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

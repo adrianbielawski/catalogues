@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect, useRef } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import { Route, Switch } from 'react-router-dom'
-import styles from './settings.scss'
+import styles from './settings.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
@@ -21,7 +21,7 @@ const Settings = () => {
         if (settingsRef.current === null) {
             return
         }
-        
+
         getMinHeight()
     }, [settingsRef.current, screenHeight])
 

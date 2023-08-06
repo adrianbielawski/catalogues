@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
-import styles from './latestFromFavourites.scss'
+import styles from './latestFromFavourites.module.scss'
 //Redux
 import {
     CLEAR_LFF, FETCH_LFF, FETCH_LFF_ITEM_COMMENTS, POST_LFF_ITEM_COMMENT

@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './editableFieldTitle.scss'
+import styles from './editableFieldTitle.module.scss'
 //Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 

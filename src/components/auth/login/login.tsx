@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Redirect, useHistory, useLocation } from 'react-router-dom'
-import styles from './login.scss'
+import styles from './login.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
@@ -35,7 +35,7 @@ const Login = () => {
         e.preventDefault()
         const isEmailValid = emailInput.current!.checkValidity()
         const isPasswordValid = passwordInput.current!.checkValidity()
-        
+
         if (!isEmailValid || !isPasswordValid) {
             setIsValid(false)
         } else {

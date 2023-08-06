@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './confirmMessageModal.scss'
+import styles from './confirmMessageModal.module.scss'
 //Custom Components
 import Modal from 'components/global-components/modals/modal'
 import Button from '../button/button'

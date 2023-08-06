@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
-import styles from './mediaFieldValue.scss'
+import styles from './mediaFieldValue.module.scss'
 //Assets
 import YT from 'assets/img/youtube.png'
 import FB from 'assets/img/facebook.png'

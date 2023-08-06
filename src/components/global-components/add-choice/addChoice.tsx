@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './addChoice.scss'
+import styles from './addChoice.module.scss'
 //Types
 import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
@@ -83,7 +83,7 @@ const AddChoice = (props: Props) => {
             {isAddChoiceActive
                 ? (
                     <InputWithConfirmButton
-                        { ...inputAttributes }
+                        {...inputAttributes}
                         buttonProps={buttonProps}
                         clearOnConfirm={true}
                         invalidInputMessage={inputError}

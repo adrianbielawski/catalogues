@@ -1,0 +1,9 @@
+.itemData {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    span {
+        font-weight: 700;
+    }
+}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './mediaPlayer.scss'
+import styles from './mediaPlayer.module.scss'
 //Components
 import ReactPlayer from 'react-player'
 import Loader from '../loader/loader'
@@ -23,7 +23,7 @@ const MediaPlayer = (props: Props) => {
     const handlePlayerReady = () => {
         setShowLodaer(false)
     }
-    
+
     const playerClass = cx(
         'mediaPlayer',
         props.className,

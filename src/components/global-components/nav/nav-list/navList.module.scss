@@ -1,0 +1,83 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.navList {
+    position: absolute;
+    right: 5px;
+    top: calc(100% + 5px);
+    z-index: 10000;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 1px 1px 4px $midLightGrey;
+    min-width: 300px;
+    box-sizing: border-box;
+    &.left {
+        right: unset;
+        left: 5px;
+    }
+    .listWrapper {
+        @include scrollY;
+        .listHeader {
+            display: flex;
+            align-items: center;
+            height: 50px;
+            border-bottom: 1px solid $lightGrey;
+            padding: 5px;
+            .goBack {
+                color: $grey;
+                font-size: 1.6em;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+            .wrapper {
+                display: flex;
+                flex: 1;
+                align-items: center;
+                justify-content: center;
+                p {
+                    font-size: 1.3em;
+                    font-weight: 700;
+                    margin-left: 3px;
+                }
+            }
+        }
+        .listItem {
+            width: 100%;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            p {
+                margin-left: 10px;
+                font-size: 1.2em;
+            }
+        }
+        .noContent {
+            margin: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+    }
+}
+
+@media only screen and (max-width: 640px) {
+    .navList {
+        min-width: 100vw;
+        border-radius: 0;
+        box-shadow: inset 0px 1px 0px $midLightGrey;
+        top: 100%;
+        right: 0;
+        &.left {
+            left: 0;
+        }
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .navList {
+        .listHeader {
+            .goBack:hover {
+                color: $orange;
+            }
+        }
+    }
+}

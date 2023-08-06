@@ -6,7 +6,7 @@ import {
     faFolderOpen, faHouseUser, faSignInAlt, faSignOutAlt, faTh, faUser
 } from '@fortawesome/free-solid-svg-icons'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
-import styles from './header.scss'
+import styles from './header.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
@@ -160,7 +160,7 @@ const Header = () => {
                     className={styles.title}
                     onClick={handleLogoClick}
                 >
-                    <img className={styles.logo} src={icon} />
+                    <img className={styles.logo} src={icon} alt='' />
                     {(location.pathname === '/' && largeViewport) &&
                         <h1>
                             Catalogues

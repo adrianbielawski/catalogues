@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import styles from './manageCatalogue.scss'
+import styles from './manageCatalogue.module.scss'
 //Redux
 import { FETCH_AUTH_USER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

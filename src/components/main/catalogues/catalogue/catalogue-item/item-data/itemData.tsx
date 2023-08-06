@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import classNames from 'classnames/bind'
-import styles from './itemData.scss'
+import styles from './itemData.module.scss'
 //Types
 import { DeserializedItem } from 'src/globalTypes'
 

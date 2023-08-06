@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import styles from './filterStarsRange.scss'
+import styles from './filterStarsRange.module.scss'
 //Types
 import { FilterWithoutChoices, Range } from '../../filtersTypes'
 //Context

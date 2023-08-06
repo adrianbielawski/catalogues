@@ -1,0 +1,40 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    .confirmMessageModal {
+        margin-top: 20px;
+        padding: 20px 30px;
+        min-width: 250px;
+        background: #fff;
+        box-shadow: 0 0 10px #000;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .title {
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+        .message {
+            margin: 10px 0 20px 0;
+        }
+        .inputMessage {
+            span {
+                font-weight: 700;
+            }
+        }
+        input {
+            border-bottom: 1px solid $midLightGrey;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            .button {
+                margin: 10px 20px 20px 10px;
+            }
+        }
+    }
+}

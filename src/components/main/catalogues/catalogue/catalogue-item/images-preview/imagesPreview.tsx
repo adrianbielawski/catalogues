@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './imagesPreview.scss'
+import styles from './imagesPreview.module.scss'
 //Types
 import { DeserializedImage } from 'src/globalTypes'
 //Components

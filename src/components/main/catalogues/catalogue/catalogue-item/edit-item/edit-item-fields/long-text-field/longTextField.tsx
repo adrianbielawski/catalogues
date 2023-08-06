@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './longTextField.scss'
+import styles from './longTextField.module.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
@@ -31,7 +31,7 @@ const LongTextField = (props: Props) => {
         }))
         setIsEditing(false)
     }
-    
+
     const content = isEditing ? (
         <TextareaWithConfirmButton
             className={styles.textarea}

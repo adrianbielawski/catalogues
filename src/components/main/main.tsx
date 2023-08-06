@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react'
 import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import styles from './main.scss'
+import styles from './main.module.scss'
 //Router context
 import { HydratedRouteComponentProps, PrivateRouteWithContext, RouteWithContext } from 'src/router'
 //Redux

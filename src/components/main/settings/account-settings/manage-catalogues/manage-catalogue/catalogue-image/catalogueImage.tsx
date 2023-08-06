@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
-import styles from './catalogueImage.scss'
+import styles from './catalogueImage.module.scss'
 //Constants
-import { BASE_URL } from 'src/constants'
+import { API_URL } from 'src/constants'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux
@@ -46,7 +46,7 @@ const CatalogueImage = (props: Props) => {
             <Image
                 className={styles.image}
                 url={props.url}
-                baseUrl={BASE_URL}
+                baseUrl={API_URL}
                 loading={catalogueData.isSubmittingImage}
                 placeHolder={
                     <NoImageIcon size="6x" />

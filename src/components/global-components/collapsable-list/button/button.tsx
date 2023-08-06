@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLongArrowAltUp } from '@fortawesome/free-solid-svg-icons'
 import { faLongArrowAltDown } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './button.scss'
+import styles from './button.module.scss'
 //Contexts
 import { ListContext } from '../listStore'
 

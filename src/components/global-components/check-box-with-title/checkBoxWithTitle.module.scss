@@ -1,0 +1,20 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.checkBoxWithTitle {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    @include resetTapHighlight;
+    span {
+        margin-left: 5px;
+        white-space: break-spaces;
+    }
+}
+@media (hover: hover) and (pointer: fine) {
+    .checkBoxWithTitle {
+        &:hover {
+            color: $lightOrange;
+            cursor: pointer;
+        }
+    }
+}

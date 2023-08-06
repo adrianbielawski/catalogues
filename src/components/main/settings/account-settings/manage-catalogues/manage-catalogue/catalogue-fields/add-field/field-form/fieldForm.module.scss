@@ -1,0 +1,51 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.fieldForm {
+    margin: 20px 0 0 0px;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.2s ease-out;
+    &.active {
+        opacity: 1;
+        overflow: unset;
+    }
+    .title {
+        font-size: 1.3em;
+        font-weight: 700;
+    }
+    .wrapper {
+        margin-left: 20px;
+        input {
+            border-bottom: 1px solid $midLightGrey;
+            max-width: 250px;
+        }
+        .checkboxes {
+            margin: 5px 0;
+        }
+        p {
+            white-space: nowrap;
+        }
+        .type {
+            font-weight: 700;
+        }
+        .typeList {
+            display: flex;
+            flex-direction: column;
+            margin: 5px 0 0 10px;
+        }
+        .buttons {
+            display: flex;
+            button {
+                margin: 10px 20px 10px 0;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .fieldForm {
+        .wrapper {
+            margin-left: 10px;
+        }
+    }
+}

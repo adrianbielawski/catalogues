@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import classNames from 'classnames/bind'
-import styles from './filter.scss'
+import styles from './filter.module.scss'
 //Context
 import { FiltersContext } from '../filtersStore'
 //Types

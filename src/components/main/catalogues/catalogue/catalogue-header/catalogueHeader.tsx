@@ -3,7 +3,7 @@ import { useLocation } from 'react-router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter, faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './catalogueHeader.scss'
+import styles from './catalogueHeader.module.scss'
 //Types
 import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
 //Context

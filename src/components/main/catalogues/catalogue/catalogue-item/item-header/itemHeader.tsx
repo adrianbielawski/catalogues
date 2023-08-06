@@ -2,7 +2,7 @@ import React from 'react'
 import { useHistory } from 'react-router'
 import { faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './itemHeader.scss'
+import styles from './itemHeader.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Components

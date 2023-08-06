@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './addComment.scss'
+import styles from './addComment.module.scss'
 //Utils
 import { confirmOnEnter } from 'src/utils'
 //Context

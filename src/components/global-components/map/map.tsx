@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './map.scss'
+import styles from './map.module.scss'
 import { MapContainer, TileLayer } from 'react-leaflet'
 //Types
 import { LatLngLiteral } from 'leaflet'

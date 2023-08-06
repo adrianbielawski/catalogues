@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
-import styles from './latestItems.scss'
+import styles from './latestItems.module.scss'
 //Redux
 import {
     CLEAR_LATEST_ITEMS, FETCH_LATEST_ITEMS, FETCH_LATEST_ITEM_COMMENTS, POST_LATEST_ITEM_COMMENT
@@ -87,7 +87,7 @@ const LatestItems = () => {
 
     if (!itemsData
         || latestItems.isFetchingData && !itemsData.results.length
-        || authUser.id && isFetchingCataloguesData    
+        || authUser.id && isFetchingCataloguesData
     ) {
         return <Loader className={styles.loader} />
     }

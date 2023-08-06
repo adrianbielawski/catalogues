@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import { Redirect, useLocation } from 'react-router-dom'
 import { Switch } from 'react-router-dom'
-import styles from './accountSettings.scss'
+import styles from './accountSettings.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Router

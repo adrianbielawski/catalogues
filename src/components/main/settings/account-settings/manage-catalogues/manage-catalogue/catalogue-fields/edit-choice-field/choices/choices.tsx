@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
-import styles from './choices.scss'
+import styles from './choices.module.scss'
 //Types
 import { AuthUserChoiceData, AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux
@@ -14,8 +14,8 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import SearchBar from 'components/global-components/search-bar/searchBar'
 import
-    ProtectedConfirmMessageModal, { ProtectedMessage }
-from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
+ProtectedConfirmMessageModal, { ProtectedMessage }
+    from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
 
 type Props = {
     field: DeserializedField,

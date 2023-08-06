@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import classNames from 'classnames/bind'
-import styles from './addImage.scss'
+import styles from './addImage.module.scss'
 //Custom components
 import AddButton from 'components/global-components/add-button/addButton'
 

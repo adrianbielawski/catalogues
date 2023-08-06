@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './filtersBar.scss'
+import styles from './filtersBar.module.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Custom components

@@ -1,0 +1,13 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.choiceList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    ul {
+        max-height: 200px;
+        min-width: 250px;
+        margin: 5px 0 0 5px;
+    }
+}

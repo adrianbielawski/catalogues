@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './shareButton.scss'
+import styles from './shareButton.module.scss'
 import TransparentButton from '../transparent-button/transparentButton'
 
 type Data = {
@@ -40,7 +40,7 @@ const ShareButton = (props: Props) => {
         <TransparentButton
             className={buttonClass}
             onClick={handleShare}
-            { ...rest }
+            {...rest}
         >
             <FontAwesomeIcon icon={faShareAlt} />
         </TransparentButton>

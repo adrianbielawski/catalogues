@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowsAltV, faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './field.scss'
+import styles from './field.module.scss'
 //Types
 import { AuthUserFieldData } from 'src/globalTypes'
 //Redux

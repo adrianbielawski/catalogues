@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { size } from 'lodash'
 import classNames from 'classnames/bind'
-import styles from './catalogueItems.scss'
+import styles from './catalogueItems.module.scss'
 //Types
 import { AuthUserFieldData, CatalogueData, CurrentUserFieldData, DeserializedItem, LocationState } from 'src/globalTypes'
 //Redux
@@ -44,7 +44,7 @@ const CatalogueItems = (props: Props) => {
     const filtersBarContext = useFiltersBarContext()
 
     useEffect(() => {
-        const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
+        const parsedQuery = filtersBarValuesBuilder(filtersBarContext, location.search)
 
         if (parsedQuery.searchValue) {
             filtersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './arrowButton.scss'
+import styles from './arrowButton.module.scss'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     leftArrow: boolean,
@@ -21,7 +21,7 @@ const ArrowButton = (props: Props) => {
     )
 
     return (
-        <button className={buttonClass} onClick={props.onClick} { ...rest }>
+        <button className={buttonClass} onClick={props.onClick} {...rest}>
             <FontAwesomeIcon
                 icon={leftArrow ? faChevronLeft : faChevronRight}
                 className={styles.arrow}

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useResizeDetector } from 'react-resize-detector'
 import classNames from 'classnames/bind'
 import { clamp } from 'lodash'
-import styles from './carousel.scss'
+import styles from './carousel.module.scss'
 //Hooks and utils
 import { mod } from 'src/utils'
 import useSwipe from '@adrianbielawski/use-swipe'

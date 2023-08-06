@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './addButton.scss'
+import styles from './addButton.module.scss'
 //Custom hooks
 import { useDelay } from 'src/hooks/useDelay'
 //Custom components
@@ -21,7 +21,7 @@ const cx = classNames.bind(styles)
 const AddButton = (props: Props) => {
     const delayCompleated = useDelay(props.loading)
     const { text, loading, onClick, className, ...rest } = props
-    
+
     const buttonClass = cx(
         'addButton',
         className,
@@ -32,13 +32,13 @@ const AddButton = (props: Props) => {
             className={buttonClass}
             disabled={loading}
             onClick={onClick}
-            { ...rest }
+            {...rest}
         >
             <>
-            {delayCompleated
-                ? <Loader size={24} />
-                : <FontAwesomeIcon icon={faPlus} className={styles.plus} />
-            }
+                {delayCompleated
+                    ? <Loader size={24} />
+                    : <FontAwesomeIcon icon={faPlus} className={styles.plus} />
+                }
                 {text ? <p>{text}</p> : null}
             </>
         </TransparentButton>

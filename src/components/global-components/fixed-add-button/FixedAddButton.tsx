@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './fixedAddButton.scss'
+import styles from './fixedAddButton.module.scss'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     text?: string,

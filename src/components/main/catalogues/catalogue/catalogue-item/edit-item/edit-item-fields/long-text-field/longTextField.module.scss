@@ -1,0 +1,9 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.textarea {
+    resize: none;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    @include scrollY;
+}

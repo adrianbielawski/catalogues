@@ -1,0 +1,17 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.navItem {
+    box-sizing: border-box;
+    cursor: pointer;
+    @include resetTapHighlight;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .navItem {
+        &:hover,
+        &:hover div,
+        &:hover p {
+            color: $orange;
+        }
+    }
+}

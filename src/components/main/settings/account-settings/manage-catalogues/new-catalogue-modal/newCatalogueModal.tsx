@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './newCatalogueModal.scss'
+import styles from './newCatalogueModal.module.scss'
 //Redux
 import { DELETE_CATALOGUE, NEW_CATALOGUE_CREATED } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './protectedConfirmMessageModal.scss'
+import styles from './protectedConfirmMessageModal.module.scss'
 //Custom Components
 import Modal from 'components/global-components/modals/modal'
 import Button from '../button/button'
@@ -58,13 +58,13 @@ const ProtectedConfirmMessageModal = (props: Props) => {
                         onClick={props.onConfirm}
                     >
                         Ok
-                </Button>
+                    </Button>
                     <Button
                         className={styles.button}
                         onClick={props.onCancel}
                     >
                         Cancel
-                </Button>
+                    </Button>
                 </div>
             </div>
         </Modal>

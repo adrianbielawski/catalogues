@@ -1,7 +1,7 @@
 import React, { useEffect, Suspense } from 'react'
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import * as Sentry from "@sentry/react"
-import styles from 'global-styles/app.scss'
+import styles from 'global-styles/app.module.scss'
 //Redux
 import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/modules/app/slice'
 import { GET_USER, INITIALIZED } from 'store/modules/auth-user/slice'
@@ -50,11 +50,11 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-      if (!authUser.id) {
-          return
-      }
-      dispatch(FETCH_AUTH_USER_CATALOGUES())
-      dispatch(FETCH_FAVOURITE_CATALOGUES())
+    if (!authUser.id) {
+      return
+    }
+    dispatch(FETCH_AUTH_USER_CATALOGUES())
+    dispatch(FETCH_FAVOURITE_CATALOGUES())
   }, [authUser?.id])
 
   if (!authUser.isInitialized || app.fetchingSwitches) {

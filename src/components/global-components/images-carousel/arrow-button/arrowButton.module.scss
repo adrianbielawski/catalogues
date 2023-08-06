@@ -1,0 +1,23 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.button {
+    font-weight: 700;
+    padding: 0;
+    color: $darkGrey;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
+    @include resetTapHighlight;
+    &:disabled {
+        color: $lightGrey;
+        cursor: not-allowed;
+    }
+}
+@media (hover: hover) and (pointer: fine) {
+    .button {
+        &:hover {
+            color: $lightOrange;
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useContext, useEffect, useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
-import styles from './nav.scss'
+import styles from './nav.module.scss'
 //Types
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { LocationState } from 'src/globalTypes'

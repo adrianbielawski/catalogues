@@ -2,7 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './modalHeader.scss'
+import styles from './modalHeader.module.scss'
 //Components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 

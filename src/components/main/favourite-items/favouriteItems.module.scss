@@ -1,0 +1,8 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.favouriteItems {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 100%;
+}

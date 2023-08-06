@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import styles from './auth.scss'
+import styles from './auth.module.scss'
 //Redux
 import { CLEAR_AUTH_USER_ERROR } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

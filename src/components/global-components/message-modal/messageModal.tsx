@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './messageModal.scss'
+import styles from './messageModal.module.scss'
 //Custom Components
 import Modal from 'components/global-components/modals/modal'
 import Button from '../button/button'

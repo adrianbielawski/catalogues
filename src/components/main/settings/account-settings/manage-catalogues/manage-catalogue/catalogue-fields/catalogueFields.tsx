@@ -1,6 +1,6 @@
 import React from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
-import styles from './catalogueFields.scss'
+import styles from './catalogueFields.module.scss'
 //Types
 import { AuthUserFieldData } from 'src/globalTypes'
 //Redux

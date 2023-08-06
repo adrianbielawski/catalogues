@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { orderBy, size, upperFirst } from 'lodash'
 import classNames from 'classnames/bind'
-import styles from './choiceList.scss'
+import styles from './choiceList.module.scss'
 //Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import SearchBar from '../search-bar/searchBar'

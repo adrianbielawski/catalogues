@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './addField.scss'
+import styles from './addField.module.scss'
 //Redux
 import { TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

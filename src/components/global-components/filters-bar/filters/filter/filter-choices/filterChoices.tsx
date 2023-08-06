@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import styles from './filterChoices.scss'
+import styles from './filterChoices.module.scss'
 //Types
 import { FilterWithChoices, SelectedChoiceFilterValue } from '../../filtersTypes'
 //Context

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './changePassword.scss'
+import styles from './changePassword.module.scss'
 //Redux
 import { CHANGE_PASSWORD, TOGGLE_PASSWORD_EDIT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
