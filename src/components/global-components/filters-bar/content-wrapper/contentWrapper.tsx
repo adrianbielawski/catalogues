@@ -1,32 +1,26 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import classNames from 'classnames/bind'
 import styles from './contentWrapper.module.scss'
-//components
+// components
 import AnimateHeight from 'react-animate-height'
 
-type Props = {
-    active: boolean,
-    children: JSX.Element,
+interface Props {
+  active: boolean
+  children: ReactNode
 }
 
 const cx = classNames.bind(styles)
 
 const ContentWrapper = (props: Props) => {
-    const contentClass = cx(
-        'content',
-        {
-            active: props.active,
-        }
-    )
+  const contentClass = cx('content', {
+    active: props.active,
+  })
 
-    return (
-        <AnimateHeight
-            className={contentClass}
-            height={props.active ? 'auto' : 0}
-        >
-            {props.children}
-        </AnimateHeight>
-    )
+  return (
+    <AnimateHeight className={contentClass} height={props.active ? 'auto' : 0}>
+      {props.children}
+    </AnimateHeight>
+  )
 }
 
 export default ContentWrapper

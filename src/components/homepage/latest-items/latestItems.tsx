@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestItems.module.scss'
-//Redux
+// Redux
 import {
-    CLEAR_LATEST_ITEMS, FETCH_LATEST_ITEMS, FETCH_LATEST_ITEM_COMMENTS, POST_LATEST_ITEM_COMMENT
+  CLEAR_LATEST_ITEMS,
+  FETCH_LATEST_ITEMS,
+  FETCH_LATEST_ITEM_COMMENTS,
+  POST_LATEST_ITEM_COMMENT,
 } from 'store/modules/homepage/latest-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//Components
+// Components
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
@@ -14,100 +17,109 @@ import PaginatedList from 'components/global-components/paginated-list/paginated
 const cx = classNames.bind(styles)
 
 const LatestItems = () => {
-    const dispatch = useAppDispatch()
-    const authUser = useTypedSelector(state => state.modules.authUser)
-    const isFetchingCataloguesData = useTypedSelector(state => state.modules.authUserCatalogues.isFetchingCataloguesData)
-    const latestItems = useTypedSelector(state => state.modules.homepage.latestItems)
-    const itemsData = latestItems.itemsData!
+  const dispatch = useAppDispatch()
+  const authUser = useTypedSelector((state) => state.modules.authUser)
+  const isFetchingCataloguesData = useTypedSelector(
+    (state) => state.modules.authUserCatalogues.isFetchingCataloguesData,
+  )
+  const latestItems = useTypedSelector(
+    (state) => state.modules.homepage.latestItems,
+  )
+  const itemsData = latestItems.itemsData!
 
-    useEffect(() => {
-        fetchItems(1)
+  useEffect(() => {
+    fetchItems(1)
 
-        return () => {
-            dispatch(CLEAR_LATEST_ITEMS())
-        }
-    }, [])
-
-    const fetchItems = (page?: number) => {
-        dispatch(FETCH_LATEST_ITEMS(page || itemsData?.next || 1))
+    return () => {
+      dispatch(CLEAR_LATEST_ITEMS())
     }
+  }, [])
 
-    const itemsComponents = () => {
-        return itemsData.results.map((item, i) => {
-            const handleAddComment = (text: string, parentId?: number) => {
-                dispatch(POST_LATEST_ITEM_COMMENT({
-                    itemId: item.id,
-                    text,
-                    parentId,
-                }))
-            }
+  const fetchItems = (page?: number) => {
+    dispatch(FETCH_LATEST_ITEMS(page ?? itemsData?.next ?? 1))
+  }
 
-            const handleFetchComments = (page: number | null) => {
-                dispatch(FETCH_LATEST_ITEM_COMMENTS({
-                    itemId: item.id,
-                    page,
-                }))
-            }
+  const itemsComponents = () => {
+    return itemsData.results.map((item, i) => {
+      const handleAddComment = (text: string, parentId?: number) => {
+        dispatch(
+          POST_LATEST_ITEM_COMMENT({
+            itemId: item.id,
+            text,
+            parentId,
+          }),
+        )
+      }
 
-            let renderQty = itemsData.results.length
+      const handleFetchComments = (page: number | null) => {
+        dispatch(
+          FETCH_LATEST_ITEM_COMMENTS({
+            itemId: item.id,
+            page,
+          }),
+        )
+      }
 
-            if (latestItems.isFetchingItems && itemsData.current) {
-                renderQty = itemsData.current * 10
-            }
-            if (latestItems.isFetchingData
-                && !latestItems.isFetchingItems
-                && itemsData.current
-            ) {
-                renderQty = (itemsData.current - 1) * 10
-            }
+      let renderQty = itemsData.results.length
 
-            if (i >= renderQty) {
-                return
-            }
-            const itemClass = cx(
-                'item',
-                {
-                    last: i === itemsData.results.length - 1,
-                }
-            )
+      if (latestItems.isFetchingItems && itemsData.current) {
+        renderQty = itemsData.current * 10
+      }
+      if (
+        latestItems.isFetchingData &&
+        !latestItems.isFetchingItems &&
+        itemsData.current
+      ) {
+        renderQty = (itemsData.current - 1) * 10
+      }
 
-            return (
-                <CatalogueItem
-                    className={itemClass}
-                    itemData={item}
-                    isNarrow={true}
-                    editable={false}
-                    key={item.id}
-                    onAddComment={handleAddComment}
-                    onFetchComments={handleFetchComments}
-                />
-            )
-        })
-    }
+      if (i >= renderQty) {
+        return undefined
+      }
+      const itemClass = cx('item', {
+        last: i === itemsData.results.length - 1,
+      })
 
-    if (!itemsData
-        || latestItems.isFetchingData && !itemsData.results.length
-        || authUser.id && isFetchingCataloguesData
-    ) {
-        return <Loader className={styles.loader} />
-    }
+      return (
+        <CatalogueItem
+          className={itemClass}
+          itemData={item}
+          isNarrow={true}
+          editable={false}
+          key={item.id}
+          onAddComment={handleAddComment}
+          onFetchComments={handleFetchComments}
+        />
+      )
+    })
+  }
 
-    if (!latestItems.isFetchingData && !itemsData.results.length) {
-        return <p className={styles.noContent}>No content</p>
-    }
+  const hasItemsData = itemsData.results.length === 0
 
-    return (
-        <PaginatedList
-            next={itemsData.next}
-            buttonChild="See more"
-            isFetching={latestItems.isFetchingData}
-            fetchOnButtonClick="once"
-            intersectingElement={3}
-            onLoadMore={fetchItems}
-        >
-            {itemsComponents()}
-        </PaginatedList>
-    )
+  if (
+    !itemsData ||
+    (latestItems.isFetchingData && !hasItemsData) ||
+    (authUser.id && isFetchingCataloguesData)
+  ) {
+    return <Loader className={styles.loader} />
+  }
+
+  if (!latestItems.isFetchingData && !hasItemsData) {
+    return <p className={styles.noContent}>No content</p>
+  }
+
+  return (
+    <PaginatedList
+      next={itemsData.next}
+      buttonChild="See more"
+      isFetching={latestItems.isFetchingData}
+      fetchOnButtonClick="once"
+      intersectingElement={3}
+      onLoadMore={fetchItems}
+    >
+      {itemsComponents()}
+    </PaginatedList>
+  )
 }
 
 export default LatestItems

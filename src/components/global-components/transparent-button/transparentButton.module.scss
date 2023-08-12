@@ -1,24 +1,27 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .transparentButton {
-    display: flex;
-    flex-direction: row;
-    padding: 0;
-    color: $darkGrey;
-    border: none;
-    background: none;
-    outline: none;
-    cursor: pointer;
-    @include resetTapHighlight;
-    &:disabled {
-        color: $lightGrey;
-        cursor: not-allowed;
-    }
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  color: $darkGrey;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: pointer;
+
+  @include resetTapHighlight;
+
+  &:disabled {
+    color: $lightGrey;
+    cursor: not-allowed;
+  }
 }
+
 @media (hover: hover) and (pointer: fine) {
-    .transparentButton {
-        &:hover {
-            color: $lightOrange;
-        }
+  .transparentButton {
+    &:hover {
+      color: $lightOrange;
     }
+  }
 }

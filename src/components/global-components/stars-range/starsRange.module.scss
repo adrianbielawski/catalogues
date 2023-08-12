@@ -1,62 +1,72 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .stars {
-	line-height: 0.8em;
-	.star {
-		padding: 0 2px;
-		color: $midLightGrey;
-		cursor: pointer;
-		@include resetTapHighlight;
-		path {
-			stroke: $midLightGrey;
-			stroke-width: 10%;
-			fill: transparent;
-		}
-		&.active path {
-			stroke: $orange;
-			fill: $orange;
-		}
-	}
-	:first-child {
-		padding-left: 0;
-	}
-	:last-child {
-		padding-right: 0;
-	}
+  line-height: 0.8em;
+
+  .star {
+    padding: 0 2px;
+    color: $midLightGrey;
+    cursor: pointer;
+
+    @include resetTapHighlight;
+
+    path {
+      stroke: $midLightGrey;
+      stroke-width: 10%;
+      fill: transparent;
+    }
+
+    &.active path {
+      stroke: $orange;
+      fill: $orange;
+    }
+  }
+
+  :first-child {
+    padding-left: 0;
+  }
+
+  :last-child {
+    padding-right: 0;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
-	.stars:hover:not(.hoveredAfterClick) {
-		.active:not(:hover):not(.last) {
-			path {
-				stroke: $midLightGrey;
-				fill: transparent;
-			}
-		}
-		.last:not(:hover) ~ .star {
-			path {
-				stroke: $orange;
-				fill: $orange;
-			}
-		}
-		.last:not(:hover) ~ .star:hover ~ .star {
-			path {
-				stroke: $midLightGrey;
-				fill: transparent;
-			}
-		}
-		.star:not(.last):hover,
-		.star:not(.last):hover ~ .star {
-			path {
-				stroke: $orange;
-				fill: $orange;
-			}
-		}
-		.star:hover ~ .last ~ .star {
-			path {
-				stroke: $midLightGrey;
-				fill: transparent;
-			}
-		}
-	}
+  .stars:hover:not(.hoveredAfterClick) {
+    .active:not(:hover, .last) {
+      path {
+        stroke: $midLightGrey;
+        fill: transparent;
+      }
+    }
+
+    .last:not(:hover) ~ .star {
+      path {
+        stroke: $orange;
+        fill: $orange;
+      }
+    }
+
+    .last:not(:hover) ~ .star:hover ~ .star {
+      path {
+        stroke: $midLightGrey;
+        fill: transparent;
+      }
+    }
+
+    .star:not(.last):hover,
+    .star:not(.last):hover ~ .star {
+      path {
+        stroke: $orange;
+        fill: $orange;
+      }
+    }
+
+    .star:hover ~ .last ~ .star {
+      path {
+        stroke: $midLightGrey;
+        fill: transparent;
+      }
+    }
+  }
 }

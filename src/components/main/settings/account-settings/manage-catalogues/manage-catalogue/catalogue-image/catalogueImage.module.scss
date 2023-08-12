@@ -1,26 +1,29 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .catalogueImage {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 200px;
-    width: 200px;
-    max-height: 200px;
-    max-width: 200px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  width: 200px;
+  max-height: 200px;
+  max-width: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+
+  .image {
     margin: 0 auto;
-    overflow: hidden;
-    .image {
-        margin: 0 auto;
-    }
-    .loader {
-        position: absolute;
-        left: calc(50% - 30px);
-        top: calc(50% - 30px);
-        margin: 0 auto;
-    }
-    input {
-        display: none;
-    }
+  }
+
+  .loader {
+    position: absolute;
+    left: calc(50% - 30px);
+    top: calc(50% - 30px);
+    margin: 0 auto;
+  }
+
+  input {
+    display: none;
+  }
 }

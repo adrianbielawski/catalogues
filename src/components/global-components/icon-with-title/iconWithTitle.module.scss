@@ -1,45 +1,53 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .iconWithTitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @include resetTapHighlight;
+
+  .title {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    @include resetTapHighlight;
-    .title {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 5px 0;
-        &.active .icon,
-        &.active p {
-            color: $orange;
-        }
-        .icon {
-            font-size: 1.4em;
-            width: 30px;
-            color: $darkGrey;
-        }
-        p {
-            margin-left: 5px;
-            font-size: 1.1em;
-        }
+    align-items: center;
+    justify-content: center;
+    margin: 5px 0;
+
+    &.active .icon,
+    &.active p {
+      color: $orange;
     }
-    .content {
-        box-sizing: border-box;
-        max-width: 100%;
-        width: 100%;
+
+    .icon {
+      font-size: 1.4em;
+      width: 30px;
+      color: $darkGrey;
     }
+
+    p {
+      margin-left: 5px;
+      font-size: 1.1em;
+    }
+  }
+
+  .content {
+    box-sizing: border-box;
+    max-width: 100%;
+    width: 100%;
+  }
 }
+
 @media (hover: hover) and (pointer: fine) {
-    .iconWithTitle {
-        .title {
-            &:hover {
-                cursor: pointer;
-            }
-            &:hover .icon,
-            &:hover p {
-                color: $lightOrange;
-            }
-        }
+  .iconWithTitle {
+    .title {
+      &:hover {
+        cursor: pointer;
+      }
+
+      &:hover .icon,
+      &:hover p {
+        color: $lightOrange;
+      }
     }
+  }
 }

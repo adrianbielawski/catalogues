@@ -1,33 +1,37 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .catalogues {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    .noCatalogues {
-        margin: 30px auto 0 auto;
-        text-align: center;
-        .anchor {
-            font-weight: 700;
-        }
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  .noCatalogues {
+    margin: 30px auto 0;
+    text-align: center;
+
+    .anchor {
+      font-weight: 700;
     }
-    .noPublicCatalogues {
-        margin: 30px auto 0 auto;
-        text-align: center;
-        font-weight: 700;
-    }
+  }
+
+  .noPublicCatalogues {
+    margin: 30px auto 0;
+    text-align: center;
+    font-weight: 700;
+  }
 }
 
 .loader {
-    margin: 50px auto;
+  margin: 50px auto;
 }
+
 @media (hover: hover) and (pointer: fine) {
-    .catalogues {
-        .noCatalogues {
-            &:hover {
-                color: $lightOrange;
-                cursor: pointer;
-            }
-        }
+  .catalogues {
+    .noCatalogues {
+      &:hover {
+        color: $lightOrange;
+        cursor: pointer;
+      }
     }
+  }
 }

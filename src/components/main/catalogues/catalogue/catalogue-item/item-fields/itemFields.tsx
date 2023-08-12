@@ -1,39 +1,38 @@
-import React from 'react'
 import { cloneDeep } from 'lodash'
-//Types
-import { DeserializedItem } from 'src/globalTypes'
-//Redux
+// Types
+import { type DeserializedItem } from 'src/globalTypes'
+// Redux
 import { useTypedSelector } from 'store/storeConfig'
-//Components
+// Components
 import CollapsableList from 'components/global-components/collapsable-list/collapsableList'
 import Field from './field/field'
 
-type Props = {
-    item: DeserializedItem,
-    isNarrow: boolean,
-    className?: string,
+interface Props {
+  item: DeserializedItem
+  isNarrow: boolean
+  className?: string
 }
 
 const ItemFields = (props: Props) => {
-    const fields = useTypedSelector(state => state.entities.fields.entities)
-    const maxHeight = props.isNarrow ? 55 : 106
+  const fields = useTypedSelector((state) => state.entities.fields.entities)
+  const maxHeight = props.isNarrow ? 55 : 106
 
-    const items = cloneDeep(props.item.fieldsValues).sort(
-        (a, b) => fields[a.fieldId]!.position - fields[b.fieldId]!.position
-    )
+  const items = cloneDeep(props.item.fieldsValues).sort(
+    (a, b) => fields[a.fieldId]!.position - fields[b.fieldId]!.position,
+  )
 
-    return (
-        <div className={props.className}>
-            <CollapsableList >
-                <CollapsableList.List
-                    items={items}
-                    maxHeight={maxHeight}
-                    itemComponent={Field}
-                />
-                <CollapsableList.Button />
-            </CollapsableList>
-        </div>
-    )
+  return (
+    <div className={props.className}>
+      <CollapsableList>
+        <CollapsableList.List
+          items={items}
+          maxHeight={maxHeight}
+          itemComponent={Field}
+        />
+        <CollapsableList.Button />
+      </CollapsableList>
+    </div>
+  )
 }
 
 export default ItemFields

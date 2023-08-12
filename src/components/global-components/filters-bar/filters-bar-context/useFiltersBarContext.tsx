@@ -5,17 +5,17 @@ import { SortContext } from '../sort/sortStore'
 import { FiltersBarContext } from './filtersBarStore'
 
 const useFiltersBarContext = () => {
-    const searchContext = useContext(SearchContext)
-    const sortContext = useContext(SortContext)
-    const filtersContext = useContext(FiltersContext)
-    const filtersBar = useContext(FiltersBarContext)
+  const searchContext = useContext(SearchContext)
+  const sortContext = useContext(SortContext)
+  const filtersContext = useContext(FiltersContext)
+  const filtersBar = useContext(FiltersBarContext)
 
-    return {
-        searchContext,
-        sortContext,
-        filtersContext,
-        filtersBar,
-    }
+  return {
+    searchContext,
+    sortContext,
+    filtersContext,
+    filtersBar,
+  }
 }
 
 export default useFiltersBarContext

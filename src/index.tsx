@@ -1,10 +1,9 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { Provider } from 'react-redux'
 import { store } from 'store/storeConfig'
 import { BrowserRouter } from 'react-router-dom'
-import { init as SentryInit, ErrorBoundary } from "@sentry/react"
+import { init as SentryInit, ErrorBoundary } from '@sentry/react'
 import { BASE_URL, SENTRY_DSN } from './constants'
 
 if (SENTRY_DSN !== undefined) {
@@ -15,13 +14,14 @@ if (SENTRY_DSN !== undefined) {
   })
 }
 
+// eslint-disable-next-line react/no-deprecated
 ReactDOM.render(
-  <ErrorBoundary fallback={"An error has occurred"}>
+  <ErrorBoundary fallback={'An error has occurred'}>
     <Provider store={store}>
       <BrowserRouter basename={BASE_URL}>
         <App />
       </BrowserRouter>
     </Provider>
   </ErrorBoundary>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )

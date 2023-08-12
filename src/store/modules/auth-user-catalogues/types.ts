@@ -1,91 +1,99 @@
-import { AuthUserCatalogueData, AuthUserFieldData, Choice, Field } from "src/globalTypes";
+import {
+  type AuthUserCatalogueData,
+  type AuthUserFieldData,
+  type Choice,
+  type Field,
+} from 'src/globalTypes'
 
 export interface AuthUserCataloguesState {
-    cataloguesData: AuthUserCatalogueData[],
-    defaultCatalogueId: number | null,
-    newCatalogueId: number | null,
-    isFetchingCatalogues: boolean,
-    isFetchingCataloguesData: boolean,
-    isCreatingNewCatalogue: boolean,
+  cataloguesData: AuthUserCatalogueData[]
+  defaultCatalogueId: number | null
+  newCatalogueId: number | null
+  isFetchingCatalogues: boolean
+  isFetchingCataloguesData: boolean
+  isCreatingNewCatalogue: boolean
 }
 
-//Payloads
+// Payloads
 export interface ChangeCatalogueNamePayload {
-    catalogueId: number,
-    name: string,
+  catalogueId: number
+  name: string
 }
 
 export interface ChangeDefaultCataloguePayload {
-    catalogueId: number,
-    default: boolean,
+  catalogueId: number
+  default: boolean
 }
 
 export interface ChangePublicCataloguePayload {
-    catalogueId: number,
-    public: boolean,
+  catalogueId: number
+  public: boolean
 }
 
 export interface ChangeCatalogueImagePayload {
-    catalogueId: number,
-    image: string,
+  catalogueId: number
+  image: string
 }
 
 export interface CatalogueAndFieldIdPayload {
-    catalogueId: number,
-    fieldId: number,
+  catalogueId: number
+  fieldId: number
 }
 
 export interface CreateCatalogueFieldPayload {
-    name: string,
-    catalogueId: number,
-    type: string,
-    position: number,
-    public: boolean,
+  name: string
+  catalogueId: number
+  type: string
+  position: number
+  public: boolean
 }
 
-export interface FetchCatalogueFieldSuccessPayload extends CatalogueAndFieldIdPayload {
-    data: Field,
+export interface FetchCatalogueFieldSuccessPayload
+  extends CatalogueAndFieldIdPayload {
+  data: Field
 }
 
 export interface FetchCatalogueFieldsSuccessPayload {
-    data: Field[],
-    catalogueId: number,
+  data: Field[]
+  catalogueId: number
 }
 
 export interface ChangeFieldNamePayload extends CatalogueAndFieldIdPayload {
-    name: string,
+  name: string
 }
 
-export interface ChangeFieldNameSuccessPayload extends CatalogueAndFieldIdPayload {
-    field: Field,
+export interface ChangeFieldNameSuccessPayload
+  extends CatalogueAndFieldIdPayload {
+  field: Field
 }
 
 export interface ChangePublicFieldPayload extends CatalogueAndFieldIdPayload {
-    public: boolean,
+  public: boolean
 }
 
 export interface FetchFieldsChoicesPayload {
-    catalogueId: number,
-    data: Record<number, Choice[]>,
+  catalogueId: number
+  data: Record<number, Choice[]>
 }
 
 export interface FetchFieldChoicesPayload extends CatalogueAndFieldIdPayload {
-    data: Choice[],
+  data: Choice[]
 }
 
 export interface PostChoicePayload extends CatalogueAndFieldIdPayload {
-    name: string,
+  name: string
 }
 
 export interface PostChoiceSuccessPayload extends CatalogueAndFieldIdPayload {
-    choice: Choice,
+  choice: Choice
 }
 
 export interface RemoveChoicePayload extends CatalogueAndFieldIdPayload {
-    choiceId: number,
+  choiceId: number
 }
 
-export interface ReorderCatalogueFieldsPayload extends CatalogueAndFieldIdPayload {
-    newPosition: number,
-    fieldsData: AuthUserFieldData[],
+export interface ReorderCatalogueFieldsPayload
+  extends CatalogueAndFieldIdPayload {
+  newPosition: number
+  fieldsData: AuthUserFieldData[]
 }

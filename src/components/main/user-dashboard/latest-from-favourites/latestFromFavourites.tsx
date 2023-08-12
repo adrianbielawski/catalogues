@@ -1,12 +1,15 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestFromFavourites.module.scss'
-//Redux
+// Redux
 import {
-    CLEAR_LFF, FETCH_LFF, FETCH_LFF_ITEM_COMMENTS, POST_LFF_ITEM_COMMENT
+  CLEAR_LFF,
+  FETCH_LFF,
+  FETCH_LFF_ITEM_COMMENTS,
+  POST_LFF_ITEM_COMMENT,
 } from 'store/modules/auth-user-dashboard/latest-from-favourites/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//Components
+// Components
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
@@ -14,93 +17,102 @@ import PaginatedList from 'components/global-components/paginated-list/paginated
 const cx = classNames.bind(styles)
 
 const LatestFromFavourites = () => {
-    const dispatch = useAppDispatch()
-    const latestFromFavourites = useTypedSelector(state => state.modules.authUserDashboard.latestFromFavourites)
-    const itemsData = latestFromFavourites.itemsData!
+  const dispatch = useAppDispatch()
+  const latestFromFavourites = useTypedSelector(
+    (state) => state.modules.authUserDashboard.latestFromFavourites,
+  )
+  const itemsData = latestFromFavourites.itemsData!
 
-    useEffect(() => {
-        fetchItems(1)
+  useEffect(() => {
+    fetchItems(1)
 
-        return () => {
-            dispatch(CLEAR_LFF())
-        }
-    }, [])
-
-    const fetchItems = (page?: number) => {
-        dispatch(FETCH_LFF(page || itemsData?.next || 1))
+    return () => {
+      dispatch(CLEAR_LFF())
     }
+  }, [])
 
-    const itemsComponents = () => {
-        return itemsData.results.map((item, i) => {
-            const handleAddComment = (text: string, parentId?: number) => {
-                dispatch(POST_LFF_ITEM_COMMENT({
-                    itemId: item.id,
-                    text,
-                    parentId,
-                }))
-            }
+  const fetchItems = (page?: number) => {
+    dispatch(FETCH_LFF(page ?? itemsData?.next ?? 1))
+  }
 
-            const handleFetchComments = (page: number | null) => {
-                dispatch(FETCH_LFF_ITEM_COMMENTS({
-                    itemId: item.id,
-                    page,
-                }))
-            }
+  const itemsComponents = () => {
+    return itemsData.results.map((item, i) => {
+      const handleAddComment = (text: string, parentId?: number) => {
+        dispatch(
+          POST_LFF_ITEM_COMMENT({
+            itemId: item.id,
+            text,
+            parentId,
+          }),
+        )
+      }
 
-            let renderQty = itemsData.results.length
+      const handleFetchComments = (page: number | null) => {
+        dispatch(
+          FETCH_LFF_ITEM_COMMENTS({
+            itemId: item.id,
+            page,
+          }),
+        )
+      }
 
-            if (latestFromFavourites.isFetchingItems && itemsData.current) {
-                renderQty = itemsData.current * 10
-            }
-            if (latestFromFavourites.isFetchingData && !latestFromFavourites.isFetchingItems && itemsData.current) {
-                renderQty = (itemsData.current - 1) * 10
-            }
+      let renderQty = itemsData.results.length
 
-            if (i >= renderQty) {
-                return
-            }
+      if (latestFromFavourites.isFetchingItems && itemsData.current) {
+        renderQty = itemsData.current * 10
+      }
+      if (
+        latestFromFavourites.isFetchingData &&
+        !latestFromFavourites.isFetchingItems &&
+        itemsData.current
+      ) {
+        renderQty = (itemsData.current - 1) * 10
+      }
 
-            const itemClass = cx(
-                'item',
-                {
-                    last: i === itemsData.results.length - 1,
-                }
-            )
+      if (i >= renderQty) {
+        return undefined
+      }
 
-            return (
-                <CatalogueItem
-                    className={itemClass}
-                    itemData={item}
-                    isNarrow={true}
-                    editable={false}
-                    key={item.id}
-                    onAddComment={handleAddComment}
-                    onFetchComments={handleFetchComments}
-                />
-            )
-        })
-    }
+      const itemClass = cx('item', {
+        last: i === itemsData.results.length - 1,
+      })
 
-    if (!itemsData || latestFromFavourites.isFetchingData && !itemsData.results.length) {
-        return <Loader className={styles.loader} />
-    }
+      return (
+        <CatalogueItem
+          className={itemClass}
+          itemData={item}
+          isNarrow={true}
+          editable={false}
+          key={item.id}
+          onAddComment={handleAddComment}
+          onFetchComments={handleFetchComments}
+        />
+      )
+    })
+  }
 
-    if (!latestFromFavourites.isFetchingData && !itemsData.results.length) {
-        return <p className={styles.noContent}>No content</p>
-    }
+  const hasItems = itemsData.results.length !== 0
 
-    return (
-        <PaginatedList
-            next={itemsData.next}
-            buttonChild="See more"
-            isFetching={latestFromFavourites.isFetchingData}
-            fetchOnButtonClick="once"
-            intersectingElement={3}
-            onLoadMore={fetchItems}
-        >
-            {itemsComponents()}
-        </PaginatedList>
-    )
+  if (!itemsData || (latestFromFavourites.isFetchingData && !hasItems)) {
+    return <Loader className={styles.loader} />
+  }
+
+  if (!latestFromFavourites.isFetchingData && hasItems) {
+    return <p className={styles.noContent}>No content</p>
+  }
+
+  return (
+    <PaginatedList
+      next={itemsData.next}
+      buttonChild="See more"
+      isFetching={latestFromFavourites.isFetchingData}
+      fetchOnButtonClick="once"
+      intersectingElement={3}
+      onLoadMore={fetchItems}
+    >
+      {itemsComponents()}
+    </PaginatedList>
+  )
 }
 
 export default LatestFromFavourites

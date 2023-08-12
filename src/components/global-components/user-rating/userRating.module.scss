@@ -1,41 +1,48 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .stars {
-	line-height: 0.8em;
-	path {
-		stroke: $midLightGrey;
-		stroke-width: 10%;
-		fill: transparent;
-	}
-	.star {
-		padding: 0 2px;
-		color: $midLightGrey;
-		cursor: pointer;
-		@include resetTapHighlight;
-		&.active path {
-			stroke: $orange;
-			fill: $orange;
-		}
-	}
-	:first-child {
-		padding-left: 0;
-	}
-	:last-child {
-		padding-right: 0;
-	}
+  line-height: 0.8em;
+
+  path {
+    stroke: $midLightGrey;
+    stroke-width: 10%;
+    fill: transparent;
+  }
+
+  .star {
+    padding: 0 2px;
+    color: $midLightGrey;
+    cursor: pointer;
+
+    @include resetTapHighlight;
+
+    &.active path {
+      stroke: $orange;
+      fill: $orange;
+    }
+  }
+
+  :first-child {
+    padding-left: 0;
+  }
+
+  :last-child {
+    padding-right: 0;
+  }
 }
 
 @media (hover: hover) {
-	.stars {
-		&:hover path {
-			stroke: $orange;
-			fill: $orange;
-		}
-		.star {
-			&:hover ~ .star path {
-				stroke: $midLightGrey;
-				fill: transparent;
-			}
-		}
-	}
+  .stars {
+    &:hover path {
+      stroke: $orange;
+      fill: $orange;
+    }
+
+    .star {
+      &:hover ~ .star path {
+        stroke: $midLightGrey;
+        fill: transparent;
+      }
+    }
+  }
 }

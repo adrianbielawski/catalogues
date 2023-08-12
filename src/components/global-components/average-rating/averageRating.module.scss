@@ -1,17 +1,20 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .averageRating {
-    display: flex;
-    align-items: center;
-    .star {
-        font-size: 22px;
-        color: $grey;
-        &.rated {
-            color: $orange;
-        }
+  display: flex;
+  align-items: center;
+
+  .star {
+    font-size: 22px;
+    color: $grey;
+
+    &.rated {
+      color: $orange;
     }
-    p {
-        margin-left: 3px;
-        font-size: 1.1em;
-    }
+  }
+
+  p {
+    margin-left: 3px;
+    font-size: 1.1em;
+  }
 }

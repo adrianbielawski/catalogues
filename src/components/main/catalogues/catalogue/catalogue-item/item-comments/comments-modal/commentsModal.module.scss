@@ -1,58 +1,69 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .commentsModal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    .wrapper {
-        display: flex;
-        background: #fff;
-        max-height: 90vh;
-        max-width: 90vw;
-        .carouselWrapper {
-            width: 50vw;
-            height: 90vh;
-            background: $lightGrey;
-        }
-        .commentsWrapper {
-            width: 50vw;
-            .addComment {
-                padding: 10px 5px;
-                border-bottom: 1px solid $midLightGrey;
-            }
-            .comments {
-                padding: 5px;
-                box-sizing: border-box;
-                max-height: calc(100% - var(--top));
-                overflow-y: scroll;
-                @include scrollBar;
-            }
-            .loader {
-                margin: 0 auto;
-            }
-        }
+    background: #fff;
+    max-height: 90vh;
+    max-width: 90vw;
+
+    .carouselWrapper {
+      width: 50vw;
+      height: 90vh;
+      background: $lightGrey;
     }
+
+    .commentsWrapper {
+      width: 50vw;
+
+      .addComment {
+        padding: 10px 5px;
+        border-bottom: 1px solid $midLightGrey;
+      }
+
+      .comments {
+        padding: 5px;
+        box-sizing: border-box;
+        max-height: calc(100% - var(--top));
+        overflow-y: scroll;
+
+        @include scrollBar;
+      }
+
+      .loader {
+        margin: 0 auto;
+      }
+    }
+  }
 }
 
-@media only screen and (max-width: 800px) {
-    .commentsModal {
-        .wrapper {
-            min-width: 100vw;
-            min-height: 100vh;
-            .commentsWrapper {
-                min-width: 100vw;
-                .comments {
-                    max-height: calc(100% - var(--top));
-                    padding-bottom: 15px;
-                }
-                .buttonWrapper {
-                    padding: 10px;
-                    box-shadow: 0px 2px 5px $midLightGrey;
-                    button {
-                        font-size: 1.4em;
-                    }
-                }
-            }
+@media only screen and (width <= 800px) {
+  .commentsModal {
+    .wrapper {
+      min-width: 100vw;
+      min-height: 100vh;
+
+      .commentsWrapper {
+        min-width: 100vw;
+
+        .comments {
+          max-height: calc(100% - var(--top));
+          padding-bottom: 15px;
         }
+
+        .buttonWrapper {
+          padding: 10px;
+          box-shadow: 0 2px 5px $midLightGrey;
+
+          button {
+            font-size: 1.4em;
+          }
+        }
+      }
     }
+  }
 }

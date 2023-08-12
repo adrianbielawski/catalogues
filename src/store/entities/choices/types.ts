@@ -1,4 +1,4 @@
 export interface FieldChoiceUpdated {
-    id: number,
-    changes: any,
+  id: number
+  changes: any
 }

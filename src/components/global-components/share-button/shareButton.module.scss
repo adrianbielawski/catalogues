@@ -1,6 +1,6 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .button {
-    font-size: 1.3em;
-    color: $darkGrey;
+  font-size: 1.3em;
+  color: $darkGrey;
 }
