@@ -1,117 +1,114 @@
-import React, { useEffect, useRef, useContext, useState } from 'react'
+import { useEffect, useRef, useContext, useState } from 'react'
+import * as React from 'react'
 import { clamp } from 'lodash'
-//Contexts
+// Contexts
 import { ListContext } from '../listStore'
-//Components
+// Components
 import Item from '../item/item'
 import AnimateHeight from 'react-animate-height'
 
-type ItemType = {}
-
-type Props = {
-    items: ItemType[],
-    itemsProps?: {},
-    itemComponent: React.ComponentType<any>,
-    maxHeight: number,
+interface Props {
+  items: Array<Record<string, any>>
+  itemsProps?: Record<string, any>
+  itemComponent: React.ComponentType<any>
+  maxHeight: number
 }
 
 const ITEM_MARGIN = 5
 const ITEM_HEIGHT = 21.34 + ITEM_MARGIN
 
 const List = (props: Props) => {
-    const { dispatch, ...state } = useContext(ListContext)
-    const listRef = useRef<HTMLUListElement>(null)
-    const [duration, setDuration] = useState(0)
+  const { dispatch, ...state } = useContext(ListContext)
+  const listRef = useRef<HTMLUListElement>(null)
+  const [duration, setDuration] = useState(0)
 
-    useEffect(() => {
-        inspectItemsHeight()
-    }, [props.items])
+  useEffect(() => {
+    inspectItemsHeight()
+  }, [props.items])
 
-    useEffect(() => {
-        let timeout: ReturnType<typeof setTimeout>
-        if (state.overflowInspected) {
-            const newDuration = clamp(
-                Math.floor((state.totalHeight - state.collapsedHeight) * 3),
-                200,
-                400
-            )
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>
+    if (state.overflowInspected) {
+      const newDuration = clamp(
+        Math.floor((state.totalHeight - state.collapsedHeight) * 3),
+        200,
+        400,
+      )
 
-            timeout = setTimeout(() => setDuration(newDuration), newDuration)
-        }
-        return () => {
-            clearTimeout(timeout)
-        }
-    }, [state.overflowInspected, state.totalHeight])
+      timeout = setTimeout(() => {
+        setDuration(newDuration)
+      }, newDuration)
+    }
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [state.overflowInspected, state.totalHeight])
 
-    useEffect(() => {
-        if (state.itemsInspected) {
-            inspectOverflow()
-        }
-    }, [state.itemsInspected])
+  useEffect(() => {
+    if (state.itemsInspected) {
+      inspectOverflow()
+    }
+  }, [state.itemsInspected])
 
-    const inspectItemsHeight = () => {
-        const items = listRef.current!.children
+  const inspectItemsHeight = () => {
+    const items = listRef.current!.children
 
-        let totalHeight = 0
-        let collapsedHeight = 0
-        let itemsInView = 0
+    let totalHeight = 0
+    let collapsedHeight = 0
+    let itemsInView = 0
 
-        for (let item of Array.from(items)) {
-            totalHeight += item.getBoundingClientRect().height + ITEM_MARGIN
+    for (const item of Array.from(items)) {
+      totalHeight += item.getBoundingClientRect().height + ITEM_MARGIN
 
-            if (collapsedHeight + ITEM_HEIGHT <= props.maxHeight) {
-                itemsInView++
-                collapsedHeight += ITEM_HEIGHT
-            }
-        }
-
-        dispatch({
-            type: 'ITEMS_INSPECTED',
-            itemsInView,
-            totalHeight,
-            collapsedHeight,
-        })
+      if (collapsedHeight + ITEM_HEIGHT <= props.maxHeight) {
+        itemsInView++
+        collapsedHeight += ITEM_HEIGHT
+      }
     }
 
-    const inspectOverflow = () => {
-        const items = listRef.current!.children
+    dispatch({
+      type: 'ITEMS_INSPECTED',
+      itemsInView,
+      totalHeight,
+      collapsedHeight,
+    })
+  }
 
-        let hasOverflow = false
+  const inspectOverflow = () => {
+    const items = listRef.current!.children
 
-        for (let item of Array.from(items)) {
-            if (item.scrollHeight > item.clientHeight) {
-                hasOverflow = true
-            }
-        }
+    let hasOverflow = false
 
-        dispatch({
-            type: 'OVERFLOW_INSPECTED',
-            hasOverflow,
-        })
+    for (const item of Array.from(items)) {
+      if (item.scrollHeight > item.clientHeight) {
+        hasOverflow = true
+      }
     }
 
-    const getItems = () => {
-        return props.items.map((item, i) => (
-            <Item
-                item={item}
-                itemProps={props.itemsProps}
-                itemComponent={props.itemComponent}
-                key={i}
-            />
-        ))
-    }
-    return (
-        <AnimateHeight
-            height={state.showAllItems ? 'auto' : state.collapsedHeight}
-            duration={duration}
-        >
-            <ul
-                ref={listRef}
-            >
-                {getItems()}
-            </ul>
-        </AnimateHeight>
-    )
+    dispatch({
+      type: 'OVERFLOW_INSPECTED',
+      hasOverflow,
+    })
+  }
+
+  const getItems = () => {
+    return props.items.map((item, i) => (
+      <Item
+        item={item}
+        itemProps={props.itemsProps}
+        itemComponent={props.itemComponent}
+        key={i}
+      />
+    ))
+  }
+  return (
+    <AnimateHeight
+      height={state.showAllItems ? 'auto' : state.collapsedHeight}
+      duration={duration}
+    >
+      <ul ref={listRef}>{getItems()}</ul>
+    </AnimateHeight>
+  )
 }
 
 export default List

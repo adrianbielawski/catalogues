@@ -2,11 +2,11 @@ import { combineReducers } from 'redux'
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
-import { createReduxEnhancer } from "@sentry/react"
-//Slices
+import { createReduxEnhancer } from '@sentry/react'
+// Slices
 import { entities } from './entities'
 import { modules } from './modules'
-//Epics
+// Epics
 import { appEpics } from './modules/app/epics'
 import { homepageEpics } from './modules/homepage/epics'
 import { authUserEpics } from './modules/auth-user/epics'
@@ -37,8 +37,8 @@ const rootEpic = combineEpics(
 const epicMiddleware = createEpicMiddleware()
 
 const rootReducer = combineReducers({
-  entities: entities,
-  modules: modules,
+  entities,
+  modules,
 })
 
 export const store = configureStore({
@@ -47,19 +47,17 @@ export const store = configureStore({
     ...getDefaultMiddleware({
       thunk: false,
       serializableCheck: {
-        ignoredActionPaths: ['payload.history']
+        ignoredActionPaths: ['payload.history'],
       },
     }),
     epicMiddleware,
   ],
-  enhancers: [
-    sentryEnhancer
-  ]
+  enhancers: [sentryEnhancer],
 })
 
 epicMiddleware.run(rootEpic)
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>() 
+export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useTypedSelector = createSelectorHook<RootState>()

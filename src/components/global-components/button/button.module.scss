@@ -1,35 +1,40 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .button {
-	display: block;
-	border: none;
-	font-weight: 700;
-	font-size: 1.1em;
-	font-family: "nunito", sans-serif;
-	color: $darkGrey;
-	background: #fff;
-	padding: 5px 8px;
-	box-shadow: 1px 1px 5px $midLightGrey;
-	box-sizing: border-box;
-	cursor: pointer;
-	outline: none;
-	@include resetTapHighlight;
-	&:active {
-		background: $grey;
-		outline: none;
-	}
-	&:disabled {
-		opacity: 0.3;
-		cursor: no-drop;
-	}
-	.loader {
-		margin: 0 auto;
-	}
+  display: block;
+  border: none;
+  font-weight: 700;
+  font-size: 1.1em;
+  font-family: nunito, sans-serif;
+  color: $darkGrey;
+  background: #fff;
+  padding: 5px 8px;
+  box-shadow: 1px 1px 5px $midLightGrey;
+  box-sizing: border-box;
+  cursor: pointer;
+  outline: none;
+
+  @include resetTapHighlight;
+
+  &:active {
+    background: $grey;
+    outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: no-drop;
+  }
+
+  .loader {
+    margin: 0 auto;
+  }
 }
+
 @media (hover: hover) and (pointer: fine) {
-	.button {
-		&:hover {
-			color: $lightOrange;
-		}
-	}
+  .button {
+    &:hover {
+      color: $lightOrange;
+    }
+  }
 }

@@ -1,18 +1,21 @@
 .changeUserImage {
+  display: flex;
+
+  .imageWrapper {
     display: flex;
-    .imageWrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 35px;
-        height: 35px;
-        margin-left: 5px;
-        .image {
-            width: 35px;
-            height: 35px;
-        }
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    margin-left: 5px;
+
+    .image {
+      width: 35px;
+      height: 35px;
     }
-    .input {
-        display: none;
-    }
+  }
+
+  .input {
+    display: none;
+  }
 }

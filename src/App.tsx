@@ -1,16 +1,22 @@
-import React, { useEffect, Suspense } from 'react'
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
-import * as Sentry from "@sentry/react"
+import { useEffect, Suspense } from 'react'
+import {
+  Redirect,
+  Route,
+  Switch,
+  useHistory,
+  useLocation,
+} from 'react-router-dom'
+import * as Sentry from '@sentry/react'
 import styles from 'global-styles/app.module.scss'
-//Redux
+// Redux
 import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/modules/app/slice'
 import { GET_USER, INITIALIZED } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-//Types
+// Types
 import { LocationState } from 'src/globalTypes'
-//Router
+// Router
 import { RouteWithContext } from './router'
-//Custom components
+// Custom components
 import Auth from 'components/auth/auth'
 import Main from 'components/main/main'
 import Loader from 'components/global-components/loader/loader'
@@ -23,14 +29,16 @@ const App = () => {
   const dispatch = useAppDispatch()
   const history = useHistory<LocationState>()
   const location = useLocation<LocationState>()
-  const app = useTypedSelector(state => state.modules.app)
-  const authUser = useTypedSelector(state => state.modules.authUser)
+  const app = useTypedSelector((state) => state.modules.app)
+  const authUser = useTypedSelector((state) => state.modules.authUser)
 
   const handleResize = () => {
-    dispatch(CHANGE_SCREEN_SIZE({
-      height: window.innerHeight,
-      width: window.innerWidth,
-    }))
+    dispatch(
+      CHANGE_SCREEN_SIZE({
+        height: window.innerHeight,
+        width: window.innerWidth,
+      }),
+    )
   }
 
   useEffect(() => {
@@ -62,38 +70,25 @@ const App = () => {
   }
 
   return (
-    <div
-      className={styles.app}
-      style={{ minHeight: app.screenHeight }}
-    >
+    <div className={styles.app} style={{ minHeight: app.screenHeight }}>
       <Suspense fallback={<Loader />}>
         <Switch>
           <Redirect
             exact
             from="/"
             to={{
-              pathname: `/discover`,
+              pathname: '/discover',
               state: location.state,
             }}
           />
+          <RouteWithContext exact path="/discover" component={Homepage} />
+          <Route path={['/login', '/signup']} component={Auth} />
           <RouteWithContext
-            exact
-            path="/discover"
-            component={Homepage}
-          />
-          <Route
-            path={["/login", "/signup"]}
-            component={Auth}
-          />
-          <RouteWithContext
-            path={"/item/:itemId"}
+            path={'/item/:itemId'}
             component={SingleItem}
             canonical={true}
           />
-          <Route
-            path="/:username"
-            component={Main}
-          />
+          <Route path="/:username" component={Main} />
         </Switch>
       </Suspense>
     </div>

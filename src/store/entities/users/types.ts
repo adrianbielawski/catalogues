@@ -1,4 +1,4 @@
 export interface UserUpdatedPayload {
-    id: number,
-    changes: any,
+  id: number
+  changes: any
 }

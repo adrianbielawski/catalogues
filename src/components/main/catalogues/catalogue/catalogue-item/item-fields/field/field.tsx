@@ -1,67 +1,66 @@
-import React from 'react'
+import { useMemo } from 'react'
 import styles from './field.module.scss'
-//Types
-import { DeserializedGeoField, DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
-//Redux
+// Types
+import {
+  DeserializedGeoField,
+  DeserializedItemField,
+  DeserializedItemFieldValue,
+  DeserializedMediaFieldValue,
+} from 'src/globalTypes'
+// Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { fieldSelector, fieldChoicesSelector } from 'store/selectors'
-//Components
+// Components
 import MediaFieldValue from '../media-field-value/mediaFieldValue'
 import GeoFieldValue from '../geo-field-value/geoFieldValue'
 
-type Props = {
-    item: DeserializedItemField<DeserializedItemFieldValue>,
+interface Props {
+  item: DeserializedItemField<DeserializedItemFieldValue>
 }
 
 const Field = (props: Props) => {
-    const field = useTypedSelector(fieldSelector(props.item.fieldId))
-    const fieldChoices = useTypedSelector(fieldChoicesSelector(field.id))
+  const field = useTypedSelector(fieldSelector(props.item.fieldId))!
+  const fieldChoices = useTypedSelector(fieldChoicesSelector(field?.id))
 
-    let value = props.item.value
-    let valueComponent = <p>{value}</p>
-
-    if (field.type === 'multiple_choice') {
+  const valueComponent = useMemo(() => {
+    const value = props.item.value
+    switch (field.type) {
+      case 'multiple_choice': {
         if (value === null) {
-            return null
+          return null
         }
-        const values = (value as number[]).map(id =>
-            fieldChoices.find(c => c.id === id)?.value
+        const values = (value as number[]).map(
+          (id) => fieldChoices.find((c) => c.id === id)?.value,
         )
         const displayedValue = values.join(', ')
-        valueComponent = <p>{displayedValue}</p>
-    }
+        return <p>{displayedValue}</p>
+      }
 
-    if (field.type === 'single_choice') {
-        const displayedValue = fieldChoices.find(f => f.id === value)?.value || ''
-        valueComponent = <p>{displayedValue}</p>
-    }
-
-    if (field.type === 'media') {
-        valueComponent = (
-            <MediaFieldValue
-                fieldValue={value as DeserializedMediaFieldValue}
-            />
+      case 'single_choice': {
+        const displayedValue =
+          fieldChoices.find((f) => f.id === value)?.value ?? ''
+        return <p>{displayedValue}</p>
+      }
+      case 'media': {
+        return (
+          <MediaFieldValue fieldValue={value as DeserializedMediaFieldValue} />
         )
+      }
+      case 'geo_point': {
+        return <GeoFieldValue fieldValue={value as DeserializedGeoField} />
+      }
+      default: {
+        return <p>{value}</p>
+      }
     }
+  }, [props.item.value, field.type])
 
-    if (field.type === 'geo_point') {
-        valueComponent = (
-            <GeoFieldValue
-                fieldValue={value as DeserializedGeoField}
-            />
-        )
-    }
-
-    return (
-        <div className={styles.field}>
-            <p className={styles.name}>
-                {field.name}:
-            </p>
-            <div className={styles.value}>
-                {valueComponent}
-            </div>
-        </div>
-    )
+  return (
+    <div className={styles.field}>
+      <p className={styles.name}>{field.name}:</p>
+      <div className={styles.value}>{valueComponent}</div>
+    </div>
+  )
 }
 
 export default Field

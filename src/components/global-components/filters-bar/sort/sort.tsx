@@ -1,37 +1,32 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sort.module.scss'
-//Contexts
+// Contexts
 import { SortContext } from './sortStore'
-//Custom components
+// Custom components
 import SortOption from './sort-option/sortOption'
 
-type Props = {
-    className?: string,
+interface Props {
+  className?: string
 }
 
 const cx = classNames.bind(styles)
 
 const Sort = (props: Props) => {
-    const { sortOptions } = useContext(SortContext)
+  const { sortOptions } = useContext(SortContext)
 
-    const optionsComponents = sortOptions.map(option => (
-        <SortOption option={option} key={option.id} />
-    ))
+  const optionsComponents = sortOptions.map((option) => (
+    <SortOption option={option} key={option.id} />
+  ))
 
-    const sortClass = cx(
-        'sort',
-        props.className,
-    )
+  const sortClass = cx('sort', props.className)
 
-    return (
-        <div className={sortClass}>
-            <p className={styles.title}>Sort</p>
-            <ul>
-                {optionsComponents}
-            </ul>
-        </div>
-    )
+  return (
+    <div className={sortClass}>
+      <p className={styles.title}>Sort</p>
+      <ul>{optionsComponents}</ul>
+    </div>
+  )
 }
 
 export default Sort

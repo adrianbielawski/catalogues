@@ -1,37 +1,37 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import { useImmerReducer } from 'use-immer'
-//Contexts
+// Contexts
 import { FiltersBarContext, reducer } from './filtersBarStore'
 import { FiltersBarInitialState, INITIALIZED } from './filtersBarTypes'
 
-type Props = {
-    children: JSX.Element,
-    value: FiltersBarInitialState,
+interface Props {
+  children: ReactNode
+  value: FiltersBarInitialState
 }
 
 const FiltersBarContextProvider = (props: Props) => {
-    const initialState = {
-        ...props.value
-    }
+  const initialState = {
+    ...props.value,
+  }
 
-    const [state, dispatch] = useImmerReducer(reducer, initialState)
+  const [state, dispatch] = useImmerReducer(reducer, initialState)
 
-    const initialize = () => {
-        dispatch({
-            type: INITIALIZED,
-        })
-    }
+  const initialize = () => {
+    dispatch({
+      type: INITIALIZED,
+    })
+  }
 
-    const context = {
-        ...state,
-        initialize,
-    }
+  const context = {
+    ...state,
+    initialize,
+  }
 
-    return (
-        <FiltersBarContext.Provider value={context}>
-            {props.children}
-        </FiltersBarContext.Provider>
-    )
+  return (
+    <FiltersBarContext.Provider value={context}>
+      {props.children}
+    </FiltersBarContext.Provider>
+  )
 }
 
 export default FiltersBarContextProvider

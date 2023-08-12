@@ -1,23 +1,28 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .choices {
-    margin-top: 10px;
-    .choicesList {
-        margin: 5px 0;
-        max-height: 210px;
-        overflow-y: scroll;
-        @include scrollBar;
-        .choice {
-            display: flex;
-            align-items: center;
-            margin: 5px 0;
-            font-size: 16px;
-            button {
-                font-size: 18px;
-            }
-            span {
-                margin-left: 8px;
-            }
-        }
+  margin-top: 10px;
+
+  .choicesList {
+    margin: 5px 0;
+    max-height: 210px;
+    overflow-y: scroll;
+
+    @include scrollBar;
+
+    .choice {
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+      font-size: 16px;
+
+      button {
+        font-size: 18px;
+      }
+
+      span {
+        margin-left: 8px;
+      }
     }
+  }
 }

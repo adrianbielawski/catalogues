@@ -1,9 +1,10 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .textarea {
-    resize: none;
-    width: 100%;
-    font-size: 16px;
-    box-sizing: border-box;
-    @include scrollY;
+  resize: none;
+  width: 100%;
+  font-size: 16px;
+  box-sizing: border-box;
+
+  @include scrollY;
 }

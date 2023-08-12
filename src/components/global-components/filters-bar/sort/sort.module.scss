@@ -1,9 +1,9 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .sort {
-    .title {
-        font-weight: 700;
-        font-size: 1.3em;
-        margin: 10px 0;
-    }
+  .title {
+    font-weight: 700;
+    font-size: 1.3em;
+    margin: 10px 0;
+  }
 }

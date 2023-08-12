@@ -1,21 +1,24 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .wrapper {
-    .nameInput {
-        border: none;
-        font-size: 18px;
-        margin-left: 3px;
-        max-width: 250px;
-        border-bottom: 1px solid $midLightGrey;
+  .nameInput {
+    border: none;
+    font-size: 18px;
+    margin-left: 3px;
+    max-width: 250px;
+    border-bottom: 1px solid $midLightGrey;
+  }
+
+  .checkboxes {
+    margin: 5px 0;
+  }
+
+  .deleteButton {
+    margin: 5px 0;
+
+    &:hover {
+      background: $red;
+      color: #000;
     }
-    .checkboxes {
-        margin: 5px 0;
-    }
-    .deleteButton {
-        margin: 5px 0;
-        &:hover {
-            background: $red;
-            color: #000;
-        }
-    }
+  }
 }

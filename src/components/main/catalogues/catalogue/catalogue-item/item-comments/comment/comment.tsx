@@ -1,152 +1,141 @@
-import React, { useContext, useState } from 'react'
+import { useContext, useState } from 'react'
+import * as React from 'react'
 import { useHistory } from 'react-router-dom'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import classNames from 'classnames/bind'
 import styles from './comment.module.scss'
-//Types
+// Types
 import { DeserializedItemComment, LocationState } from 'src/globalTypes'
-//Redux
+// Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { userSelector } from 'store/selectors'
-//Context
+// Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
-//Components
+// Components
 import CommentChildren from './comment-children/commentChildren'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
 import AnimateHeight from 'react-animate-height'
 
-type Props = {
-    comment: DeserializedItemComment,
-    canComment: boolean,
-    isChild?: boolean,
-    className?: string,
-    clipText?: boolean,
+interface Props {
+  comment: DeserializedItemComment
+  canComment: boolean
+  isChild?: boolean
+  className?: string
+  clipText?: boolean
 }
 
 const cx = classNames.bind(styles)
 
-const Comment: React.ForwardRefRenderFunction<
-    HTMLDivElement,
-    Props
-> = (props, ref) => {
-    const { comment } = props
-    const history = useHistory<LocationState>()
-    const user = useTypedSelector(userSelector(comment.createdBy))
-    const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
-    const [clipText, setClipText] = useState(props.clipText)
-    const [height, setHeight] = useState<'auto' | 35>(props.clipText ? 35 : 'auto')
+const Comment: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
+  props,
+  ref,
+) => {
+  const { comment } = props
+  const history = useHistory<LocationState>()
+  const user = useTypedSelector(userSelector(comment.createdBy))
+  const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
+  const [clipText, setClipText] = useState(props.clipText)
+  const [height, setHeight] = useState<'auto' | 35>(
+    props.clipText ? 35 : 'auto',
+  )
 
-    const handleUsernameClick = () => {
-        history.push(`/${user.username}`)
+  const handleUsernameClick = () => {
+    if (!user) {
+      return
     }
+    history.push(`/${user.username}`)
+  }
 
-    const handleCommentClick = () => {
-        if (!props.clipText) {
-            return
-        }
-        if (clipText) {
-            setHeight('auto')
-            setClipText(false)
-        } else {
-            setHeight(35)
-        }
+  const handleCommentClick = () => {
+    if (!props.clipText) {
+      return
     }
-
-    const handleAnimationEnd = () => {
-        if (height === 35) {
-            setClipText(true)
-        }
+    if (clipText) {
+      setHeight('auto')
+      setClipText(false)
+    } else {
+      setHeight(35)
     }
+  }
 
-    const handleReply = () => {
-        changeReplyTo({
-            id: comment.id,
-            username: user.username,
-        })
+  const handleAnimationEnd = () => {
+    if (height === 35) {
+      setClipText(true)
     }
+  }
 
-    const getChildren = () => {
-        if ('children' in comment && comment.children.length !== 0) {
-            return (
-                <CommentChildren
-                    children={comment.children}
-                    canComment={props.canComment}
-                />
-            )
-        }
+  const handleReply = () => {
+    if (!user) {
+      return
     }
+    changeReplyTo({
+      id: comment.id,
+      username: user.username,
+    })
+  }
 
-    const getReplyButton = () => {
-        if ('children' in comment) {
-            return (
-                <TransparentButton onClick={handleReply}>
-                    Reply
-                </TransparentButton>
-            )
-        }
+  const getChildren = () => {
+    if ('children' in comment && comment.children.length !== 0) {
+      return (
+        <CommentChildren
+          commentChildren={comment.children}
+          canComment={props.canComment}
+        />
+      )
     }
+  }
 
-    const getCreatedAt = () => {
-        if (moment(comment.createdAt).isAfter(moment())) {
-            return 'now'
-        }
-        return moment(comment.createdAt).fromNow()
+  const getReplyButton = () => {
+    if ('children' in comment) {
+      return <TransparentButton onClick={handleReply}>Reply</TransparentButton>
     }
+  }
 
-    const commentClass = cx(
-        'comment',
-        props.className,
-        {
-            replying: replyTo?.id === comment.id,
-            clipText: clipText,
-        }
-    )
-    const textClass = cx(
-        'text',
-        {
-            parentText: !props.isChild
-        }
-    )
+  const getCreatedAt = () => {
+    if (moment(comment.createdAt).isAfter(moment())) {
+      return 'now'
+    }
+    return moment(comment.createdAt).fromNow()
+  }
 
-    return (
-        <div
-            className={commentClass}
-            ref={ref}
-        >
-            <div className={styles.parent}>
-                <AnimateHeight
-                    height={height}
-                    onAnimationEnd={handleAnimationEnd}
-                >
-                    <div className={styles.wrapper}>
-                        <AvatarWithName
-                            name={user.username}
-                            placeholderIcon={faUser}
-                            className={styles.avatar}
-                            url={user.imageThumbnail}
-                            avatarClassName={styles.userImage}
-                            onClick={handleUsernameClick}
-                        />
-                        <span
-                            className={textClass}
-                            onClick={handleCommentClick}
-                        >
-                            {comment.text}
-                        </span>
-                    </div>
-                </AnimateHeight>
-                <div className={styles.info}>
-                    {props.canComment && getReplyButton()}
-                    <p className={styles.createdAt}>
-                        {getCreatedAt()}
-                    </p>
-                </div>
-            </div>
-            {getChildren()}
+  const commentClass = cx('comment', props.className, {
+    replying: replyTo?.id === comment.id,
+    clipText,
+  })
+  const textClass = cx('text', {
+    parentText: !props.isChild,
+  })
+
+  return (
+    <div className={commentClass} ref={ref}>
+      <div className={styles.parent}>
+        <AnimateHeight height={height} onAnimationEnd={handleAnimationEnd}>
+          <div className={styles.wrapper}>
+            {user && (
+              <AvatarWithName
+                name={user.username}
+                placeholderIcon={faUser}
+                className={styles.avatar}
+                url={user.imageThumbnail}
+                avatarClassName={styles.userImage}
+                onClick={handleUsernameClick}
+              />
+            )}
+            <span className={textClass} onClick={handleCommentClick}>
+              {comment.text}
+            </span>
+          </div>
+        </AnimateHeight>
+        <div className={styles.info}>
+          {props.canComment && getReplyButton()}
+          <p className={styles.createdAt}>{getCreatedAt()}</p>
         </div>
-    )
+      </div>
+      {getChildren()}
+    </div>
+  )
 }
 
 export default React.forwardRef(Comment)

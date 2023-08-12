@@ -1,7 +1,7 @@
-import * as T from "src/globalTypes"
+import type * as T from 'src/globalTypes'
 
 export interface LatestCataloguesState {
-    cataloguesData: T.DeserializedListData<number> | null,
-    isFetchingCatalogues: boolean,
-    error: T.ErrorMessage | null,
+  cataloguesData: T.DeserializedListData<number> | null
+  isFetchingCatalogues: boolean
+  error: T.ErrorMessage | null
 }

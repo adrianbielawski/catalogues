@@ -1,11 +1,11 @@
-import { ItemCommentChild } from "src/globalTypes";
+import { type ItemCommentChild } from 'src/globalTypes'
 
 export interface ItemCommentUpdated {
-    id: number,
-    changes: any,
+  id: number
+  changes: any
 }
 
 export interface ItemCommentChildAdded {
-    parentId: number,
-    child: ItemCommentChild,
+  parentId: number
+  child: ItemCommentChild
 }

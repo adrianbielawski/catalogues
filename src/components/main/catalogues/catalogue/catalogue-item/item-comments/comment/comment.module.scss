@@ -1,62 +1,72 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .comment {
-    position: relative;
-    width: 100%;
-    padding: 3px 0;
-    &.replying {
-        background: $veryLightGrey;
-        padding: 3px 10px;
-        margin: 0 -10px;
+  position: relative;
+  width: 100%;
+  padding: 3px 0;
+
+  &.replying {
+    background: $veryLightGrey;
+    padding: 3px 10px;
+    margin: 0 -10px;
+  }
+
+  &.clipText .parent .wrapper .parentText {
+    @include clipText;
+  }
+
+  .parent {
+    .avatar {
+      display: inline-flex;
+      align-self: flex-start;
+      float: left;
+      margin-right: 10px;
+
+      p {
+        font-weight: 700;
+      }
     }
-    &.clipText .parent .wrapper .parentText {
-        @include clipText;
+
+    .userImage {
+      font-size: 1.7em;
     }
-    .parent {
-        .avatar {
-            display: inline-flex;
-            align-self: flex-start;
-            float: left;
-            margin-right: 10px;
-            p {
-                font-weight: 700;
-            }
-        }
-        .userImage {
-            font-size: 1.7em;
-        }
-        .wrapper {
-            display: flow-root;
-            .text {
-                display: block;
-                margin-top: 6px;
-            }
-        }
-        .info {
-            display: flex;
-            align-items: center;
-            margin-top: 5px;
-            .createdAt {
-                font-size: 0.7em;
-                color: $midLightGrey;
-                white-space: nowrap;
-                text-align: end;
-                width: 100%;
-            }
-            button {
-                font-weight: 700;
-            }
-        }
+
+    .wrapper {
+      display: flow-root;
+
+      .text {
+        display: block;
+        margin-top: 6px;
+      }
     }
+
+    .info {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+
+      .createdAt {
+        font-size: 0.7em;
+        color: $midLightGrey;
+        white-space: nowrap;
+        text-align: end;
+        width: 100%;
+      }
+
+      button {
+        font-weight: 700;
+      }
+    }
+  }
 }
 
-@media only screen and (max-width: 800px) {
-    .comment {
-        &.replying {
-            padding: 3px 5px;
-            margin: 0 -5px;
-        }
+@media only screen and (width <= 800px) {
+  .comment {
+    &.replying {
+      padding: 3px 5px;
+      margin: 0 -5px;
     }
+  }
 }
 
 // @media (hover: hover) and (pointer: fine) {

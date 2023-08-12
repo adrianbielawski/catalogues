@@ -1,115 +1,102 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './starsRange.module.scss'
 
-type Props = {
-    selected: number[],
-    range?: number,
-    className?: string,
-    onChange: (selected: number[]) => void
+interface Props {
+  selected: number[]
+  range?: number
+  className?: string
+  onChange: (selected: number[]) => void
 }
 
 const cx = classNames.bind(styles)
 
 const StarsRange = (props: Props) => {
-    const [selected, setSelected] = useState<number[]>(props.selected)
-    const [hoveredAfterClick, setHoveredAfterClick] = useState(false)
-    const starsRef = useRef<HTMLDivElement>(null)
+  const [selected, setSelected] = useState<number[]>(props.selected)
+  const [hoveredAfterClick, setHoveredAfterClick] = useState(false)
+  const starsRef = useRef<HTMLDivElement>(null)
 
-    useEffect(() => {
-        setSelected(props.selected)
-    }, [props.selected])
+  useEffect(() => {
+    setSelected(props.selected)
+  }, [props.selected])
 
-    useEffect(() => {
-        return () => {
-            starsRef.current?.removeEventListener('mouseout', handleMouseLeave)
-        }
-    }, [])
-
-    const handleMouseLeave = () => {
-        setHoveredAfterClick(false)
+  useEffect(() => {
+    return () => {
+      starsRef.current?.removeEventListener('mouseout', handleMouseLeave)
     }
+  }, [])
 
-    const stars: JSX.Element[] = []
+  const handleMouseLeave = () => {
+    setHoveredAfterClick(false)
+  }
 
-    for (let i = 0; i < props.range!; i++) {
-        const index = i + 1
+  const stars: ReactNode[] = []
 
-        const handleClick = useCallback(
-            () => {
-                let newSelected = [...selected]
+  for (let i = 0; i < props.range!; i++) {
+    const index = i + 1
 
-                newSelected.push(index)
-                newSelected.shift()
+    const handleClick = useCallback(() => {
+      let newSelected = [...selected]
 
-                if (selected.length === 0) {
-                    newSelected = [props.range!, index]
-                }
+      newSelected.push(index)
+      newSelected.shift()
 
-                if (selected.includes(index)) {
-                    newSelected = [index, index]
-                }
+      if (selected.length === 0) {
+        newSelected = [props.range!, index]
+      }
 
-                if (selected && index === selected[0] && selected[0] === selected[1]) {
-                    newSelected = []
-                }
+      if (selected.includes(index)) {
+        newSelected = [index, index]
+      }
 
-                if (starsRef.current) {
-                    starsRef.current.addEventListener('mouseout', handleMouseLeave)
-                }
+      if (selected && index === selected[0] && selected[0] === selected[1]) {
+        newSelected = []
+      }
 
-                setSelected(newSelected)
-                setHoveredAfterClick(true)
-                props.onChange([...newSelected].sort())
-            },
-            [selected, props.range, starsRef]
-        )
+      if (starsRef.current != null) {
+        starsRef.current.addEventListener('mouseout', handleMouseLeave)
+      }
 
-        const sorted = [...selected].sort()
+      setSelected(newSelected)
+      setHoveredAfterClick(true)
+      props.onChange([...newSelected].sort((a, b) => a - b))
+    }, [selected, props.range, starsRef])
 
-        const starClass = cx(
-            'star',
-            {
-                active: index >= sorted[0] && index <= sorted[1],
-                last: index === selected[1]
-            },
-        )
+    const sorted = [...selected].sort((a, b) => a - b)
 
-        stars.push(
-            <FontAwesomeIcon
-                className={starClass}
-                icon={faStar}
-                key={i}
-                onClick={handleClick}
-            />
-        )
-    }
+    const starClass = cx('star', {
+      active: index >= sorted[0] && index <= sorted[1],
+      last: index === selected[1],
+    })
 
-    const starsClass = cx(
-        'stars',
-        props.className,
-        {
-            hoveredAfterClick,
-        }
+    stars.push(
+      <FontAwesomeIcon
+        className={starClass}
+        icon={faStar}
+        key={i}
+        onClick={handleClick}
+      />,
     )
+  }
 
-    return (
-        <div
-            className={starsClass}
-            ref={starsRef}
-        >
-            {stars}
-        </div>
-    )
+  const starsClass = cx('stars', props.className, {
+    hoveredAfterClick,
+  })
+
+  return (
+    <div className={starsClass} ref={starsRef}>
+      {stars}
+    </div>
+  )
 }
 
 StarsRange.defaultProps = {
-    selected: null,
-    range: 5,
-    className: undefined,
-    onChange: ([]) => {}
+  selected: null,
+  range: 5,
+  className: undefined,
+  onChange: () => {},
 }
 
 export default StarsRange

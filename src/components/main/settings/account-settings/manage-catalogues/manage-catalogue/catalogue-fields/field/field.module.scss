@@ -1,51 +1,57 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  background: #fff;
+  padding-right: 10px;
+  margin: 0 3px 3px 0;
+
+  &.grabbed {
+    box-shadow: 2px 2px 3px $midLightGrey;
+  }
+
+  .grabbable {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    background: #fff;
-    padding-right: 10px;
-    margin: 0 3px 3px 0;
-    &.grabbed {
-        box-shadow: 2px 2px 3px $midLightGrey;
-    }
-    .grabbable {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 35px;
-        height: 30px;
-        color: $darkGrey;
-        cursor: pointer;
+    width: 35px;
+    height: 30px;
+    color: $darkGrey;
+    cursor: pointer;
+  }
+
+  .field {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+
+    &.active {
+      align-items: flex-start;
+
+      .editButton {
+        margin-top: 7px;
+      }
     }
 
-    .field {
-        display: flex;
-        align-items: center;
-        min-height: 30px;
-        &.active {
-            align-items: flex-start;
-            .editButton {
-                margin-top: 7px;
-            }
-        }
-        .editButton {
-            margin-right: 3px;
-            font-size: 16px;
-            &.active {
-                color: $orange;
-            }
-        }
+    .editButton {
+      margin-right: 3px;
+      font-size: 16px;
+
+      &.active {
+        color: $orange;
+      }
     }
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .wrapper {
-        .grabbable {
-            &:hover {
-                color: $lightOrange;
-            }
-        }
+  .wrapper {
+    .grabbable {
+      &:hover {
+        color: $lightOrange;
+      }
     }
+  }
 }

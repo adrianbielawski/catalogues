@@ -1,14 +1,16 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .primaryImageStar {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    transition: opacity 0.2s ease-in-out;
-    .icon {
-        font-size: 26px;
-        &.solid {
-            color: $orange;
-        }
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  transition: opacity 0.2s ease-in-out;
+
+  .icon {
+    font-size: 26px;
+
+    &.solid {
+      color: $orange;
     }
+  }
 }

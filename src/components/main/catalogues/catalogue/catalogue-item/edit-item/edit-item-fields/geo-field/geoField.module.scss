@@ -1,17 +1,20 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .wrapper {
-    display: inline-block;
+  display: inline-block;
+  width: 100%;
+
+  p {
+    min-height: 1.4em;
     width: 100%;
-    p {
-        min-height: 1.4em;
-        width: 100%;
-    }
-    .map {
-        width: 100%;
-        height: 400px;
-    }
-    &.clipText p {
-        @include clipText;
-    }
+  }
+
+  .map {
+    width: 100%;
+    height: 400px;
+  }
+
+  &.clipText p {
+    @include clipText;
+  }
 }
