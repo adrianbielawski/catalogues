@@ -1,0 +1,11 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.content {
+    margin-left: 8px;
+    opacity: 0;
+    transition: all 0.2s ease-out;
+    overflow: hidden;
+    &.active {
+        opacity: 1;
+    }
+}

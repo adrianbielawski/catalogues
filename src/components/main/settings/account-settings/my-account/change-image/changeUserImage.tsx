@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
-import styles from './changeUserImage.scss'
+import styles from './changeUserImage.module.scss'
 //Redux
 import { POST_USER_IMAGE } from 'store/modules/auth-user/slice'
 import { userSelector } from 'store/selectors'

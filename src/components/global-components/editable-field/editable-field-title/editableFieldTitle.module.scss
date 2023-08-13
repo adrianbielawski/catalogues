@@ -1,0 +1,19 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.editableFieldTitle {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+    .editButton {
+        margin-right: 3px;
+        font-size: 16px;
+        &.active {
+            color: $orange;
+        }
+    }
+}

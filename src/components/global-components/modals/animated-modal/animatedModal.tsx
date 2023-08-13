@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CSSTransition } from 'react-transition-group'
-import styles from './animatedModal.scss'
+import styles from './animatedModal.module.scss'
 import Modal from 'components/global-components/modals/modal'
 
 type Props = {

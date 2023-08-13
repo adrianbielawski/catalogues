@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './columns.scss'
+import styles from './columns.module.scss'
 import useSwipe from '@adrianbielawski/use-swipe'
 
 export interface ColumnInterface {
@@ -145,7 +145,7 @@ const Columns = (props: Props) => {
                 className={styles.wrapper}
                 style={props.mobileView ? {
                     transform: `translate3d(${i * 100}%, 0, 0)`
-                }: undefined}
+                } : undefined}
             >
                 <div className={styles.columnContentWrapper}>
                     <p className={styles.header}>
@@ -164,7 +164,7 @@ const Columns = (props: Props) => {
                 ref={count > 1 ? columnsRef : null}
                 style={props.mobileView ? {
                     transform: `translate3d(${columnsOffset * 100}%, 0, 0)`
-                }: undefined}
+                } : undefined}
             >
                 {COLUMNS}
             </ul>

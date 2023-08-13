@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
-import styles from './recommendedCatalogues.scss'
+import styles from './recommendedCatalogues.module.scss'
 //Redux
 import {
     CLEAR_RECOMENDED_CATALOGUES, FETCH_RECOMMENDED_CATALOGUES

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styles from './userDashboard.scss'
+import styles from './userDashboard.module.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Utils

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
-import styles from './catalogueSettings.scss'
+import styles from './catalogueSettings.module.scss'
 //Types
 import { DeserializedCatalogue } from 'src/globalTypes'
 //Redux

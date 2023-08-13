@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { RouteComponentProps, useHistory, useLocation } from 'react-router-dom'
-import styles from './verifyEmail.scss'
+import styles from './verifyEmail.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux

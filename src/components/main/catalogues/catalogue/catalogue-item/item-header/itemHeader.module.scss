@@ -1,0 +1,17 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.itemHeader {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $lightGrey;
+    padding: 5px;
+    .userImage {
+        font-size: 1.6em;
+    }
+    .catalogueImage {
+        font-size: 1.3em;
+    }
+    .username {
+        font-weight: 700;
+    }
+}

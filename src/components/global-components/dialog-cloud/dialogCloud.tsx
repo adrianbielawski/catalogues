@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './dialogCloud.scss'
+import styles from './dialogCloud.module.scss'
 
 type Props = {
     message: string,

@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import classNames from 'classnames/bind'
-import styles from './image.scss'
+import styles from './image.module.scss'
 //Hooks
 import { useImageLoader } from 'src/hooks/useImageLoader'
 //Custom components

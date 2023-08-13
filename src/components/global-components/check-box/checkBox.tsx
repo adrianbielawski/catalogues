@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSquare as solidSquare } from '@fortawesome/free-solid-svg-icons'
 import { faSquare as regularSquare } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './checkBox.scss'
+import styles from './checkBox.module.scss'
 
 type Props = {
     selected: boolean,

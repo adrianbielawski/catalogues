@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import classNames from 'classnames/bind'
-import styles from './sort.scss'
+import styles from './sort.module.scss'
 //Contexts
 import { SortContext } from './sortStore'
 //Custom components

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
-import styles from './itemSettings.scss'
+import styles from './itemSettings.module.scss'
 //Types
 import { DeserializedItemData } from 'src/globalTypes'
 //Redux
@@ -10,8 +10,8 @@ import { useAppDispatch } from 'store/storeConfig'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 import Button from 'components/global-components/button/button'
 import
-    ProtectedConfirmMessageModal, { ProtectedMessage }
-from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
+ProtectedConfirmMessageModal, { ProtectedMessage }
+    from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
 
 type Props = {
     itemData: DeserializedItemData,
@@ -50,21 +50,21 @@ const ItemSettings = (props: Props) => {
             icon={faListAlt}
         >
             <div className={styles.itemSettings}>
-            {!isNewItem &&
-                <Button
-                    className={styles.deleteButton}
-                    disabled={props.itemData.isSubmitting}
-                    onClick={handleDeleteItem}
-                >
-                    Delete item
-                </Button>
-            }
-            <ProtectedConfirmMessageModal
-                show={message !== null}
-                message={message}
-                onConfirm={deleteItem}
-                onCancel={clearMessage}
-            />
+                {!isNewItem &&
+                    <Button
+                        className={styles.deleteButton}
+                        disabled={props.itemData.isSubmitting}
+                        onClick={handleDeleteItem}
+                    >
+                        Delete item
+                    </Button>
+                }
+                <ProtectedConfirmMessageModal
+                    show={message !== null}
+                    message={message}
+                    onConfirm={deleteItem}
+                    onCancel={clearMessage}
+                />
             </div>
         </IconWithTitle>
     )

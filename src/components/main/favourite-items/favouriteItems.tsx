@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styles from './favouriteItems.scss'
+import styles from './favouriteItems.module.scss'
 //Redux
 import { FETCH_FAVOURITE_ITEMS_DATA } from 'store/modules/favourite-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

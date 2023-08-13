@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './fieldForm.scss'
+import styles from './fieldForm.module.scss'
 //Redux
 import { CREATE_CATALOGUE_FIELD, TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { authUserFieldsDataSelector, authUserCatalogueDataSelector } from 'store/selectors'
@@ -116,7 +116,7 @@ const FieldForm = (props: Props) => {
 
         fieldsData.forEach(f => {
             if (fields[f.id]?.name.toLowerCase() === fieldName.toLowerCase()) {
-                    error = `Field with name "${fieldName}" already exists`
+                error = `Field with name "${fieldName}" already exists`
             }
         })
 

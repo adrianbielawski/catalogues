@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './catalogueTitle.scss'
+import styles from './catalogueTitle.module.scss'
 //Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 //Redux
@@ -35,7 +35,7 @@ const CatalogueTitle = (props: Props) => {
 
         authUserCatalogues.cataloguesData.forEach(c => {
             if (catalogues[c.id]?.name.toLowerCase() === name.toLowerCase()
-            && catalogues[c.id]?.id !== props.id) {
+                && catalogues[c.id]?.id !== props.id) {
                 message = `Catalogue with name "${name}" already exists`
             }
         })

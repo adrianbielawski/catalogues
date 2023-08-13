@@ -1,0 +1,12 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.imagesPreview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .wrapper {
+        width: 90vw;
+        height: 90vh;
+        background: $lightGrey;
+    }
+}

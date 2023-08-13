@@ -1,0 +1,61 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.mediaField {
+    .icon {
+        color: $darkGrey;
+    }
+    .image {
+        display: inline-flex;
+        vertical-align: bottom;
+        max-width: 50px;
+        height: 1.3em;
+        width: unset;
+        padding-right: 5px;
+    }
+    .title {
+        display: inline;
+        overflow-wrap: anywhere;
+    }
+}
+
+.mediaPlayerModal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .wrapper {
+        width: 90vw;
+        height: 90vh;
+        .mediaPlayer {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .mediaPlayerModal {
+        .wrapper {
+            width: 100vw;
+            height: 100vh;
+            .header {
+                height: 40px;
+                background: #000;
+            }
+            .mediaPlayer {
+                width: 100%;
+                height: calc(100% - 40px);
+            }
+        }
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .mediaField {
+        &:hover {
+            cursor: pointer;
+            .title {
+                color: $lightOrange;
+            }
+        }
+    }
+}

@@ -1,4 +1,6 @@
-export const BASE_URL = process.env.API_URL
+export const BASE_URL = import.meta.env.BASE_URL
+export const API_URL = import.meta.env.VITE_API_URL
+export const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN
 
 export const listData = {
     count: null,

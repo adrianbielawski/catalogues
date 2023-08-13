@@ -1,0 +1,24 @@
+.manageCatalogues {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    .addCatalogue {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        height: 33px;
+        margin: 0 0 0 auto;
+        .addButton {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .newCatalogueInput {
+            display: block;
+            width: 250px;
+        }
+    }
+}
+
+.loader {
+    margin: 30px auto;
+}

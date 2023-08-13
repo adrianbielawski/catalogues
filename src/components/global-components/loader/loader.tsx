@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './loader.scss'
+import styles from './loader.module.scss'
 
 type Props = {
     className?: string,

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import classNames from 'classnames/bind'
-import styles from './topItems.scss'
+import styles from './topItems.module.scss'
 //Redux
 import {
     CLEAR_TOP_ITEMS, FETCH_TOP_ITEMS, FETCH_TOP_ITEM_COMMENTS, POST_TOP_ITEM_COMMENT
@@ -85,7 +85,7 @@ const TopItems = () => {
 
     if (!itemsData
         || topItems.isFetchingData && !itemsData.results.length
-        || authUser.id && isFetchingCataloguesData        
+        || authUser.id && isFetchingCataloguesData
     ) {
         return <Loader className={styles.loader} />
     }

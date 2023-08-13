@@ -1,8 +1,0 @@
-@import "global-styles/variables_and_mixins";
-
-.item {
-    margin-bottom: 5px;
-    &.clipText {
-        @include clipText;
-    }
-}

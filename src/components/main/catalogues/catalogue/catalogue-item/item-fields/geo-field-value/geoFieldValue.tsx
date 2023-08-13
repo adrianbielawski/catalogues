@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons'
-import styles from './geoFieldValue.scss'
+import styles from './geoFieldValue.module.scss'
 //Types
 import { DeserializedGeoField } from 'src/globalTypes'
 //Redux

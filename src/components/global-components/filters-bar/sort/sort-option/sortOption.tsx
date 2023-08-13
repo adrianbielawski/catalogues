@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react'
-import styles from './sortOption.scss'
+import styles from './sortOption.module.scss'
 //Contexts
 import { SortContext } from '../sortStore'
 //Types

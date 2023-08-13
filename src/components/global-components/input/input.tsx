@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styles from './input.scss'
+import styles from './input.module.scss'
 import classNames from 'classnames/bind'
 //Custom hooks
 import { mergeRefs } from 'src/utils'
@@ -22,7 +22,7 @@ const Input: React.ForwardRefRenderFunction<
         'wrapper',
         className,
     )
-    
+
     return (
         <div className={wrapperClass}>
             <DialogCloud message={invalidInputMessage || ''} />

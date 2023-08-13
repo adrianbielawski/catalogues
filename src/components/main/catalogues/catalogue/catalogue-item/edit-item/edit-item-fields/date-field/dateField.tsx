@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './dateField.scss'
+import styles from './dateField.module.scss'
 //Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux

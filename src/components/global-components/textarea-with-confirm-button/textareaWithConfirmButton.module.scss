@@ -1,0 +1,17 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.inputWrapper {
+    position: relative;
+    textarea {
+        border: 1px solid $midLightGrey;
+        outline: none;
+        padding: 5px 25px 5px 5px;
+        @include scrollBar;
+    }
+    .confirmButton {
+        position: absolute;
+        right: 10px;
+        bottom: 8px;
+        z-index: 1;
+    }
+}

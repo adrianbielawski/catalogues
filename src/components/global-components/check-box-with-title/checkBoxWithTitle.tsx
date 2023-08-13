@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './checkBoxWithTitle.scss'
+import styles from './checkBoxWithTitle.module.scss'
 //Custom components
 import CheckBox from 'components/global-components/check-box/checkBox'
 

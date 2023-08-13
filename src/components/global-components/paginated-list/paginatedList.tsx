@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from 'react'
 import classNames from 'classnames/bind'
-import styles from './paginatedList.scss'
+import styles from './paginatedList.module.scss'
 //Hooks
 import { useElementInView } from 'src/hooks/useElementInView'
 //Components
@@ -113,7 +113,7 @@ PaginatedList.defaultProps = {
     buttonChild: undefined,
     intersectingElement: 1,
     className: undefined,
-    onLoadMore: () => { },
+    onLoadMore: () => {},
 
 }
 

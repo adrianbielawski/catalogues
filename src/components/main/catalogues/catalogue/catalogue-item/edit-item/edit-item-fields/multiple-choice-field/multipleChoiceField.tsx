@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './multipleChoiceField.scss'
+import styles from './multipleChoiceField.module.scss'
 //Types
 import { AuthUserChoiceFieldData, DeserializedField, DeserializedItemField } from 'src/globalTypes'
 //Redux
@@ -44,7 +44,7 @@ const MultipleChoiceField = (props: Props) => {
         )
         return values.join(', ')
     }
-    
+
     const content = isEditing ? (
         <>
             <ChoiceList

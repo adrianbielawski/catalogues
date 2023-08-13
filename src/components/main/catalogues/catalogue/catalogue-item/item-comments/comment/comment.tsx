@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import classNames from 'classnames/bind'
-import styles from './comment.scss'
+import styles from './comment.module.scss'
 //Types
 import { DeserializedItemComment, LocationState } from 'src/globalTypes'
 //Redux

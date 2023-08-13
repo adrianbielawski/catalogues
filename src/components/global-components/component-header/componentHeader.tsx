@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './componentHeader.scss'
+import styles from './componentHeader.module.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 
@@ -96,7 +96,7 @@ const ComponentHeader = (props: Props) => {
             offset: offset,
         })
         setShow(newShow)
-    } 
+    }
 
     const headerClass = cx(
         'componentHeader',

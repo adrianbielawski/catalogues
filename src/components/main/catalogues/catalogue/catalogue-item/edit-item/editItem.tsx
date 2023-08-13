@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styles from './editItem.scss'
+import styles from './editItem.module.scss'
 //Types
 import { AuthUserCatalogueData, DeserializedItem, DeserializedItemData } from 'src/globalTypes'
 //Hooks
@@ -94,16 +94,16 @@ const EditItem = (props: Props) => {
                     fieldsData={props.catalogueData.fieldsData}
                 />
                 <ItemSettings
-                    itemData={props.itemData}    
+                    itemData={props.itemData}
                 />
                 <div className={styles.buttons}>
                     <Button
-                        disabled={props.itemData. isSubmitting}
+                        disabled={props.itemData.isSubmitting}
                         loading={delayCompleated}
                         onClick={handleEditConfirm}
                     >
                         Save
-                </Button>
+                    </Button>
                     <Button
                         onClick={handleEditCancel}
                     >

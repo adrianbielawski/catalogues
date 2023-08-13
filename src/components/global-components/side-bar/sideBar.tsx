@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import classNames from 'classnames/bind'
-import styles from './sideBar.scss'
+import styles from './sideBar.module.scss'
 import { useTypedSelector } from 'store/storeConfig'
 import { useDisableScroll } from 'src/hooks/useDisableScroll'
 

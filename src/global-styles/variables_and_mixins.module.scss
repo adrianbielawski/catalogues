@@ -1,0 +1,61 @@
+$veryLightGrey: #f5f5f5;
+$lightGrey: #eee;
+$midLightGrey: #cacaca;
+$grey: #7b7b7b;
+$darkGrey: #5f5f5f;
+$red: #e20000;
+$green: #0bb660;
+$orange: #db8e00;
+$lightOrange: #d19c39;
+
+@mixin resetTapHighlight {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+@mixin scrollBar {
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: $midLightGrey;
+        border-radius: 4px;
+        &:hover {
+            background-color: $lightOrange;
+        }
+    }
+}
+
+@mixin scroll {
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@mixin scrollY {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+@mixin clipText {
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}

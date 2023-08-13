@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './contentWrapper.scss'
+import styles from './contentWrapper.module.scss'
 //components
 import AnimateHeight from 'react-animate-height'
 

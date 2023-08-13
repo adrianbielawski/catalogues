@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import styles from './button.scss'
+import styles from './button.module.scss'
 import classNames from 'classnames/bind'
 import Loader from '../loader/loader'
 

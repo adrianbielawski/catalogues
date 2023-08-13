@@ -1,0 +1,14 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.buttonWrapper {
+    display: flex;
+    align-items: center;
+    height: var(--size);
+    .button {
+        color: $green;
+        font-size: calc(var(--size) * 0.8);
+        &.disabled {
+            color: $lightGrey;
+        }
+    }
+}

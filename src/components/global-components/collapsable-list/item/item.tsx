@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import classNames from 'classnames/bind'
-import styles from './item.scss'
+import styles from './item.module.scss'
 //Contexts
 import { ListContext } from '../listStore'
 

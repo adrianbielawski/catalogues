@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './catalogueItem.scss'
+import styles from './catalogueItem.module.scss'
 //Redux
 import { CHANGE_FAVOURITE_ITEM, REFRESH_CURRENT_USER_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

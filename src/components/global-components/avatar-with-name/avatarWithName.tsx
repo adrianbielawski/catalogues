@@ -1,7 +1,7 @@
 import React from 'react'
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './avatarWithName.scss'
+import styles from './avatarWithName.module.scss'
 //Custom components
 import Avatar from 'components/global-components/avatar/avatar'
 

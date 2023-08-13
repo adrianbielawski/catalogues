@@ -5,13 +5,14 @@ import { UseFiltersBarContextInterface } from 'components/global-components/filt
 import { SelectedFilter } from 'components/global-components/filters-bar/filters/filtersTypes'
 
 
-const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
-    const parsedQuery = queryString.parse(location.search || '')
+const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface, search: string) => {
+    // eslint-disable-next-line no-restricted-globals
+    const parsedQuery = queryString.parse(search || '')
 
-    const searchValue = parsedQuery.search || ''
+    const searchValue = parsedQuery.search as string || ''
 
     const orderingValue = parsedQuery.ordering ? {
-        [trimStart(parsedQuery.ordering, '-')]: parsedQuery.ordering,
+        [trimStart(parsedQuery.ordering as string, '-')]: parsedQuery.ordering as string,
     } : {}
 
     const filtersValue: SelectedFilter = {}
@@ -20,13 +21,13 @@ const filtersBarValuesBuilder = (context: UseFiltersBarContextInterface) => {
         if (filter.type === 'date' || filter.type === 'number' || filter.type === 'rating') {
             if (`${filter.id}__lte` in parsedQuery || `${filter.id}__gte` in parsedQuery) {
                 filtersValue[filter.id] = {
-                    gte: parsedQuery[`${filter.id}__gte`] || null,
-                    lte: parsedQuery[`${filter.id}__lte`] || null,
+                    gte: parsedQuery[`${filter.id}__gte`] as string || null,
+                    lte: parsedQuery[`${filter.id}__lte`] as string || null,
                 }
             }
         } else {
             if (filter.id in parsedQuery) {
-                filtersValue[filter.id] = parsedQuery[filter.id].split(',')
+                filtersValue[filter.id] = (parsedQuery[filter.id] as string).split(',')
             }
         }
     }

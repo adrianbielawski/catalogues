@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
 import classNames from 'classnames/bind'
-import styles from './editableField.scss'
+import styles from './editableField.module.scss'
 //Custom components
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
 

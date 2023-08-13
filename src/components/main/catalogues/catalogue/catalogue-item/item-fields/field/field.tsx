@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './field.scss'
+import styles from './field.module.scss'
 //Types
 import { DeserializedGeoField, DeserializedItemField, DeserializedItemFieldValue, DeserializedMediaFieldValue } from 'src/globalTypes'
 //Redux

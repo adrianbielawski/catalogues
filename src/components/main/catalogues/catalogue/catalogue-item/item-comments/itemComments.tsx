@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import classNames from 'classnames/bind'
-import styles from './itemComments.scss'
+import styles from './itemComments.module.scss'
 //Types
 import { DeserializedCommentData, DeserializedImage, DeserializedListData } from 'src/globalTypes'
 //Redux
@@ -40,7 +40,7 @@ const ItemComments = (props: Props) => {
         if (props.commentsData.results[i]?.id === undefined) {
             break
         }
-        
+
         commentsComponents.push(
             <Comment
                 comment={comments[props.commentsData.results[i].id]!}

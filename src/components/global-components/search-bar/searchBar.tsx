@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSortAlphaUp, faSortAlphaDown } from '@fortawesome/free-solid-svg-icons'
-import styles from './searchBar.scss'
+import styles from './searchBar.module.scss'
 //Custom components
 import Input from 'components/global-components/input/input'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'

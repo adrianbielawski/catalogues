@@ -1,0 +1,17 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.choiceList {
+    .selectAll {
+        margin-top: 5px;
+    }
+    ul {
+        max-height: 200px;
+        margin-left: 5px;
+        padding-right: 20px;
+        overflow-y: scroll;
+        @include scrollBar;
+        li {
+            display: flex;
+        }
+    }
+}

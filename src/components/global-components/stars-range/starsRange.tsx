@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
-import styles from './starsRange.scss'
+import styles from './starsRange.module.scss'
 
 type Props = {
     selected: number[],
@@ -109,7 +109,7 @@ StarsRange.defaultProps = {
     selected: null,
     range: 5,
     className: undefined,
-    onChange: ([]) => { }
+    onChange: ([]) => {}
 }
 
 export default StarsRange

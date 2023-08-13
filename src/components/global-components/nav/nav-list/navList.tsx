@@ -3,7 +3,7 @@ import { useHistory, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './navList.scss'
+import styles from './navList.module.scss'
 //Types
 import { ItemWithChildren } from '../nav'
 import { LocationState } from 'src/globalTypes'

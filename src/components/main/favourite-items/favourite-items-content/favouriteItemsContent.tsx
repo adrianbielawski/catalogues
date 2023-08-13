@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
-import styles from './favouriteItemsContent.scss'
+import styles from './favouriteItemsContent.module.scss'
 //Redux
 import { useTypedSelector } from 'store/storeConfig'
 //Filters bar context and utils

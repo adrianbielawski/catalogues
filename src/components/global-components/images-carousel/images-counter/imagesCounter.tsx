@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './imagesCounter.scss'
+import styles from './imagesCounter.module.scss'
 
 type Props = {
     current: number,

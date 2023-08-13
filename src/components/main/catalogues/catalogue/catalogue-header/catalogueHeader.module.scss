@@ -1,0 +1,80 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.catalogueHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .nav {
+        display: flex;
+        flex: 1;
+        .userImage {
+            font-size: 1.7em;
+            width: 100%;
+            height: 100%;
+            min-width: 35px;
+            min-height: 35px;
+        }
+    }
+    .catalogueName {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 2;
+        margin: 0 3px;
+        &.noJustify {
+            justify-content: flex-start;
+        }
+        &.increasedMargin {
+            margin-left: 5px;
+        }
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 35px;
+            min-height: 35px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        p {
+            margin: 0 5px;
+            font-size: 26px;
+            font-weight: 700;
+            max-height: 40px;
+            overflow: hidden;
+        }
+    }
+    .catalogueActions {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+        .filtersButton {
+            margin-right: 10px;
+            font-size: 1.3em;
+            color: $grey;
+            &.active {
+                color: $orange;
+            }
+        }
+        .favouriteIcon {
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+    }
+    .catalogueImage {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    .catalogueHeader .catalogueName p {
+        font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (800 - 300)));
+    }
+}

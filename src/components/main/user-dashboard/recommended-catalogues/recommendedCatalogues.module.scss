@@ -1,0 +1,19 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.catalogueCard {
+    box-shadow: 1px 1px 2px $midLightGrey;
+    margin-bottom: 10px;
+    &.last {
+        margin: 0;
+    }
+}
+
+.loader {
+    margin: 30px auto;
+}
+
+.noContent {
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 10px;
+}

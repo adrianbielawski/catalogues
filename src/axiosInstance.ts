@@ -1,8 +1,9 @@
 import axios from 'axios'
 import Axios from 'axios-observable'
+import { API_URL } from './constants'
 
 export const axiosInstance = axios.create({
-    baseURL: process.env.API_URL,
+    baseURL: API_URL,
 })
 
 axiosInstance.interceptors.request.use(request => {
@@ -15,7 +16,7 @@ axiosInstance.interceptors.request.use(request => {
 })
 
 export const axiosInstance$ = Axios.create({
-    baseURL: process.env.API_URL,
+    baseURL: API_URL,
 })
 
 axiosInstance$.interceptors.request.use(request => {

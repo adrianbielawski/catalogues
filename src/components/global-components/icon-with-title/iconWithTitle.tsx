@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react'
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
-import styles from './iconWithTitle.scss'
+import styles from './iconWithTitle.module.scss'
 import AnimateHeight from 'react-animate-height'
 
 type Props = {

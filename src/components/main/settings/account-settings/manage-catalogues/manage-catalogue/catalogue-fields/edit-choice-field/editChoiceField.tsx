@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from './editChoiceField.scss'
+import styles from './editChoiceField.module.scss'
 //Types
 import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
 //Redux

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import styles from './manageCatalogues.scss'
+import styles from './manageCatalogues.module.scss'
 //Redux
 import { CREATE_CATALOGUE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -64,7 +64,7 @@ const ManageCatalogues = () => {
     const catalogueComponents = authUserCatalogues.cataloguesData.map(c => (
         <ManageCatalogue catalogueId={c.id} key={c.id} />
     ))
-    
+
     if (authUserCatalogues.isFetchingCatalogues) {
         return <Loader size={50} className={styles.loader} />
     }
@@ -75,7 +75,7 @@ const ManageCatalogues = () => {
                 {addingCatalogue
                     ? (
                         <InputWithConfirmButton
-                            { ...inputAttributes }
+                            {...inputAttributes}
                             invalidInputMessage={inputError}
                             ref={inputRef}
                             onConfirm={handleAddCatalogue}

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import styles from './textareaWithConfirmButton.scss'
+import styles from './textareaWithConfirmButton.module.scss'
 //Utils
 import { confirmOnEnter } from 'src/utils'
 //Custom components

@@ -1,6 +1,6 @@
 import React from 'react'
 import classNames from 'classnames/bind'
-import styles from './navItem.scss'
+import styles from './navItem.module.scss'
 //Types
 import { ItemType } from '../nav'
 //Custom components

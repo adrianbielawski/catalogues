@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useHistory } from 'react-router'
 import { size } from 'lodash'
-import styles from './items.scss'
+import styles from './items.module.scss'
 //Types
 import { LocationState } from 'src/globalTypes'
 //Redux
@@ -21,9 +21,11 @@ import PaginatedList from 'components/global-components/paginated-list/paginated
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import { useLocation } from 'react-router-dom'
 
 const FavouriteItems = () => {
     const dispatch = useAppDispatch()
+    const location = useLocation<LocationState>()
     const history = useHistory<LocationState>()
     const filtersBarContext = useFiltersBarContext()
     const screenWidth = useTypedSelector(state => state.modules.app.screenWidth)
@@ -31,7 +33,7 @@ const FavouriteItems = () => {
     const itemsData = favouriteItems.itemsData!
 
     useEffect(() => {
-        const parsedQuery = filtersBarValuesBuilder(filtersBarContext)
+        const parsedQuery = filtersBarValuesBuilder(filtersBarContext, location.search)
 
         if (parsedQuery.searchValue) {
             filtersBarContext.searchContext.setSearchValue(parsedQuery.searchValue)

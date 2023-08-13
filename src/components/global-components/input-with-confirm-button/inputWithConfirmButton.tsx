@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import classNames from 'classnames/bind'
-import styles from './inputWithConfirmButton.scss'
+import styles from './inputWithConfirmButton.module.scss'
 //Utils
 import { confirmOnEnter, mergeRefs } from 'src/utils'
 //Custom components

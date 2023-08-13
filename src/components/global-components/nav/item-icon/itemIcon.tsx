@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
-import styles from './itemIcon.scss'
+import styles from './itemIcon.module.scss'
 //Types
 import { ItemType } from '../nav'
 
@@ -21,7 +21,7 @@ const ItemIcon = (props: Props) => {
             active: props.active,
         }
     )
-    
+
     return (
         <div className={iconClass}>
             {props.item.faIcon ? (

@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './myAccount.scss'
+import styles from './myAccount.module.scss'
 //Redux
 import { CLEAR_AUTH_USER_ERROR } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

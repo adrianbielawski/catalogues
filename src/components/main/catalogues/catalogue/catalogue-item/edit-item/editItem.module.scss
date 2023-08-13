@@ -1,0 +1,37 @@
+@import "global-styles/variables_and_mixins.module.scss";
+
+.editItem {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    .carouselWrapper {
+        width: 100%;
+        min-height: 150px;
+        max-height: 600px;
+        img {
+            max-height: 600px;
+        }
+    }
+    .contentWrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+        .addImageButton {
+            margin: 5px 0;
+        }
+        .itemId {
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            button {
+                margin: 5px 10px;
+            }
+        }
+    }
+}

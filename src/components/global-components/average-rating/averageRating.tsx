@@ -3,7 +3,7 @@ import { faStar as regStar } from '@fortawesome/free-regular-svg-icons'
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
-import styles from './averageRating.scss'
+import styles from './averageRating.module.scss'
 
 type Props = {
     rating: number,

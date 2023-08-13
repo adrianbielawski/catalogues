@@ -1,7 +1,7 @@
 import React from 'react'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import styles from './editItemButton.scss'
+import styles from './editItemButton.module.scss'
 //Redux
 import { TOGGLE_EDIT_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch } from 'store/storeConfig'

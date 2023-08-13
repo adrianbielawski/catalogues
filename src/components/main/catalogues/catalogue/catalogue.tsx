@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import styles from './catalogue.scss'
+import styles from './catalogue.module.scss'
 //Types
 import { HydratedRouteComponentProps } from 'src/router'
 //Redux

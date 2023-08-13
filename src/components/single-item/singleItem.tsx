@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import styles from './singleItem.scss'
+import styles from './singleItem.module.scss'
 //Types
 import { DeserializedItem, LocationState } from 'src/globalTypes'
 import { HydratedRouteComponentProps } from 'src/router'
