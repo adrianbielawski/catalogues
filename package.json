@@ -65,7 +65,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-transition-group": "^4.4.1",
-    "redux": "^4.0.5",
+    "redux": "^4.2.1",
     "redux-observable": "^1.2.0",
     "rxjs": "^6.6.3",
     "use-immer": "^0.5.1"
