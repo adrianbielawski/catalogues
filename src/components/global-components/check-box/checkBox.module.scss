@@ -1,9 +1,10 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .checkBox {
-    cursor: pointer;
-    color: $grey;
-    &.selected {
-        color: $lightOrange;
-    }
+  cursor: pointer;
+  color: $grey;
+
+  &.selected {
+    color: $lightOrange;
+  }
 }

@@ -1,53 +1,59 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .items {
-    margin: 0 auto 30px auto;
-    max-width: 95%;
-    .addItemButton {
-        margin: 10px 10px 0 auto;
-        font-size: 20px;
-        font-weight: 700;
+  margin: 0 auto 30px;
+  max-width: 95%;
+
+  .addItemButton {
+    margin: 10px 10px 0 auto;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .noContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px auto 0;
+    text-align: center;
+
+    .anchor {
+      font-weight: 700;
     }
-    .noContent {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 30px auto 0 auto;
-        text-align: center;
-        .anchor {
-            font-weight: 700;
-        }
-    }
-    .noItemsFound {
-        margin: 30px auto 0 auto;
-        text-align: center;
-        font-size: 1.5em;
-        font-weight: 700;
-    }
-    .seeMoreButton {
-        margin: 30px auto;
-    }
+  }
+
+  .noItemsFound {
+    margin: 30px auto 0;
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: 700;
+  }
+
+  .seeMoreButton {
+    margin: 30px auto;
+  }
 }
 
 .loader {
-    margin: 30px auto;
+  margin: 30px auto;
 }
 
-@media only screen and (max-width: 640px) {
-    .items {
-        margin-bottom: 30px;
-        max-width: 100%;
-        &.showingAll {
-            margin: 0 auto 90px auto;
-        }
+@media only screen and (width <= 640px) {
+  .items {
+    margin-bottom: 30px;
+    max-width: 100%;
+
+    &.showingAll {
+      margin: 0 auto 90px;
     }
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .items .noContent .anchor {
-        &:hover {
-            color: $lightOrange;
-            cursor: pointer;
-        }
+  .items .noContent .anchor {
+    &:hover {
+      color: $lightOrange;
+      cursor: pointer;
     }
+  }
 }

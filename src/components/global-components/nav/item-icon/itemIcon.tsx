@@ -1,36 +1,31 @@
-import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './itemIcon.module.scss'
-//Types
-import { ItemType } from '../nav'
+// Types
+import { type ItemType } from '../nav'
 
 interface Props {
-    item: ItemType,
-    active?: boolean,
-    className?: string,
+  item: ItemType
+  active?: boolean
+  className?: string
 }
 
 const cx = classNames.bind(styles)
 
 const ItemIcon = (props: Props) => {
-    const iconClass = cx(
-        'icon',
-        props.className,
-        {
-            active: props.active,
-        }
-    )
+  const iconClass = cx('icon', props.className, {
+    active: props.active,
+  })
 
-    return (
-        <div className={iconClass}>
-            {props.item.faIcon ? (
-                <FontAwesomeIcon icon={props.item.faIcon} />
-            ) : (
-                props.item.icon
-            )}
-        </div>
-    )
+  return (
+    <div className={iconClass}>
+      {props.item.faIcon != null ? (
+        <FontAwesomeIcon icon={props.item.faIcon} />
+      ) : (
+        props.item.icon
+      )}
+    </div>
+  )
 }
 
 export default ItemIcon

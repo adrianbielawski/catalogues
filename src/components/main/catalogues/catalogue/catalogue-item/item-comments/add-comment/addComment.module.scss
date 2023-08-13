@@ -1,19 +1,23 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .addComment {
-    display: flex;
-    align-items: center;
-    .input {
-        width: 100%;
+  display: flex;
+  align-items: center;
+
+  .input {
+    width: 100%;
+  }
+
+  button {
+    font-size: 1.3em;
+
+    &:disabled {
+      color: $grey;
     }
-    button {
-        font-size: 1.3em;
-        &:disabled {
-            color: $grey;
-        }
-    }
-    .cancelButton {
-        font-size: 1.5em;
-        margin-left: 5px;
-    }
+  }
+
+  .cancelButton {
+    font-size: 1.5em;
+    margin-left: 5px;
+  }
 }

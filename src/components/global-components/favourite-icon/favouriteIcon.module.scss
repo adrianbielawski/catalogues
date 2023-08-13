@@ -1,26 +1,28 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .favouriteIcon {
-    font-size: 1.1em;
-    line-height: 0.8em;
+  font-size: 1.1em;
+  line-height: 0.8em;
+
+  path {
+    stroke: $grey;
+    stroke-width: 10%;
+    fill: transparent;
+  }
+
+  &.active {
     path {
-        stroke: $grey;
-        stroke-width: 10%;
-        fill: transparent;
+      stroke: $red;
+      fill: $red;
     }
-    &.active {
-        path {
-            stroke: $red;
-            fill: $red;
-        }
-    }
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .favouriteIcon {
-        &:hover path {
-            stroke: $red;
-            fill: $red;
-        }
+  .favouriteIcon {
+    &:hover path {
+      stroke: $red;
+      fill: $red;
     }
+  }
 }

@@ -1,60 +1,58 @@
-import React from 'react'
+import { ReactNode } from 'react'
 import { useImmerReducer } from 'use-immer'
-//Contexts
+// Contexts
 import { NavContext, reducer } from './navStore'
 import * as T from './navStoreTypes'
 
-type Props = {
-    children: JSX.Element,
-    value: T.NavInitialState,
+interface Props {
+  children: ReactNode
+  value: T.NavInitialState
 }
 
 const NavContextProvider = (props: Props) => {
-    const initialState = {
-        ...props.value
-    }
+  const initialState = {
+    ...props.value,
+  }
 
-    const [state, dispatch] = useImmerReducer(reducer, initialState)
+  const [state, dispatch] = useImmerReducer(reducer, initialState)
 
-    const showList = (listId: string | number) => {
-        dispatch({
-            type: T.SHOW_LIST,
-            listId,
-        })
-    }
+  const showList = (listId: string | number) => {
+    dispatch({
+      type: T.SHOW_LIST,
+      listId,
+    })
+  }
 
-    const closeList = () => {
-        dispatch({
-            type: T.CLOSE_LIST,
-        })
-    }
+  const closeList = () => {
+    dispatch({
+      type: T.CLOSE_LIST,
+    })
+  }
 
-    const showNestedList = (nestedListId: string | number) => {
-        dispatch({
-            type: T.SHOW_NESTED_LIST,
-            nestedListId,
-        })
-    }
+  const showNestedList = (nestedListId: string | number) => {
+    dispatch({
+      type: T.SHOW_NESTED_LIST,
+      nestedListId,
+    })
+  }
 
-    const removeNestedListId = () => {
-        dispatch({
-            type: T.REMOVE_NESTED_LIST_ID,
-        })
-    }
+  const removeNestedListId = () => {
+    dispatch({
+      type: T.REMOVE_NESTED_LIST_ID,
+    })
+  }
 
-    const context = {
-        ...state,
-        showList,
-        closeList,
-        showNestedList,
-        removeNestedListId,
-    }
+  const context = {
+    ...state,
+    showList,
+    closeList,
+    showNestedList,
+    removeNestedListId,
+  }
 
-    return (
-        <NavContext.Provider value={context}>
-            {props.children}
-        </NavContext.Provider>
-    )
+  return (
+    <NavContext.Provider value={context}>{props.children}</NavContext.Provider>
+  )
 }
 
 export default NavContextProvider

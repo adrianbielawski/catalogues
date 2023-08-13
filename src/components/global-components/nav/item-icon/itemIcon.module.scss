@@ -1,15 +1,16 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: $grey;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    font-size: 1.4em;
-    &.active {
-        color: $orange;
-    }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: $grey;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 1.4em;
+
+  &.active {
+    color: $orange;
+  }
 }

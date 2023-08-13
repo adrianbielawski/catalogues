@@ -1,34 +1,30 @@
-import React, { useEffect } from 'react'
-//Types
+import { useEffect } from 'react'
+// Types
 import { Coords } from '../map'
-//Hooks
+// Hooks
 import useDeviceLocation from '../hooks/useDeviceLocation'
-//Components
+// Components
 import { Marker, useMap } from 'react-leaflet'
 
-type Props = {
-	coords: Coords,
+interface Props {
+  coords: Coords
 }
 
 const StaticLayer = (props: Props) => {
-	const location = useDeviceLocation()
-    const map = useMap()
+  const location = useDeviceLocation()
+  const map = useMap()
 
-	useEffect(() => {
-		if (location && !props.coords) {
-			map.panTo(location?.latlng)
-		}
-	}, [location])
-    
-	if (!props.coords) {
-		return null
-	}
+  useEffect(() => {
+    if (location != null && props.coords == null) {
+      map.panTo(location?.latlng)
+    }
+  }, [location])
 
-	return (
-		<Marker
-			position={props.coords}
-		/>
-	)
+  if (props.coords == null) {
+    return null
+  }
+
+  return <Marker position={props.coords} />
 }
 
 export default StaticLayer

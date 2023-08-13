@@ -1,6 +1,6 @@
-import { ErrorMessage } from "src/globalTypes"
+import { type ErrorMessage } from 'src/globalTypes'
 
 export interface CurrentUserState {
-    userId: number | null,
-    currentUserError: ErrorMessage | null,
+  userId: number | null
+  currentUserError: ErrorMessage | null
 }

@@ -1,4 +1,4 @@
 export interface CurrentUserFavCataloguesState {
-    cataloguesIds: number[],
-    fetchingCatalogues: boolean,
+  cataloguesIds: number[]
+  fetchingCatalogues: boolean
 }

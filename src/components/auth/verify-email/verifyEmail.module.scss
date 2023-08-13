@@ -1,24 +1,28 @@
 .verifyEmail {
-    .title {
-        font-size: 1.6em;
-        font-weight: 700;
-        margin: 30px auto 10px auto;
+  .title {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin: 30px auto 10px;
+  }
+
+  p {
+    font-size: 1.3em;
+    text-align: center;
+  }
+
+  .loader {
+    margin: 30px auto;
+  }
+
+  .buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      margin: 20px;
+      width: 130px;
     }
-    p {
-        font-size: 1.3em;
-        text-align: center;
-    }
-    .loader {
-        margin: 30px auto;
-    }
-    .buttons {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-top: 20px;
-        button {
-            margin: 20px;
-            width: 130px;
-        }
-    }
+  }
 }

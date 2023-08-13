@@ -1,40 +1,32 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './filters.module.scss'
-//Contexts
+// Contexts
 import { FiltersContext } from './filtersStore'
-//Custom components
+// Custom components
 import Filter from './filter/filter'
 
-type Props = {
-    className?: string,
+interface Props {
+  className?: string
 }
 
 const cx = classNames.bind(styles)
 
 const Filters = (props: Props) => {
-    const state = useContext(FiltersContext)
+  const state = useContext(FiltersContext)
 
-    const filters = state.filters.map(filter => (
-        <Filter
-            filter={filter}
-            key={filter.id}
-        />
-    ))
+  const filters = state.filters.map((filter) => (
+    <Filter filter={filter} key={filter.id} />
+  ))
 
-    const filtersClass = cx(
-        'filters',
-        props.className,
-    )
+  const filtersClass = cx('filters', props.className)
 
-    return (
-        <div className={filtersClass}>
-            <p className={styles.title}>Filters</p>
-            <ul>
-                {filters}
-            </ul>
-        </div>
-    )
+  return (
+    <div className={filtersClass}>
+      <p className={styles.title}>Filters</p>
+      <ul>{filters}</ul>
+    </div>
+  )
 }
 
 export default Filters

@@ -1,95 +1,96 @@
-import React, { useEffect, useState } from 'react'
-//Types
+import { useEffect, useState } from 'react'
+// Types
 import { LeafletMouseEvent, LatLngLiteral } from 'leaflet'
 import { Coords } from '../map'
-//Hooks
+// Hooks
 import { useFirstRender } from 'src/hooks/useFirstRender'
 import { useMap, useMapEvent } from 'react-leaflet'
 import useDeviceLocation from '../hooks/useDeviceLocation'
 import useSearchBar from '../hooks/useSearchBar'
-//Components
+// Components
 import DraggableMarker from '../dragable-marker/dragableMarker'
 
-type Props = {
-	coords: Coords,
-	onChange: (coords: Coords, displayName: string | null) => void,
+interface Props {
+  coords: Coords
+  onChange: (coords: Coords, displayName: string | null) => void
 }
 
 const InteractiveLayer = (props: Props) => {
-	const [coords, setCoords] = useState(props.coords)
-	const [displayName, setDisplayName] = useState<string | null>(null)
-	const map = useMap()
-	const firstRender = useFirstRender()
-	const location = useDeviceLocation()
-	const search = useSearchBar()
+  const [coords, setCoords] = useState(props.coords)
+  const [displayName, setDisplayName] = useState<string | null>(null)
+  const map = useMap()
+  const firstRender = useFirstRender()
+  const location = useDeviceLocation()
+  const search = useSearchBar()
 
-	useEffect(() => {
-		if (firstRender) {
-			return
-		}
+  useEffect(() => {
+    if (firstRender) {
+      return
+    }
 
-		const newCoords = search
-			? { lat: search.location.y, lng: search.location.x }
-			: null
+    const newCoords = search
+      ? { lat: search.location.y, lng: search.location.x }
+      : null
 
-		setCoords(newCoords)
-		setDisplayName(search?.location?.label || null)
-	}, [search])
+    setCoords(newCoords)
+    setDisplayName(search?.location?.label || null)
+  }, [search])
 
-	useEffect(() => {
-		if (location && !props.coords) {
-			map.panTo(location.latlng)
-		}
-	}, [location])
+  useEffect(() => {
+    if (location != null && props.coords == null) {
+      map.panTo(location.latlng)
+    }
+  }, [location])
 
-	useEffect(() => {
-		if (coords === props.coords) {
-			return
-		}
+  useEffect(() => {
+    if (coords === props.coords) {
+      return
+    }
 
-		const latLng = coords ? convertLatLng(coords) : null
-		props.onChange(latLng, displayName)
-	}, [coords, displayName, props.onChange])
+    const latLng = coords != null ? convertLatLng(coords) : null
+    props.onChange(latLng, displayName)
+  }, [coords, displayName, props.onChange])
 
-	const convertLatLng = (latLng: LatLngLiteral) => ({
-		lat: latLng.lat,
-		lng: (latLng.lng % 360 + 540) % 360 - 180,
-	})
+  const convertLatLng = (latLng: LatLngLiteral) => ({
+    lat: latLng.lat,
+    lng: (((latLng.lng % 360) + 540) % 360) - 180,
+  })
 
-	const getAddress = (coords: LatLngLiteral) => {
-		const { lat, lng } = convertLatLng(coords)
-		fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`)
-			.then(r => r.json())
-			.then(r => setDisplayName(r.display_name))
-			.catch(() => setDisplayName('Unknown address'))
-	}
+  const getAddress = (coords: LatLngLiteral) => {
+    const { lat, lng } = convertLatLng(coords)
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`,
+    )
+      .then(async (r) => await r.json())
+      .then((r) => {
+        setDisplayName(r.display_name)
+      })
+      .catch(() => {
+        setDisplayName('Unknown address')
+      })
+  }
 
-	const handleClick = (e: LeafletMouseEvent) => {
-		if (search !== null) {
-			return
-		}
+  const handleClick = (e: LeafletMouseEvent) => {
+    if (search !== null) {
+      return
+    }
 
-		setCoords(e.latlng)
-		getAddress(e.latlng)
-	}
+    setCoords(e.latlng)
+    getAddress(e.latlng)
+  }
 
-	useMapEvent('click', handleClick)
+  useMapEvent('click', handleClick)
 
-	const handleMarkerDrop = (coords: LatLngLiteral) => {
-		setCoords(coords)
-		getAddress(coords)
-	}
+  const handleMarkerDrop = (coords: LatLngLiteral) => {
+    setCoords(coords)
+    getAddress(coords)
+  }
 
-	if (!coords || search !== null) {
-		return null
-	}
+  if (coords == null || search !== null) {
+    return null
+  }
 
-	return (
-		<DraggableMarker
-			coords={coords}
-			onDrop={handleMarkerDrop}
-		/>
-	)
+  return <DraggableMarker coords={coords} onDrop={handleMarkerDrop} />
 }
 
 export default InteractiveLayer

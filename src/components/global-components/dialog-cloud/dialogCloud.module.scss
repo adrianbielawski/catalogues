@@ -1,34 +1,37 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .dialogCloud {
+  position: absolute;
+  bottom: calc(100% + 15px);
+  left: 0;
+  display: none;
+  background: #fff;
+  border: 2px solid $orange;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px -2px $orange;
+  padding: 5px 7px;
+  z-index: 10000;
+
+  &::before {
     position: absolute;
-    bottom: calc(100% + 15px);
-    left: 0;
-    display: none;
+    bottom: -9.5px;
+    left: 10px;
+    content: '';
     background: #fff;
-    border: 2px solid $orange;
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px -2px $orange;
-    padding: 5px 7px;
-    z-index: 10000;
-    &::before {
-        position: absolute;
-        bottom: -9.5px;
-        left: 10px;
-        content: "";
-        background: #fff;
-        width: 15px;
-        height: 15px;
-        border-bottom: 2px solid $orange;
-        border-right: 2px solid $orange;
-        border-radius: 3px;
-        box-shadow: 2px 1px 4px -2px $orange;
-        transform: rotate(45deg);
-    }
-    &.active {
-        display: block;
-    }
-    p {
-        text-align: center;
-    }
+    width: 15px;
+    height: 15px;
+    border-bottom: 2px solid $orange;
+    border-right: 2px solid $orange;
+    border-radius: 3px;
+    box-shadow: 2px 1px 4px -2px $orange;
+    transform: rotate(45deg);
+  }
+
+  &.active {
+    display: block;
+  }
+
+  p {
+    text-align: center;
+  }
 }

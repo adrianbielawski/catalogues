@@ -1,7 +1,7 @@
-@import "global-styles/variables_and_mixins.module.scss";
+@import 'global-styles/variables_and_mixins.module';
 
 .filterStarsRange {
-    display: flex;
-    align-items: center;
-    min-height: 25px;
+  display: flex;
+  align-items: center;
+  min-height: 25px;
 }

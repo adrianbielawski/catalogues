@@ -1,38 +1,32 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
+import * as React from 'react'
 import styles from './input.module.scss'
 import classNames from 'classnames/bind'
-//Custom hooks
+// Custom hooks
 import { mergeRefs } from 'src/utils'
 import DialogCloud from '../dialog-cloud/dialogCloud'
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
-    className?: string,
-    invalidInputMessage?: string,
+  className?: string
+  invalidInputMessage?: string
 }
 const cx = classNames.bind(styles)
 
-const Input: React.ForwardRefRenderFunction<
-    HTMLInputElement,
-    Props
-> = (props, ref) => {
-    const { className, invalidInputMessage, ...rest } = props
-    const inputRef = useRef<HTMLInputElement>(null)
+const Input: React.ForwardRefRenderFunction<HTMLInputElement, Props> = (
+  props,
+  ref,
+) => {
+  const { className, invalidInputMessage, ...rest } = props
+  const inputRef = useRef<HTMLInputElement>(null)
 
-    const wrapperClass = cx(
-        'wrapper',
-        className,
-    )
+  const wrapperClass = cx('wrapper', className)
 
-    return (
-        <div className={wrapperClass}>
-            <DialogCloud message={invalidInputMessage || ''} />
-            <input
-                {...rest}
-                ref={mergeRefs([ref, inputRef])}
-                spellCheck="false"
-            />
-        </div>
-    )
+  return (
+    <div className={wrapperClass}>
+      <DialogCloud message={invalidInputMessage ?? ''} />
+      <input {...rest} ref={mergeRefs([ref, inputRef])} spellCheck="false" />
+    </div>
+  )
 }
 
 export default React.forwardRef(Input)
