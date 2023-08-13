@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './carouselItem.module.scss'
-// Constants
-import { API_URL } from 'src/constants'
 // Types
 import { DeserializedImage } from 'src/globalTypes'
 // Custom components
@@ -63,7 +61,6 @@ const CarouselItem = (props: Props) => {
       <Image
         className={styles.image}
         url={url}
-        baseUrl={API_URL}
         dimensions={props.image.dimensions}
         placeHolder={<NoImageIcon className={styles.noImageIcon} size="6x" />}
         onClick={props.onImageClick}

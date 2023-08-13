@@ -1,9 +1,7 @@
 import { useRef } from 'react'
 import styles from './catalogueImage.module.scss'
-// Constants
-import { API_URL } from 'src/constants'
 // Types
-import { type DeserializedCatalogue } from 'src/globalTypes'
+import { DeserializedCatalogue } from 'src/globalTypes'
 // Redux
 import { POST_CATALOGUE_IMAGE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
@@ -50,7 +48,6 @@ const CatalogueImage = (props: Props) => {
       <Image
         className={styles.image}
         url={props.url}
-        baseUrl={API_URL}
         loading={catalogueData.isSubmittingImage}
         placeHolder={<NoImageIcon size="6x" />}
       />
