@@ -1,5 +1,4 @@
 export const BASE_URL = import.meta.env.BASE_URL
-export const API_URL = import.meta.env.VITE_API_URL
 export const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN
 
 export const listData = {
@@ -15,5 +14,5 @@ export const listData = {
 
 export const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
