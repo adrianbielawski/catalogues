@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useHistory } from 'react-router'
 import { size } from 'lodash'
 import styles from './items.module.scss'
@@ -32,10 +32,9 @@ const FavouriteItems = () => {
   const history = useHistory<LocationState>()
   const filtersBarContext = useFiltersBarContext()
   const screenWidth = useTypedSelector((state) => state.modules.app.screenWidth)
-  const favouriteItems = useTypedSelector(
+  const { itemsData, isFetchingItems, error } = useTypedSelector(
     (state) => state.modules.favouriteItems,
   )
-  const itemsData = favouriteItems.itemsData!
 
   useEffect(() => {
     const parsedQuery = filtersBarValuesBuilder(
@@ -80,71 +79,75 @@ const FavouriteItems = () => {
     }
   }, [])
 
-  const fetchItems = (pageNum?: number) => {
-    const query = queryBuilder(filtersBarContext)
+  const fetchItems = useCallback(
+    (pageNum?: number) => {
+      const query = queryBuilder(filtersBarContext)
 
-    history.push({ search: query.query })
+      history.push({ search: query.query })
 
-    dispatch(
-      FETCH_FAVOURITE_ITEMS({
-        page: pageNum ?? itemsData.next ?? 1,
-        search: query.search,
-        sort: query.sort,
-        filters: query.filters,
-      }),
-    )
-  }
-
-  const itemsComponents = () => {
-    return itemsData.results.map((item, i) => {
-      const handleAddComment = (text: string, parentId?: number) => {
-        dispatch(
-          POST_FAVOURITE_ITEM_COMMENT({
-            itemId: item.id,
-            text,
-            parentId,
-          }),
-        )
-      }
-
-      const handleFetchComments = (page: number | null) => {
-        dispatch(
-          FETCH_FAVOURITE_ITEM_COMMENTS({
-            itemId: item.id,
-            page,
-          }),
-        )
-      }
-
-      return (
-        <CatalogueItem
-          className={styles.item}
-          itemData={item}
-          isNarrow={!screenWidth.largeViewport}
-          editable={false}
-          key={item.id}
-          onAddComment={handleAddComment}
-          onFetchComments={handleFetchComments}
-        />
+      dispatch(
+        FETCH_FAVOURITE_ITEMS({
+          page: pageNum ?? itemsData?.next ?? 1,
+          search: query.search,
+          sort: query.sort,
+          filters: query.filters,
+        }),
       )
-    })
-  }
+    },
+    [filtersBarContext, itemsData],
+  )
 
-  const clearError = () => {
+  const itemsComponents = useMemo(
+    () =>
+      itemsData?.results.map((item, i) => {
+        const handleAddComment = (text: string, parentId?: number) => {
+          dispatch(
+            POST_FAVOURITE_ITEM_COMMENT({
+              itemId: item.id,
+              text,
+              parentId,
+            }),
+          )
+        }
+
+        const handleFetchComments = (page: number | null) => {
+          dispatch(
+            FETCH_FAVOURITE_ITEM_COMMENTS({
+              itemId: item.id,
+              page,
+            }),
+          )
+        }
+
+        return (
+          <CatalogueItem
+            className={styles.item}
+            itemData={item}
+            isNarrow={!screenWidth.largeViewport}
+            editable={false}
+            key={item.id}
+            onAddComment={handleAddComment}
+            onFetchComments={handleFetchComments}
+          />
+        )
+      }),
+    [itemsData, screenWidth.largeViewport],
+  )
+
+  const clearError = useCallback(() => {
     dispatch(CLEAR_FAVOURITE_ITEMS_ERROR())
-    fetchItems(itemsData.current ?? 1)
-  }
+    fetchItems(itemsData?.current ?? 1)
+  }, [itemsData?.current, fetchItems])
 
-  const error = favouriteItems.error
-  const hasItems = itemsData.results.length !== 0
+  const itemsQty = itemsData?.results.length
 
-  if (!itemsData || (favouriteItems.isFetchingItems && !hasItems)) {
+  if (!itemsData || (isFetchingItems && !itemsQty)) {
     return <Loader className={styles.loader} />
   }
 
   return (
     <div className={styles.items}>
-      {hasItems && (
+      {itemsQty === 0 && (
         <p className={styles.noItemsFound}>
           {location.search.length === 0
             ? 'You have no favourite items'
@@ -155,12 +158,12 @@ const FavouriteItems = () => {
         className={styles.list}
         next={itemsData.next}
         buttonChild="See more"
-        isFetching={favouriteItems.isFetchingItems}
+        isFetching={isFetchingItems}
         fetchOnButtonClick="once"
         intersectingElement={3}
         onLoadMore={fetchItems}
       >
-        {itemsComponents()}
+        {itemsComponents}
       </PaginatedList>
       <MessageModal
         show={error !== null}

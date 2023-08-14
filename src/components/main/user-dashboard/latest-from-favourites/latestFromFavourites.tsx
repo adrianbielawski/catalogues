@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestFromFavourites.module.scss'
 // Redux
@@ -18,10 +18,17 @@ const cx = classNames.bind(styles)
 
 const LatestFromFavourites = () => {
   const dispatch = useAppDispatch()
-  const latestFromFavourites = useTypedSelector(
-    (state) => state.modules.authUserDashboard.latestFromFavourites,
+  const { itemsData, isFetchingData, isFetchingItems, error } =
+    useTypedSelector(
+      (state) => state.modules.authUserDashboard.latestFromFavourites,
+    )
+
+  const fetchItems = useCallback(
+    (page?: number) => {
+      dispatch(FETCH_LFF(page ?? itemsData?.next ?? 1))
+    },
+    [itemsData?.next],
   )
-  const itemsData = latestFromFavourites?.itemsData
 
   useEffect(() => {
     fetchItems(1)
@@ -30,10 +37,6 @@ const LatestFromFavourites = () => {
       dispatch(CLEAR_LFF())
     }
   }, [])
-
-  const fetchItems = (page?: number) => {
-    dispatch(FETCH_LFF(page ?? itemsData?.next ?? 1))
-  }
 
   const itemsComponents = () => {
     return itemsData?.results.map((item, i) => {
@@ -58,14 +61,10 @@ const LatestFromFavourites = () => {
 
       let renderQty = itemsData.results.length
 
-      if (latestFromFavourites.isFetchingItems && itemsData.current) {
+      if (isFetchingItems && itemsData.current) {
         renderQty = itemsData.current * 10
       }
-      if (
-        latestFromFavourites.isFetchingData &&
-        !latestFromFavourites.isFetchingItems &&
-        itemsData.current
-      ) {
+      if (isFetchingData && !isFetchingItems && itemsData.current) {
         renderQty = (itemsData.current - 1) * 10
       }
 
@@ -91,13 +90,17 @@ const LatestFromFavourites = () => {
     })
   }
 
-  const hasItems = itemsData?.results.length !== 0
+  const hasItems = !!itemsData?.results.length
 
-  if (!itemsData || (latestFromFavourites.isFetchingData && !hasItems)) {
+  if (error?.message) {
+    return <p className={styles.noContent}>{error.message}</p>
+  }
+
+  if (!itemsData || (isFetchingData && !hasItems)) {
     return <Loader className={styles.loader} />
   }
 
-  if (!latestFromFavourites.isFetchingData && hasItems) {
+  if (!isFetchingData && hasItems) {
     return <p className={styles.noContent}>No content</p>
   }
 
@@ -105,7 +108,7 @@ const LatestFromFavourites = () => {
     <PaginatedList
       next={itemsData.next}
       buttonChild="See more"
-      isFetching={latestFromFavourites.isFetchingData}
+      isFetching={isFetchingData}
       fetchOnButtonClick="once"
       intersectingElement={3}
       onLoadMore={fetchItems}

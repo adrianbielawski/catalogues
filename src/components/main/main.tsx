@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense, useCallback, useEffect } from 'react'
 import { Switch, Redirect, useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import styles from './main.module.scss'
@@ -42,10 +42,10 @@ const Main = (props: HydratedRouteComponentProps) => {
     dispatch(GET_CURRENT_USER(username))
   }, [username])
 
-  const handleCloseMessage = () => {
+  const handleCloseMessage = useCallback(() => {
     dispatch(CLEAR_CURRENT_USER_ERROR())
     history.push(`/${authUser?.username ?? ''}`, undefined)
-  }
+  }, [authUser?.username])
 
   if (
     currentUser == null ||

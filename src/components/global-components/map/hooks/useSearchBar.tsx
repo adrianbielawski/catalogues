@@ -17,10 +17,10 @@ const useSearchBar = () => {
 
   useEffect(() => {
     const mapWrapper = document.getElementById('leaflet-map')
-    const form = mapWrapper!.getElementsByTagName('form')[0]
-    const clearButton = form.getElementsByTagName('a')[0]
+    const form = mapWrapper?.getElementsByTagName('form')[0]
+    const clearButton = form?.getElementsByTagName('a')[0]
 
-    clearButton.addEventListener('click', handleClear)
+    clearButton?.addEventListener('click', handleClear)
     map.on('geosearch/showlocation', handleSelect)
   }, [])
 

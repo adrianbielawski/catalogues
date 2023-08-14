@@ -22,10 +22,8 @@ const TopItems = () => {
   const isFetchingCataloguesData = useTypedSelector(
     (state) => state.modules.authUserCatalogues.isFetchingCataloguesData,
   )
-  const topItems = useTypedSelector(
-    (state) => state.modules.authUserDashboard.topItems,
-  )
-  const itemsData = topItems.itemsData
+  const { itemsData, isFetchingData, isFetchingItems, error } =
+    useTypedSelector((state) => state.modules.authUserDashboard.topItems)
 
   useEffect(() => {
     fetchItems(1)
@@ -63,14 +61,10 @@ const TopItems = () => {
 
         let renderQty = itemsData.results.length
 
-        if (topItems.isFetchingItems && itemsData.current) {
+        if (isFetchingItems && itemsData.current) {
           renderQty = itemsData.current * 10
         }
-        if (
-          topItems.isFetchingData &&
-          !topItems.isFetchingItems &&
-          itemsData.current
-        ) {
+        if (isFetchingData && !isFetchingItems && itemsData.current) {
           renderQty = (itemsData.current - 1) * 10
         }
 
@@ -94,18 +88,22 @@ const TopItems = () => {
           />
         )
       }),
-    [itemsData, topItems],
+    [itemsData, isFetchingData, isFetchingItems],
   )
 
-  const hasItems = itemsData?.results.length !== 0
-  const isInitialFetch = topItems.isFetchingData && !hasItems
+  const hasItems = !!itemsData?.results.length
+  const isInitialFetch = isFetchingData && !hasItems
   const isFetchingCatalogues = authUser.id && isFetchingCataloguesData
+
+  if (error?.message) {
+    return <p className={styles.noContent}>{error.message}</p>
+  }
 
   if (!itemsData || isInitialFetch || isFetchingCatalogues) {
     return <Loader className={styles.loader} />
   }
 
-  if (!topItems.isFetchingData && !hasItems) {
+  if (!isFetchingData && !hasItems) {
     return <p className={styles.noContent}>No content</p>
   }
 
@@ -113,7 +111,7 @@ const TopItems = () => {
     <PaginatedList
       next={itemsData.next}
       buttonChild="See more"
-      isFetching={topItems.isFetchingData}
+      isFetching={isFetchingData}
       fetchOnButtonClick="once"
       intersectingElement={3}
       onLoadMore={fetchItems}

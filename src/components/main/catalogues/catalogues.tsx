@@ -1,4 +1,11 @@
-import { Suspense, useEffect, useRef, useState } from 'react'
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
 import { upperFirst } from 'lodash'
 import styles from './catalogues.module.scss'
@@ -47,8 +54,14 @@ const Catalogues = () => {
   )
   const [minHeight, setMinHeight] = useState(0)
 
+  const getMinHeight = useCallback(() => {
+    const top = cataloguesRef.current!.getBoundingClientRect().top
+    const minHeight = screenHeight - top - window.scrollY
+    setMinHeight(minHeight)
+  }, [screenHeight])
+
   useEffect(() => {
-    if (currentUser != null) {
+    if (currentUser !== null) {
       dispatch(FETCH_CURRENT_USER_CATALOGUES())
     }
   }, [currentUser])
@@ -65,36 +78,30 @@ const Catalogues = () => {
     }
 
     getMinHeight()
-  }, [cataloguesRef.current, screenHeight])
+  }, [screenHeight, getMinHeight])
 
-  const getMinHeight = () => {
-    const top = cataloguesRef.current!.getBoundingClientRect().top
-    const minHeight = screenHeight - top - window.pageYOffset
-    setMinHeight(minHeight)
-  }
-
-  const handleRedirectToSettings = () => {
+  const handleRedirectToSettings = useCallback(() => {
     history.push(`/${currentUser!.username}/settings/account/manage-catalogues`)
-  }
+  }, [currentUser?.username])
 
-  const getNoCatalogueMessage = () => {
+  const getNoCatalogueMessage = useMemo(() => {
     if (authUser?.username !== currentUser?.username) {
       return (
         <p className={styles.noPublicCatalogues}>
           {`${upperFirst(currentUser?.username)} has no public catalogues`}
         </p>
       )
-    } else {
-      return (
-        <div className={styles.noCatalogues}>
-          <p>You have no catalogues yet,</p>
-          <p className={styles.anchor} onClick={handleRedirectToSettings}>
-            click here to create your first catalogue
-          </p>
-        </div>
-      )
     }
-  }
+
+    return (
+      <div className={styles.noCatalogues}>
+        <p>You have no catalogues yet,</p>
+        <p className={styles.anchor} onClick={handleRedirectToSettings}>
+          click here to create your first catalogue
+        </p>
+      </div>
+    )
+  }, [authUser?.username, currentUser?.username])
 
   if (currentUserCatalogues.isFetchingCatalogues || firstRender) {
     return <Loader className={styles.loader} />
@@ -113,7 +120,7 @@ const Catalogues = () => {
       >
         <Header />
         {currentUserCatalogues.cataloguesData.length === 0 || !catalogueSlug ? (
-          getNoCatalogueMessage()
+          getNoCatalogueMessage
         ) : (
           <Suspense fallback={<Loader />}>
             <Switch>

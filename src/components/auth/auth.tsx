@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, useCallback } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styles from './auth.module.scss'
 // Redux
@@ -16,9 +16,9 @@ const Auth = () => {
   const dispatch = useAppDispatch()
   const authUser = useTypedSelector((state) => state.modules.authUser)
 
-  const clearError = () => {
+  const clearError = useCallback(() => {
     dispatch(CLEAR_AUTH_USER_ERROR())
-  }
+  }, [])
 
   return (
     <div className={styles.auth}>

@@ -34,7 +34,7 @@ const UserDashboard = () => {
 
   const getMinHeight = () => {
     const top = userDashboardRef.current!.getBoundingClientRect().top
-    const minHeight = app.screenHeight - top - window.pageYOffset
+    const minHeight = app.screenHeight - top - window.scrollY
     setMinHeight(minHeight)
   }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
@@ -16,36 +16,36 @@ import LatestCatalogues from './latest-catalogues/latestCatalogues'
 import LatestItems from './latest-items/latestItems'
 import TopItems from 'components/main/user-dashboard/top-items/topItems'
 
+const COLUMNS = [
+  {
+    title: 'Latest catalogues',
+    component: <LatestCatalogues />,
+  },
+  {
+    title: 'Latest items',
+    component: <LatestItems />,
+  },
+  {
+    title: 'Highest rated',
+    component: <TopItems />,
+  },
+]
+
 const Homepage = () => {
   const app = useTypedSelector((state) => state.modules.app)
   const [currentColumn, setCurrentColumn] = useState(0)
 
-  const handleColumnChange = (column: number) => {
+  const handleColumnChange = useCallback((column: number) => {
     setCurrentColumn(column)
-  }
+  }, [])
 
-  const showPrevColumn = () => {
+  const showPrevColumn = useCallback(() => {
     handleColumnChange(currentColumn - 1)
-  }
+  }, [handleColumnChange, currentColumn])
 
-  const showNextColumn = () => {
+  const showNextColumn = useCallback(() => {
     handleColumnChange(currentColumn + 1)
-  }
-
-  const COLUMNS = [
-    {
-      title: 'Latest catalogues',
-      component: <LatestCatalogues />,
-    },
-    {
-      title: 'Latest items',
-      component: <LatestItems />,
-    },
-    {
-      title: 'Highest rated',
-      component: <TopItems />,
-    },
-  ]
+  }, [handleColumnChange, currentColumn])
 
   return (
     <div className={styles.homepage} style={{ minHeight: app.screenHeight }}>

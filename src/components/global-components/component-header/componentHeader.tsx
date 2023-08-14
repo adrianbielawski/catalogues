@@ -41,7 +41,7 @@ const ComponentHeader = (props: Props) => {
   }, [largeViewport, scrollData, show])
 
   const handleScroll = useCallback(() => {
-    const offset = window.pageYOffset
+    const offset = window.scrollY
 
     if (offset > scrollData.offset) {
       handleScrollDown(offset)
