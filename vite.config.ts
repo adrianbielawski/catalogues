@@ -37,6 +37,7 @@ export default defineConfig(({ mode }) => {
         '^/(api|admin)': {
           target: env.API_URL,
           changeOrigin: true,
+          xfwd: true,
         },
         '^/(static|media)': env.API_URL,
       },
