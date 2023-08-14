@@ -21,7 +21,7 @@ const LatestFromFavourites = () => {
   const latestFromFavourites = useTypedSelector(
     (state) => state.modules.authUserDashboard.latestFromFavourites,
   )
-  const itemsData = latestFromFavourites.itemsData!
+  const itemsData = latestFromFavourites?.itemsData
 
   useEffect(() => {
     fetchItems(1)
@@ -36,7 +36,7 @@ const LatestFromFavourites = () => {
   }
 
   const itemsComponents = () => {
-    return itemsData.results.map((item, i) => {
+    return itemsData?.results.map((item, i) => {
       const handleAddComment = (text: string, parentId?: number) => {
         dispatch(
           POST_LFF_ITEM_COMMENT({
@@ -91,7 +91,7 @@ const LatestFromFavourites = () => {
     })
   }
 
-  const hasItems = itemsData.results.length !== 0
+  const hasItems = itemsData?.results.length !== 0
 
   if (!itemsData || (latestFromFavourites.isFetchingData && !hasItems)) {
     return <Loader className={styles.loader} />

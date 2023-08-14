@@ -22,7 +22,7 @@ const RecommendedCatalogues = () => {
   const recommended = useTypedSelector(
     (state) => state.modules.authUserDashboard.recommendedCatalogues,
   )
-  const cataloguesData = recommended.cataloguesData!
+  const cataloguesData = recommended?.cataloguesData
 
   useEffect(() => {
     fetchRecommended(1)
@@ -42,7 +42,7 @@ const RecommendedCatalogues = () => {
   }
 
   const cataloguesComponents = () => {
-    return cataloguesData.results.map((id, i) => {
+    return cataloguesData?.results.map((id, i) => {
       const catalogueCardClass = cx('catalogueCard', {
         last: i === cataloguesData.results.length - 1,
       })
@@ -57,7 +57,7 @@ const RecommendedCatalogues = () => {
     })
   }
 
-  const hasCataloguesData = cataloguesData.results.length === 0
+  const hasCataloguesData = cataloguesData?.results.length === 0
 
   if (
     !cataloguesData ||

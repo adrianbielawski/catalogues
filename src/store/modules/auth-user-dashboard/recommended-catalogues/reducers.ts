@@ -16,7 +16,7 @@ export const recommendedCatalogues = {
 export const fetchRecommendedCatalogues = {
   FETCH_RECOMMENDED_CATALOGUES(
     state: State,
-    action: PayloadAction<T.FetchrecommendedCatalogues>,
+    action: PayloadAction<T.FetchRecommendedCatalogues>,
   ) {},
   FETCH_RECOMMENDED_CATALOGUES_START(state: State) {
     state.isFetchingCatalogues = true
