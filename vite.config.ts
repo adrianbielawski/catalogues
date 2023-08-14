@@ -45,13 +45,15 @@ export default defineConfig(({ mode }) => {
 
   if (mode === 'development') {
     config.plugins.push(basicSsl())
+  }
+
+  if (mode === 'production') {
     config.plugins.push(
       sentryVitePlugin({
         org: 'catalogues',
         project: 'catalogues',
         authToken: process.env.SENTRY_AUTH_TOKEN,
         debug: true,
-        disable: mode === 'development',
         telemetry: false,
       }),
     )
