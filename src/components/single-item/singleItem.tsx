@@ -52,7 +52,7 @@ const Item = (props: HydratedRouteComponentProps) => {
 
   const getMinHeight = () => {
     const top = singleItemRef.current!.getBoundingClientRect().top
-    const minHeight = screenHeight - top - window.pageYOffset
+    const minHeight = screenHeight - top - window.scrollY
     setMinHeight(minHeight)
   }
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './favouriteItems.module.scss'
 // Redux
 import { FETCH_FAVOURITE_ITEMS_DATA } from 'store/modules/favourite-items/slice'
@@ -21,6 +21,12 @@ const FavouriteItems = () => {
   )
   const [minHeight, setMinHeight] = useState(0)
 
+  const getMinHeight = useCallback(() => {
+    const top = favouriteItemsRef.current!.getBoundingClientRect().top
+    const minHeight = screenHeight - top - window.scrollY
+    setMinHeight(minHeight)
+  }, [screenHeight])
+
   useEffect(() => {
     dispatch(FETCH_FAVOURITE_ITEMS_DATA())
   }, [])
@@ -31,13 +37,7 @@ const FavouriteItems = () => {
     }
 
     getMinHeight()
-  }, [favouriteItemsRef.current, screenHeight])
-
-  const getMinHeight = () => {
-    const top = favouriteItemsRef.current!.getBoundingClientRect().top
-    const minHeight = screenHeight - top - window.pageYOffset
-    setMinHeight(minHeight)
-  }
+  }, [screenHeight, getMinHeight])
 
   return (
     <FiltersBarBulkContextProvider values={filtersBarInitialState}>

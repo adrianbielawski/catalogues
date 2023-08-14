@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import classNames from 'classnames/bind'
 import styles from './recommendedCatalogues.module.scss'
 // Redux
@@ -19,10 +19,21 @@ const RecommendedCatalogues = () => {
   const catalogues = useTypedSelector(
     (state) => state.entities.catalogues.entities,
   )
-  const recommended = useTypedSelector(
+  const { cataloguesData, isFetchingCatalogues, error } = useTypedSelector(
     (state) => state.modules.authUserDashboard.recommendedCatalogues,
   )
-  const cataloguesData = recommended?.cataloguesData
+
+  const fetchRecommended = useCallback(
+    (page?: number) => {
+      dispatch(
+        FETCH_RECOMMENDED_CATALOGUES({
+          page: page ?? cataloguesData?.next ?? 1,
+          salt: cataloguesData?.salt ?? undefined,
+        }),
+      )
+    },
+    [cataloguesData?.next, cataloguesData?.salt],
+  )
 
   useEffect(() => {
     fetchRecommended(1)
@@ -31,15 +42,6 @@ const RecommendedCatalogues = () => {
       dispatch(CLEAR_RECOMMENDED_CATALOGUES())
     }
   }, [])
-
-  const fetchRecommended = (page?: number) => {
-    dispatch(
-      FETCH_RECOMMENDED_CATALOGUES({
-        page: page ?? cataloguesData?.next ?? 1,
-        salt: cataloguesData?.salt ?? undefined,
-      }),
-    )
-  }
 
   const cataloguesComponents = () => {
     return cataloguesData?.results.map((id, i) => {
@@ -57,16 +59,17 @@ const RecommendedCatalogues = () => {
     })
   }
 
-  const hasCataloguesData = cataloguesData?.results.length === 0
+  const hasCataloguesData = !!cataloguesData?.results.length
 
-  if (
-    !cataloguesData ||
-    (recommended.isFetchingCatalogues && !hasCataloguesData)
-  ) {
+  if (error?.message) {
+    return <p className={styles.noContent}>{error.message}</p>
+  }
+
+  if (!cataloguesData || (isFetchingCatalogues && !hasCataloguesData)) {
     return <Loader className={styles.loader} />
   }
 
-  if (!recommended.isFetchingCatalogues && !hasCataloguesData) {
+  if (!isFetchingCatalogues && !hasCataloguesData) {
     return <p className={styles.noContent}>No content</p>
   }
 
@@ -74,7 +77,7 @@ const RecommendedCatalogues = () => {
     <PaginatedList
       next={cataloguesData.next}
       buttonChild="See more"
-      isFetching={recommended.isFetchingCatalogues}
+      isFetching={isFetchingCatalogues}
       fetchOnButtonClick="once"
       intersectingElement={3}
       onLoadMore={fetchRecommended}

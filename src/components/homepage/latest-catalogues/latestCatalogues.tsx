@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestCatalogues.module.scss'
 // Redux
@@ -22,7 +22,7 @@ const LatestCatalogues = () => {
   const latestCatalogues = useTypedSelector(
     (state) => state.modules.homepage.latestCatalogues,
   )
-  const cataloguesData = latestCatalogues.cataloguesData!
+  const { cataloguesData, error } = latestCatalogues
 
   useEffect(() => {
     fetchCatalogues(1)
@@ -32,27 +32,36 @@ const LatestCatalogues = () => {
     }
   }, [])
 
-  const fetchCatalogues = (page?: number) => {
-    dispatch(FETCH_LATEST_CATALOGUES(page ?? cataloguesData?.next ?? 1))
+  const fetchCatalogues = useCallback(
+    (page?: number) => {
+      dispatch(FETCH_LATEST_CATALOGUES(page ?? cataloguesData?.next ?? 1))
+    },
+    [cataloguesData?.next],
+  )
+
+  const cataloguesComponents = useMemo(
+    () =>
+      cataloguesData?.results.map((id, i) => {
+        const catalogueCardClass = cx('catalogueCard', {
+          last: i === cataloguesData.results.length - 1,
+        })
+
+        return (
+          <CatalogueCard
+            className={catalogueCardClass}
+            catalogue={catalogues[id]!}
+            key={id}
+          />
+        )
+      }),
+    [cataloguesData?.results, catalogues],
+  )
+
+  const hasCataloguesData = !!cataloguesData?.results.length
+
+  if (error?.message) {
+    return <p className={styles.noContent}>{error.message}</p>
   }
-
-  const cataloguesComponents = () => {
-    return cataloguesData.results.map((id, i) => {
-      const catalogueCardClass = cx('catalogueCard', {
-        last: i === cataloguesData.results.length - 1,
-      })
-
-      return (
-        <CatalogueCard
-          className={catalogueCardClass}
-          catalogue={catalogues[id]!}
-          key={id}
-        />
-      )
-    })
-  }
-
-  const hasCataloguesData = cataloguesData?.results.length === 0
 
   if (
     !cataloguesData ||
@@ -74,7 +83,7 @@ const LatestCatalogues = () => {
       intersectingElement={3}
       onLoadMore={fetchCatalogues}
     >
-      {cataloguesComponents()}
+      {cataloguesComponents}
     </PaginatedList>
   )
 }
