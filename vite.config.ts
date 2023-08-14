@@ -15,18 +15,7 @@ export default defineConfig(({ mode }) => {
     },
     base: '/',
     publicDir: '../assets',
-    plugins: [
-      react(),
-      vitePluginFaviconsInject(`./src/assets/img/icon.svg`),
-      sentryVitePlugin({
-        org: 'catalogues',
-        project: 'catalogues',
-        authToken: process.env.SENTRY_AUTH_TOKEN,
-        debug: true,
-        disable: mode === 'development',
-        telemetry: false,
-      }),
-    ],
+    plugins: [react(), vitePluginFaviconsInject(`./src/assets/img/icon.svg`)],
     resolve: {
       alias: {
         path: 'path-browserify', // Module "path" has been externalized for browser compatibility
@@ -56,6 +45,16 @@ export default defineConfig(({ mode }) => {
 
   if (mode === 'development') {
     config.plugins.push(basicSsl())
+    config.plugins.push(
+      sentryVitePlugin({
+        org: 'catalogues',
+        project: 'catalogues',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        debug: true,
+        disable: mode === 'development',
+        telemetry: false,
+      }),
+    )
   }
 
   return config
