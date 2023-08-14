@@ -16,7 +16,7 @@ if (SENTRY_DSN !== undefined) {
 
 // eslint-disable-next-line react/no-deprecated
 ReactDOM.render(
-  <ErrorBoundary fallback={'An error has occurred'}>
+  <ErrorBoundary fallback={<p>An error has occurred</p>}>
     <Provider store={store}>
       <BrowserRouter basename={BASE_URL}>
         <App />
