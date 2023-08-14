@@ -41,7 +41,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/react": "^6.3.0",
     "axios": "^0.21.0",
-    "axios-observable": "^1.1.6",
+    "axios-observable": "^1.2.1",
     "classnames": "^2.3.2",
     "favicons": "^7.1.4",
     "leaflet": "^1.9.4",
