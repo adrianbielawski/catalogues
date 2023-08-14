@@ -25,7 +25,7 @@ const LatestItems = () => {
   const latestItems = useTypedSelector(
     (state) => state.modules.homepage.latestItems,
   )
-  const itemsData = latestItems.itemsData!
+  const itemsData = latestItems.itemsData
 
   useEffect(() => {
     fetchItems(1)
@@ -40,7 +40,7 @@ const LatestItems = () => {
   }
 
   const itemsComponents = () => {
-    return itemsData.results.map((item, i) => {
+    return itemsData?.results.map((item, i) => {
       const handleAddComment = (text: string, parentId?: number) => {
         dispatch(
           POST_LATEST_ITEM_COMMENT({
@@ -94,7 +94,7 @@ const LatestItems = () => {
     })
   }
 
-  const hasItemsData = itemsData.results.length === 0
+  const hasItemsData = itemsData?.results.length === 0
 
   if (
     !itemsData ||

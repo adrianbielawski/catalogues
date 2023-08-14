@@ -25,7 +25,7 @@ const TopItems = () => {
   const topItems = useTypedSelector(
     (state) => state.modules.authUserDashboard.topItems,
   )
-  const itemsData = topItems.itemsData!
+  const itemsData = topItems.itemsData
 
   useEffect(() => {
     fetchItems(1)
@@ -41,7 +41,7 @@ const TopItems = () => {
 
   const itemsComponents = useMemo(
     () =>
-      itemsData.results.map((item, i) => {
+      itemsData?.results.map((item, i) => {
         const handleAddComment = (text: string, parentId?: number) => {
           dispatch(
             POST_TOP_ITEM_COMMENT({
@@ -97,7 +97,7 @@ const TopItems = () => {
     [itemsData, topItems],
   )
 
-  const hasItems = itemsData.results.length !== 0
+  const hasItems = itemsData?.results.length !== 0
   const isInitialFetch = topItems.isFetchingData && !hasItems
   const isFetchingCatalogues = authUser.id && isFetchingCataloguesData
 

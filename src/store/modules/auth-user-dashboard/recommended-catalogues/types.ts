@@ -6,7 +6,7 @@ export interface RecommendedCataloguesState {
   error: T.ErrorMessage | null
 }
 
-export interface FetchrecommendedCatalogues {
+export interface FetchRecommendedCatalogues {
   page: number
   salt?: string
 }

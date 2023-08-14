@@ -52,7 +52,7 @@ const LatestCatalogues = () => {
     })
   }
 
-  const hasCataloguesData = cataloguesData.results.length === 0
+  const hasCataloguesData = cataloguesData?.results.length === 0
 
   if (
     !cataloguesData ||
