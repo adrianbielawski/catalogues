@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShareAlt } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -11,7 +11,7 @@ interface Data {
   url: string
 }
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   data: Data
 }
 

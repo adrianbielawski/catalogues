@@ -2,12 +2,9 @@ import { useContext, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import styles from './search.module.scss'
-// Custom hooks and utils
 import { useDebouncedCallback } from 'src/hooks/useDebouncedCallback'
 import { mergeRefs } from 'src/utils'
-// Contexts
 import { SearchContext } from './searchStore'
-// Custom components
 import Input from 'components/global-components/input/input'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 

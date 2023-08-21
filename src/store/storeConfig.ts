@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { $CombinedState, combineReducers } from 'redux'
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import { createSelectorHook, useDispatch } from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
@@ -58,6 +58,8 @@ export const store = configureStore({
 epicMiddleware.run(rootEpic)
 
 export type RootState = ReturnType<typeof rootReducer>
+
+export type Entity = Exclude<keyof RootState['entities'], typeof $CombinedState>
 export type AppDispatch = typeof store.dispatch
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useTypedSelector = createSelectorHook<RootState>()

@@ -11,13 +11,16 @@ export interface ErrorMessage {
   message: string
 }
 
+export interface LocationParams {
+  username?: string
+  catalogueSlug?: string
+  catalogue?: DeserializedCatalogue
+  itemId?: string
+}
+
 export interface Referrer {
   pathname: string
-  params: {
-    username?: string
-    slug?: string
-    catalogue?: DeserializedCatalogue
-  }
+  params: LocationParams
 }
 
 export interface LocationState {

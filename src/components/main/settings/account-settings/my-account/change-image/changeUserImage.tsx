@@ -1,12 +1,9 @@
-import { useRef } from 'react'
-import * as React from 'react'
+import { useRef, ChangeEvent } from 'react'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import styles from './changeUserImage.module.scss'
-// Redux
 import { POST_USER_IMAGE } from 'store/modules/auth-user/slice'
 import { userSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import Avatar from 'components/global-components/avatar/avatar'
 import Loader from 'components/global-components/loader/loader'
@@ -21,7 +18,7 @@ const ChangeUserImage = () => {
     inputRef.current?.click()
   }
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     dispatch(POST_USER_IMAGE(URL.createObjectURL(e.target.files![0])))
   }
 

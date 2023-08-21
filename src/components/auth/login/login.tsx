@@ -1,37 +1,36 @@
-import { useRef, useState } from 'react'
-import * as React from 'react'
-import { Redirect, useHistory, useLocation } from 'react-router-dom'
+import { useRef, useState, FormEvent } from 'react'
 import styles from './login.module.scss'
-// Types
-import { LocationState } from 'src/globalTypes'
-// Redux
 import { LOG_IN } from 'store/modules/auth-user/slice'
 import { usersSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
+import { useNavigate, useLocation, Navigate } from 'react-router-dom'
 
 const Login = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
-  const location = useLocation<LocationState>()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const users = useTypedSelector(usersSelector())
-  const authUser = useTypedSelector((state) => state.modules.authUser)
-  const [isValid, setIsValid] = useState(false)
+  const { authUser } = useTypedSelector((state) => state.modules)
+
   const emailInput = useRef<HTMLInputElement>(null)
   const passwordInput = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [isValid, setIsValid] = useState(false)
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const email = emailInput.current!.value
     const password = passwordInput.current!.value
 
-    dispatch(LOG_IN({ email, password, history, location }))
+    dispatch(LOG_IN({ email, password, navigate, location }))
   }
 
-  const validateInput = (e: React.FormEvent<HTMLFormElement>) => {
+  const validateInput = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const isEmailValid = emailInput.current!.checkValidity()
     const isPasswordValid = passwordInput.current!.checkValidity()
@@ -44,17 +43,11 @@ const Login = () => {
   }
 
   const handleSignUp = () => {
-    history.push('/signup')
+    navigate('/auth/signup')
   }
 
   if (authUser.id) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/${users[authUser.id]!.username}`,
-        }}
-      />
-    )
+    return <Navigate to={`/${users[authUser.id]!.username}`} />
   }
 
   return (

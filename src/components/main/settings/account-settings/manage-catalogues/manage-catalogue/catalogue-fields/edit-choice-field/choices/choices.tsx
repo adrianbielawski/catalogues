@@ -4,22 +4,20 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { orderBy } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choices.module.scss'
-// Types
 import {
   type AuthUserChoiceData,
   type AuthUserChoiceFieldData,
   type DeserializedField,
 } from 'src/globalTypes'
-// Redux
 import { REMOVE_FIELD_CHOICE } from 'store/modules/auth-user-catalogues/slice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
+import { useAppDispatch } from 'store/storeConfig'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import SearchBar from 'components/global-components/search-bar/searchBar'
 import ProtectedConfirmMessageModal, {
   type ProtectedMessage,
 } from 'components/global-components/protected-confirm-message-modal/protectedConfirmMessageModal'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   field: DeserializedField
@@ -32,7 +30,9 @@ const cx = classNames.bind(styles)
 
 const Choices = (props: Props) => {
   const dispatch = useAppDispatch()
-  const choices = useTypedSelector((state) => state.entities.choices.entities)
+
+  const choices = useEntitiesSelector('choices')
+
   const [choicesSortDir, setChoicesSortDir] = useState<'asc' | 'desc'>('asc')
   const [searchChoiceValue, setSearchChoiceValue] = useState('')
   const [protectedMessage, setProtectedMessage] =

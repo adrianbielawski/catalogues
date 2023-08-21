@@ -1,20 +1,15 @@
-import { useContext } from 'react'
-import * as React from 'react'
+import { useContext, ForwardRefRenderFunction, forwardRef } from 'react'
 import styles from './sortChoice.module.scss'
-// Context
 import { SortContext } from '../sortStore'
-// Types
 import { Option } from '../sortTypes'
-// Maps
 import { sortMap } from '../sortMaps'
-// Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 
 interface Props {
   option: Option
 }
 
-const SortChoice: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
+const SortChoice: ForwardRefRenderFunction<HTMLDivElement, Props> = (
   props,
   ref,
 ) => {
@@ -42,4 +37,4 @@ const SortChoice: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   )
 }
 
-export default React.forwardRef(SortChoice)
+export default forwardRef(SortChoice)

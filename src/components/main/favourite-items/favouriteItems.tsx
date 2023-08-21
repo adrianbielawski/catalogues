@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './favouriteItems.module.scss'
-// Redux
 import { FETCH_FAVOURITE_ITEMS_DATA } from 'store/modules/favourite-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Filters bar context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
 import { filtersBarInitialState } from './filter-bar/utils/contextInitialValues'
-// Custom components
 import Header from 'components/global-components/header/header'
 import FavouriteItemsContent from './favourite-items-content/favouriteItemsContent'
 
 const FavouriteItems = () => {
   const dispatch = useAppDispatch()
-  const favouriteItemsRef = useRef<HTMLDivElement>(null)
+
   const screenHeight = useTypedSelector(
     (state) => state.modules.app.screenHeight,
   )
   const isFetchingFavItemsData = useTypedSelector(
     (state) => state.modules.favouriteItems.isFetchingFavItemsData,
   )
+
+  const favouriteItemsRef = useRef<HTMLDivElement>(null)
+
   const [minHeight, setMinHeight] = useState(0)
 
   const getMinHeight = useCallback(() => {

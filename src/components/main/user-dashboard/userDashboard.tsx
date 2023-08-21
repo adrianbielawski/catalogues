@@ -5,11 +5,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './userDashboard.module.scss'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
-// Utils
 import { scrollTop } from 'src/utils'
-// Custom components
 import Header from 'components/global-components/header/header'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import Columns from 'components/global-components/columns/columns'
@@ -19,8 +16,10 @@ import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
 import TopItems from './top-items/topItems'
 
 const UserDashboard = () => {
-  const userDashboardRef = useRef<HTMLDivElement>(null)
   const app = useTypedSelector((state) => state.modules.app)
+
+  const userDashboardRef = useRef<HTMLDivElement>(null)
+
   const [minHeight, setMinHeight] = useState(0)
   const [currentColumn, setCurrentColumn] = useState(0)
 

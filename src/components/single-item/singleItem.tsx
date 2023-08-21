@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import styles from './singleItem.module.scss'
-// Types
-import { DeserializedItem, LocationState } from 'src/globalTypes'
-import { HydratedRouteComponentProps } from 'src/router'
-// Redux
+import { useNavigate, useParams } from 'react-router-dom'
+import { DeserializedItem } from 'src/globalTypes'
 import {
   CLEAR_SINGLE_ITEM_DATA,
   CLEAR_SINGLE_ITEM_ERROR,
@@ -16,17 +12,18 @@ import {
   REFRESH_SINGLE_ITEM,
 } from 'store/modules/single-item/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Custom components
 import Header from 'components/global-components/header/header'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import Loader from 'components/global-components/loader/loader'
+import styles from './singleItem.module.scss'
 
-const Item = (props: HydratedRouteComponentProps) => {
+const Item = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
+
+  const navigate = useNavigate()
+  const { itemId } = useParams()
   const singleItemRef = useRef<HTMLDivElement>(null)
-  const itemId = props.match.params.itemId!
   const screenHeight = useTypedSelector(
     (state) => state.modules.app.screenHeight,
   )
@@ -57,7 +54,10 @@ const Item = (props: HydratedRouteComponentProps) => {
   }
 
   const fetchItem = () => {
-    dispatch(FETCH_SINGLE_ITEM(itemId))
+    if (!itemId) {
+      return
+    }
+    dispatch(FETCH_SINGLE_ITEM(Number(itemId)))
   }
 
   const handleEditItem = () => {
@@ -69,7 +69,10 @@ const Item = (props: HydratedRouteComponentProps) => {
   }
 
   const handleEditCancel = () => {
-    dispatch(REFRESH_SINGLE_ITEM(itemId))
+    if (!itemId) {
+      return
+    }
+    dispatch(REFRESH_SINGLE_ITEM(Number(itemId)))
   }
 
   const handleAddComment = (text: string, parentId?: number) => {
@@ -93,7 +96,7 @@ const Item = (props: HydratedRouteComponentProps) => {
 
   const clearError = () => {
     dispatch(CLEAR_SINGLE_ITEM_ERROR())
-    history.replace('/')
+    navigate('/')
   }
 
   const error = singleItem.error

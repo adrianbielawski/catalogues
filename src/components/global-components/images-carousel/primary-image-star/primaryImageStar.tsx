@@ -1,13 +1,12 @@
-import * as React from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar as solidStar } from '@fortawesome/free-solid-svg-icons'
 import { faStar as regStar } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './primaryImageStar.module.scss'
-// Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   solid: boolean
   className?: string
   onClick: () => void

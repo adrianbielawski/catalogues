@@ -1,10 +1,5 @@
-import { useHistory, useLocation } from 'react-router-dom'
-// Types
-import { LocationState } from 'src/globalTypes'
-// Hooks and utils
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 import { useDelay } from 'src/hooks/useDelay'
-// Redux
 import {
   CHANGE_USERNAME,
   TOGGLE_USERNAME_EDIT,
@@ -12,17 +7,20 @@ import {
 } from 'store/modules/auth-user/slice'
 import { userSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import EditableField from 'components/global-components/editable-field/editableField'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const ChangeUsername = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
-  const location = useLocation<LocationState>()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const authUser = useTypedSelector((state) => state.modules.authUser)
   const user = useTypedSelector(userSelector(authUser.id!))!
-  const delayCompleated = useDelay(authUser.isSubmittingUsername)
+
+  const delayCompleted = useDelay(authUser.isSubmittingUsername)
 
   const handleEditUsername = () => {
     dispatch(TOGGLE_USERNAME_EDIT(!authUser.isEditingUsername))
@@ -46,7 +44,7 @@ const ChangeUsername = () => {
       CHANGE_USERNAME({
         name: username,
         location,
-        history,
+        navigate,
       }),
     )
   }
@@ -57,7 +55,7 @@ const ChangeUsername = () => {
 
   const content = authUser.isEditingUsername ? (
     <InputWithConfirmButton
-      loading={delayCompleated}
+      loading={delayCompleted}
       {...inputAttributes}
       buttonProps={{ disabled: authUser.invalidUsernameMessage?.length !== 0 }}
       invalidInputMessage={authUser.invalidUsernameMessage}

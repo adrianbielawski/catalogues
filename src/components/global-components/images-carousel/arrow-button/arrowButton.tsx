@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChevronLeft,
@@ -8,7 +8,7 @@ import {
 import classNames from 'classnames/bind'
 import styles from './arrowButton.module.scss'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftArrow: boolean
   className?: string
   onClick: () => void

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import styles from './editTextField.module.scss'
-// Redux
 import {
   CHANGE_FIELD_NAME,
   CHANGE_FIELD_PUBLIC,
@@ -8,18 +7,16 @@ import {
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'
-// Types
 import {
   type AuthUserTextFieldData,
   type DeserializedField,
 } from 'src/globalTypes'
-// Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
-// Components
 import Input from 'components/global-components/input/input'
 import Button from 'components/global-components/button/button'
 import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   field: DeserializedField
@@ -28,10 +25,12 @@ interface Props {
 
 const EditTextField = (props: Props) => {
   const dispatch = useAppDispatch()
-  const fields = useTypedSelector((state) => state.entities.fields.entities)
+
+  const fields = useEntitiesSelector('fields')
   const fieldsData = useTypedSelector(
     authUserFieldsDataSelector(props.field.catalogueId),
   )
+
   const [inputError, setInputError] = useState('')
   const [message, setMessage] = useState({ title: '', value: '' })
 

@@ -1,16 +1,13 @@
-import { useEffect, useRef, useContext, useState } from 'react'
-import * as React from 'react'
+import { useEffect, useRef, useContext, useState, ComponentType } from 'react'
 import { clamp } from 'lodash'
-// Contexts
 import { ListContext } from '../listStore'
-// Components
 import Item from '../item/item'
 import AnimateHeight from 'react-animate-height'
 
 interface Props {
   items: Array<Record<string, any>>
   itemsProps?: Record<string, any>
-  itemComponent: React.ComponentType<any>
+  itemComponent: ComponentType<any>
   maxHeight: number
 }
 

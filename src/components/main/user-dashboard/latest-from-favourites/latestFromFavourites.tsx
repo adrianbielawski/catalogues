@@ -1,7 +1,6 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestFromFavourites.module.scss'
-// Redux
 import {
   CLEAR_LFF,
   FETCH_LFF,
@@ -9,7 +8,6 @@ import {
   POST_LFF_ITEM_COMMENT,
 } from 'store/modules/auth-user-dashboard/latest-from-favourites/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
@@ -18,6 +16,7 @@ const cx = classNames.bind(styles)
 
 const LatestFromFavourites = () => {
   const dispatch = useAppDispatch()
+
   const { itemsData, isFetchingData, isFetchingItems, error } =
     useTypedSelector(
       (state) => state.modules.authUserDashboard.latestFromFavourites,
@@ -38,57 +37,59 @@ const LatestFromFavourites = () => {
     }
   }, [])
 
-  const itemsComponents = () => {
-    return itemsData?.results.map((item, i) => {
-      const handleAddComment = (text: string, parentId?: number) => {
-        dispatch(
-          POST_LFF_ITEM_COMMENT({
-            itemId: item.id,
-            text,
-            parentId,
-          }),
+  const itemsComponents = useMemo(
+    () =>
+      itemsData?.results.map((item, i) => {
+        const handleAddComment = (text: string, parentId?: number) => {
+          dispatch(
+            POST_LFF_ITEM_COMMENT({
+              itemId: item.id,
+              text,
+              parentId,
+            }),
+          )
+        }
+
+        const handleFetchComments = (page: number | null) => {
+          dispatch(
+            FETCH_LFF_ITEM_COMMENTS({
+              itemId: item.id,
+              page,
+            }),
+          )
+        }
+
+        let renderQty = itemsData.results.length
+
+        if (isFetchingItems && itemsData.current) {
+          renderQty = itemsData.current * 10
+        }
+        if (isFetchingData && !isFetchingItems && itemsData.current) {
+          renderQty = (itemsData.current - 1) * 10
+        }
+
+        if (i >= renderQty) {
+          return undefined
+        }
+
+        const itemClass = cx('item', {
+          last: i === itemsData.results.length - 1,
+        })
+
+        return (
+          <CatalogueItem
+            className={itemClass}
+            itemData={item}
+            isNarrow={true}
+            editable={false}
+            key={item.id}
+            onAddComment={handleAddComment}
+            onFetchComments={handleFetchComments}
+          />
         )
-      }
-
-      const handleFetchComments = (page: number | null) => {
-        dispatch(
-          FETCH_LFF_ITEM_COMMENTS({
-            itemId: item.id,
-            page,
-          }),
-        )
-      }
-
-      let renderQty = itemsData.results.length
-
-      if (isFetchingItems && itemsData.current) {
-        renderQty = itemsData.current * 10
-      }
-      if (isFetchingData && !isFetchingItems && itemsData.current) {
-        renderQty = (itemsData.current - 1) * 10
-      }
-
-      if (i >= renderQty) {
-        return undefined
-      }
-
-      const itemClass = cx('item', {
-        last: i === itemsData.results.length - 1,
-      })
-
-      return (
-        <CatalogueItem
-          className={itemClass}
-          itemData={item}
-          isNarrow={true}
-          editable={false}
-          key={item.id}
-          onAddComment={handleAddComment}
-          onFetchComments={handleFetchComments}
-        />
-      )
-    })
-  }
+      }),
+    [itemsData, isFetchingItems, isFetchingData],
+  )
 
   const hasItems = !!itemsData?.results.length
 
@@ -100,7 +101,7 @@ const LatestFromFavourites = () => {
     return <Loader className={styles.loader} />
   }
 
-  if (!isFetchingData && hasItems) {
+  if (!isFetchingData && !hasItems) {
     return <p className={styles.noContent}>No content</p>
   }
 
@@ -113,7 +114,7 @@ const LatestFromFavourites = () => {
       intersectingElement={3}
       onLoadMore={fetchItems}
     >
-      {itemsComponents()}
+      {itemsComponents}
     </PaginatedList>
   )
 }

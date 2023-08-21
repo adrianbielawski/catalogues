@@ -1,37 +1,33 @@
 import { useEffect } from 'react'
-import {
-  type RouteComponentProps,
-  useHistory,
-  useLocation,
-} from 'react-router-dom'
-import styles from './verifyEmail.module.scss'
-// Types
-import { type LocationState } from 'src/globalTypes'
-// Redux
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import {
   CLEAR_VERIFY_EMAIL_ERROR,
   VERIFY_EMAIL,
 } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
+import styles from './verifyEmail.module.scss'
 
-interface Params {
-  key: string
-}
+type Params = Record<string, string>
 
-const VerifyEmail = (props: RouteComponentProps<Params>) => {
+const VerifyEmail = () => {
   const dispatch = useAppDispatch()
-  const location = useLocation<LocationState>()
-  const history = useHistory<LocationState>()
-  const authUser = useTypedSelector((state) => state.modules.authUser)
+
+  const { key } = useParams<Params>()
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const { authUser } = useTypedSelector((state) => state.modules)
 
   useEffect(() => {
+    if (!key) {
+      return
+    }
     dispatch(
       VERIFY_EMAIL({
-        key: props.match.params.key,
-        history,
+        key,
+        navigate,
         location,
       }),
     )
@@ -41,7 +37,7 @@ const VerifyEmail = (props: RouteComponentProps<Params>) => {
 
   const redirectToLogin = () => {
     dispatch(CLEAR_VERIFY_EMAIL_ERROR())
-    history.push('/login')
+    navigate('/auth/login')
   }
 
   if (authUser.verifyEmailError.length) {

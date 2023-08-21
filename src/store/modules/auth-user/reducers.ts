@@ -5,7 +5,7 @@ import type * as T from './types'
 
 const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
 
 type State = T.AuthUserState
@@ -20,7 +20,10 @@ export const initialize = {
   INITIALIZED(state: State) {
     state.isInitialized = true
   },
-  GET_USER(state: State, action: PayloadAction<T.HistoryAndLocationPayload>) {},
+  GET_USER(
+    state: State,
+    action: PayloadAction<T.NavigateAndLocationPayload>,
+  ) {},
   GET_USER_SUCCESS(state: State, action: PayloadAction<number>) {
     state.id = action.payload
     state.isInitialized = true

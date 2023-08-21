@@ -1,9 +1,7 @@
-import * as React from 'react'
+import { MouseEvent } from 'react'
 import classNames from 'classnames/bind'
 import styles from './navItem.module.scss'
-// Types
 import { type ItemType } from '../nav'
-// Custom components
 import ItemIcon from '../item-icon/itemIcon'
 
 interface Props {
@@ -11,7 +9,7 @@ interface Props {
   active?: boolean
   className?: string
   showTitle?: boolean
-  onClick: (e: React.MouseEvent) => void
+  onClick: (e: MouseEvent) => void
 }
 
 const cx = classNames.bind(styles)

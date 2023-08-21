@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import classNames from 'classnames/bind'
 import styles from './topItems.module.scss'
-// Redux
 import {
   CLEAR_TOP_ITEMS,
   FETCH_TOP_ITEMS,
@@ -9,7 +8,6 @@ import {
   POST_TOP_ITEM_COMMENT,
 } from 'store/modules/auth-user-dashboard/top-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
@@ -18,6 +16,7 @@ const cx = classNames.bind(styles)
 
 const TopItems = () => {
   const dispatch = useAppDispatch()
+
   const authUser = useTypedSelector((state) => state.modules.authUser)
   const isFetchingCataloguesData = useTypedSelector(
     (state) => state.modules.authUserCatalogues.isFetchingCataloguesData,

@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import * as React from 'react'
+import { useEffect, useRef, useState, ButtonHTMLAttributes } from 'react'
 import styles from './button.module.scss'
 import classNames from 'classnames/bind'
 import Loader from '../loader/loader'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string
   loading?: boolean
 }

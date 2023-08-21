@@ -1,15 +1,13 @@
-import * as React from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './addButton.module.scss'
-// Custom hooks
 import { useDelay } from 'src/hooks/useDelay'
-// Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Loader from '../loader/loader'
 
-interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   text?: string
   loading?: boolean
   className?: string

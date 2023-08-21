@@ -1,18 +1,15 @@
-import { useState } from 'react'
-import * as React from 'react'
+import { useState, ChangeEvent } from 'react'
 import styles from './addChoice.module.scss'
-// Types
 import { AuthUserChoiceFieldData, DeserializedField } from 'src/globalTypes'
-// Redux
 import {
   CLEAR_FIELD_ERROR,
   POST_FIELD_CHOICE,
 } from 'store/modules/auth-user-catalogues/slice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Custom components
+import { useAppDispatch } from 'store/storeConfig'
 import AddButton from 'components/global-components/add-button/addButton'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   field: DeserializedField
@@ -21,7 +18,9 @@ interface Props {
 
 const AddChoice = (props: Props) => {
   const dispatch = useAppDispatch()
-  const choices = useTypedSelector((state) => state.entities.choices.entities)
+
+  const choices = useEntitiesSelector('choices')
+
   const [isAddChoiceActive, setIsAddChoiceActive] = useState(false)
   const [inputError, setInputError] = useState('')
 
@@ -50,7 +49,7 @@ const AddChoice = (props: Props) => {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value
     const { valid, error } = validateInput(input)
     if (!valid) {

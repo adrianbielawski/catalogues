@@ -10,7 +10,8 @@
     "lint:ts": "npx eslint src --ext js,jsx,ts,tsx",
     "lint": "npm run lint:ts && npm run lint:css",
     "format:fix": "npx prettier src --write",
-    "format": "npx prettier src --check"
+    "format": "npx prettier src --check",
+    "check": "npm run lint && npm run format && npm run build"
   },
   "eslintConfig": {
     "extends": [
@@ -56,7 +57,7 @@
     "react-player": "^2.12.0",
     "react-redux": "^7.2.4",
     "react-resize-detector": "^9.1.0",
-    "react-router-dom": "^5.2.0",
+    "react-router-dom": "^6.15.0",
     "react-transition-group": "^4.4.5",
     "redux": "^4.2.1",
     "redux-observable": "^1.2.0",
@@ -78,7 +79,6 @@
     "@types/react-leaflet": "^2.8.1",
     "@types/react-redux": "^7.1.11",
     "@types/react-resize-detector": "^6.1.0",
-    "@types/react-router-dom": "^5.1.7",
     "@types/react-transition-group": "^4.4.6",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",

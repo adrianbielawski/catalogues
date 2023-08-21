@@ -1,13 +1,11 @@
 import { useRef, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './changePassword.module.scss'
-// Redux
 import {
   CHANGE_PASSWORD,
   TOGGLE_PASSWORD_EDIT,
 } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import Button from 'components/global-components/button/button'
 import EditableFieldTitle from 'components/global-components/editable-field/editable-field-title/editableFieldTitle'
 import Input from 'components/global-components/input/input'
@@ -16,9 +14,12 @@ const cx = classNames.bind(styles)
 
 const ChangePassword = () => {
   const dispatch = useAppDispatch()
+
   const authUser = useTypedSelector((state) => state.modules.authUser)
+
   const passwordInput = useRef<HTMLInputElement>(null)
   const repeatPasswordInput = useRef<HTMLInputElement>(null)
+
   const [arePasswordsValid, setArePasswordsValid] = useState(false)
 
   const handleEditPassword = () => {
