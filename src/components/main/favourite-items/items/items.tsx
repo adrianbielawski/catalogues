@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
-import { useHistory } from 'react-router'
 import { size } from 'lodash'
 import styles from './items.module.scss'
-// Types
-import { LocationState } from 'src/globalTypes'
-// Redux
 import {
   CLEAR_FAVOURITE_ITEMS_ERROR,
   CLEAR_FAVOURITE_ITEMS_DATA,
@@ -13,24 +9,24 @@ import {
   POST_FAVOURITE_ITEM_COMMENT,
 } from 'store/modules/favourite-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// hooks and utils
 import { scrollTop } from 'src/utils'
-// Filters bar context
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 import queryBuilder from 'components/global-components/filters-bar/builders/queryBuilder'
 import filtersBarValuesBuilder from 'components/global-components/filters-bar/builders/filtersBarValuesBuilder'
-// Custom components
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import Loader from 'components/global-components/loader/loader'
 import MessageModal from 'components/global-components/message-modal/messageModal'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const FavouriteItems = () => {
   const dispatch = useAppDispatch()
-  const location = useLocation<LocationState>()
-  const history = useHistory<LocationState>()
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const filtersBarContext = useFiltersBarContext()
+
   const screenWidth = useTypedSelector((state) => state.modules.app.screenWidth)
   const { itemsData, isFetchingItems, error } = useTypedSelector(
     (state) => state.modules.favouriteItems,
@@ -83,7 +79,7 @@ const FavouriteItems = () => {
     (pageNum?: number) => {
       const query = queryBuilder(filtersBarContext)
 
-      history.push({ search: query.query })
+      navigate({ search: query.query })
 
       dispatch(
         FETCH_FAVOURITE_ITEMS({

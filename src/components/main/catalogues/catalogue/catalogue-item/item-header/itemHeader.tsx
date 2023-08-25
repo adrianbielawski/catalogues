@@ -1,11 +1,8 @@
-import { useHistory } from 'react-router'
 import { faFolderOpen, faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './itemHeader.module.scss'
-// Types
-import { type LocationState } from 'src/globalTypes'
-// Components
 import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   userImage: string
@@ -19,14 +16,14 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const ItemHeader = (props: Props) => {
-  const history = useHistory<LocationState>()
+  const navigate = useNavigate()
 
   const handleUserClick = () => {
-    history.push(`/${props.username}`)
+    navigate(`/${props.username}`)
   }
 
   const handleCatalogueClick = () => {
-    history.push(`/${props.username}/catalogues/${props.slug}`)
+    navigate(`/${props.username}/catalogues/${props.slug}`)
   }
 
   const itemHeaderClass = cx('itemHeader', props.className)

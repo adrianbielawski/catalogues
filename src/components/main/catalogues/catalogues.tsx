@@ -1,45 +1,30 @@
-import {
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-import { Redirect, Switch, useHistory, useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { upperFirst } from 'lodash'
 import styles from './catalogues.module.scss'
-// Types
-import { type LocationState } from 'src/globalTypes'
-// Context
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
-// Redux
 import {
   FETCH_CURRENT_USER_CATALOGUES,
   CLEAR_CURRENT_USER_CATALOGUES_DATA,
 } from 'store/modules/current-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Router
-import { RouteWithContext } from 'src/router'
-// Hooks
 import { useFirstRender } from 'src/hooks/useFirstRender'
-// Filters bar utils
 import { filtersBarInitialState } from './catalogue/filter-bar-utils/contextInitialValues'
-// Components
 import Loader from 'components/global-components/loader/loader'
-import Catalogue from './catalogue/catalogue'
 import Header from 'components/global-components/header/header'
+import { useNavigate, useLocation, Navigate, Outlet } from 'react-router-dom'
+import usePathMatcher from 'src/hooks/usePathMatcher'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const Catalogues = () => {
-  const history = useHistory<LocationState>()
-  const location = useLocation<LocationState>()
   const dispatch = useAppDispatch()
-  const cataloguesRef = useRef<HTMLDivElement>(null)
-  const firstRender = useFirstRender()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const screenHeight = useTypedSelector(
     (state) => state.modules.app.screenHeight,
   )
-  const users = useTypedSelector((state) => state.entities.users.entities)
+  const users = useEntitiesSelector('users')
   const authUserData = useTypedSelector((state) => state.modules.authUser)
   const currentUserData = useTypedSelector((state) => state.modules.currentUser)
   const authUser = authUserData.id ? users[authUserData.id] : null
@@ -49,10 +34,14 @@ const Catalogues = () => {
   const currentUserCatalogues = useTypedSelector(
     (state) => state.modules.currentUserCatalogues,
   )
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+  const catalogues = useEntitiesSelector('catalogues')
+
   const [minHeight, setMinHeight] = useState(0)
+
+  const cataloguesRef = useRef<HTMLDivElement>(null)
+
+  const firstRender = useFirstRender()
+  const cataloguesPathMatch = usePathMatcher('/:username/catalogues')
 
   const getMinHeight = useCallback(() => {
     const top = cataloguesRef.current!.getBoundingClientRect().top
@@ -81,7 +70,7 @@ const Catalogues = () => {
   }, [screenHeight, getMinHeight])
 
   const handleRedirectToSettings = useCallback(() => {
-    history.push(`/${currentUser!.username}/settings/account/manage-catalogues`)
+    navigate(`/${currentUser!.username}/settings/account/manage-catalogues`)
   }, [currentUser?.username])
 
   const getNoCatalogueMessage = useMemo(() => {
@@ -111,6 +100,15 @@ const Catalogues = () => {
     ? catalogues[currentUserCatalogues.defaultCatalogueId]?.slug
     : catalogues[currentUserCatalogues.cataloguesData[0]?.id]?.slug
 
+  if (cataloguesPathMatch) {
+    return (
+      <Navigate
+        to={`/${currentUser!.username}/catalogues/${catalogueSlug ?? ''}`}
+        state={location.state}
+      />
+    )
+  }
+
   return (
     <FiltersBarBulkContextProvider values={filtersBarInitialState}>
       <div
@@ -122,23 +120,7 @@ const Catalogues = () => {
         {currentUserCatalogues.cataloguesData.length === 0 || !catalogueSlug ? (
           getNoCatalogueMessage
         ) : (
-          <Suspense fallback={<Loader />}>
-            <Switch>
-              <Redirect
-                exact
-                from="/:username/catalogues"
-                to={{
-                  pathname: `/:username/catalogues/${catalogueSlug || ''}`,
-                  state: location.state,
-                }}
-              />
-              <RouteWithContext
-                path="/:username/catalogues/:slug"
-                component={Catalogue}
-                canonical={true}
-              />
-            </Switch>
-          </Suspense>
+          <Outlet />
         )}
       </div>
     </FiltersBarBulkContextProvider>

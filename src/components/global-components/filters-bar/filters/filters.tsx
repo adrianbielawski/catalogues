@@ -1,9 +1,7 @@
 import { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './filters.module.scss'
-// Contexts
 import { FiltersContext } from './filtersStore'
-// Custom components
 import Filter from './filter/filter'
 
 interface Props {

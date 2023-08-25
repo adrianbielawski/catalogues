@@ -1,24 +1,22 @@
 import { useCallback, useEffect, useMemo } from 'react'
 import classNames from 'classnames/bind'
 import styles from './latestCatalogues.module.scss'
-// Redux
 import {
   CLEAR_LATEST_CATALOGUES,
   FETCH_LATEST_CATALOGUES,
 } from 'store/modules/homepage/latest-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 import Loader from 'components/global-components/loader/loader'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const cx = classNames.bind(styles)
 
 const LatestCatalogues = () => {
   const dispatch = useAppDispatch()
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+
+  const catalogues = useEntitiesSelector('catalogues')
   const latestCatalogues = useTypedSelector(
     (state) => state.modules.homepage.latestCatalogues,
   )

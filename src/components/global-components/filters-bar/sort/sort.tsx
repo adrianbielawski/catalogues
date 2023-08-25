@@ -1,9 +1,7 @@
 import { useContext } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sort.module.scss'
-// Contexts
 import { SortContext } from './sortStore'
-// Custom components
 import SortOption from './sort-option/sortOption'
 
 interface Props {

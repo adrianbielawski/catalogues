@@ -1,7 +1,5 @@
-import { useState } from 'react'
-import * as React from 'react'
+import { useState, ChangeEvent } from 'react'
 import styles from './protectedConfirmMessageModal.module.scss'
-// Custom Components
 import Modal from 'components/global-components/modals/modal'
 import Button from '../button/button'
 import Input from 'components/global-components/input/input'
@@ -23,7 +21,7 @@ interface Props {
 const ProtectedConfirmMessageModal = (props: Props) => {
   const [inputVal, setInputVal] = useState('')
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputVal(e.target.value)
   }
 

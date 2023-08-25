@@ -8,9 +8,6 @@ import {
   DeserializedItemField,
   DeserializedMediaFieldValue,
 } from 'src/globalTypes'
-// Redux
-import { useTypedSelector } from 'store/storeConfig'
-// Components
 import TextField from './text-field/textField'
 import LongTextField from './long-text-field/longTextField'
 import SingleChoiceField from './single-choice-field/singleChoiceField'
@@ -19,6 +16,7 @@ import IconWithTitle from 'components/global-components/icon-with-title/iconWith
 import DateField from './date-field/dateField'
 import MediaField from './media-field/mediaField'
 import GeoField from './geo-field/geoField'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   item: DeserializedItem
@@ -26,7 +24,7 @@ interface Props {
 }
 
 const EditItemFields = (props: Props) => {
-  const fields = useTypedSelector((state) => state.entities.fields.entities)
+  const fields = useEntitiesSelector('fields')
 
   const fieldsComponents = props.fieldsData.map((fieldData) => {
     const field = fields[fieldData.id]!

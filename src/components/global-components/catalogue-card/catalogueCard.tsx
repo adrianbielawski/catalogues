@@ -1,18 +1,15 @@
-import * as React from 'react'
-import { useHistory } from 'react-router'
+import { ForwardRefRenderFunction, forwardRef } from 'react'
 import moment from 'moment'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './catalogueCard.module.scss'
-// Types
-import { DeserializedCatalogue, LocationState } from 'src/globalTypes'
-// Redux
+import { DeserializedCatalogue } from 'src/globalTypes'
 import { useTypedSelector } from 'store/storeConfig'
 import { userSelector } from 'store/selectors'
-// Custom components
 import AvatarWithName from '../avatar-with-name/avatarWithName'
 import NoImageIcon from '../no-image-icon/noImageIcon'
 import Image from 'components/global-components/image/image'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   catalogue: DeserializedCatalogue
@@ -21,23 +18,23 @@ interface Props {
 
 const cx = classNames.bind(styles)
 
-const CatalogueCard: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
-  props,
+const CatalogueCard: ForwardRefRenderFunction<HTMLDivElement, Props> = (
+  { catalogue, className },
   ref,
 ) => {
-  const { catalogue } = props
-  const history = useHistory<LocationState>()
-  const user = useTypedSelector(userSelector(props.catalogue.createdBy))!
+  const navigate = useNavigate()
+
+  const user = useTypedSelector(userSelector(catalogue.createdBy))!
 
   const redirectToCatalogue = () => {
-    history.push(`/${user.username}/catalogues/${catalogue.slug}`)
+    navigate(`/${user.username}/catalogues/${catalogue.slug}`)
   }
 
   const redirectToUser = () => {
-    history.push(`/${user.username}`)
+    navigate(`/${user.username}`)
   }
 
-  const catalogueCardClass = cx('catalogueCard', props.className)
+  const catalogueCardClass = cx('catalogueCard', className)
 
   return (
     <div className={catalogueCardClass} ref={ref}>
@@ -68,4 +65,4 @@ const CatalogueCard: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   )
 }
 
-export default React.forwardRef(CatalogueCard)
+export default forwardRef(CatalogueCard)

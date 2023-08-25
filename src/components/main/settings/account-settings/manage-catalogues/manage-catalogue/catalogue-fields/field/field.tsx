@@ -2,15 +2,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowsAltV, faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './field.module.scss'
-// Types
 import { type AuthUserFieldData } from 'src/globalTypes'
-// Redux
 import {
   CLEAR_FIELD_ERROR,
   TOGGLE_FIELD_EDIT,
 } from 'store/modules/auth-user-catalogues/slice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
+import { useAppDispatch } from 'store/storeConfig'
 import OrderableList, {
   type ItemComponentProps,
 } from '@adrianbielawski/orderable-list'
@@ -18,14 +15,15 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import EditTextField from '../edit-text-field/editTextField'
 import EditChoiceField from '../edit-choice-field/editChoiceField'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const cx = classNames.bind(styles)
 
 const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
-  const fieldsEntities = useTypedSelector(
-    (state) => state.entities.fields.entities,
-  )
   const dispatch = useAppDispatch()
+
+  const fieldsEntities = useEntitiesSelector('fields')
+
   const fieldData = props.item
   const isEditing = fieldData.isEditing
   const error = fieldData.fieldError

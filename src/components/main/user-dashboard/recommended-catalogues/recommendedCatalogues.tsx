@@ -1,24 +1,22 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import classNames from 'classnames/bind'
 import styles from './recommendedCatalogues.module.scss'
-// Redux
 import {
   CLEAR_RECOMMENDED_CATALOGUES,
   FETCH_RECOMMENDED_CATALOGUES,
 } from 'store/modules/auth-user-dashboard/recommended-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Components
 import CatalogueCard from 'components/global-components/catalogue-card/catalogueCard'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
 import Loader from 'components/global-components/loader/loader'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const cx = classNames.bind(styles)
 
 const RecommendedCatalogues = () => {
   const dispatch = useAppDispatch()
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+
+  const catalogues = useEntitiesSelector('catalogues')
   const { cataloguesData, isFetchingCatalogues, error } = useTypedSelector(
     (state) => state.modules.authUserDashboard.recommendedCatalogues,
   )
@@ -43,21 +41,23 @@ const RecommendedCatalogues = () => {
     }
   }, [])
 
-  const cataloguesComponents = () => {
-    return cataloguesData?.results.map((id, i) => {
-      const catalogueCardClass = cx('catalogueCard', {
-        last: i === cataloguesData.results.length - 1,
-      })
+  const cataloguesComponents = useMemo(
+    () =>
+      cataloguesData?.results.map((id, i) => {
+        const catalogueCardClass = cx('catalogueCard', {
+          last: i === cataloguesData.results.length - 1,
+        })
 
-      return (
-        <CatalogueCard
-          className={catalogueCardClass}
-          catalogue={catalogues[id]!}
-          key={id}
-        />
-      )
-    })
-  }
+        return (
+          <CatalogueCard
+            className={catalogueCardClass}
+            catalogue={catalogues[id]!}
+            key={id}
+          />
+        )
+      }),
+    [cataloguesData, catalogues],
+  )
 
   const hasCataloguesData = !!cataloguesData?.results.length
 
@@ -82,7 +82,7 @@ const RecommendedCatalogues = () => {
       intersectingElement={3}
       onLoadMore={fetchRecommended}
     >
-      {cataloguesComponents()}
+      {cataloguesComponents}
     </PaginatedList>
   )
 }

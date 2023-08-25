@@ -1,18 +1,21 @@
-import { useRef } from 'react'
-import * as React from 'react'
+import {
+  useRef,
+  InputHTMLAttributes,
+  ForwardRefRenderFunction,
+  forwardRef,
+} from 'react'
 import styles from './input.module.scss'
 import classNames from 'classnames/bind'
-// Custom hooks
 import { mergeRefs } from 'src/utils'
 import DialogCloud from '../dialog-cloud/dialogCloud'
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   className?: string
   invalidInputMessage?: string
 }
 const cx = classNames.bind(styles)
 
-const Input: React.ForwardRefRenderFunction<HTMLInputElement, Props> = (
+const Input: ForwardRefRenderFunction<HTMLInputElement, Props> = (
   props,
   ref,
 ) => {
@@ -29,4 +32,4 @@ const Input: React.ForwardRefRenderFunction<HTMLInputElement, Props> = (
   )
 }
 
-export default React.forwardRef(Input)
+export default forwardRef(Input)

@@ -1,17 +1,13 @@
 import { useCallback, useContext, useEffect, useRef, ReactNode } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.module.scss'
-// Types
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
-import { LocationState } from 'src/globalTypes'
-// Router
-import { RouterContext, useUrlBuilder } from 'src/router'
-// Context
+import { useUrlBuilder } from 'src/hooks/useUrlBuilder'
 import { NavContext } from './nav-store/navStore'
-// Custom components
 import NavItem from './nav-item/navItem'
 import NavList from './nav-list/navList'
+import useCurrentPath from 'src/hooks/useCurrentPath'
 
 export interface CommonItem {
   id: string | number
@@ -79,12 +75,15 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const Nav = (props: Props) => {
-  const history = useHistory<LocationState>()
+  const navigate = useNavigate()
   const params = useParams()
-  const navRef = useRef<HTMLElement>(null)
-  const routerContext = useContext(RouterContext)
+  const currentPath = useCurrentPath()
+
   const { show, listId, nestedListId, showList, closeList } =
     useContext(NavContext)
+
+  const navRef = useRef<HTMLElement>(null)
+
   const buildUrl = useUrlBuilder()
 
   const handleCloseList = useCallback(
@@ -120,21 +119,21 @@ const Nav = (props: Props) => {
   const items = props.items.map((item) => {
     const handleClick = () => {
       if ('url' in item && item.url !== undefined) {
-        history.push(item.url, {
-          referrer: {
-            pathname: buildUrl({
-              pathname: routerContext.match?.path,
+        navigate(item.url, {
+          state: {
+            referrer: {
+              pathname: buildUrl({
+                pathname: currentPath.path,
+                params,
+              }),
               params,
-            }),
-            params,
+            },
           },
         })
+      } else if (show && listId === item.id) {
+        closeList()
       } else {
-        if (show && listId === item.id) {
-          closeList()
-        } else {
-          showList(item.id)
-        }
+        showList(item.id)
       }
     }
 

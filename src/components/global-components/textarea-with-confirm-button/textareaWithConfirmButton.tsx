@@ -1,12 +1,9 @@
-import { useRef } from 'react'
-import * as React from 'react'
+import { useRef, TextareaHTMLAttributes } from 'react'
 import styles from './textareaWithConfirmButton.module.scss'
-// Utils
 import { useConfirmOnEnter } from 'src/utils'
-// Custom components
 import ConfirmButton from '../confirm-button/confirmButton'
 
-interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface Props extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   loading?: boolean
   onConfirm: (input: string) => void
 }

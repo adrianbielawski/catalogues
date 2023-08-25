@@ -1,10 +1,7 @@
-import { ReactNode } from 'react'
-import * as React from 'react'
+import { ReactNode, HTMLProps } from 'react'
 import classNames from 'classnames/bind'
 import styles from './image.module.scss'
-// Hooks
 import { useImageLoader } from 'src/hooks/useImageLoader'
-// Custom components
 import Loader from '../loader/loader'
 
 type Props = {
@@ -18,7 +15,7 @@ type Props = {
   loading?: boolean
   onLoading?: 'loader' | 'placeholder' | 'none'
   className?: string
-} & React.HTMLProps<HTMLDivElement>
+} & HTMLProps<HTMLDivElement>
 
 const cx = classNames.bind(styles)
 

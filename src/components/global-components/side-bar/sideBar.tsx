@@ -1,5 +1,4 @@
-import type { PropsWithChildren } from 'react'
-import * as React from 'react'
+import { PropsWithChildren, CSSProperties, MouseEvent } from 'react'
 import classNames from 'classnames/bind'
 import styles from './sideBar.module.scss'
 import { useTypedSelector } from 'store/storeConfig'
@@ -13,7 +12,7 @@ interface Props extends PropsWithChildren<any> {
   slideDirection?: SlideDirection
   className?: string
   childrenWrapperClassName?: string
-  onBackgroundClick: (e: React.MouseEvent) => void
+  onBackgroundClick: (e: MouseEvent) => void
 }
 
 const defaultProps: Props = {
@@ -33,13 +32,13 @@ const SideBar = (props: Props) => {
   )
   useDisableScroll(props.active)
 
-  const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => {
+  const stopPropagation = (e: MouseEvent<HTMLDivElement>) => {
     if (props.mobile) {
       e.stopPropagation()
     }
   }
 
-  const onBackgroundClick = (e: React.MouseEvent) => {
+  const onBackgroundClick = (e: MouseEvent) => {
     e.stopPropagation()
     props.onBackgroundClick(e)
   }
@@ -61,7 +60,7 @@ const SideBar = (props: Props) => {
       style={
         {
           '--height': `${screenHeight}px`,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <div className={childrenWrapperClass} onClick={stopPropagation}>

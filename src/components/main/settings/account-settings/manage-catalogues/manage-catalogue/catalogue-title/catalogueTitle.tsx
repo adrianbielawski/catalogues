@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import styles from './catalogueTitle.module.scss'
-// Hooks
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
-// Redux
 import {
   CHANGE_CATALOGUE_NAME,
   CLEAR_CATALOGUE_ERROR,
@@ -10,10 +8,10 @@ import {
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueDataSelector } from 'store/selectors'
-// Components
 import EditableField from 'components/global-components/editable-field/editableField'
 import Input from 'components/global-components/input/input'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   id: number
@@ -22,16 +20,17 @@ interface Props {
 
 const CatalogueTitle = (props: Props) => {
   const dispatch = useAppDispatch()
-  const [inputError, setInputError] = useState('')
+
   const authUserCatalogues = useTypedSelector(
     (state) => state.modules.authUserCatalogues,
   )
   const catalogueData = useTypedSelector(
     authUserCatalogueDataSelector(props.id),
   )
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+  const catalogues = useEntitiesSelector('catalogues')
+
+  const [inputError, setInputError] = useState('')
+
   const error = catalogueData.catalogueError
 
   const validateName = (name: string) => {

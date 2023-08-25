@@ -1,12 +1,8 @@
-import { useState } from 'react'
-import * as React from 'react'
+import { useState, ChangeEvent } from 'react'
 import styles from './dateField.module.scss'
-// Types
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
-// Redux
 import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
 import { useAppDispatch } from 'store/storeConfig'
-// Components
 import EditableField from 'components/global-components/editable-field/editableField'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,7 +22,7 @@ const DateField = (props: Props) => {
     setIsEditing(!isEditing)
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     changeFieldValue(e.target.value)
   }
 

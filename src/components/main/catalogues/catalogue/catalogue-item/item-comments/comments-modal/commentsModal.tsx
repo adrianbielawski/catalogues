@@ -1,17 +1,14 @@
-import * as React from 'react'
+import { CSSProperties } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from './commentsModal.module.scss'
-// Types
 import {
   type DeserializedCommentData,
   type DeserializedImage,
   type DeserializedListData,
 } from 'src/globalTypes'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
 import { commentsSelector } from 'store/selectors'
-// Components
 import Comment from '../comment/comment'
 import AddComment from '../add-comment/addComment'
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
@@ -103,7 +100,7 @@ const CommentsModal = (props: Props) => {
             style={
               {
                 '--top': `${commentsTop}px`,
-              } as React.CSSProperties
+              } as CSSProperties
             }
           >
             <PaginatedList

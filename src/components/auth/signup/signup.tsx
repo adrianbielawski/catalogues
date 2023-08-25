@@ -1,10 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import * as React from 'react'
-import { Redirect, useHistory } from 'react-router-dom'
+import { useEffect, useRef, useState, FormEvent } from 'react'
 import styles from './signup.module.scss'
-// Types
-import { LocationState } from 'src/globalTypes'
-// Redux
 import {
   CLEAR_SIGNUP_MESSAGE,
   SIGN_UP,
@@ -12,24 +7,26 @@ import {
 } from 'store/modules/auth-user/slice'
 import { usersSelector } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Custom hooks and utils
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 import { mergeRefs } from 'src/utils'
-// Custom Components
 import Loader from 'components/global-components/loader/loader'
 import Button from 'components/global-components/button/button'
 import Input from 'components/global-components/input/input'
 import MessageModal from 'components/global-components/message-modal/messageModal'
+import { useNavigate, Navigate } from 'react-router-dom'
 
 const Signup = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
+  const navigate = useNavigate()
+
   const users = useTypedSelector(usersSelector())
-  const authUser = useTypedSelector((state) => state.modules.authUser)
+  const { authUser } = useTypedSelector((state) => state.modules)
+
   const usernameInput = useRef<HTMLInputElement>(null)
   const emailInput = useRef<HTMLInputElement>(null)
   const passwordInput = useRef<HTMLInputElement>(null)
   const repeatPasswordInput = useRef<HTMLInputElement>(null)
+
   const [isValid, setIsValid] = useState(false)
 
   useEffect(() => {
@@ -68,7 +65,7 @@ const Signup = () => {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const password = passwordInput.current!.value
@@ -82,24 +79,18 @@ const Signup = () => {
         email,
         password,
         repeatedPassword,
-        history,
+        navigate,
       }),
     )
   }
 
   const clearError = () => {
     dispatch(CLEAR_SIGNUP_MESSAGE())
-    history.push('/')
+    navigate('/')
   }
 
   if (authUser.id !== null) {
-    return (
-      <Redirect
-        to={{
-          pathname: `/${users[authUser.id]!.username}`,
-        }}
-      />
-    )
+    return <Navigate to={`/${users[authUser.id]!.username}`} />
   }
 
   return (

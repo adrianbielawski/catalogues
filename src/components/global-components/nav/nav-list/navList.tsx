@@ -1,22 +1,16 @@
-import { useContext, useEffect, useState } from 'react'
-import * as React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useContext, useEffect, useState, MouseEvent } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './navList.module.scss'
-// Types
 import { type ItemWithChildren } from '../nav'
-import { type LocationState } from 'src/globalTypes'
-// Router
-import { RouterContext } from 'src/router'
 import { useTypedSelector } from 'store/storeConfig'
-// Context
 import { NavContext } from '../nav-store/navStore'
-// Components
 import AnimateHeight from 'react-animate-height'
 import NavItem from '../nav-item/navItem'
 import ItemIcon from '../item-icon/itemIcon'
+import useCurrentPath from 'src/hooks/useCurrentPath'
 
 interface Props {
   item: ItemWithChildren
@@ -27,9 +21,10 @@ interface Props {
 const cx = classNames.bind(styles)
 
 const NavList = (props: Props) => {
-  const history = useHistory<LocationState>()
+  const navigate = useNavigate()
   const params = useParams()
-  const routerContext = useContext(RouterContext)
+  const currentPath = useCurrentPath()
+
   const {
     show,
     listId,
@@ -47,7 +42,7 @@ const NavList = (props: Props) => {
     setMaxHeight(app.screenHeight - top)
   }, [props.top, app.screenHeight, app.screenWidth])
 
-  const handleListClick = (e: React.MouseEvent) => {
+  const handleListClick = (e: MouseEvent) => {
     e.stopPropagation()
   }
 
@@ -57,16 +52,19 @@ const NavList = (props: Props) => {
     }
 
     return props.item.children.map((item) => {
-      const handleItemClick = (e: React.MouseEvent) => {
+      const handleItemClick = (e: MouseEvent) => {
         e.stopPropagation()
         if ('onClick' in item && item.onClick != null) {
           item.onClick()
         }
 
         if ('url' in item) {
-          history.push(item.url!, {
-            referrer: {
-              pathname: routerContext.match.path,
+          navigate(item.url!, {
+            state: {
+              referrer: {
+                pathname: currentPath,
+                params,
+              },
               params,
             },
           })

@@ -10,6 +10,7 @@ import ChangeUsername from './change-username/changeUsername'
 
 const MyAccount = () => {
   const dispatch = useAppDispatch()
+
   const authUser = useTypedSelector((state) => state.modules.authUser)
 
   const clearMyAccountError = () => {

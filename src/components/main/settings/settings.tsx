@@ -1,23 +1,18 @@
-import { Suspense, useState, useEffect, useRef } from 'react'
-import { Redirect, useLocation, Route, Switch } from 'react-router-dom'
-
+import { useState, useEffect, useRef } from 'react'
 import styles from './settings.module.scss'
-// Types
-import { type LocationState } from 'src/globalTypes'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
-// Custom components
-import Loader from 'components/global-components/loader/loader'
-import AccountSettings from './account-settings/accountSettings'
 import Header from 'components/global-components/header/header'
+import { Navigate, Outlet } from 'react-router-dom'
+import usePathMatcher from 'src/hooks/usePathMatcher'
 
 const Settings = () => {
-  const location = useLocation<LocationState>()
   const settingsRef = useRef<HTMLDivElement>(null)
   const screenHeight = useTypedSelector(
     (state) => state.modules.app.screenHeight,
   )
   const [minHeight, setMinHeight] = useState(0)
+
+  const settingsPathMatch = usePathMatcher('/:username/settings')
 
   useEffect(() => {
     if (settingsRef.current === null) {
@@ -33,6 +28,10 @@ const Settings = () => {
     setMinHeight(minHeight)
   }
 
+  if (settingsPathMatch) {
+    return <Navigate to="account" />
+  }
+
   return (
     <div
       className={styles.settings}
@@ -40,22 +39,7 @@ const Settings = () => {
       ref={settingsRef}
     >
       <Header />
-      <Suspense fallback={<Loader />}>
-        <Switch>
-          <Redirect
-            exact
-            from="/:username/settings"
-            to={{
-              pathname: '/:username/settings/account',
-              state: location.state,
-            }}
-          />
-          <Route
-            path="/:username/settings/account"
-            render={() => <AccountSettings />}
-          />
-        </Switch>
-      </Suspense>
+      <Outlet />
     </div>
   )
 }

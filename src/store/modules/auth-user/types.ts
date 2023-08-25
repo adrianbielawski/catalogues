@@ -1,5 +1,5 @@
-import { ErrorMessage, LocationState, User } from 'src/globalTypes'
-import { History, Location } from 'history'
+import { ErrorMessage, User } from 'src/globalTypes'
+import { Location, NavigateFunction } from 'react-router-dom'
 
 export interface AuthUserState {
   id: number | null
@@ -24,12 +24,12 @@ export interface ChangePasswordPayload {
   password2: string
 }
 
-export interface HistoryAndLocationPayload {
-  history: History<LocationState>
-  location: Location<LocationState>
+export interface NavigateAndLocationPayload {
+  navigate: NavigateFunction
+  location: Location
 }
 
-export interface LoginPayload extends HistoryAndLocationPayload {
+export interface LoginPayload extends NavigateAndLocationPayload {
   email: string
   password: string
 }
@@ -39,14 +39,14 @@ export interface SignUpPayload {
   email: string
   password: string
   repeatedPassword: string
-  history: History<LocationState>
+  navigate: NavigateFunction
 }
 
-export interface VerifyEmailPayload extends HistoryAndLocationPayload {
+export interface VerifyEmailPayload extends NavigateAndLocationPayload {
   key: string
 }
 
-export interface ChangeUsernamePayload extends HistoryAndLocationPayload {
+export interface ChangeUsernamePayload extends NavigateAndLocationPayload {
   name: string
 }
 

@@ -1,25 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
-import * as React from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  ForwardRefRenderFunction,
+  forwardRef,
+} from 'react'
 import classNames from 'classnames/bind'
 import styles from './catalogueItem.module.scss'
-// Redux
 import {
   CHANGE_FAVOURITE_ITEM,
   REFRESH_CURRENT_USER_ITEM,
 } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector, itemSelector, userSelector } from 'store/selectors'
-// Types
 import {
   AuthUserCatalogueData,
   CurrentUserCatalogueData,
   DeserializedItem,
   DeserializedItemData,
 } from 'src/globalTypes'
-// Hooks and utils
 import { mergeRefs } from 'src/utils'
 import { useFirstRender } from 'src/hooks/useFirstRender'
-// Components
 import ItemFields from './item-fields/itemFields'
 import EditItem from './edit-item/editItem'
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
@@ -65,20 +66,35 @@ type Props = ItemProps | EditableItemProps
 
 const cx = classNames.bind(styles)
 
-const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
-  props,
+const CatalogueItem: ForwardRefRenderFunction<HTMLDivElement, Props> = (
+  {
+    itemData,
+    isNarrow,
+    className,
+    largeImage,
+    editable,
+    catalogueData,
+    onSave,
+    onEdit,
+    onEditCancel,
+    onAddComment,
+    onFetchComments,
+  },
   ref,
 ) => {
-  const { itemData, isNarrow, className } = props
   const dispatch = useAppDispatch()
+
   const largeViewport = useTypedSelector(
     (state) => state.modules.app.screenWidth.largeViewport,
   )
   const item = useTypedSelector(itemSelector(itemData.id))!
   const user = useTypedSelector(userSelector(item.createdBy))!
   const catalogue = useTypedSelector(catalogueSelector(item.catalogueId))!
+
   const itemRef = useRef<HTMLDivElement>()
+
   const [showImagesPreview, setShowImagesPreview] = useState(false)
+
   const firstRender = useFirstRender()
 
   useEffect(() => {
@@ -101,9 +117,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   }
 
   const handleEdit = () => {
-    if (props.onEdit != null) {
-      props.onEdit()
-    }
+    onEdit?.()
   }
 
   const refreshItem = () => {
@@ -123,21 +137,21 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   })
 
   const carouselWrapperClass = cx('carouselWrapper', {
-    large: props.largeImage && !isNarrow,
+    large: largeImage && !isNarrow,
   })
 
   return (
     <div className={itemClass} ref={mergeRefs([ref, itemRef])}>
-      {itemData.isEditing && props.editable ? (
+      {itemData.isEditing && editable ? (
         <EditItem
           show={itemData.isEditing}
           itemId={item.id}
           itemData={itemData}
-          catalogueData={props.catalogueData as AuthUserCatalogueData}
+          catalogueData={catalogueData as AuthUserCatalogueData}
           isItemNew={false}
           className={styles.editItem}
-          onSave={props.onSave}
-          onCancel={props.onEditCancel}
+          onSave={onSave}
+          onCancel={onEditCancel}
         />
       ) : (
         <>
@@ -173,7 +187,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
                   />
                 )}
                 <ShareButton className={styles.shareButton} data={shareData} />
-                {item.permissions.canEdit && props.editable && (
+                {item.permissions.canEdit && editable && (
                   <EditItemButton itemId={item.id} onClick={handleEdit} />
                 )}
               </div>
@@ -181,7 +195,7 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
               <ItemFields
                 className={styles.itemFields}
                 item={item}
-                isNarrow={props.isNarrow}
+                isNarrow={isNarrow}
               />
             </div>
           </div>
@@ -193,8 +207,8 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
             isPostingComment={itemData.isPostingComment}
             isFetchingComments={itemData.isFetchingComments}
             canComment={item.permissions.canComment}
-            onAdd={props.onAddComment}
-            onFetch={props.onFetchComments}
+            onAdd={onAddComment}
+            onFetch={onFetchComments}
           />
         </>
       )}
@@ -213,4 +227,4 @@ const CatalogueItem: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   )
 }
 
-export default React.forwardRef(CatalogueItem)
+export default forwardRef(CatalogueItem)

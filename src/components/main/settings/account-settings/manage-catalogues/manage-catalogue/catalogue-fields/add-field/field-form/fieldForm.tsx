@@ -1,8 +1,6 @@
-import { useRef, useState } from 'react'
-import * as React from 'react'
+import { useRef, useState, ChangeEvent } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.module.scss'
-// Redux
 import {
   CREATE_CATALOGUE_FIELD,
   TOGGLE_ADD_FIELD,
@@ -12,9 +10,7 @@ import {
   authUserCatalogueDataSelector,
 } from 'store/selectors'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Hooks
 import { useDelay } from 'src/hooks/useDelay'
-// Components
 import Input from 'components/global-components/input/input'
 import ChoiceList, {
   type SingleChoiceOnChange,
@@ -22,6 +18,7 @@ import ChoiceList, {
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const FIELD_TYPES = [
   {
@@ -63,7 +60,8 @@ const cx = classNames.bind(styles)
 
 const FieldForm = (props: Props) => {
   const dispatch = useAppDispatch()
-  const fields = useTypedSelector((state) => state.entities.fields.entities)
+
+  const fields = useEntitiesSelector('fields')
   const fieldsData = useTypedSelector(
     authUserFieldsDataSelector(props.catalogueId),
   )
@@ -76,7 +74,7 @@ const FieldForm = (props: Props) => {
   const [formError, setFormError] = useState('')
   const [nameError, setNameError] = useState('')
   const [isPublic, setIsPublic] = useState(false)
-  const delayCompleated = useDelay(catalogueData.isSubmittingNewField)
+  const delayCompleted = useDelay(catalogueData.isSubmittingNewField)
 
   const handlePublicChange = () => {
     setIsPublic(!isPublic)
@@ -101,7 +99,7 @@ const FieldForm = (props: Props) => {
     }
   }
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value
     const { valid, error } = validateName(input)
     if (!valid) {
@@ -208,7 +206,7 @@ const FieldForm = (props: Props) => {
         />
         <div className={styles.buttons}>
           <Button
-            loading={delayCompleated}
+            loading={delayCompleted}
             disabled={disabled}
             onClick={handleConfirm}
           >

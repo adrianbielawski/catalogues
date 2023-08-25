@@ -1,6 +1,4 @@
-import { useContext } from 'react'
-import { useHistory, useLocation } from 'react-router'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import icon from 'assets/img/icon.svg'
 import {
   faFolderOpen,
@@ -13,18 +11,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import styles from './header.module.scss'
-// Types
-import { type LocationState } from 'src/globalTypes'
-// Redux
 import { LOG_OUT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Router
-import { RouterContext, useUrlBuilder } from 'src/router'
-// Components
+import { useUrlBuilder } from 'src/hooks/useUrlBuilder'
 import Nav, { type ItemType } from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
+import useCurrentPath from 'src/hooks/useCurrentPath'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const contextValue = {
   show: false,
@@ -34,25 +29,26 @@ const contextValue = {
 
 const Header = () => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
-  const location = useLocation<LocationState>()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const params = useParams()
+  const currentPath = useCurrentPath()
+
   const largeViewport = useTypedSelector(
     (state) => state.modules.app.screenWidth.largeViewport,
   )
-  const users = useTypedSelector((state) => state.entities.users.entities)
+  const users = useEntitiesSelector('users')
   const authUserData = useTypedSelector((state) => state.modules.authUser)
   const authUser = authUserData.id ? users[authUserData.id] : null
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+  const catalogues = useEntitiesSelector('catalogues')
   const cataloguesData = useTypedSelector(
     (state) => state.modules.authUserCatalogues.cataloguesData,
   )
   const favouriteCatalogues = useTypedSelector(
     (state) => state.modules.authUserFavourites.cataloguesIds,
   )
-  const params = useParams()
-  const routerContext = useContext(RouterContext)
+
   const buildUrl = useUrlBuilder()
 
   const handleLogout = () => {
@@ -60,13 +56,15 @@ const Header = () => {
   }
 
   const handleLogoClick = () => {
-    history.push('/discover', {
-      referrer: {
-        pathname: buildUrl({
-          pathname: routerContext.match?.path,
+    navigate('/discover', {
+      state: {
+        referrer: {
+          pathname: buildUrl({
+            pathname: currentPath.path,
+            params,
+          }),
           params,
-        }),
-        params,
+        },
       },
     })
   }
@@ -170,11 +168,11 @@ const Header = () => {
             id: 'Login',
             title: 'Login',
             faIcon: faSignInAlt,
-            url: '/login',
+            url: '/auth/login',
           },
         ]
 
-  if (authUser == null && location.pathname === '/login') {
+  if (authUser == null && location.pathname === '/auth/login') {
     const loginIndex = NAV_ITEMS.findIndex((item) => item.id !== 'Login')
     NAV_ITEMS.splice(loginIndex, 1)
   }

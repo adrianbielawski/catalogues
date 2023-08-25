@@ -1,11 +1,9 @@
-import * as React from 'react'
+import { CSSProperties } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './carouselItem.module.scss'
-// Types
 import { DeserializedImage } from 'src/globalTypes'
-// Custom components
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import PrimaryImageStar from '../primary-image-star/primaryImageStar'
 import Image from 'components/global-components/image/image'
@@ -55,7 +53,7 @@ const CarouselItem = (props: Props) => {
         {
           '--offset': props.offset,
           '--scale': props.scale,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <Image

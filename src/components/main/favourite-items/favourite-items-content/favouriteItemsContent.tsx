@@ -1,19 +1,16 @@
-import { useEffect, useState } from 'react'
-import * as React from 'react'
+import { useEffect, useState, MouseEvent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './favouriteItemsContent.module.scss'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
-// Filters bar context and utils
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
 import buildFilters from '../filter-bar/utils/filtersBuilder'
-// Custom components
 import ComponentHeader from 'components/global-components/component-header/componentHeader'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import Items from '../items/items'
 import FiltersBar from '../filter-bar/filtersBar'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const cx = classNames.bind(styles)
 
@@ -21,14 +18,14 @@ const FavouriteItemsContent = () => {
   const favouriteItems = useTypedSelector(
     (state) => state.modules.favouriteItems,
   )
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
+  const catalogues = useEntitiesSelector('catalogues')
   const smallViewport = useTypedSelector(
     (state) => state.modules.app.screenWidth.smallViewport,
   )
-  const { filtersContext } = useFiltersBarContext()
+
   const [showFilters, setShowFilters] = useState(false)
+
+  const { filtersContext } = useFiltersBarContext()
 
   useEffect(() => {
     const filters = buildFilters(favouriteItems.cataloguesIds, catalogues)
@@ -36,7 +33,7 @@ const FavouriteItemsContent = () => {
     filtersContext.changeFilters(filters)
   }, [favouriteItems.cataloguesIds, catalogues])
 
-  const toggleFiltersBar = (e: React.MouseEvent) => {
+  const toggleFiltersBar = (e: MouseEvent) => {
     e.stopPropagation()
     setShowFilters(!showFilters)
   }

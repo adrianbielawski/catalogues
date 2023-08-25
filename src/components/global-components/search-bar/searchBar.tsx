@@ -1,11 +1,10 @@
-import * as React from 'react'
+import { ChangeEvent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faSortAlphaUp,
   faSortAlphaDown,
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './searchBar.module.scss'
-// Custom components
 import Input from 'components/global-components/input/input'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 
@@ -17,7 +16,7 @@ interface Props {
 }
 
 const SearchBar = (props: Props) => {
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     props.onSearch(e.target.value)
   }
   return (

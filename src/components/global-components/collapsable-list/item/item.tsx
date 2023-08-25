@@ -1,14 +1,12 @@
-import { useContext } from 'react'
-import * as React from 'react'
+import { useContext, ComponentType } from 'react'
 import classNames from 'classnames/bind'
 import styles from './item.module.scss'
-// Contexts
 import { ListContext } from '../listStore'
 
 interface Props {
   item: Record<string, any>
   itemProps?: Record<string, any>
-  itemComponent: React.ComponentType<any>
+  itemComponent: ComponentType<any>
 }
 
 const cx = classNames.bind(styles)

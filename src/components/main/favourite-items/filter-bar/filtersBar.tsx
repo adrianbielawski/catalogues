@@ -1,8 +1,6 @@
-import * as React from 'react'
+import { MouseEvent } from 'react'
 import styles from './filtersBar.module.scss'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
-// Custom components
 import SideBar from 'components/global-components/side-bar/sideBar'
 import Search from 'components/global-components/filters-bar/search/search'
 import Sort from 'components/global-components/filters-bar/sort/sort'
@@ -10,7 +8,7 @@ import Filters from 'components/global-components/filters-bar/filters/filters'
 
 interface Props {
   show: boolean
-  toggleShow: (e: React.MouseEvent) => void
+  toggleShow: (e: MouseEvent) => void
 }
 
 const FavouriteItems = (props: Props) => {

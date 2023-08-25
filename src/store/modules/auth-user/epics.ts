@@ -30,7 +30,7 @@ export const getUserEpic = (action$: Observable<Action>) =>
               of(actions.GET_USER_SUCCESS(response.data.id)),
               defer(() => {
                 if (action.payload.location.pathname === '/') {
-                  action.payload.history.push(
+                  action.payload.navigate(
                     `/${response.data.username}/catalogues`,
                   )
                 }
@@ -94,7 +94,7 @@ export const logInEpic = (action$: Observable<Action>) =>
                     pathname: `/${response.data.user.username}/catalogues`,
                   }
 
-                  action.payload.history.push(pathname)
+                  action.payload.navigate(pathname)
                 }),
               ),
             ),
@@ -167,7 +167,7 @@ export const verifyEmailEpic = (action$: Observable<Action>) =>
               of(usersActions.USER_ADDED(response.data.user)),
               of(actions.VERIFY_EMAIL_SUCCESS(response.data.user.id)),
               defer(() => {
-                action.payload.history.push(
+                action.payload.navigate(
                   `/${response.data.user.username}/catalogues`,
                 )
               }),
@@ -200,7 +200,7 @@ export const changeUsernameEpic = (action$: Observable<Action>) =>
                   const pathname = `/${response.data.username}/settings/account/my-account`
                   referrer.params.username = response.data.username
 
-                  action.payload.history.push(pathname, { referrer })
+                  action.payload.navigate(pathname, { state: { referrer } })
                 }),
                 of(actions.CHANGE_USERNAME_SUCCESS(response.data)),
               ),

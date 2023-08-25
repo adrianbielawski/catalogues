@@ -5,9 +5,7 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons'
 import styles from './homepage.module.scss'
-// Redux
 import { useTypedSelector } from 'store/storeConfig'
-// Components
 import Header from 'components/global-components/header/header'
 import Columns from 'components/global-components/columns/columns'
 import ComponentHeader from 'components/global-components/component-header/componentHeader'

@@ -1,30 +1,29 @@
-import { useRef, useState } from 'react'
-import * as React from 'react'
+import { useRef, useState, ChangeEvent } from 'react'
 import styles from './manageCatalogues.module.scss'
-// Redux
 import { CREATE_CATALOGUE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
-// Hooks
 import { useDelay } from 'src/hooks/useDelay'
-// Components
 import AddButton from 'components/global-components/add-button/addButton'
 import ManageCatalogue from './manage-catalogue/manageCatalogue'
 import Loader from 'components/global-components/loader/loader'
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import NewCatalogueModal from './new-catalogue-modal/newCatalogueModal'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 const ManageCatalogues = () => {
   const dispatch = useAppDispatch()
+
   const authUserCatalogues = useTypedSelector(
     (state) => state.modules.authUserCatalogues,
   )
-  const catalogues = useTypedSelector(
-    (state) => state.entities.catalogues.entities,
-  )
-  const newCatalogueDelay = useDelay(authUserCatalogues.isCreatingNewCatalogue)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const catalogues = useEntitiesSelector('catalogues')
+
   const [addingCatalogue, setAddingCatalogue] = useState(false)
   const [inputError, setInputError] = useState('')
+
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const newCatalogueDelay = useDelay(authUserCatalogues.isCreatingNewCatalogue)
 
   const handleAddCatalogue = (name: string) => {
     if (inputError.length !== 0) {
@@ -56,7 +55,7 @@ const ManageCatalogues = () => {
     setAddingCatalogue(true)
   }
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     validateName(e.target.value)
   }
 

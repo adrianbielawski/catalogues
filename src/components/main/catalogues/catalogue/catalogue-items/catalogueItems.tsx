@@ -1,17 +1,13 @@
-import { useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useMemo } from 'react'
 import { size } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './catalogueItems.module.scss'
-// Types
 import {
   AuthUserFieldData,
   CatalogueData,
   CurrentUserFieldData,
   DeserializedItem,
-  LocationState,
 } from 'src/globalTypes'
-// Redux
 import {
   ADD_ITEM,
   CLEAR_ITEMS_DATA,
@@ -26,13 +22,10 @@ import {
 } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { catalogueSelector } from 'store/selectors'
-// Hooks
 import useFiltersBarContext from 'components/global-components/filters-bar/filters-bar-context/useFiltersBarContext'
-// Utils
 import { scrollTop } from 'src/utils'
 import queryBuilder from 'components/global-components/filters-bar/builders/queryBuilder'
 import filtersBarValuesBuilder from 'components/global-components/filters-bar/builders/filtersBarValuesBuilder'
-// Components
 import Loader from 'components/global-components/loader/loader'
 import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/catalogueItem'
 import AddButton from 'components/global-components/add-button/addButton'
@@ -40,6 +33,7 @@ import FixedAddButton from 'components/global-components/fixed-add-button/FixedA
 import NewItemModal from './new-item-modal/newItemModal'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import PaginatedList from 'components/global-components/paginated-list/paginatedList'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 interface Props {
   catalogueData: CatalogueData<AuthUserFieldData | CurrentUserFieldData>
@@ -49,8 +43,10 @@ const cx = classNames.bind(styles)
 
 const CatalogueItems = (props: Props) => {
   const dispatch = useAppDispatch()
-  const history = useHistory<LocationState>()
-  const location = useLocation<LocationState>()
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const largeViewport = useTypedSelector(
     (state) => state.modules.app.screenWidth.largeViewport,
   )
@@ -110,7 +106,7 @@ const CatalogueItems = (props: Props) => {
 
     const query = queryBuilder(filtersBarContext)
 
-    history.push({ search: query.query })
+    navigate({ search: query.query })
 
     dispatch(
       FETCH_CURRENT_USER_ITEMS({
@@ -123,60 +119,67 @@ const CatalogueItems = (props: Props) => {
     )
   }
 
-  const getItems = () =>
-    itemsData!.results.map((itemData) => {
-      const handleAddComment = (text: string, parentId?: number) => {
-        dispatch(
-          POST_ITEM_COMMENT({
-            itemId: itemData.id,
-            text,
-            parentId,
-          }),
-        )
-      }
+  const handleAddItem = useCallback(() => {
+    dispatch(ADD_ITEM(catalogue!.id))
+  }, [catalogue?.id])
 
-      const handleFetchComments = (page: number | null) => {
-        dispatch(
-          FETCH_ITEM_COMMENTS({
-            itemId: itemData.id,
-            page,
-          }),
-        )
-      }
-
-      const handleEditItem = () => {
-        dispatch(TOGGLE_EDIT_ITEM(itemData.id))
-      }
-
-      const handleEditConfirm = (item: DeserializedItem) => {
-        dispatch(SAVE_ITEM(item))
-      }
-
-      const handleEditCancel = (isNew: boolean) => {
-        if (isNew) {
-          dispatch(DELETE_ITEM(itemData.id))
-        } else {
-          dispatch(REFRESH_CURRENT_USER_ITEM(itemData.id))
+  const items = useMemo(
+    () =>
+      itemsData?.results.map((itemData) => {
+        const handleAddComment = (text: string, parentId?: number) => {
+          dispatch(
+            POST_ITEM_COMMENT({
+              itemId: itemData.id,
+              text,
+              parentId,
+            }),
+          )
         }
-      }
 
-      return (
-        <CatalogueItem
-          itemData={itemData}
-          catalogueData={props.catalogueData}
-          isNarrow={!largeViewport}
-          editable={true}
-          key={itemData.id}
-          onEdit={handleEditItem}
-          onSave={handleEditConfirm}
-          onEditCancel={handleEditCancel}
-          onAddComment={handleAddComment}
-          onFetchComments={handleFetchComments}
-        />
-      )
-    })
+        const handleFetchComments = (page: number | null) => {
+          dispatch(
+            FETCH_ITEM_COMMENTS({
+              itemId: itemData.id,
+              page,
+            }),
+          )
+        }
 
-  const getNoItemsMessage = () => {
+        const handleEditItem = () => {
+          dispatch(TOGGLE_EDIT_ITEM(itemData.id))
+        }
+
+        const handleEditConfirm = (item: DeserializedItem) => {
+          dispatch(SAVE_ITEM(item))
+        }
+
+        const handleEditCancel = (isNew: boolean) => {
+          if (isNew) {
+            dispatch(DELETE_ITEM(itemData.id))
+          } else {
+            dispatch(REFRESH_CURRENT_USER_ITEM(itemData.id))
+          }
+        }
+
+        return (
+          <CatalogueItem
+            itemData={itemData}
+            catalogueData={props.catalogueData}
+            isNarrow={!largeViewport}
+            editable={true}
+            key={itemData.id}
+            onEdit={handleEditItem}
+            onSave={handleEditConfirm}
+            onEditCancel={handleEditCancel}
+            onAddComment={handleAddComment}
+            onFetchComments={handleFetchComments}
+          />
+        )
+      }),
+    [itemsData, props.catalogueData, largeViewport],
+  )
+
+  const noItemsMessage = useMemo(() => {
     if (currentUserItems.isCreatingNewItem) return
     return (
       <div className={styles.noContent}>
@@ -186,9 +189,9 @@ const CatalogueItems = (props: Props) => {
         </p>
       </div>
     )
-  }
+  }, [currentUserItems.isCreatingNewItem, handleAddItem])
 
-  const getNoItemsFoundMessage = () => {
+  const noItemsFoundMessage = useMemo(() => {
     if (currentUserItems.isCreatingNewItem) {
       return
     }
@@ -198,13 +201,9 @@ const CatalogueItems = (props: Props) => {
         <p>No items found</p>
       </div>
     )
-  }
+  }, [currentUserItems.isCreatingNewItem])
 
-  const handleAddItem = () => {
-    dispatch(ADD_ITEM(catalogue!.id))
-  }
-
-  const getAddItemButton = () => {
+  const addItemButton = useMemo(() => {
     if (largeViewport) {
       return (
         <AddButton
@@ -216,7 +215,7 @@ const CatalogueItems = (props: Props) => {
     } else {
       return <FixedAddButton onClick={handleAddItem} />
     }
-  }
+  }, [largeViewport, handleAddItem])
 
   const clearError = () => {
     dispatch(CLEAR_ITEMS_DATA_ERROR())
@@ -244,15 +243,14 @@ const CatalogueItems = (props: Props) => {
   const showAddItemButton =
     isItemInCatalogue &&
     !currentUserItems.newItemId &&
-    !currentUserItems.isCreatingNewItem
+    !currentUserItems.isCreatingNewItem &&
+    catalogue!.permissions.canCreateItems
 
   return (
     <div className={itemsClass}>
-      {showAddItemButton && catalogue!.permissions.canCreateItems
-        ? getAddItemButton()
-        : null}
-      {!isItemInCatalogue && getNoItemsMessage()}
-      {isSearchResult && getNoItemsFoundMessage()}
+      {showAddItemButton && addItemButton}
+      {!isItemInCatalogue && noItemsMessage}
+      {isSearchResult && noItemsFoundMessage}
       <PaginatedList
         next={itemsData.next}
         buttonChild="See more"
@@ -261,7 +259,7 @@ const CatalogueItems = (props: Props) => {
         intersectingElement={3}
         onLoadMore={fetchItems}
       >
-        {getItems()}
+        {items}
       </PaginatedList>
       <NewItemModal />
       <MessageModal

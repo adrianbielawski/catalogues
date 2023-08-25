@@ -2,7 +2,7 @@
 
 ## Description
 
-Cataloging website allows you to catalogue anything you like in public or private catalogues with custom also public or private description fields. \
+Cataloguing website allows you to catalogue anything you like in public or private catalogues with custom also public or private description fields. \
 Browse catalogues, comment, rate and follow them to be always up to date with the latest items from your favourite catalogues. \
 Interested in some specific items? Just filter, sort or search any items in any catalogue of your choice. \
 Simple and fully responsive layout makes it easy to use on any device.
@@ -41,7 +41,7 @@ Desktop | Smartphone
 #### Demo user / [Photo catalogue](https://catalogues.adrian.bielaw.ski)
 
 This is the view of Photo catalogue on Demo user. \
-To play around as demo user go to https://catalogues.adrian.bielaw.ski/login and use \
+To play around as demo user go to https://catalogues.adrian.bielaw.ski/auth/login and use \
 **email:** demo<!---->@demo.com, **password:** password
 Desktop | Smartphone
 ------- | -------

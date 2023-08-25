@@ -1,11 +1,8 @@
 import { cloneDeep } from 'lodash'
-// Types
 import { type DeserializedItem } from 'src/globalTypes'
-// Redux
-import { useTypedSelector } from 'store/storeConfig'
-// Components
 import CollapsableList from 'components/global-components/collapsable-list/collapsableList'
 import Field from './field/field'
+import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
   item: DeserializedItem
@@ -14,7 +11,7 @@ interface Props {
 }
 
 const ItemFields = (props: Props) => {
-  const fields = useTypedSelector((state) => state.entities.fields.entities)
+  const fields = useEntitiesSelector('fields')
   const maxHeight = props.isNarrow ? 55 : 106
 
   const items = cloneDeep(props.item.fieldsValues).sort(

@@ -1,22 +1,22 @@
-import { useContext, useState } from 'react'
-import * as React from 'react'
-import { useHistory } from 'react-router-dom'
+import {
+  useContext,
+  useState,
+  ForwardRefRenderFunction,
+  forwardRef,
+} from 'react'
 import { faUser } from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment'
 import classNames from 'classnames/bind'
 import styles from './comment.module.scss'
-// Types
-import { DeserializedItemComment, LocationState } from 'src/globalTypes'
-// Redux
+import { DeserializedItemComment } from 'src/globalTypes'
 import { useTypedSelector } from 'store/storeConfig'
 import { userSelector } from 'store/selectors'
-// Context
 import { ItemCommentsContext } from '../item-comments-context/itemCommentsStore'
-// Components
 import CommentChildren from './comment-children/commentChildren'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import AvatarWithName from 'components/global-components/avatar-with-name/avatarWithName'
 import AnimateHeight from 'react-animate-height'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   comment: DeserializedItemComment
@@ -28,12 +28,12 @@ interface Props {
 
 const cx = classNames.bind(styles)
 
-const Comment: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
+const Comment: ForwardRefRenderFunction<HTMLDivElement, Props> = (
   props,
   ref,
 ) => {
   const { comment } = props
-  const history = useHistory<LocationState>()
+  const navigate = useNavigate()
   const user = useTypedSelector(userSelector(comment.createdBy))
   const { replyTo, changeReplyTo } = useContext(ItemCommentsContext)
   const [clipText, setClipText] = useState(props.clipText)
@@ -45,7 +45,7 @@ const Comment: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
     if (!user) {
       return
     }
-    history.push(`/${user.username}`)
+    navigate(`/${user.username}`)
   }
 
   const handleCommentClick = () => {
@@ -138,4 +138,4 @@ const Comment: React.ForwardRefRenderFunction<HTMLDivElement, Props> = (
   )
 }
 
-export default React.forwardRef(Comment)
+export default forwardRef(Comment)
