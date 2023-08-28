@@ -116,7 +116,7 @@ export interface CataloguePermisions {
   can_create_items: boolean
 }
 
-export interface DeserializedCataloguePermisions {
+export interface DeserializedCataloguePermissions {
   canCreateItems: boolean
 }
 
@@ -128,7 +128,7 @@ export interface DeserializedCatalogue {
   name: string
   slug: string
   itemsRanges: DeserializedItemsRanges
-  permissions: DeserializedCataloguePermisions
+  permissions: DeserializedCataloguePermissions
   image: string
   imageThumbnail: string
   isFavourite: boolean

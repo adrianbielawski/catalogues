@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { concat, of, Observable } from 'rxjs'
 import { catchError, switchMap, filter, mergeMap } from 'rxjs/operators'
 import { Action } from '@reduxjs/toolkit'
@@ -8,6 +7,7 @@ import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
 import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import { Catalogue } from 'src/globalTypes'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchRecommendedCataloguesEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -45,6 +45,6 @@ export const fetchRecommendedCataloguesEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const recommendedCataloguesEpics = combineEpics(
+export const recommendedCataloguesEpics = typedCombineEpics(
   fetchRecommendedCataloguesEpic,
 )

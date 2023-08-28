@@ -1,15 +1,16 @@
-import { combineEpics } from 'redux-observable'
-import { concat, type Observable, of } from 'rxjs'
-import { catchError, filter, mapTo, mergeMap, switchMap } from 'rxjs/operators'
-import { type Action } from '@reduxjs/toolkit'
+import { ofType } from 'redux-observable'
+import { concat, Observable, of } from 'rxjs'
+import { catchError, map, mergeMap, switchMap } from 'rxjs/operators'
+import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
-// Actions
 import * as actions from './slice'
 import { LOG_OUT_SUCCESS } from 'store/modules/auth-user/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchSwitchesEpic = (action$: Observable<Action>) =>
   action$.pipe(
-    filter(actions.FETCH_SWITCHES.match),
+    ofType(actions.FETCH_SWITCHES),
+    // filter(actions.FETCH_SWITCHES.match),
     switchMap(() =>
       concat(
         of(actions.FETCH_SWITCHES_START()),
@@ -24,6 +25,10 @@ export const fetchSwitchesEpic = (action$: Observable<Action>) =>
   )
 
 export const clearAppStateEpic = (action$: Observable<Action>) =>
-  action$.pipe(filter(LOG_OUT_SUCCESS.match), mapTo(actions.CLEAR_APP_STATE()))
+  action$.pipe(
+    ofType(LOG_OUT_SUCCESS),
+    // filter(LOG_OUT_SUCCESS.match),
+    map(() => actions.CLEAR_APP_STATE()),
+  )
 
-export const appEpics = combineEpics(fetchSwitchesEpic, clearAppStateEpic)
+export const appEpics = typedCombineEpics(fetchSwitchesEpic, clearAppStateEpic)

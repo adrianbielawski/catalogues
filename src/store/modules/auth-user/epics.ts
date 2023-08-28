@@ -1,6 +1,5 @@
 import { Action } from '@reduxjs/toolkit'
-import { combineEpics } from 'redux-observable'
-import { of, concat, Observable, from, defer } from 'rxjs'
+import { of, concat, Observable, from, defer, EMPTY } from 'rxjs'
 import {
   catchError,
   filter,
@@ -17,6 +16,7 @@ import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
 import { User } from 'src/globalTypes'
 import { AuthResponse } from './types'
+import { typedCombineEpics } from 'store/utils'
 
 export const getUserEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -34,6 +34,7 @@ export const getUserEpic = (action$: Observable<Action>) =>
                     `/${response.data.username}/catalogues`,
                   )
                 }
+                return EMPTY
               }),
             ),
           ),
@@ -85,6 +86,7 @@ export const logInEpic = (action$: Observable<Action>) =>
               concat(
                 defer(() => {
                   localStorage.setItem('token', response.data.key)
+                  return EMPTY
                 }),
                 of(usersActions.USER_ADDED(response.data.user)),
                 of(actions.LOG_IN_SUCCESS(response.data.user.id)),
@@ -95,6 +97,7 @@ export const logInEpic = (action$: Observable<Action>) =>
                   }
 
                   action.payload.navigate(pathname)
+                  return EMPTY
                 }),
               ),
             ),
@@ -119,6 +122,7 @@ export const logOutEpic = (action$: Observable<Action>) =>
               of(actions.LOG_OUT_SUCCESS()),
               defer(() => {
                 localStorage.removeItem('token')
+                return EMPTY
               }),
             ),
           ),
@@ -163,6 +167,7 @@ export const verifyEmailEpic = (action$: Observable<Action>) =>
             concat(
               defer(() => {
                 localStorage.setItem('token', response.data.key)
+                return EMPTY
               }),
               of(usersActions.USER_ADDED(response.data.user)),
               of(actions.VERIFY_EMAIL_SUCCESS(response.data.user.id)),
@@ -170,6 +175,7 @@ export const verifyEmailEpic = (action$: Observable<Action>) =>
                 action.payload.navigate(
                   `/${response.data.user.username}/catalogues`,
                 )
+                return EMPTY
               }),
             ),
           ),
@@ -201,6 +207,7 @@ export const changeUsernameEpic = (action$: Observable<Action>) =>
                   referrer.params.username = response.data.username
 
                   action.payload.navigate(pathname, { state: { referrer } })
+                  return EMPTY
                 }),
                 of(actions.CHANGE_USERNAME_SUCCESS(response.data)),
               ),
@@ -265,7 +272,7 @@ export const postUserImageEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const authUserEpics = combineEpics(
+export const authUserEpics = typedCombineEpics(
   getUserEpic,
   signUpEpic,
   logInEpic,

@@ -58,7 +58,7 @@ export const itemsRangeDeserializer = (
 
 export const cataloguePermissionsDeserializer = (
   permissions: T.CataloguePermisions,
-): T.DeserializedCataloguePermisions => ({
+): T.DeserializedCataloguePermissions => ({
   canCreateItems: permissions.can_create_items,
 })
 

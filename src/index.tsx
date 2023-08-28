@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { store } from 'store/storeConfig'
 import { init as SentryInit, ErrorBoundary } from '@sentry/react'
@@ -18,12 +18,13 @@ const router = createBrowserRouter(routeConfig, {
   basename: BASE_URL,
 })
 
-// eslint-disable-next-line react/no-deprecated
-ReactDOM.render(
+const container = document.getElementById('root')!
+const root = createRoot(container)
+
+root.render(
   <ErrorBoundary fallback={<p>An error has occurred</p>}>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
   </ErrorBoundary>,
-  document.getElementById('root'),
 )

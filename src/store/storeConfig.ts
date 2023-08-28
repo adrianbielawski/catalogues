@@ -1,6 +1,10 @@
 import { $CombinedState, combineReducers } from 'redux'
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
-import { createSelectorHook, useDispatch } from 'react-redux'
+import { configureStore, AnyAction } from '@reduxjs/toolkit'
+import {
+  TypedUseSelectorHook,
+  createSelectorHook,
+  useDispatch,
+} from 'react-redux'
 import { combineEpics, createEpicMiddleware } from 'redux-observable'
 import { createReduxEnhancer } from '@sentry/react'
 // Slices
@@ -21,7 +25,7 @@ import { singleItemEpics } from './modules/single-item/epics'
 
 const sentryEnhancer = createReduxEnhancer()
 
-const rootEpic = combineEpics(
+const rootEpic = combineEpics<AnyAction, AnyAction, RootState>(
   appEpics,
   homepageEpics,
   authUserEpics,
@@ -34,7 +38,7 @@ const rootEpic = combineEpics(
   currentUserItemsEpics,
   singleItemEpics,
 )
-const epicMiddleware = createEpicMiddleware()
+const epicMiddleware = createEpicMiddleware<AnyAction, AnyAction, RootState>()
 
 const rootReducer = combineReducers({
   entities,
@@ -43,11 +47,11 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: [
+  middleware: (getDefaultMiddleware) => [
     ...getDefaultMiddleware({
       thunk: false,
       serializableCheck: {
-        ignoredActionPaths: ['payload.history'],
+        ignoredActionPaths: ['payload.navigate'],
       },
     }),
     epicMiddleware,
@@ -58,8 +62,9 @@ export const store = configureStore({
 epicMiddleware.run(rootEpic)
 
 export type RootState = ReturnType<typeof rootReducer>
-
 export type Entity = Exclude<keyof RootState['entities'], typeof $CombinedState>
 export type AppDispatch = typeof store.dispatch
-export const useAppDispatch = () => useDispatch<AppDispatch>()
-export const useTypedSelector = createSelectorHook<RootState>()
+
+export const useAppDispatch: () => AppDispatch = useDispatch
+export const useTypedSelector: TypedUseSelectorHook<RootState> =
+  createSelectorHook()

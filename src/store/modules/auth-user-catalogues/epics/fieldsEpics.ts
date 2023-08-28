@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 import { concat, of, defer, Observable, merge, forkJoin } from 'rxjs'
@@ -6,6 +5,7 @@ import { catchError, mergeMap, switchMap, filter, map } from 'rxjs/operators'
 // Actions
 import * as actions from '../slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const refreshCatalogueFieldEpic = (action$: Observable<Action>) =>
   merge(action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELD.match))).pipe(
@@ -313,7 +313,7 @@ export const reorderCatalogueFieldsEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const authUserCataloguesFieldsEpics = combineEpics(
+export const authUserCataloguesFieldsEpics = typedCombineEpics(
   refreshCatalogueFieldEpic,
   fetchCatalogueFieldEpic,
   refreshCatalogueFieldsEpic,

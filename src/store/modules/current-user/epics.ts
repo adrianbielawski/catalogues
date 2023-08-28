@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { axiosInstance$ } from 'src/axiosInstance'
 import { concat, of, type Observable } from 'rxjs'
 import { catchError, filter, mergeMap, switchMap } from 'rxjs/operators'
@@ -6,6 +5,7 @@ import { type Action } from '@reduxjs/toolkit'
 // Actions
 import * as actions from 'store/modules/current-user/slice'
 import * as usersActions from 'store/entities/users/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const getCurrentUserEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -32,4 +32,4 @@ export const getCurrentUserEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const currentUserEpics = combineEpics(getCurrentUserEpic)
+export const currentUserEpics = typedCombineEpics(getCurrentUserEpic)
