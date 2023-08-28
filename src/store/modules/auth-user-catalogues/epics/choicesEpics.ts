@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { type Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 import { concat, of, type Observable, merge, forkJoin } from 'rxjs'
@@ -12,6 +11,8 @@ import {
 // Actions
 import * as actions from '../slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
+import { Choice } from 'src/globalTypes'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchFieldsChoicesEpic = (action$: Observable<Action>) =>
   merge(
@@ -28,7 +29,7 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) =>
         fields.map((field) => [
           field.id,
           axiosInstance$
-            .get('/choices/', {
+            .get<Choice[]>('/choices/', {
               params: { field_id: field.id },
             })
             .pipe(map((response) => response.data)),
@@ -37,8 +38,8 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) =>
 
       return concat(
         of(actions.FETCH_FIELDS_CHOICES_START(action.payload.catalogueId)),
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) =>
             concat(
               of(
@@ -161,7 +162,7 @@ export const removeFieldChoiceEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const authUserChoicesEpics = combineEpics(
+export const authUserChoicesEpics = typedCombineEpics(
   fetchFieldsChoicesEpic,
   fetchAuthUserCataloguesChoicesEpic,
   postFieldChoiceEpic,

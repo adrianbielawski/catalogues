@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { concat, of, type Observable, forkJoin, defer, iif } from 'rxjs'
 import {
   catchError,
@@ -14,7 +13,11 @@ import { type Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 // Types
 import { type RootState } from 'store/storeConfig'
-import { type Item, type ItemCommentParent } from 'src/globalTypes'
+import {
+  CommentsData,
+  type Item,
+  type ItemCommentParent,
+} from 'src/globalTypes'
 // Actions
 import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
@@ -23,6 +26,7 @@ import * as itemsCommentsActions from 'store/entities/items-comments/slice'
 import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchTopItemsEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -99,7 +103,7 @@ export const fetchTopItemsCommentsEpic = (action$: Observable<Action>) =>
         items.map((item) => [
           item.id,
           axiosInstance$
-            .get('/comments/', {
+            .get<CommentsData>('/comments/', {
               params: {
                 item_id: item.id,
                 page: 1,
@@ -110,14 +114,14 @@ export const fetchTopItemsCommentsEpic = (action$: Observable<Action>) =>
       )
 
       return concat(
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) => {
             const comments = Object.values(data)
               .flat()
               .map((list) => list.results)
               .filter((c) => c.length > 0)
-              .flat() as ItemCommentParent[]
+              .flat()
 
             const users = comments
               .map((c) => {
@@ -167,7 +171,7 @@ export const fetchTopItemsFieldsEpic = (
       )
 
       return forkJoin(requests).pipe(
-        defaultIfEmpty(),
+        defaultIfEmpty([]),
         mergeMap((response) =>
           concat(
             of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
@@ -199,7 +203,7 @@ export const fetchTopItemsChoicesEpic = (action$: Observable<Action>) =>
 
       return concat(
         forkJoin(requests).pipe(
-          defaultIfEmpty(),
+          defaultIfEmpty([]),
           mergeMap((data) => {
             const choices = Object.values(data).flat()
 
@@ -300,7 +304,7 @@ export const fetchTopItemCommentsEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const topItemsEpics = combineEpics(
+export const topItemsEpics = typedCombineEpics(
   fetchTopItemsEpic,
   fetchTopItemsCommentsEpic,
   fetchTopItemsCataloguesEpic,

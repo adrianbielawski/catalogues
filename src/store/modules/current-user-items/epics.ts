@@ -1,5 +1,14 @@
-import { combineEpics } from 'redux-observable'
-import { concat, of, defer, forkJoin, Observable, from, merge, iif } from 'rxjs'
+import {
+  concat,
+  of,
+  defer,
+  forkJoin,
+  Observable,
+  from,
+  merge,
+  iif,
+  EMPTY,
+} from 'rxjs'
 import {
   catchError,
   mergeMap,
@@ -9,28 +18,29 @@ import {
   filter,
   map,
   withLatestFrom,
-  pluck,
 } from 'rxjs/operators'
 import { Action } from '@reduxjs/toolkit'
 import mime from 'mime-types'
 import { axiosInstance$ } from 'src/axiosInstance'
-// Store observables
 import { retry$ } from 'store/storeObservables'
-// Serializers
 import {
   itemDeserializer,
   itemFieldSerializer,
   itemRatingDeserializer,
 } from 'src/serializers'
-// Types
-import { DeserializedImage, Item, ItemCommentParent } from 'src/globalTypes'
+import {
+  CommentsData,
+  DeserializedImage,
+  Item,
+  ItemCommentParent,
+} from 'src/globalTypes'
 import { RootState } from 'store/storeConfig'
-// Actions
 import * as actions from './slice'
 import * as authUserCataloguesActions from 'store/modules/auth-user-catalogues/slice'
 import * as itemsActions from 'store/entities/items/slice'
 import * as itemsCommentsActions from 'store/entities/items-comments/slice'
 import * as usersActions from 'store/entities/users/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const refreshItemEpic = (action$: Observable<Action>) =>
   merge(
@@ -197,14 +207,12 @@ export const saveItemEpic = (
         request$.pipe(
           mergeMap((response) =>
             imagesRequests$(response.data.id).pipe(
-              defaultIfEmpty(),
+              defaultIfEmpty({}),
               withLatestFrom(
                 state$.pipe(
-                  pluck(
-                    'entities',
-                    'catalogues',
-                    'entities',
-                    `${response.data.id}`,
+                  map(
+                    (state) =>
+                      state.entities.catalogues.entities[response.data.id],
                   ),
                 ),
               ),
@@ -217,6 +225,7 @@ export const saveItemEpic = (
                         action.payload.catalogueId,
                       ),
                     ),
+                    EMPTY,
                   ),
                   of(actions.SAVE_ITEM_SUCCESS(response.data.id)),
                 ),
@@ -353,7 +362,7 @@ export const fetchItemsCommentsEpic = (action$: Observable<Action>) =>
         items.map((item) => [
           item.id,
           axiosInstance$
-            .get('/comments/', {
+            .get<CommentsData>('/comments/', {
               params: {
                 item_id: item.id,
                 page: 1,
@@ -365,14 +374,14 @@ export const fetchItemsCommentsEpic = (action$: Observable<Action>) =>
 
       return concat(
         of(actions.FETCH_ITEMS_COMMENTS_START()),
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) => {
             const comments = Object.values(data)
               .flat()
               .map((list) => list.results)
               .filter((c) => c.length > 0)
-              .flat() as ItemCommentParent[]
+              .flat()
 
             const users = comments
               .map((c) => {
@@ -476,7 +485,7 @@ export const postItemCommentEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const currentUserItemsEpics = combineEpics(
+export const currentUserItemsEpics = typedCombineEpics(
   refreshItemEpic,
   fetchItemEpic,
   fetchItemsEpic,

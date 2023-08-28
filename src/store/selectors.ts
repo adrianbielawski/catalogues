@@ -1,8 +1,15 @@
-import { Dictionary, Selector } from '@reduxjs/toolkit'
+import { Dictionary, Selector, createSelector } from '@reduxjs/toolkit'
 import { RootState } from './storeConfig'
 import type * as T from 'src/globalTypes'
 
 type SelectorType<T> = Selector<RootState, T>
+
+const cataloguesDataSelector = (state: RootState) =>
+  state.modules.currentUserCatalogues.cataloguesData
+const authUserCataloguesDataSelector = (state: RootState) =>
+  state.modules.authUserCatalogues.cataloguesData
+const currentUserItemsDataSelector = (state: RootState) =>
+  state.modules.currentUserItems.itemsData?.results
 
 // User
 export const userSelector =
@@ -20,15 +27,17 @@ export const catalogueSelector =
   (state) =>
     state.entities.catalogues.entities[id]
 
-export const catalogueSelectorBySlug =
-  (
-    slug: string,
-    id: number,
-  ): SelectorType<T.DeserializedCatalogue | undefined> =>
-  (state) =>
-    Object.values(state.entities.catalogues.entities).filter(
-      (c) => c?.slug === slug && c?.createdBy === id,
-    )[0]
+export const catalogueSelectorBySlug = (
+  slug: string,
+  id: number,
+): SelectorType<T.DeserializedCatalogue | undefined> =>
+  createSelector(
+    [(state: RootState) => state.entities.catalogues.entities],
+    (catalogues) =>
+      Object.values(catalogues).filter(
+        (c) => c?.slug === slug && c?.createdBy === id,
+      )[0],
+  )
 
 // Fields entities
 export const fieldSelector =
@@ -36,67 +45,80 @@ export const fieldSelector =
   (state) =>
     state.entities.fields.entities[fieldId]
 
-export const fieldsSelector =
-  (fieldsIds: number[]): SelectorType<T.DeserializedField[]> =>
-  (state) =>
-    fieldsIds.map(
-      (f) => state.entities.fields.entities[f],
-    ) as T.DeserializedField[]
+export const fieldsSelector = (
+  fieldsIds: number[],
+): SelectorType<T.DeserializedField[]> =>
+  createSelector(
+    [(state: RootState) => state.entities.fields.entities],
+    (fields) => fieldsIds.map((f) => fields[f]) as T.DeserializedField[],
+  )
 
 // Choices entities
-export const fieldChoicesSelector =
-  (fieldId: number): SelectorType<T.DeserializedChoice[]> =>
-  (state) =>
-    Object.values(state.entities.choices.entities).filter(
-      (c) => c?.fieldId === fieldId,
-    ) as T.DeserializedChoice[]
-
+export const fieldChoicesSelector = (fieldId: number) =>
+  createSelector(
+    [(state: RootState) => state.entities.choices.entities],
+    (choices) =>
+      Object.values(choices).filter(
+        (c) => c?.fieldId === fieldId,
+      ) as T.DeserializedChoice[],
+  )
 // Current user
-export const currentUserCatalogueSelector =
-  (id: number): SelectorType<T.CurrentUserCatalogueData> =>
-  (state) =>
-    state.modules.currentUserCatalogues.cataloguesData.filter(
-      (c) => c.id === id,
-    )[0]
+export const currentUserCatalogueSelector = (
+  id: number,
+): SelectorType<T.CurrentUserCatalogueData> =>
+  createSelector(
+    [cataloguesDataSelector],
+    (cataloguesData) => cataloguesData.filter((c) => c.id === id)[0],
+  )
 
-export const currentUserFieldDataSelector =
-  (
-    catalogueId: number,
-    fieldId: number,
-  ): SelectorType<T.CurrentUserFieldData> =>
-  (state) =>
-    state.modules.currentUserCatalogues.cataloguesData
-      .filter((c) => c.id === catalogueId)[0]
-      .fieldsData.filter((f) => f.id === fieldId)[0]
+export const currentUserFieldDataSelector = (
+  catalogueId: number,
+  fieldId: number,
+) =>
+  createSelector(
+    [cataloguesDataSelector],
+    (cataloguesData) =>
+      cataloguesData
+        .filter((c) => c.id === catalogueId)[0]
+        .fieldsData.filter((f) => f.id === fieldId)[0],
+  )
 
-export const currentUserFieldsDataSelector =
-  (catalogueId: number): SelectorType<T.CurrentUserFieldData[]> =>
-  (state) =>
-    state.modules.currentUserCatalogues.cataloguesData.filter(
-      (c) => c.id === catalogueId,
-    )[0].fieldsData
+export const currentUserFieldsDataSelector = (catalogueId: number) =>
+  createSelector(
+    [cataloguesDataSelector],
+    (cataloguesData) =>
+      cataloguesData.filter((c) => c.id === catalogueId)[0].fieldsData,
+  )
 
 // Auth user
-export const authUserCatalogueDataSelector =
-  (id: number): SelectorType<T.AuthUserCatalogueData> =>
-  (state) =>
-    state.modules.authUserCatalogues.cataloguesData.filter(
-      (c) => c.id === id,
-    )[0]
+export const authUserCatalogueDataSelector = (
+  id: number,
+): SelectorType<T.AuthUserCatalogueData> =>
+  createSelector(
+    [authUserCataloguesDataSelector],
+    (cataloguesData) => cataloguesData.filter((c) => c.id === id)[0],
+  )
 
-export const authUserFieldDataSelector =
-  (catalogueId: number, fieldId: number): SelectorType<T.AuthUserFieldData> =>
-  (state) =>
-    state.modules.authUserCatalogues.cataloguesData
-      .filter((f) => f.id === catalogueId)[0]
-      .fieldsData.filter((f) => f.id === fieldId)[0]
+export const authUserFieldDataSelector = (
+  catalogueId: number,
+  fieldId: number,
+): SelectorType<T.AuthUserFieldData> =>
+  createSelector(
+    [authUserCataloguesDataSelector],
+    (cataloguesData) =>
+      cataloguesData
+        .filter((f) => f.id === catalogueId)[0]
+        .fieldsData.filter((f) => f.id === fieldId)[0],
+  )
 
-export const authUserFieldsDataSelector =
-  (catalogueId: number): SelectorType<T.AuthUserFieldData[]> =>
-  (state) =>
-    state.modules.authUserCatalogues.cataloguesData.filter(
-      (f) => f.id === catalogueId,
-    )[0].fieldsData
+export const authUserFieldsDataSelector = (
+  catalogueId: number,
+): SelectorType<T.AuthUserFieldData[]> =>
+  createSelector(
+    [authUserCataloguesDataSelector],
+    (cataloguesData) =>
+      cataloguesData.filter((f) => f.id === catalogueId)[0].fieldsData,
+  )
 
 // Items data
 export const itemSelector =
@@ -134,23 +156,24 @@ export const commentChildrenSelector =
   (state) =>
     state.entities.itemsComments.entities[commentId]?.children
 
-export const itemCommentsDataSelector =
-  (
-    itemId: number,
-  ): SelectorType<
-    T.DeserializedListData<T.DeserializedCommentData> | undefined
-  > =>
-  (state) =>
-    state.modules.currentUserItems.itemsData?.results.filter(
-      (i) => i.id === itemId,
-    )[0].commentsData
+export const itemCommentsDataSelector = (
+  itemId: number,
+): SelectorType<
+  T.DeserializedListData<T.DeserializedCommentData> | undefined
+> =>
+  createSelector(
+    [currentUserItemsDataSelector],
+    (itemsData) => itemsData?.filter((i) => i.id === itemId)[0].commentsData,
+  )
 
-export const itemCommentDataSelector =
-  (
-    itemId: number,
-    commentId: number,
-  ): SelectorType<T.DeserializedCommentData | undefined> =>
-  (state) =>
-    state.modules.currentUserItems.itemsData?.results
-      .filter((i) => i.id === itemId)[0]
-      .commentsData.results.filter((c) => c.id === commentId)[0]
+export const itemCommentDataSelector = (
+  itemId: number,
+  commentId: number,
+): SelectorType<T.DeserializedCommentData | undefined> =>
+  createSelector(
+    [currentUserItemsDataSelector],
+    (itemsData) =>
+      itemsData
+        ?.filter((i) => i.id === itemId)[0]
+        .commentsData.results.filter((c) => c.id === commentId)[0],
+  )

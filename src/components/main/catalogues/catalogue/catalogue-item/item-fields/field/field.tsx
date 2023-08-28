@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import styles from './field.module.scss'
 // Types
 import {
+  BasicFieldValue,
   DeserializedGeoField,
   DeserializedItemField,
   DeserializedItemFieldValue,
@@ -50,7 +51,7 @@ const Field = (props: Props) => {
         return <GeoFieldValue fieldValue={value as DeserializedGeoField} />
       }
       default: {
-        return <p>{value}</p>
+        return <p>{value as BasicFieldValue}</p>
       }
     }
   }, [props.item.value, field.type])

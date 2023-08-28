@@ -1,12 +1,11 @@
-import { combineEpics } from 'redux-observable'
+import { StateObservable } from 'redux-observable'
 import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 import mime from 'mime-types'
-import { concat, of, defer, Observable, from } from 'rxjs'
+import { concat, of, defer, Observable, from, EMPTY } from 'rxjs'
 import {
   catchError,
   mergeMap,
-  pluck,
   switchMap,
   withLatestFrom,
   filter,
@@ -20,6 +19,7 @@ import { catalogueDeserializer } from 'src/serializers'
 import * as actions from '../slice'
 import * as cataloguesActions from 'store/entities/catalogues/slice'
 import { FETCH_FAVOURITE_CATALOGUES } from 'store/modules/auth-user-favourites/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const createCatalogueEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -46,12 +46,12 @@ export const createCatalogueEpic = (action$: Observable<Action>) =>
 
 export const fetchAuthUserCataloguesEpic = (
   action$: Observable<Action>,
-  state$: Observable<RootState>,
+  state$: StateObservable<RootState>,
 ) =>
   action$.pipe(
     filter(actions.FETCH_AUTH_USER_CATALOGUES.match),
-    withLatestFrom(state$.pipe(pluck('modules', 'authUser', 'id'))),
-    switchMap(([_, id]) =>
+    withLatestFrom(state$.pipe(map((state) => state.modules.authUser.id))),
+    switchMap(([, id]) =>
       concat(
         of(actions.FETCH_AUTH_USER_CATALOGUES_START()),
         axiosInstance$
@@ -78,14 +78,12 @@ export const refreshCatalogueEpic = (action$: Observable<Action>) =>
       concat(
         axiosInstance$.get(`/catalogues/${action.payload}/`).pipe(
           map((response) =>
-            of(
-              cataloguesActions.CATALOGUE_UPDATED({
-                id: action.payload,
-                changes: {
-                  ...catalogueDeserializer(response.data),
-                },
-              }),
-            ),
+            cataloguesActions.CATALOGUE_UPDATED({
+              id: action.payload,
+              changes: {
+                ...catalogueDeserializer(response.data),
+              },
+            }),
           ),
           catchError(() =>
             of(actions.REFRESH_CATALOGUE_FAILURE(action.payload)),
@@ -276,9 +274,10 @@ export const deleteCatalogueEpic = (action$: Observable<Action>) =>
     mergeMap((action) =>
       concat(
         of(actions.DELETE_CATALOGUE_START(action.payload)),
-        defer(() =>
-          axiosInstance$.delete(`/catalogues/${action.payload}/`),
-        ).pipe(
+        defer(() => {
+          axiosInstance$.delete(`/catalogues/${action.payload}/`)
+          return EMPTY
+        }).pipe(
           mergeMap(() =>
             concat(
               of(actions.DELETE_CATALOGUE_SUCCESS(action.payload)),
@@ -375,7 +374,7 @@ export const deleteCatalogueFromFavouriteEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const authUserCataloguesEpics = combineEpics(
+export const authUserCataloguesEpics = typedCombineEpics(
   createCatalogueEpic,
   fetchAuthUserCataloguesEpic,
   refreshCatalogueEpic,

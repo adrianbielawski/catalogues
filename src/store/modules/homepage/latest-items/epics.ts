@@ -1,5 +1,4 @@
-import { combineEpics } from 'redux-observable'
-import { concat, of, type Observable, forkJoin, defer, iif } from 'rxjs'
+import { concat, of, Observable, forkJoin, defer, iif } from 'rxjs'
 import {
   catchError,
   switchMap,
@@ -12,10 +11,8 @@ import {
 } from 'rxjs/operators'
 import { type Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
-// Types
 import { type RootState } from 'store/storeConfig'
-import { type ItemCommentParent } from 'src/globalTypes'
-// Actions
+import { CommentsData, type ItemCommentParent } from 'src/globalTypes'
 import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
 import * as itemsEntitiesActions from 'store/entities/items/slice'
@@ -23,6 +20,7 @@ import * as itemsCommentsActions from 'store/entities/items-comments/slice'
 import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchLatestItemsEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -95,7 +93,7 @@ export const fetchLatestItemsCommentsEpic = (action$: Observable<Action>) =>
         items.map((item) => [
           item.id,
           axiosInstance$
-            .get('/comments/', {
+            .get<CommentsData>('/comments/', {
               params: {
                 item_id: item.id,
                 page: 1,
@@ -106,14 +104,14 @@ export const fetchLatestItemsCommentsEpic = (action$: Observable<Action>) =>
       )
 
       return concat(
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) => {
             const comments = Object.values(data)
               .flat()
               .map((list) => list.results)
               .filter((c) => c.length > 0)
-              .flat() as ItemCommentParent[]
+              .flat()
 
             const users = comments
               .map((c) => {
@@ -163,7 +161,7 @@ export const fetchLatestItemsFieldsEpic = (
       )
 
       return forkJoin(requests).pipe(
-        defaultIfEmpty(),
+        defaultIfEmpty([]),
         mergeMap((response) =>
           concat(
             of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
@@ -195,7 +193,7 @@ export const fetchLatestItemsChoicesEpic = (action$: Observable<Action>) =>
 
       return concat(
         forkJoin(requests).pipe(
-          defaultIfEmpty(),
+          defaultIfEmpty([]),
           mergeMap((data) => {
             const choices = Object.values(data).flat()
 
@@ -300,7 +298,7 @@ export const fetchLatestItemCommentsEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const latestItemsEpics = combineEpics(
+export const latestItemsEpics = typedCombineEpics(
   fetchLatestItemsEpic,
   fetchLatestItemsCommentsEpic,
   fetchLatestItemsCataloguesEpic,

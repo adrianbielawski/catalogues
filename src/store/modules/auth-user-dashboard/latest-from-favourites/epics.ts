@@ -1,4 +1,3 @@
-import { combineEpics } from 'redux-observable'
 import { concat, of, Observable, forkJoin, defer, iif } from 'rxjs'
 import {
   catchError,
@@ -14,7 +13,7 @@ import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 // Types
 import { RootState } from 'store/storeConfig'
-import { ItemCommentParent } from 'src/globalTypes'
+import { CommentsData, ItemCommentParent } from 'src/globalTypes'
 // Actions
 import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
@@ -23,6 +22,7 @@ import * as itemsCommentsActions from 'store/entities/items-comments/slice'
 import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchLatestFromFavouritesEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -94,7 +94,7 @@ export const fetchLFFItemsCommentsEpic = (action$: Observable<Action>) =>
         items.map((item) => [
           item.id,
           axiosInstance$
-            .get('/comments/', {
+            .get<CommentsData>('/comments/', {
               params: {
                 item_id: item.id,
                 page: 1,
@@ -105,14 +105,14 @@ export const fetchLFFItemsCommentsEpic = (action$: Observable<Action>) =>
       )
 
       return concat(
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) => {
             const comments = Object.values(data)
               .flat()
               .map((list) => list.results)
               .filter((c) => c.length > 0)
-              .flat() as ItemCommentParent[]
+              .flat()
 
             const users = comments
               .map((c) => {
@@ -162,7 +162,7 @@ export const fetchLFFFieldsEpic = (
       )
 
       return forkJoin(requests).pipe(
-        defaultIfEmpty(),
+        defaultIfEmpty([]),
         mergeMap((response) =>
           concat(
             of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
@@ -194,7 +194,7 @@ export const fetchLFFChoicesEpic = (action$: Observable<Action>) =>
 
       return concat(
         forkJoin(requests).pipe(
-          defaultIfEmpty(),
+          defaultIfEmpty([]),
           mergeMap((data) => {
             const choices = Object.values(data).flat()
 
@@ -295,7 +295,7 @@ export const fetchItemCommentsEpic = (action$: Observable<Action>) =>
     ),
   )
 
-export const latestFromFavouritesEpics = combineEpics(
+export const latestFromFavouritesEpics = typedCombineEpics(
   fetchLatestFromFavouritesEpic,
   fetchLFFItemsCommentsEpic,
   fetchLFFCataloguesEpic,

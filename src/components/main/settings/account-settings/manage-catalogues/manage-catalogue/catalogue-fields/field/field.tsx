@@ -2,14 +2,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowsAltV, faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './field.module.scss'
-import { type AuthUserFieldData } from 'src/globalTypes'
+import {
+  AuthUserChoiceFieldData,
+  AuthUserFieldData,
+  AuthUserTextFieldData,
+} from 'src/globalTypes'
 import {
   CLEAR_FIELD_ERROR,
   TOGGLE_FIELD_EDIT,
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch } from 'store/storeConfig'
 import OrderableList, {
-  type ItemComponentProps,
+  ItemComponentProps,
 } from '@adrianbielawski/orderable-list'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import MessageModal from 'components/global-components/message-modal/messageModal'
@@ -49,10 +53,20 @@ const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
       case 'date':
       case 'media':
       case 'geo_point':
-        return <EditTextField field={field} fieldData={fieldData} />
+        return (
+          <EditTextField
+            field={field}
+            fieldData={fieldData as AuthUserTextFieldData}
+          />
+        )
       case 'single_choice':
       case 'multiple_choice':
-        return <EditChoiceField field={field} fieldData={fieldData} />
+        return (
+          <EditChoiceField
+            field={field}
+            fieldData={fieldData as AuthUserChoiceFieldData}
+          />
+        )
     }
   }
 
@@ -81,7 +95,7 @@ const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
         <MessageModal
           show={error !== null}
           title={error?.title}
-          message={error?.message || ''}
+          message={error?.message ?? ''}
           onConfirm={clearError}
         />
       </div>

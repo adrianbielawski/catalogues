@@ -1,5 +1,14 @@
-import { combineEpics } from 'redux-observable'
-import { concat, of, Observable, forkJoin, defer, iif, from, merge } from 'rxjs'
+import {
+  concat,
+  of,
+  Observable,
+  forkJoin,
+  defer,
+  iif,
+  from,
+  merge,
+  EMPTY,
+} from 'rxjs'
 import {
   catchError,
   switchMap,
@@ -15,7 +24,12 @@ import mime from 'mime-types'
 import { axiosInstance$ } from 'src/axiosInstance'
 // Types
 import { RootState } from 'store/storeConfig'
-import { DeserializedImage, Item, ItemCommentParent } from 'src/globalTypes'
+import {
+  Choice,
+  DeserializedImage,
+  Item,
+  ItemCommentParent,
+} from 'src/globalTypes'
 // Serializers
 import { itemFieldSerializer } from 'src/serializers'
 // Actions
@@ -27,6 +41,7 @@ import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
 import * as authUserCataloguesActions from 'store/modules/auth-user-catalogues/slice'
+import { typedCombineEpics } from 'store/utils'
 
 export const fetchSingleItemEpic = (action$: Observable<Action>) =>
   action$.pipe(
@@ -178,7 +193,7 @@ export const fetchSingleItemChoicesEpic = (action$: Observable<Action>) =>
         fields.map((field) => [
           field.id,
           axiosInstance$
-            .get('/choices/', {
+            .get<Choice[]>('/choices/', {
               params: { field_id: field.id },
             })
             .pipe(map((response) => response.data)),
@@ -186,8 +201,8 @@ export const fetchSingleItemChoicesEpic = (action$: Observable<Action>) =>
       )
 
       return concat(
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty([]),
           mergeMap((data) =>
             concat(
               of(
@@ -313,14 +328,12 @@ export const saveSingleItemEpic = (
         request$.pipe(
           mergeMap((response) =>
             imagesRequests$(response.data.id).pipe(
-              defaultIfEmpty(),
+              defaultIfEmpty({}),
               withLatestFrom(
                 state$.pipe(
-                  pluck(
-                    'entities',
-                    'catalogues',
-                    'entities',
-                    `${response.data.id}`,
+                  map(
+                    (state) =>
+                      state.entities.catalogues.entities[response.data.id],
                   ),
                 ),
               ),
@@ -333,6 +346,7 @@ export const saveSingleItemEpic = (
                         action.payload.catalogueId,
                       ),
                     ),
+                    EMPTY,
                   ),
                   of(actions.SAVE_SINGLE_ITEM_SUCCESS(response.data.id)),
                 ),
@@ -353,7 +367,7 @@ export const refreshSingleItemEpic = (action$: Observable<Action>) =>
     action$.pipe(filter(actions.SAVE_SINGLE_ITEM_SUCCESS.match)),
   ).pipe(map((action) => actions.FETCH_SINGLE_ITEM(action.payload)))
 
-export const singleItemEpics = combineEpics(
+export const singleItemEpics = typedCombineEpics(
   fetchSingleItemEpic,
   refreshSingleItemCommentsEpic,
   fetchSingleItemCommentsEpic,

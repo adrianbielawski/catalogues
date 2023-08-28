@@ -41,8 +41,10 @@ const Carousel = (props: Props) => {
   )
   const currentRef = useRef<HTMLLIElement>(null)
   const [width, setWidth] = useState(0)
-  const onResize = useCallback((width) => {
-    setWidth(width)
+  const onResize = useCallback((width?: number) => {
+    if (width !== undefined) {
+      setWidth(width)
+    }
   }, [])
   useResizeDetector({
     targetRef: currentRef,

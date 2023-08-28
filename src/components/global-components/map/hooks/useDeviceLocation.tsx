@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
-// Types
-import { type LocationEvent } from 'leaflet'
-// Hooks
+import { LocationEvent } from 'leaflet'
 import { useMap, useMapEvent } from 'react-leaflet'
 
 const useDeviceLocation = () => {
@@ -13,10 +11,12 @@ const useDeviceLocation = () => {
   }, [map])
 
   const handleLocation = (e: LocationEvent) => {
+    console.log(e)
     setLocation(e)
   }
 
   useMapEvent('locationfound', handleLocation)
+  useMapEvent('locationerror', console.log)
 
   return location
 }

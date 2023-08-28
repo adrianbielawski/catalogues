@@ -1,5 +1,13 @@
-import { combineEpics } from 'redux-observable'
-import { concat, of, defer, forkJoin, type Observable, merge, iif } from 'rxjs'
+import {
+  concat,
+  of,
+  defer,
+  forkJoin,
+  type Observable,
+  merge,
+  iif,
+  EMPTY,
+} from 'rxjs'
 import {
   catchError,
   mergeMap,
@@ -20,6 +28,8 @@ import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
 import { FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS } from 'store/modules/auth-user-catalogues/slice'
+import { typedCombineEpics } from 'store/utils'
+import { Choice } from 'src/globalTypes'
 
 export const fetchCurrentUserCataloguesEpic = (
   action$: Observable<Action>,
@@ -81,6 +91,7 @@ export const fetchCurrentUserCatalogueFieldsEpic = (
                     catalogueId: action.payload,
                   }),
                 ),
+                EMPTY,
               ),
               of(fieldsEntitiesActions.FIELDS_UPDATED(response.data)),
               of(
@@ -120,7 +131,7 @@ export const fetchCurrentUserFieldsChoicesEpic = (
         fields.map((field) => [
           field.id,
           axiosInstance$
-            .get('/choices/', {
+            .get<Choice[]>('/choices/', {
               params: { field_id: field.id },
             })
             .pipe(map((response) => response.data)),
@@ -133,8 +144,8 @@ export const fetchCurrentUserFieldsChoicesEpic = (
             action.payload.catalogueId,
           ),
         ),
-        forkJoin<typeof requests, string>(requests).pipe(
-          defaultIfEmpty(),
+        forkJoin(requests).pipe(
+          defaultIfEmpty({}),
           mergeMap((data) =>
             concat(
               of(
@@ -162,7 +173,7 @@ export const fetchCurrentUserFieldsChoicesEpic = (
     }),
   )
 
-export const currentUserCataloguesEpics = combineEpics(
+export const currentUserCataloguesEpics = typedCombineEpics(
   fetchCurrentUserCataloguesEpic,
   fetchCurrentUserCatalogueFieldsEpic,
   fetchCurrentUserFieldsChoicesEpic,
