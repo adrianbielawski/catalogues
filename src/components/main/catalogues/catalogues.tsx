@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { upperFirst } from 'lodash'
 import styles from './catalogues.module.scss'
 import FiltersBarBulkContextProvider from 'components/global-components/filters-bar/filters-bar-context/filtersBarBulkContextProvider'
@@ -14,6 +14,8 @@ import Header from 'components/global-components/header/header'
 import { useNavigate, useLocation, Navigate, Outlet } from 'react-router-dom'
 import usePathMatcher from 'src/hooks/usePathMatcher'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import useMinContentHeight from 'src/hooks/useMinContentHeight'
+import useRefCallback from 'src/hooks/useRefCallback'
 
 const Catalogues = () => {
   const dispatch = useAppDispatch()
@@ -21,9 +23,6 @@ const Catalogues = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const screenHeight = useTypedSelector(
-    (state) => state.modules.app.screenHeight,
-  )
   const users = useEntitiesSelector('users')
   const authUserData = useTypedSelector((state) => state.modules.authUser)
   const currentUserData = useTypedSelector((state) => state.modules.currentUser)
@@ -36,18 +35,11 @@ const Catalogues = () => {
   )
   const catalogues = useEntitiesSelector('catalogues')
 
-  const [minHeight, setMinHeight] = useState(0)
-
-  const cataloguesRef = useRef<HTMLDivElement>(null)
+  const [rect, ref] = useRefCallback<HTMLDivElement>()
+  const minHeight = useMinContentHeight(rect)
 
   const firstRender = useFirstRender()
   const cataloguesPathMatch = usePathMatcher('/:username/catalogues')
-
-  const getMinHeight = useCallback(() => {
-    const top = cataloguesRef.current!.getBoundingClientRect().top
-    const minHeight = screenHeight - top - window.scrollY
-    setMinHeight(minHeight)
-  }, [screenHeight])
 
   useEffect(() => {
     if (currentUser !== null) {
@@ -60,14 +52,6 @@ const Catalogues = () => {
       dispatch(CLEAR_CURRENT_USER_CATALOGUES_DATA())
     }
   }, [])
-
-  useEffect(() => {
-    if (cataloguesRef.current === null) {
-      return
-    }
-
-    getMinHeight()
-  }, [screenHeight, getMinHeight])
 
   const handleRedirectToSettings = useCallback(() => {
     navigate(`/${currentUser!.username}/settings/account/manage-catalogues`)
@@ -114,7 +98,7 @@ const Catalogues = () => {
       <div
         className={styles.catalogues}
         style={{ minHeight: `${minHeight}px` }}
-        ref={cataloguesRef}
+        ref={ref}
       >
         <Header />
         {currentUserCatalogues.cataloguesData.length === 0 || !catalogueSlug ? (

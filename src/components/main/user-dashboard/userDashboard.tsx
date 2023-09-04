@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   faChevronLeft,
   faChevronRight,
@@ -14,28 +14,16 @@ import TransparentButton from 'components/global-components/transparent-button/t
 import RecommendedCatalogues from './recommended-catalogues/recommendedCatalogues'
 import LatestFromFavourites from './latest-from-favourites/latestFromFavourites'
 import TopItems from './top-items/topItems'
+import useMinContentHeight from 'src/hooks/useMinContentHeight'
+import useRefCallback from 'src/hooks/useRefCallback'
 
 const UserDashboard = () => {
   const app = useTypedSelector((state) => state.modules.app)
 
-  const userDashboardRef = useRef<HTMLDivElement>(null)
+  const [rect, ref] = useRefCallback<HTMLDivElement>()
+  const minHeight = useMinContentHeight(rect)
 
-  const [minHeight, setMinHeight] = useState(0)
   const [currentColumn, setCurrentColumn] = useState(0)
-
-  useEffect(() => {
-    if (userDashboardRef.current === null) {
-      return
-    }
-
-    getMinHeight()
-  }, [userDashboardRef.current, app.screenHeight])
-
-  const getMinHeight = () => {
-    const top = userDashboardRef.current!.getBoundingClientRect().top
-    const minHeight = app.screenHeight - top - window.scrollY
-    setMinHeight(minHeight)
-  }
 
   const handleColumnChange = (column: number) => {
     scrollTop()
@@ -69,7 +57,7 @@ const UserDashboard = () => {
     <div
       className={styles.userDashboard}
       style={{ minHeight: `${minHeight}px` }}
-      ref={userDashboardRef}
+      ref={ref}
     >
       <Header />
       <ComponentHeader className={styles.userDashboardHeader}>
