@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import * as Sentry from '@sentry/react'
 import { CHANGE_SCREEN_SIZE, FETCH_SWITCHES } from 'store/modules/app/slice'
-import { GET_USER, INITIALIZED } from 'store/modules/auth-user/slice'
+import { GET_USER } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import Loader from 'components/global-components/loader/loader'
 import { FETCH_AUTH_USER_CATALOGUES } from 'store/modules/auth-user-catalogues/slice'
@@ -41,13 +41,13 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      dispatch(GET_USER({ navigate, location }))
-    } else {
-      dispatch(INITIALIZED())
+    if (authUser.isInitialized) {
+      return
     }
+
+    dispatch(GET_USER({ navigate, location }))
     dispatch(FETCH_SWITCHES())
-  }, [])
+  }, [authUser.isInitialized])
 
   useEffect(() => {
     if (!authUser.id) {

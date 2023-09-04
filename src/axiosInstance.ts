@@ -5,14 +5,3 @@ export const axiosInstance$ = Axios.create({
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'X-CSRFToken',
 })
-
-axiosInstance$.interceptors.request.use((request) => {
-  const token = localStorage.getItem('token')
-
-  if (token) {
-    request.headers ??= {}
-    request.headers.Authorization = `Token ${token}`
-  }
-
-  return request
-})

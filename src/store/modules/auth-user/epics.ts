@@ -5,7 +5,7 @@ import {
   filter,
   map,
   mergeMap,
-  retryWhen,
+  retry,
   switchMap,
 } from 'rxjs/operators'
 import { axiosInstance$ } from 'src/axiosInstance'
@@ -39,7 +39,6 @@ export const getUserEpic = (action$: Observable<Action>) =>
             ),
           ),
           catchError(() => {
-            localStorage.removeItem('token')
             return of(actions.GET_USER_FAILURE())
           }),
         ),
@@ -84,10 +83,6 @@ export const logInEpic = (action$: Observable<Action>) =>
           .pipe(
             mergeMap((response) =>
               concat(
-                defer(() => {
-                  localStorage.setItem('token', response.data.key)
-                  return EMPTY
-                }),
                 of(usersActions.USER_ADDED(response.data.user)),
                 of(actions.LOG_IN_SUCCESS(response.data.user.id)),
                 defer(() => {
@@ -116,16 +111,8 @@ export const logOutEpic = (action$: Observable<Action>) =>
       concat(
         of(actions.LOG_OUT_START()),
         axiosInstance$.post('/logout/').pipe(
-          retryWhen((err) => retry$(err)),
-          mergeMap(() =>
-            concat(
-              of(actions.LOG_OUT_SUCCESS()),
-              defer(() => {
-                localStorage.removeItem('token')
-                return EMPTY
-              }),
-            ),
-          ),
+          retry({ delay: (err) => retry$(err) }),
+          map(() => actions.LOG_OUT_SUCCESS()),
           catchError((error) =>
             of(actions.LOG_OUT_FAILURE(getErrorMessage(error))),
           ),
@@ -165,10 +152,6 @@ export const verifyEmailEpic = (action$: Observable<Action>) =>
         .pipe(
           mergeMap((response) =>
             concat(
-              defer(() => {
-                localStorage.setItem('token', response.data.key)
-                return EMPTY
-              }),
               of(usersActions.USER_ADDED(response.data.user)),
               of(actions.VERIFY_EMAIL_SUCCESS(response.data.user.id)),
               defer(() => {

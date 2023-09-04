@@ -17,9 +17,6 @@ export const authUser = {
 }
 
 export const initialize = {
-  INITIALIZED(state: State) {
-    state.isInitialized = true
-  },
   GET_USER(
     state: State,
     action: PayloadAction<T.NavigateAndLocationPayload>,
