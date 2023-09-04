@@ -16,6 +16,7 @@ const cx = classNames.bind(styles)
 const RecommendedCatalogues = () => {
   const dispatch = useAppDispatch()
 
+  const { authUser } = useTypedSelector((state) => state.modules)
   const catalogues = useEntitiesSelector('catalogues')
   const { cataloguesData, isFetchingCatalogues, error } = useTypedSelector(
     (state) => state.modules.authUserDashboard.recommendedCatalogues,
@@ -39,7 +40,7 @@ const RecommendedCatalogues = () => {
     return () => {
       dispatch(CLEAR_RECOMMENDED_CATALOGUES())
     }
-  }, [])
+  }, [authUser.id])
 
   const cataloguesComponents = useMemo(
     () =>

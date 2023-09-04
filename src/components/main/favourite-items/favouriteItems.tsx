@@ -12,6 +12,7 @@ import useRefCallback from 'src/hooks/useRefCallback'
 const FavouriteItems = () => {
   const dispatch = useAppDispatch()
 
+  const { authUser } = useTypedSelector((state) => state.modules)
   const isFetchingFavItemsData = useTypedSelector(
     (state) => state.modules.favouriteItems.isFetchingFavItemsData,
   )
@@ -21,7 +22,7 @@ const FavouriteItems = () => {
 
   useEffect(() => {
     dispatch(FETCH_FAVOURITE_ITEMS_DATA())
-  }, [])
+  }, [authUser.id])
 
   return (
     <FiltersBarBulkContextProvider values={filtersBarInitialState}>

@@ -16,6 +16,7 @@ const cx = classNames.bind(styles)
 const LatestCatalogues = () => {
   const dispatch = useAppDispatch()
 
+  const { authUser } = useTypedSelector((state) => state.modules)
   const catalogues = useEntitiesSelector('catalogues')
   const latestCatalogues = useTypedSelector(
     (state) => state.modules.homepage.latestCatalogues,
@@ -28,7 +29,7 @@ const LatestCatalogues = () => {
     return () => {
       dispatch(CLEAR_LATEST_CATALOGUES())
     }
-  }, [])
+  }, [authUser.id])
 
   const fetchCatalogues = useCallback(
     (page?: number) => {

@@ -30,7 +30,7 @@ const TopItems = () => {
     return () => {
       dispatch(CLEAR_TOP_ITEMS())
     }
-  }, [])
+  }, [authUser.id])
 
   const fetchItems = (page?: number) => {
     dispatch(FETCH_TOP_ITEMS(page ?? itemsData?.next ?? 1))
