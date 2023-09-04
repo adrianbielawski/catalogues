@@ -10,7 +10,6 @@ import { typedCombineEpics } from 'store/utils'
 export const fetchSwitchesEpic = (action$: Observable<Action>) =>
   action$.pipe(
     ofType(actions.FETCH_SWITCHES),
-    // filter(actions.FETCH_SWITCHES.match),
     switchMap(() =>
       concat(
         of(actions.FETCH_SWITCHES_START()),
@@ -27,7 +26,6 @@ export const fetchSwitchesEpic = (action$: Observable<Action>) =>
 export const clearAppStateEpic = (action$: Observable<Action>) =>
   action$.pipe(
     ofType(LOG_OUT_SUCCESS),
-    // filter(LOG_OUT_SUCCESS.match),
     map(() => actions.CLEAR_APP_STATE()),
   )
 

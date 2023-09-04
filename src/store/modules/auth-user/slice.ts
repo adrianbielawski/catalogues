@@ -40,7 +40,7 @@ export const authUserSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(CLEAR_APP_STATE, () => {
       const clearedState = { ...initialState }
-      clearedState.isInitialized = true
+      clearedState.isInitialized = false
       return clearedState
     })
   },
@@ -48,7 +48,6 @@ export const authUserSlice = createSlice({
 
 export const {
   CLEAR_AUTH_USER_ERROR,
-  INITIALIZED,
   GET_USER,
   GET_USER_SUCCESS,
   GET_USER_FAILURE,

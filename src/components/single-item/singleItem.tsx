@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { DeserializedItem } from 'src/globalTypes'
 import {
@@ -17,19 +17,21 @@ import CatalogueItem from 'components/main/catalogues/catalogue/catalogue-item/c
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import Loader from 'components/global-components/loader/loader'
 import styles from './singleItem.module.scss'
+import useMinContentHeight from 'src/hooks/useMinContentHeight'
+import useRefCallback from 'src/hooks/useRefCallback'
 
 const Item = () => {
   const dispatch = useAppDispatch()
 
   const navigate = useNavigate()
   const { itemId } = useParams()
-  const singleItemRef = useRef<HTMLDivElement>(null)
-  const screenHeight = useTypedSelector(
-    (state) => state.modules.app.screenHeight,
-  )
+
+  const { authUser } = useTypedSelector((state) => state.modules)
   const screenWidth = useTypedSelector((state) => state.modules.app.screenWidth)
   const singleItem = useTypedSelector((state) => state.modules.singleItem)
-  const [minHeight, setMinHeight] = useState(0)
+
+  const [rect, ref] = useRefCallback<HTMLDivElement>()
+  const minHeight = useMinContentHeight(rect)
 
   useEffect(() => {
     fetchItem()
@@ -37,21 +39,7 @@ const Item = () => {
     return () => {
       dispatch(CLEAR_SINGLE_ITEM_DATA())
     }
-  }, [])
-
-  useEffect(() => {
-    if (singleItemRef.current === null) {
-      return
-    }
-
-    getMinHeight()
-  }, [singleItemRef.current, screenHeight])
-
-  const getMinHeight = () => {
-    const top = singleItemRef.current!.getBoundingClientRect().top
-    const minHeight = screenHeight - top - window.scrollY
-    setMinHeight(minHeight)
-  }
+  }, [authUser.id])
 
   const fetchItem = () => {
     if (!itemId) {
@@ -109,7 +97,7 @@ const Item = () => {
     <div
       className={styles.singleItem}
       style={{ minHeight: `${minHeight}px` }}
-      ref={singleItemRef}
+      ref={ref}
     >
       <Header />
       {singleItem.isFetchingData && <Loader className={styles.loader} />}

@@ -17,6 +17,7 @@ const cx = classNames.bind(styles)
 const LatestFromFavourites = () => {
   const dispatch = useAppDispatch()
 
+  const { authUser } = useTypedSelector((state) => state.modules)
   const { itemsData, isFetchingData, isFetchingItems, error } =
     useTypedSelector(
       (state) => state.modules.authUserDashboard.latestFromFavourites,
@@ -35,7 +36,7 @@ const LatestFromFavourites = () => {
     return () => {
       dispatch(CLEAR_LFF())
     }
-  }, [])
+  }, [authUser.id])
 
   const itemsComponents = useMemo(
     () =>

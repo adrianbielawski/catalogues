@@ -4,13 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
 import styles from './navList.module.scss'
-import { type ItemWithChildren } from '../nav'
 import { useTypedSelector } from 'store/storeConfig'
 import { NavContext } from '../nav-store/navStore'
 import AnimateHeight from 'react-animate-height'
 import NavItem from '../nav-item/navItem'
 import ItemIcon from '../item-icon/itemIcon'
 import useCurrentPath from 'src/hooks/useCurrentPath'
+import { ItemWithChildren } from '../types'
 
 interface Props {
   item: ItemWithChildren

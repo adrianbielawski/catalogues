@@ -1,70 +1,13 @@
-import { useCallback, useContext, useEffect, useRef, ReactNode } from 'react'
+import { useCallback, useContext, useEffect, useRef, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import classNames from 'classnames/bind'
 import styles from './nav.module.scss'
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core'
 import { useUrlBuilder } from 'src/hooks/useUrlBuilder'
 import { NavContext } from './nav-store/navStore'
 import NavItem from './nav-item/navItem'
 import NavList from './nav-list/navList'
 import useCurrentPath from 'src/hooks/useCurrentPath'
-
-export interface CommonItem {
-  id: string | number
-  title: string
-}
-
-export type ItemWithOnClickAndIcon = CommonItem & {
-  icon: ReactNode
-  faIcon?: never
-  onClick?: () => void
-}
-
-export type ItemWithOnClickAndFaIcon = CommonItem & {
-  icon?: never
-  faIcon: IconDefinition
-  onClick?: () => void
-}
-
-type ItemWithOnClick = ItemWithOnClickAndIcon | ItemWithOnClickAndFaIcon
-
-export type ItemWithUrlAndIcon = CommonItem & {
-  icon: ReactNode
-  faIcon?: never
-  url: string
-  children?: never
-  onClick?: never
-}
-
-export type ItemWithUrlAndFaIcon = CommonItem & {
-  icon?: never
-  faIcon: IconDefinition
-  url: string
-  children?: never
-  onClick?: never
-}
-
-export type ItemWithUrl = ItemWithUrlAndIcon | ItemWithUrlAndFaIcon
-
-export type ItemWithChildrenAndIcon = CommonItem & {
-  icon: ReactNode
-  faIcon?: never
-  url?: never
-  children: ItemType[]
-}
-
-export type ItemWithChildrenAndFaIcon = CommonItem & {
-  icon?: never
-  faIcon: IconDefinition
-  url?: never
-  children: ItemType[]
-}
-
-export type ItemWithChildren =
-  | ItemWithChildrenAndIcon
-  | ItemWithChildrenAndFaIcon
-
-export type ItemType = ItemWithUrl | ItemWithChildren | ItemWithOnClick
+import { ItemType, ItemWithChildren } from './types'
 
 interface Props {
   items: ItemType[]
@@ -102,19 +45,25 @@ const Nav = (props: Props) => {
     return () => {
       window.removeEventListener('click', handleCloseList)
     }
-  }, [show, close])
+  }, [show, handleCloseList])
 
-  const getItemById = () => {
-    const item = props.items.filter((i) => i.id === listId)[0]
+  const itemById = useMemo(() => {
+    if (!listId) {
+      return
+    }
+
+    const item = props.items.filter(
+      (i) => i.id === listId,
+    )[0] as ItemWithChildren
 
     if (nestedListId) {
-      return (item as ItemWithChildren).children.filter(
+      return item.children.filter(
         (i) => i.id === nestedListId,
-      )[0]
+      )[0] as ItemWithChildren
     }
 
     return item
-  }
+  }, [props.items, listId, nestedListId])
 
   const items = props.items.map((item) => {
     const handleClick = () => {
@@ -164,11 +113,9 @@ const Nav = (props: Props) => {
   return (
     <nav className={navClass} ref={navRef}>
       <ul className={styles.items}>{items}</ul>
-      <NavList
-        item={getItemById() as ItemWithChildren}
-        position={props.position}
-        top={getTop()}
-      />
+      {itemById && (
+        <NavList item={itemById} position={props.position} top={getTop()} />
+      )}
     </nav>
   )
 }

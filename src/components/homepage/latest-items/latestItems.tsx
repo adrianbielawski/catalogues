@@ -17,7 +17,7 @@ const cx = classNames.bind(styles)
 const LatestItems = () => {
   const dispatch = useAppDispatch()
 
-  const authUser = useTypedSelector((state) => state.modules.authUser)
+  const { authUser } = useTypedSelector((state) => state.modules)
   const isFetchingCataloguesData = useTypedSelector(
     (state) => state.modules.authUserCatalogues.isFetchingCataloguesData,
   )
@@ -37,7 +37,7 @@ const LatestItems = () => {
     return () => {
       dispatch(CLEAR_LATEST_ITEMS())
     }
-  }, [])
+  }, [authUser.id])
 
   const itemsComponents = useMemo(() => {
     if (!itemsData) {
