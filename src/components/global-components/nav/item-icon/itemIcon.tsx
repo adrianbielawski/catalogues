@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import classNames from 'classnames/bind'
 import styles from './itemIcon.module.scss'
-// Types
-import { type ItemType } from '../nav'
+import { ItemType } from '../types'
 
 interface Props {
   item: ItemType

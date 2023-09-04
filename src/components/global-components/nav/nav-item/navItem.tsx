@@ -1,8 +1,8 @@
 import { MouseEvent } from 'react'
 import classNames from 'classnames/bind'
 import styles from './navItem.module.scss'
-import { type ItemType } from '../nav'
 import ItemIcon from '../item-icon/itemIcon'
+import { ItemType } from '../types'
 
 interface Props {
   item: ItemType
