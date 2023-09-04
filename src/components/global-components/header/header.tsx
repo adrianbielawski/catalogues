@@ -14,12 +14,13 @@ import styles from './header.module.scss'
 import { LOG_OUT } from 'store/modules/auth-user/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { useUrlBuilder } from 'src/hooks/useUrlBuilder'
-import Nav, { type ItemType } from '../nav/nav'
+import Nav from '../nav/nav'
 import NavContextProvider from '../nav/nav-store/navContextProvider'
 import Avatar from '../avatar/avatar'
 import SettingsIcon from './settings-icon/settingsIcon'
 import useCurrentPath from 'src/hooks/useCurrentPath'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import { ItemType } from '../nav/types'
 
 const contextValue = {
   show: false,
