@@ -5,7 +5,7 @@ import { AuthUserChoiceFieldData } from 'src/globalTypes'
 
 const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
 
 export const createChoiceData = (id: number) => ({

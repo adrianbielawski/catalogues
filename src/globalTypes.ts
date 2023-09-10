@@ -156,7 +156,6 @@ export interface AuthUserCatalogueData
   extends CatalogueData<AuthUserFieldData> {
   isEditingCatalogueName: boolean
   isSubmittingCatalogueName: boolean
-  isAddFieldFormActive: boolean
   isSubmittingNewField: boolean
   isDeletingCatalogue: boolean
   isSubmittingImage: boolean
@@ -175,6 +174,10 @@ export interface AuthUserChoiceFieldData
   isPostingChoice: boolean
 }
 
+export interface AuthUserGroupFieldData extends AuthUserTextFieldData {
+  children: AuthUserFieldData[]
+}
+
 export interface AuthUserTextFieldData extends FieldsData {
   isChangingName: boolean
   isDeleting: boolean
@@ -183,7 +186,10 @@ export interface AuthUserTextFieldData extends FieldsData {
   fieldError: ErrorMessage | null
 }
 
-export type AuthUserFieldData = AuthUserChoiceFieldData | AuthUserTextFieldData
+export type AuthUserFieldData =
+  | AuthUserChoiceFieldData
+  | AuthUserTextFieldData
+  | AuthUserGroupFieldData
 
 export interface FieldsData {
   id: number
@@ -211,6 +217,11 @@ export interface Field {
   public: boolean
   choices?: Choice[]
   children?: Field[]
+  parent_id?: number | null
+}
+
+export interface DeserializedFieldWithChildren extends DeserializedField {
+  children?: DeserializedFieldWithChildren[]
 }
 
 export interface DeserializedField {
@@ -221,7 +232,7 @@ export interface DeserializedField {
   filterName: string
   position: number
   public: boolean
-  children?: DeserializedField[]
+  parentId?: number | null
 }
 
 // Choices

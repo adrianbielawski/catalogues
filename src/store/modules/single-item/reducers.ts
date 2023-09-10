@@ -106,7 +106,9 @@ export const fetchSingleItemFields = {
     state: State,
     action: PayloadAction<Field[]>,
   ) {
-    state.catalogueData!.fieldsData = action.payload.map(createFieldData)
+    state.catalogueData!.fieldsData = action.payload.map((f) =>
+      createFieldData(f),
+    )
     state.catalogueData!.isFetchingFields = false
   },
   FETCH_SINGLE_ITEM_FIELDS_FAILURE(state: State) {

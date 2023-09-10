@@ -1,3 +1,4 @@
+import { FC } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowsAltV, faEdit } from '@fortawesome/free-solid-svg-icons'
 import classNames from 'classnames/bind'
@@ -6,6 +7,7 @@ import {
   AuthUserChoiceFieldData,
   AuthUserFieldData,
   AuthUserTextFieldData,
+  AuthUserGroupFieldData,
 } from 'src/globalTypes'
 import {
   CLEAR_FIELD_ERROR,
@@ -20,30 +22,34 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 import EditTextField from '../edit-text-field/editTextField'
 import EditChoiceField from '../edit-choice-field/editChoiceField'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import EditGroupField from '../edit-group-field/editGroupField'
 
 const cx = classNames.bind(styles)
 
-const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
+const Field: FC<ItemComponentProps<AuthUserFieldData>> = ({
+  item: fieldData,
+  grabbed,
+}) => {
   const dispatch = useAppDispatch()
 
   const fieldsEntities = useEntitiesSelector('fields')
 
-  const fieldData = props.item
   const isEditing = fieldData.isEditing
   const error = fieldData.fieldError
   const field = fieldsEntities[fieldData.id]!
 
-  const catalogueAndFieldId = {
+  const catalogueAndFieldIds = {
     fieldId: field.id,
     catalogueId: field.catalogueId,
+    parentFieldId: field.parentId,
   }
 
   const handleEdit = () => {
-    dispatch(TOGGLE_FIELD_EDIT(catalogueAndFieldId))
+    dispatch(TOGGLE_FIELD_EDIT(catalogueAndFieldIds))
   }
 
   const clearError = () => {
-    dispatch(CLEAR_FIELD_ERROR(catalogueAndFieldId))
+    dispatch(CLEAR_FIELD_ERROR(catalogueAndFieldIds))
   }
 
   const getEditComponent = () => {
@@ -67,11 +73,19 @@ const Field = (props: ItemComponentProps<AuthUserFieldData>) => {
             fieldData={fieldData as AuthUserChoiceFieldData}
           />
         )
+      case 'group':
+        return (
+          <EditGroupField
+            fieldComponent={Field}
+            field={field}
+            fieldData={fieldData as AuthUserGroupFieldData}
+          />
+        )
     }
   }
 
   const wrapperClass = cx('wrapper', {
-    grabbed: props.grabbed,
+    grabbed,
   })
 
   const fieldClass = cx('field', {

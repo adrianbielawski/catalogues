@@ -1,29 +1,37 @@
-import { useState } from 'react'
-import styles from './editTextField.module.scss'
+import { ComponentType, useState } from 'react'
+import styles from './editGroupField.module.scss'
+import {
+  AuthUserFieldData,
+  AuthUserGroupFieldData,
+  DeserializedField,
+} from 'src/globalTypes'
 import {
   CHANGE_FIELD_NAME,
   CHANGE_FIELD_PUBLIC,
   DELETE_CATALOGUE_FIELD,
+  REORDER_CATALOGUE_FIELDS,
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'
-import {
-  type AuthUserTextFieldData,
-  type DeserializedField,
-} from 'src/globalTypes'
 import { useDebouncedDispatch } from 'src/hooks/useDebouncedDispatch'
 import Input from 'components/global-components/input/input'
 import Button from 'components/global-components/button/button'
 import ConfirmMessageModal from 'components/global-components/confirm-message-modal/confirmMessageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import AddField from '../add-field/addField'
+import OrderableList, {
+  ItemComponentProps,
+  OnDropParams,
+} from '@adrianbielawski/orderable-list'
 
 interface Props {
+  fieldComponent: ComponentType<ItemComponentProps<AuthUserFieldData>>
   field: DeserializedField
-  fieldData: AuthUserTextFieldData
+  fieldData: AuthUserGroupFieldData
 }
 
-const EditTextField = ({ field, fieldData }: Props) => {
+const EditGroupField = ({ fieldComponent, field, fieldData }: Props) => {
   const dispatch = useAppDispatch()
 
   const fields = useEntitiesSelector('fields')
@@ -37,7 +45,6 @@ const EditTextField = ({ field, fieldData }: Props) => {
   const catalogueAndFieldId = {
     fieldId: field.id,
     catalogueId: field.catalogueId,
-    parentFieldId: field.parentId,
   }
 
   const validateInput = (name: string) => {
@@ -49,7 +56,7 @@ const EditTextField = ({ field, fieldData }: Props) => {
 
     fieldsData.forEach((f) => {
       if (fields[f.id]?.name.toLowerCase() === name.toLowerCase()) {
-        message = `Field with name "${name}" already exists`
+        message = `Catalogue with name "${name}" already exists`
       }
     })
 
@@ -70,7 +77,7 @@ const EditTextField = ({ field, fieldData }: Props) => {
   const handleDeleteField = () => {
     setMessage({
       title: 'Confirm delete',
-      value: `Are you sure you want to delete field ${field.name}?`,
+      value: `Are you sure you want to delete ${field.name} field?`,
     })
   }
 
@@ -94,6 +101,18 @@ const EditTextField = ({ field, fieldData }: Props) => {
     })
   }
 
+  const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
+    dispatch(
+      REORDER_CATALOGUE_FIELDS({
+        catalogueId: field.catalogueId,
+        parentFieldId: field.id,
+        fieldId: params.item.id,
+        newPosition: params.newPosition,
+        fieldsData: params.newItems,
+      }),
+    )
+  }
+
   return (
     <div className={styles.wrapper}>
       <Input
@@ -111,6 +130,18 @@ const EditTextField = ({ field, fieldData }: Props) => {
           onChange={handlePublicChange}
         />
       </div>
+      <OrderableList
+        items={fieldData.children}
+        itemComponent={fieldComponent}
+        onDrop={handleDrop}
+        scrollTopAt={80}
+      />
+      <AddField
+        catalogueId={field.catalogueId}
+        parentId={field.id}
+        formTitle={`New field in ${field.name}`}
+        confirmButtonText={`Add to ${field.name}`}
+      />
       <Button
         className={styles.deleteButton}
         disabled={fieldData.isDeleting}
@@ -129,4 +160,4 @@ const EditTextField = ({ field, fieldData }: Props) => {
   )
 }
 
-export default EditTextField
+export default EditGroupField

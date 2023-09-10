@@ -1,10 +1,7 @@
 import { useRef, useState, ChangeEvent, FC } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.module.scss'
-import {
-  CREATE_CATALOGUE_FIELD,
-  TOGGLE_ADD_FIELD,
-} from 'store/modules/auth-user-catalogues/slice'
+import { CREATE_CATALOGUE_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import {
   authUserFieldsDataSelector,
   authUserCatalogueDataSelector,
@@ -50,20 +47,29 @@ const FIELD_TYPES: Choice[] = [
     id: 'multiple_choice',
     value: 'Multiple choice',
   },
-  {
-    id: 'group',
-    value: 'Group field',
-  },
 ]
 
 interface Props {
   active: boolean
   catalogueId: number
+  parentId?: number
+  title?: string
+  confirmButtonText?: string
+  canEditPublic?: boolean
+  onCancel: () => void
 }
 
 const cx = classNames.bind(styles)
 
-const FieldForm: FC<Props> = ({ active, catalogueId }) => {
+const FieldForm: FC<Props> = ({
+  active,
+  catalogueId,
+  parentId,
+  title = 'New field form',
+  confirmButtonText = 'Add field',
+  canEditPublic,
+  onCancel,
+}) => {
   const dispatch = useAppDispatch()
 
   const fields = useEntitiesSelector('fields')
@@ -158,7 +164,7 @@ const FieldForm: FC<Props> = ({ active, catalogueId }) => {
         type: fieldType!,
         position: fieldsData.length,
         public: isPublic,
-        parentId: null,
+        parentId,
       }),
     )
   }
@@ -167,9 +173,15 @@ const FieldForm: FC<Props> = ({ active, catalogueId }) => {
     setFormError('')
   }
 
-  const handleCancel = () => {
-    dispatch(TOGGLE_ADD_FIELD(catalogueData.id))
-  }
+  const fieldTypes = !parentId
+    ? [
+        ...FIELD_TYPES,
+        {
+          id: 'group',
+          value: 'Group field',
+        },
+      ]
+    : [...FIELD_TYPES]
 
   const disabled =
     catalogueData.isSubmittingNewField ||
@@ -184,7 +196,7 @@ const FieldForm: FC<Props> = ({ active, catalogueId }) => {
 
   return (
     <div className={formClass}>
-      <p className={styles.title}>New field form</p>
+      <p className={styles.title}>{title}</p>
       <div className={styles.wrapper}>
         <Input
           placeholder="field name"
@@ -194,18 +206,20 @@ const FieldForm: FC<Props> = ({ active, catalogueId }) => {
           ref={nameInputRef}
           onChange={handleNameChange}
         />
-        <div className={styles.checkboxes}>
-          <CheckBoxWithTitle
-            id="public"
-            title="Public"
-            selected={isPublic}
-            onChange={handlePublicChange}
-          />
-        </div>
+        {canEditPublic && (
+          <div className={styles.checkboxes}>
+            <CheckBoxWithTitle
+              id="public"
+              title="Public"
+              selected={isPublic}
+              onChange={handlePublicChange}
+            />
+          </div>
+        )}
         <p className={styles.type}>Type:</p>
         <ChoiceList
           className={styles.typeList}
-          choices={FIELD_TYPES}
+          choices={fieldTypes}
           selected={fieldType}
           onChange={handleTypeChange}
         />
@@ -215,11 +229,11 @@ const FieldForm: FC<Props> = ({ active, catalogueId }) => {
             disabled={disabled}
             onClick={handleConfirm}
           >
-            Add field
+            {confirmButtonText}
           </Button>
           <Button
             disabled={catalogueData.isSubmittingNewField}
-            onClick={handleCancel}
+            onClick={onCancel}
           >
             Cancel
           </Button>

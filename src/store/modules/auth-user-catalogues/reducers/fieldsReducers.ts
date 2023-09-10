@@ -1,28 +1,47 @@
-import { type PayloadAction } from '@reduxjs/toolkit'
-import { type AuthUserChoiceFieldData, type Field } from 'src/globalTypes'
-import type * as T from '../types'
+import { PayloadAction } from '@reduxjs/toolkit'
+import {
+  AuthUserGroupFieldData,
+  AuthUserChoiceFieldData,
+  Field,
+  AuthUserFieldData,
+} from 'src/globalTypes'
+import * as T from '../types'
 import { getCatalogueDataById, getFieldDataById } from '../selectors'
 
 const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
 
-export const createFieldData = (field: Field) => {
-  const newField = {
+export const createFieldData = (
+  field: Field,
+  prevFieldData?: AuthUserFieldData,
+) => {
+  const newFieldData = {
+    ...prevFieldData,
     id: field.id,
     isChangingName: false,
     isDeleting: false,
-    isEditing: false,
+    isEditing: prevFieldData?.isEditing ?? false,
     isSubmitting: false,
     fieldError: null,
   }
 
   if (field.type === 'multiple_choice' || field.type === 'single_choice') {
-    ;(newField as AuthUserChoiceFieldData).choices = []
+    const prev = prevFieldData as AuthUserChoiceFieldData | undefined
+    ;(newFieldData as AuthUserChoiceFieldData).choices = prev?.choices ?? []
   }
 
-  return newField
+  if (field.type === 'group') {
+    const prev = prevFieldData as AuthUserGroupFieldData | undefined
+    const fieldData = newFieldData as AuthUserGroupFieldData
+    fieldData.children =
+      field.children
+        ?.sort((a, b) => a.position - b.position)
+        .map((f, i) => createFieldData(f, prev?.children[i])) ?? []
+  }
+
+  return newFieldData
 }
 
 type State = T.AuthUserCataloguesState
@@ -32,16 +51,16 @@ export const fieldsReducers = {
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const { catalogueId, fieldId, parentFieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
     field.isEditing = !field.isEditing
   },
   CLEAR_FIELD_ERROR(
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const { catalogueId, fieldId, parentFieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
     field.fieldError = null
   },
   REFRESH_CATALOGUE_FIELD(
@@ -60,7 +79,8 @@ export const fetchCatalogueFieldReducers = {
     action: PayloadAction<T.FetchCatalogueFieldSuccessPayload>,
   ) {
     const { catalogueId, fieldId, data } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
+
     Object.assign(field, createFieldData(data))
   },
   FETCH_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<number>) {
@@ -88,10 +108,17 @@ export const fetchCatalogueFieldsReducers = {
   ) {
     const { catalogueId, data } = action.payload
     const catalogue = getCatalogueDataById(state, catalogueId)
+
     catalogue.isFetchingFields = false
     catalogue.fieldsData = data
       .sort((a, b) => a.position - b.position)
-      .map(createFieldData)
+      .map((fieldData) =>
+        createFieldData(
+          fieldData,
+          // pass previous so we can reinstate its state on update
+          getFieldDataById(state, catalogueId, fieldData.id),
+        ),
+      )
   },
   FETCH_AUTH_USER_CATALOGUE_FIELDS_FAILURE(
     state: State,
@@ -115,10 +142,6 @@ export const fetchCataloguesFieldsReducers = {
 }
 
 export const createCatalogueFieldReducers = {
-  TOGGLE_ADD_FIELD(state: State, action: PayloadAction<number>) {
-    const catalogue = getCatalogueDataById(state, action.payload)
-    catalogue.isAddFieldFormActive = !catalogue.isAddFieldFormActive
-  },
   CREATE_CATALOGUE_FIELD(
     state: State,
     action: PayloadAction<T.CreateCatalogueFieldPayload>,
@@ -130,7 +153,6 @@ export const createCatalogueFieldReducers = {
   CREATE_CATALOGUE_FIELD_SUCCESS(state: State, action: PayloadAction<number>) {
     const catalogue = getCatalogueDataById(state, action.payload)
     catalogue.isSubmittingNewField = false
-    catalogue.isAddFieldFormActive = false
   },
   CREATE_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<number>) {
     const catalogue = getCatalogueDataById(state, action.payload)
@@ -148,8 +170,8 @@ export const deleteCatalogueFieldReducers = {
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const { catalogueId, fieldId, parentFieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
     field.isDeleting = true
   },
   DELETE_CATALOGUE_FIELD_SUCCESS(
@@ -161,7 +183,7 @@ export const deleteCatalogueFieldReducers = {
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isDeleting = false
     field.fieldError = networkError
   },
@@ -177,7 +199,7 @@ export const changeFieldNameReducers = {
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isChangingName = true
   },
   CHANGE_FIELD_NAME_SUCCESS(
@@ -185,7 +207,7 @@ export const changeFieldNameReducers = {
     action: PayloadAction<T.ChangeFieldNameSuccessPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isChangingName = false
   },
   CHANGE_FIELD_NAME_FAILURE(
@@ -193,7 +215,7 @@ export const changeFieldNameReducers = {
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isChangingName = false
     field.fieldError = networkError
   },
@@ -210,7 +232,7 @@ export const changePublicFieldReducers = {
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.fieldError = networkError
   },
 }
@@ -220,9 +242,17 @@ export const reorderFieldsReducers = {
     state: State,
     action: PayloadAction<T.ReorderCatalogueFieldsPayload>,
   ) {
-    const { catalogueId, fieldsData } = action.payload
+    const { catalogueId, fieldsData, parentFieldId } = action.payload
     const catalogueData = getCatalogueDataById(state, catalogueId)
-    catalogueData.fieldsData = fieldsData
+
+    if (parentFieldId) {
+      const parentField = catalogueData.fieldsData.find(
+        (f) => f.id === parentFieldId,
+      ) as AuthUserGroupFieldData
+      parentField.children = fieldsData
+    } else {
+      catalogueData.fieldsData = fieldsData
+    }
   },
   REORDER_CATALOGUE_FIELDS_SUCCESS(
     state: State,
@@ -233,7 +263,7 @@ export const reorderFieldsReducers = {
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.fieldError = networkError
   },
 }

@@ -1,5 +1,6 @@
 import type * as T from 'src/globalTypes'
 import { listData } from './constants'
+import { pullChildren } from './utils'
 
 export const userDeserializer = (user: T.User): T.DeserializedUser => ({
   id: user.id,
@@ -79,19 +80,23 @@ export const catalogueDeserializer = (
 })
 
 // Fields
-export const fieldDeserializer = (field: T.Field): T.DeserializedField => ({
-  id: field.id,
-  catalogueId: field.catalogue_id,
-  type: field.type,
-  name: field.name,
-  filterName: field.filter_name,
-  position: field.position,
-  public: field.public,
-  children: fieldsDeserializer(field.children),
-})
+export const fieldDeserializer = (field: T.Field): T.DeserializedField[] => {
+  const getField = (f: T.Field): T.DeserializedFieldWithChildren => ({
+    id: f.id,
+    catalogueId: f.catalogue_id,
+    type: f.type,
+    name: f.name,
+    filterName: f.filter_name,
+    position: f.position,
+    public: f.public,
+    children: f.children ? f.children?.map(getField) : undefined,
+    parentId: f.parent_id,
+  })
+  return pullChildren(getField(field))
+}
 
-export const fieldsDeserializer = (fields?: T.Field[]) =>
-  fields?.map(fieldDeserializer)
+export const fieldsDeserializer = (fields: T.Field[] = []) =>
+  fields.flatMap(fieldDeserializer)
 
 // Choices
 export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({

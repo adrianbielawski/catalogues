@@ -20,7 +20,7 @@ import type * as T from './types'
 
 const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
 
 type State = T.CurrentUserItemsState

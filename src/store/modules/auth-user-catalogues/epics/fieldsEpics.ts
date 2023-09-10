@@ -2,10 +2,10 @@ import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
 import { concat, of, defer, Observable, merge, forkJoin } from 'rxjs'
 import { catchError, mergeMap, switchMap, filter, map } from 'rxjs/operators'
-// Actions
 import * as actions from '../slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import { typedCombineEpics } from 'store/utils'
+import { Field } from 'src/globalTypes'
 
 export const refreshCatalogueFieldEpic = (action$: Observable<Action>) =>
   merge(action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELD.match))).pipe(
@@ -54,7 +54,7 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) =>
       concat(
         of(actions.FETCH_AUTH_USER_CATALOGUE_FIELDS_START(action.payload)),
         defer(() =>
-          axiosInstance$.get('/fields/', {
+          axiosInstance$.get<Field[]>('/fields/', {
             params: { catalogue_id: action.payload },
           }),
         ).pipe(
@@ -160,6 +160,7 @@ export const deleteCatalogueFieldEpic = (action$: Observable<Action>) =>
           actions.DELETE_CATALOGUE_FIELD_START({
             catalogueId: action.payload.catalogueId,
             fieldId: action.payload.fieldId,
+            parentFieldId: action.payload.parentFieldId,
           }),
         ),
         defer(() =>

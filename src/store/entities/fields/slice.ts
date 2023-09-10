@@ -1,14 +1,11 @@
 import {
   createEntityAdapter,
   createSlice,
-  type PayloadAction,
+  PayloadAction,
 } from '@reduxjs/toolkit'
-// Types
-import { type DeserializedField, type Field } from 'src/globalTypes'
-import { type FieldUpdated } from './types'
-// Serializers
-import { fieldDeserializer } from 'src/serializers'
-// Actions
+import { DeserializedField, Field } from 'src/globalTypes'
+import { FieldUpdated } from './types'
+import { fieldDeserializer, fieldsDeserializer } from 'src/serializers'
 import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const fieldsAdapter = createEntityAdapter<DeserializedField>({})
@@ -18,7 +15,7 @@ export const fieldsEntitiesSlice = createSlice({
   initialState: fieldsAdapter.getInitialState(),
   reducers: {
     FIELDS_UPDATED(state, action: PayloadAction<Field[]>) {
-      fieldsAdapter.upsertMany(state, action.payload.map(fieldDeserializer))
+      fieldsAdapter.upsertMany(state, fieldsDeserializer(action.payload))
     },
     FIELD_UPDATED(state, action: PayloadAction<FieldUpdated>) {
       fieldsAdapter.updateOne(state, {
@@ -27,7 +24,7 @@ export const fieldsEntitiesSlice = createSlice({
       })
     },
     FIELD_ADDED(state, action: PayloadAction<Field>) {
-      fieldsAdapter.addOne(state, fieldDeserializer(action.payload))
+      fieldsAdapter.addMany(state, fieldDeserializer(action.payload))
     },
     FIELD_REMOVED(state, action: PayloadAction<number>) {
       fieldsAdapter.removeOne(state, action.payload)

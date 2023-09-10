@@ -1,12 +1,9 @@
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
 import styles from './catalogueFields.module.scss'
-// Types
 import { type AuthUserFieldData } from 'src/globalTypes'
-// Redux
 import { REORDER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserFieldsDataSelector } from 'store/selectors'
-// Components
 import AddField from './add-field/addField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
 import Field from './field/field'
@@ -18,16 +15,14 @@ interface Props {
   catalogueId: number
 }
 
-const CatalogueFields = (props: Props) => {
+const CatalogueFields = ({ catalogueId }: Props) => {
   const dispatch = useAppDispatch()
-  const fieldsData = useTypedSelector(
-    authUserFieldsDataSelector(props.catalogueId),
-  )
+  const fieldsData = useTypedSelector(authUserFieldsDataSelector(catalogueId))
 
   const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
     dispatch(
       REORDER_CATALOGUE_FIELDS({
-        catalogueId: props.catalogueId,
+        catalogueId,
         fieldId: params.item.id,
         newPosition: params.newPosition,
         fieldsData: params.newItems,
@@ -44,7 +39,7 @@ const CatalogueFields = (props: Props) => {
         onDrop={handleDrop}
         scrollTopAt={80}
       />
-      <AddField catalogueId={props.catalogueId} />
+      <AddField catalogueId={catalogueId} className={styles.addField} />
     </IconWithTitle>
   )
 }

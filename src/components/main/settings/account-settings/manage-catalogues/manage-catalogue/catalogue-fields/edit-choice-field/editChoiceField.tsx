@@ -24,20 +24,21 @@ interface Props {
   fieldData: AuthUserChoiceFieldData
 }
 
-const EditChoiceField = (props: Props) => {
+const EditChoiceField = ({ field, fieldData }: Props) => {
   const dispatch = useAppDispatch()
 
   const fields = useEntitiesSelector('fields')
   const fieldsData = useTypedSelector(
-    authUserFieldsDataSelector(props.field.catalogueId),
+    authUserFieldsDataSelector(field.catalogueId),
   )
 
   const [inputError, setInputError] = useState('')
   const [message, setMessage] = useState({ title: '', value: '' })
 
   const catalogueAndFieldId = {
-    fieldId: props.field.id,
-    catalogueId: props.field.catalogueId,
+    fieldId: field.id,
+    catalogueId: field.catalogueId,
+    parentFieldId: field.parentId,
   }
 
   const validateInput = (name: string) => {
@@ -70,16 +71,15 @@ const EditChoiceField = (props: Props) => {
   const handleDeleteField = () => {
     setMessage({
       title: 'Confirm delete',
-      value: `Are you sure you want to delete ${props.field.name} field?`,
+      value: `Are you sure you want to delete ${field.name} field?`,
     })
   }
 
   const handlePublicChange = () => {
     dispatch(
       CHANGE_FIELD_PUBLIC({
-        catalogueId: props.field.catalogueId,
-        fieldId: props.field.id,
-        public: !props.field.public,
+        ...catalogueAndFieldId,
+        public: !field.public,
       }),
     )
   }
@@ -98,7 +98,7 @@ const EditChoiceField = (props: Props) => {
   return (
     <div className={styles.wrapper}>
       <Input
-        defaultValue={props.field.name}
+        defaultValue={field.name}
         className={styles.nameInput}
         minLength={1}
         invalidInputMessage={inputError}
@@ -108,19 +108,19 @@ const EditChoiceField = (props: Props) => {
         <CheckBoxWithTitle
           id="public"
           title="Public"
-          selected={props.field.public}
+          selected={field.public}
           onChange={handlePublicChange}
         />
       </div>
       <Choices
-        field={props.field}
-        choices={props.fieldData.choices}
+        field={field}
+        choices={fieldData.choices}
         className={styles.choices}
-        fieldData={props.fieldData}
+        fieldData={fieldData}
       />
       <Button
         className={styles.deleteButton}
-        disabled={props.fieldData.isDeleting}
+        disabled={fieldData.isDeleting}
         onClick={handleDeleteField}
       >
         Delete field

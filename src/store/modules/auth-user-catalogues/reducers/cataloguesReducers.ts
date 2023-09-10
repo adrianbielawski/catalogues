@@ -5,7 +5,7 @@ import type * as T from '../types'
 
 const networkError = {
   title: 'Network error',
-  message: 'Something went wrong. Plaese try again.',
+  message: 'Something went wrong. Please try again.',
 }
 
 export const createCatalogueData = (id: number) => ({
@@ -15,7 +15,6 @@ export const createCatalogueData = (id: number) => ({
   isFetchingFieldsChoices: false,
   isEditingCatalogueName: false,
   isSubmittingCatalogueName: false,
-  isAddFieldFormActive: false,
   isSubmittingNewField: false,
   isDeletingCatalogue: false,
   isSubmittingImage: false,

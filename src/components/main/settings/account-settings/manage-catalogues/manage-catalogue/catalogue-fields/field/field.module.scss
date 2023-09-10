@@ -29,10 +29,6 @@
 
     &.active {
       align-items: flex-start;
-
-      .editButton {
-        margin-top: 7px;
-      }
     }
 
     .editButton {
@@ -41,6 +37,7 @@
 
       &.active {
         color: $orange;
+        margin-top: 7px;
       }
     }
   }

@@ -7,14 +7,11 @@ import {
   map,
   defaultIfEmpty,
   withLatestFrom,
-  pluck,
 } from 'rxjs/operators'
 import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
-// Types
 import { RootState } from 'store/storeConfig'
 import { CommentsData, ItemCommentParent } from 'src/globalTypes'
-// Actions
 import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
 import * as itemsEntitiesActions from 'store/entities/items/slice'
@@ -55,7 +52,7 @@ export const fetchLFFCataloguesEpic = (
 ) =>
   action$.pipe(
     filter(actions.FETCH_LFF_SUCCESS.match),
-    withLatestFrom(state$.pipe(pluck('entities', 'catalogues', 'ids'))),
+    withLatestFrom(state$.pipe(map((state) => state.entities.catalogues.ids))),
     switchMap(([action, ids]) => {
       const allIds = Array.from(
         new Set(action.payload.results.map((c) => c.catalogue_id)),
@@ -140,7 +137,7 @@ export const fetchLFFFieldsEpic = (
 ) =>
   action$.pipe(
     filter(actions.FETCH_LFF_CATALOGUES_SUCCESS.match),
-    withLatestFrom(state$.pipe(pluck('entities', 'fields', 'entities'))),
+    withLatestFrom(state$.pipe(map((state) => state.entities.fields.entities))),
     mergeMap(([action, fields]) => {
       const cataloguesIds = Array.from(
         new Set(Object.values(fields).map((f) => f!.catalogueId)),

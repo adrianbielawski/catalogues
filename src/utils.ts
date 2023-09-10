@@ -46,3 +46,25 @@ export const useConfirmOnEnter = (
     }
   }
 }
+interface Data {
+  children?: Data[]
+}
+
+type NoChildrenData<T extends Record<string, any>> = T & {
+  children?: never
+}
+export const pullChildren = <T extends Data, R extends NoChildrenData<T>>(
+  data: T,
+): R[] => {
+  const dataWithoutChildren = { ...data }
+  delete dataWithoutChildren.children
+
+  if (data.children) {
+    return [
+      dataWithoutChildren,
+      ...data.children.map((d) => pullChildren(d)),
+    ].flat() as R[]
+  }
+
+  return [data] as any as R[]
+}

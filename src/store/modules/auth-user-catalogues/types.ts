@@ -1,4 +1,5 @@
 import {
+  DeserializedField,
   type AuthUserCatalogueData,
   type AuthUserFieldData,
   type Choice,
@@ -38,6 +39,7 @@ export interface ChangeCatalogueImagePayload {
 export interface CatalogueAndFieldIdPayload {
   catalogueId: number
   fieldId: number
+  parentFieldId?: DeserializedField['parentId']
 }
 
 export interface CreateCatalogueFieldPayload {
@@ -46,7 +48,7 @@ export interface CreateCatalogueFieldPayload {
   type: string
   position: number
   public: boolean
-  parentId: number | null
+  parentId?: number
 }
 
 export interface FetchCatalogueFieldSuccessPayload
@@ -97,4 +99,5 @@ export interface ReorderCatalogueFieldsPayload
   extends CatalogueAndFieldIdPayload {
   newPosition: number
   fieldsData: AuthUserFieldData[]
+  parentFieldId?: number
 }
