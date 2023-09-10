@@ -1,4 +1,4 @@
-import { useRef, useState, ChangeEvent } from 'react'
+import { useRef, useState, ChangeEvent, FC } from 'react'
 import classNames from 'classnames/bind'
 import styles from './fieldForm.module.scss'
 import {
@@ -13,14 +13,15 @@ import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { useDelay } from 'src/hooks/useDelay'
 import Input from 'components/global-components/input/input'
 import ChoiceList, {
-  type SingleChoiceOnChange,
+  Choice,
+  SingleChoiceOnChange,
 } from 'components/global-components/choice-list/choiceList'
 import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import { useEntitiesSelector } from 'store/entities/hooks'
 
-const FIELD_TYPES = [
+const FIELD_TYPES: Choice[] = [
   {
     id: 'short_text',
     value: 'Short text',
@@ -49,6 +50,10 @@ const FIELD_TYPES = [
     id: 'multiple_choice',
     value: 'Multiple choice',
   },
+  {
+    id: 'group',
+    value: 'Group field',
+  },
 ]
 
 interface Props {
@@ -58,18 +63,16 @@ interface Props {
 
 const cx = classNames.bind(styles)
 
-const FieldForm = (props: Props) => {
+const FieldForm: FC<Props> = ({ active, catalogueId }) => {
   const dispatch = useAppDispatch()
 
   const fields = useEntitiesSelector('fields')
-  const fieldsData = useTypedSelector(
-    authUserFieldsDataSelector(props.catalogueId),
-  )
+  const fieldsData = useTypedSelector(authUserFieldsDataSelector(catalogueId))
   const catalogueData = useTypedSelector(
-    authUserCatalogueDataSelector(props.catalogueId),
+    authUserCatalogueDataSelector(catalogueId),
   )
   const nameInputRef = useRef<HTMLInputElement>(null)
-  const [fieldType, setFieldType] = useState('')
+  const [fieldType, setFieldType] = useState<string | null>(null)
   const [fieldName, setFieldName] = useState('')
   const [formError, setFormError] = useState('')
   const [nameError, setNameError] = useState('')
@@ -111,7 +114,7 @@ const FieldForm = (props: Props) => {
   }
 
   const handleTypeChange = (choiceId: SingleChoiceOnChange) => {
-    setFieldType(choiceId as string)
+    setFieldType(choiceId as string | null)
   }
 
   const validateForm = () => {
@@ -121,7 +124,7 @@ const FieldForm = (props: Props) => {
       error = 'Please add field name'
     }
 
-    if (fieldType.length === 0) {
+    if (!fieldType?.length) {
       error = 'Please select field type'
     }
 
@@ -150,11 +153,12 @@ const FieldForm = (props: Props) => {
 
     dispatch(
       CREATE_CATALOGUE_FIELD({
-        catalogueId: props.catalogueId,
+        catalogueId,
         name: fieldName,
-        type: fieldType,
+        type: fieldType!,
         position: fieldsData.length,
         public: isPublic,
+        parentId: null,
       }),
     )
   }
@@ -171,10 +175,11 @@ const FieldForm = (props: Props) => {
     catalogueData.isSubmittingNewField ||
     nameError.length > 0 ||
     fieldName.length === 0 ||
-    fieldType.length === 0
+    !fieldType ||
+    fieldType?.length === 0
 
   const formClass = cx('fieldForm', {
-    active: props.active,
+    active,
   })
 
   return (

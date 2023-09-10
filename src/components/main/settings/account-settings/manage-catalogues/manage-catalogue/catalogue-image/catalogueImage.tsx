@@ -1,12 +1,8 @@
 import { useRef } from 'react'
 import styles from './catalogueImage.module.scss'
-// Types
-import { DeserializedCatalogue } from 'src/globalTypes'
-// Redux
 import { POST_CATALOGUE_IMAGE } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueDataSelector } from 'store/selectors'
-// Components
 import Image from 'components/global-components/image/image'
 import NoImageIcon from 'components/global-components/no-image-icon/noImageIcon'
 
@@ -15,14 +11,14 @@ interface Event<T = EventTarget> {
 }
 
 interface Props {
+  catalogueId: number
   url?: string
-  catalogue: DeserializedCatalogue
 }
 
-const CatalogueImage = (props: Props) => {
+const CatalogueImage = ({ catalogueId, url }: Props) => {
   const dispatch = useAppDispatch()
   const catalogueData = useTypedSelector(
-    authUserCatalogueDataSelector(props.catalogue.id),
+    authUserCatalogueDataSelector(catalogueId),
   )
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -32,7 +28,7 @@ const CatalogueImage = (props: Props) => {
       const image = files.map((f) => URL.createObjectURL(f))[0]
       dispatch(
         POST_CATALOGUE_IMAGE({
-          catalogueId: props.catalogue.id,
+          catalogueId,
           image,
         }),
       )
@@ -47,7 +43,7 @@ const CatalogueImage = (props: Props) => {
     <div className={styles.catalogueImage} onClick={handleClick}>
       <Image
         className={styles.image}
-        url={props.url}
+        url={url}
         loading={catalogueData.isSubmittingImage}
         placeHolder={<NoImageIcon size="6x" />}
       />

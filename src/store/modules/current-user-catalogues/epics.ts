@@ -3,7 +3,7 @@ import {
   of,
   defer,
   forkJoin,
-  type Observable,
+  Observable,
   merge,
   iif,
   EMPTY,
@@ -11,25 +11,22 @@ import {
 import {
   catchError,
   mergeMap,
-  pluck,
   switchMap,
   withLatestFrom,
   filter,
   map,
   defaultIfEmpty,
 } from 'rxjs/operators'
-import { type Action } from '@reduxjs/toolkit'
+import { Action } from '@reduxjs/toolkit'
 import { axiosInstance$ } from 'src/axiosInstance'
-// Types
-import { type RootState } from 'store/storeConfig'
-// Actions
+import { RootState } from 'store/storeConfig'
 import * as actions from './slice'
 import * as cataloguesEntitiesActions from 'store/entities/catalogues/slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import * as choicesEntitiesActions from 'store/entities/choices/slice'
 import { FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS } from 'store/modules/auth-user-catalogues/slice'
 import { typedCombineEpics } from 'store/utils'
-import { Choice } from 'src/globalTypes'
+import { Catalogue, Choice, Field } from 'src/globalTypes'
 
 export const fetchCurrentUserCataloguesEpic = (
   action$: Observable<Action>,
@@ -37,12 +34,14 @@ export const fetchCurrentUserCataloguesEpic = (
 ) =>
   action$.pipe(
     filter(actions.FETCH_CURRENT_USER_CATALOGUES.match),
-    withLatestFrom(state$.pipe(pluck('modules', 'currentUser', 'userId'))),
+    withLatestFrom(
+      state$.pipe(map((state) => state.modules.currentUser.userId)),
+    ),
     switchMap(([_, id]) =>
       concat(
         of(actions.FETCH_CURRENT_USER_CATALOGUES_START()),
         axiosInstance$
-          .get('/catalogues/', {
+          .get<Catalogue[]>('/catalogues/', {
             params: { created_by: id },
           })
           .pipe(
@@ -72,7 +71,7 @@ export const fetchCurrentUserCatalogueFieldsEpic = (
       concat(
         of(actions.FETCH_CURRENT_USER_CATALOGUE_FIELDS_START(action.payload)),
         defer(() =>
-          axiosInstance$.get('/fields/', {
+          axiosInstance$.get<Field[]>('/fields/', {
             params: { catalogue_id: action.payload },
           }),
         ).pipe(

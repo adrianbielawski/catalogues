@@ -28,10 +28,7 @@ type State = T.AuthUserCataloguesState
 export const catalogueReducer = {
   CLEAR_CATALOGUE_ERROR(state: State, action: PayloadAction<number>) {
     const catalogue = getCatalogueDataById(state, action.payload)
-    catalogue.catalogueError = {
-      title: '',
-      message: '',
-    }
+    catalogue.catalogueError = null
   },
 }
 

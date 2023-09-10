@@ -46,6 +46,7 @@ export interface CreateCatalogueFieldPayload {
   type: string
   position: number
   public: boolean
+  parentId: number | null
 }
 
 export interface FetchCatalogueFieldSuccessPayload

@@ -1,9 +1,8 @@
+import { FC } from 'react'
 import styles from './addField.module.scss'
-// Redux
 import { TOGGLE_ADD_FIELD } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueDataSelector } from 'store/selectors'
-// Components
 import AddButton from 'components/global-components/add-button/addButton'
 import FieldForm from './field-form/fieldForm'
 import AnimateHeight from 'react-animate-height'
@@ -12,11 +11,9 @@ interface Props {
   catalogueId: number
 }
 
-const AddField = (props: Props) => {
+const AddField: FC<Props> = ({ catalogueId }) => {
   const dispatch = useAppDispatch()
-  const catalogue = useTypedSelector(
-    authUserCatalogueDataSelector(props.catalogueId),
-  )
+  const catalogue = useTypedSelector(authUserCatalogueDataSelector(catalogueId))
 
   const handleAddClick = () => {
     dispatch(TOGGLE_ADD_FIELD(catalogue.id))
@@ -32,7 +29,7 @@ const AddField = (props: Props) => {
         />
       ) : (
         <FieldForm
-          catalogueId={props.catalogueId}
+          catalogueId={catalogueId}
           active={catalogue.isAddFieldFormActive}
         />
       )}

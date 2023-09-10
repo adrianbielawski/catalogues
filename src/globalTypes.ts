@@ -112,7 +112,7 @@ export interface Catalogue {
   is_favourite: boolean
 }
 
-export interface CataloguePermisions {
+export interface CataloguePermissions {
   can_create_items: boolean
 }
 
@@ -210,6 +210,7 @@ export interface Field {
   position: number
   public: boolean
   choices?: Choice[]
+  children?: Field[]
 }
 
 export interface DeserializedField {
@@ -220,6 +221,7 @@ export interface DeserializedField {
   filterName: string
   position: number
   public: boolean
+  children?: DeserializedField[]
 }
 
 // Choices
@@ -262,14 +264,14 @@ export interface DeserializedItemsData
   itemsError: ErrorMessage
 }
 
-export interface ItemPermisions {
+export interface ItemPermissions {
   can_edit: boolean
   can_comment: boolean
   can_add_to_favourites: boolean
   can_rate: boolean
 }
 
-export interface DeserializedItemPermisions {
+export interface DeserializedItemPermissions {
   canEdit: boolean
   canComment: boolean
   canAddToFavourites: boolean
@@ -326,7 +328,7 @@ export interface Item {
   created_at: string
   modified_at: string
   catalogue_id: number
-  permissions: ItemPermisions
+  permissions: ItemPermissions
   values: Array<ItemField<ItemFieldValue>>
   images: Image[]
   rating: ItemRating
@@ -339,7 +341,7 @@ export interface DeserializedItem {
   createdAt: string
   modifiedAt: string
   catalogueId: number
-  permissions: DeserializedItemPermisions
+  permissions: DeserializedItemPermissions
   rating: DeserializedItemRating
   isFavourite: boolean
   fieldsValues: Array<DeserializedItemField<DeserializedItemFieldValue>>

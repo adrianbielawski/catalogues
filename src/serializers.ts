@@ -57,7 +57,7 @@ export const itemsRangeDeserializer = (
 })
 
 export const cataloguePermissionsDeserializer = (
-  permissions: T.CataloguePermisions,
+  permissions: T.CataloguePermissions,
 ): T.DeserializedCataloguePermissions => ({
   canCreateItems: permissions.can_create_items,
 })
@@ -87,10 +87,11 @@ export const fieldDeserializer = (field: T.Field): T.DeserializedField => ({
   filterName: field.filter_name,
   position: field.position,
   public: field.public,
+  children: fieldsDeserializer(field.children),
 })
 
-export const fieldsDeserializer = (fields: T.Field[]): T.DeserializedField[] =>
-  fields.map(fieldDeserializer)
+export const fieldsDeserializer = (fields?: T.Field[]) =>
+  fields?.map(fieldDeserializer)
 
 // Choices
 export const choiceDeserializer = (choice: T.Choice): T.DeserializedChoice => ({
@@ -197,8 +198,8 @@ export const itemFieldSerializer = (
 })
 
 export const itemPermissionsDeserializer = (
-  permissions: T.ItemPermisions,
-): T.DeserializedItemPermisions => ({
+  permissions: T.ItemPermissions,
+): T.DeserializedItemPermissions => ({
   canEdit: permissions.can_edit,
   canComment: permissions.can_comment,
   canAddToFavourites: permissions.can_add_to_favourites,

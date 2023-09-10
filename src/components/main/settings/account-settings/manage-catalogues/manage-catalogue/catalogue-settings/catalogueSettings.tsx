@@ -1,9 +1,7 @@
 import { useState } from 'react'
 import { faCogs } from '@fortawesome/free-solid-svg-icons'
 import styles from './catalogueSettings.module.scss'
-// Types
 import { DeserializedCatalogue } from 'src/globalTypes'
-// Redux
 import {
   CHANGE_DEFAULT_CATALOGUE,
   CHANGE_PUBLIC_CATALOGUE,
@@ -11,7 +9,6 @@ import {
 } from 'store/modules/auth-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { authUserCatalogueDataSelector } from 'store/selectors'
-// Components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import Button from 'components/global-components/button/button'
 import ProtectedConfirmMessageModal, {
@@ -23,18 +20,18 @@ interface Props {
   catalogue: DeserializedCatalogue
 }
 
-const CatalogueSettings = (props: Props) => {
+const CatalogueSettings = ({ catalogue }: Props) => {
   const dispatch = useAppDispatch()
   const catalogueData = useTypedSelector(
-    authUserCatalogueDataSelector(props.catalogue.id),
+    authUserCatalogueDataSelector(catalogue.id),
   )
   const [message, setMessage] = useState<ProtectedMessage | null>(null)
 
   const handleChangeDefault = () => {
     dispatch(
       CHANGE_DEFAULT_CATALOGUE({
-        catalogueId: props.catalogue.id,
-        default: !props.catalogue.default,
+        catalogueId: catalogue.id,
+        default: !catalogue.default,
       }),
     )
   }
@@ -42,8 +39,8 @@ const CatalogueSettings = (props: Props) => {
   const handlePublicDefault = () => {
     dispatch(
       CHANGE_PUBLIC_CATALOGUE({
-        catalogueId: props.catalogue.id,
-        public: !props.catalogue.public,
+        catalogueId: catalogue.id,
+        public: !catalogue.public,
       }),
     )
   }
@@ -51,14 +48,14 @@ const CatalogueSettings = (props: Props) => {
   const handleDeleteCatalogue = () => {
     setMessage({
       title: 'Delete catalogue',
-      value: `Are you sure you want to delete "${props.catalogue.name}" catalogue`,
-      expectedInput: props.catalogue.name,
+      value: `Are you sure you want to delete "${catalogue.name}" catalogue`,
+      expectedInput: catalogue.name,
     })
   }
 
   const deleteCatalogue = () => {
     setMessage(null)
-    dispatch(DELETE_CATALOGUE(props.catalogue.id))
+    dispatch(DELETE_CATALOGUE(catalogue.id))
   }
 
   const clearMessage = () => {
@@ -72,13 +69,13 @@ const CatalogueSettings = (props: Props) => {
           <CheckBoxWithTitle
             id={'defaultCatalogue'}
             title={'Default catalogue'}
-            selected={props.catalogue.default}
+            selected={catalogue.default}
             onChange={handleChangeDefault}
           />
           <CheckBoxWithTitle
             id={'publicCatalogue'}
             title={'Public catalogue'}
-            selected={props.catalogue.public}
+            selected={catalogue.public}
             onChange={handlePublicDefault}
           />
         </div>

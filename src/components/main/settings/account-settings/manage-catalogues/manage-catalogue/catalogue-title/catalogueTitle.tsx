@@ -14,24 +14,22 @@ import MessageModal from 'components/global-components/message-modal/messageModa
 import { useEntitiesSelector } from 'store/entities/hooks'
 
 interface Props {
-  id: number
+  catalogueId: number
   name: string
 }
 
-const CatalogueTitle = (props: Props) => {
+const CatalogueTitle = ({ catalogueId, name }: Props) => {
   const dispatch = useAppDispatch()
 
   const authUserCatalogues = useTypedSelector(
     (state) => state.modules.authUserCatalogues,
   )
-  const catalogueData = useTypedSelector(
-    authUserCatalogueDataSelector(props.id),
+  const { isEditingCatalogueName, catalogueError } = useTypedSelector(
+    authUserCatalogueDataSelector(catalogueId),
   )
   const catalogues = useEntitiesSelector('catalogues')
 
   const [inputError, setInputError] = useState('')
-
-  const error = catalogueData.catalogueError
 
   const validateName = (name: string) => {
     let message = ''
@@ -43,7 +41,7 @@ const CatalogueTitle = (props: Props) => {
     authUserCatalogues.cataloguesData.forEach((c) => {
       if (
         catalogues[c.id]?.name.toLowerCase() === name.toLowerCase() &&
-        catalogues[c.id]?.id !== props.id
+        catalogues[c.id]?.id !== catalogueId
       ) {
         message = `Catalogue with name "${name}" already exists`
       }
@@ -54,13 +52,13 @@ const CatalogueTitle = (props: Props) => {
   }
 
   const handleEditName = () => {
-    dispatch(TOGGLE_CATALOGUE_NAME_EDIT(props.id))
+    dispatch(TOGGLE_CATALOGUE_NAME_EDIT(catalogueId))
   }
 
   const nameInputRef = useDebouncedDispatch(
     (name) =>
       CHANGE_CATALOGUE_NAME({
-        catalogueId: props.id,
+        catalogueId,
         name,
       }),
     500,
@@ -68,18 +66,18 @@ const CatalogueTitle = (props: Props) => {
   )
 
   const clearError = () => {
-    dispatch(CLEAR_CATALOGUE_ERROR(catalogues[props.id]!.id))
+    dispatch(CLEAR_CATALOGUE_ERROR(catalogueId))
   }
 
-  const content = catalogueData.isEditingCatalogueName ? (
+  const content = isEditingCatalogueName ? (
     <Input
-      defaultValue={props.name}
+      defaultValue={name}
       invalidInputMessage={inputError}
       autoFocus
       ref={nameInputRef}
     />
   ) : (
-    props.name
+    name
   )
 
   return (
@@ -87,13 +85,13 @@ const CatalogueTitle = (props: Props) => {
       <EditableField
         title="Name"
         content={content}
-        isEditing={catalogueData.isEditingCatalogueName}
+        isEditing={isEditingCatalogueName}
         onEditClick={handleEditName}
       />
       <MessageModal
-        show={error !== null}
-        title={'Catalogue name error'}
-        message={error?.message ?? ''}
+        show={!!catalogueError}
+        title={catalogueError?.title ?? 'Catalogue name error'}
+        message={catalogueError?.message ?? ''}
         onConfirm={clearError}
       />
     </div>

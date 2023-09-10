@@ -126,6 +126,7 @@ export const createCatalogueFieldEpic = (action$: Observable<Action>) =>
             type: action.payload.type,
             position: action.payload.position,
             public: action.payload.public,
+            parent_id: action.payload.parentId,
           })
           .pipe(
             mergeMap((response) =>

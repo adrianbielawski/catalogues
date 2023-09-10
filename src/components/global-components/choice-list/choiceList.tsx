@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react'
 import { orderBy, size, upperFirst } from 'lodash'
 import classNames from 'classnames/bind'
 import styles from './choiceList.module.scss'
-// Custom components
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import SearchBar from '../search-bar/searchBar'
 
-interface BasicChoice {
+export interface Choice {
   id: number | string
   value: string
 }
@@ -18,8 +17,8 @@ type Id = number | string
 export type SingleChoiceOnChange = Id | null
 export type MultipleChoiceOnChange = Id[] | null
 
-interface SingleChoiceProps<ChoiceType> {
-  choices: ChoiceType[]
+interface SingleChoiceProps<T> {
+  choices: T[]
   selected: Id | null
   defaultSortDir?: Sort
   defaultSearchValue?: string
@@ -28,8 +27,8 @@ interface SingleChoiceProps<ChoiceType> {
   onChange: (choiceId: Id | null) => void
 }
 
-interface MultipleChoiceProps<ChoiceType> {
-  choices: ChoiceType[]
+interface MultipleChoiceProps<T> {
+  choices: T[]
   selected: Id[]
   defaultSortDir?: Sort
   defaultSearchValue?: string
@@ -38,20 +37,24 @@ interface MultipleChoiceProps<ChoiceType> {
   onChange: (choicesIds: Id[] | null) => void
 }
 
-type Props<ChoiceType> =
-  | SingleChoiceProps<ChoiceType>
-  | MultipleChoiceProps<ChoiceType>
+type Props<T> = SingleChoiceProps<T> | MultipleChoiceProps<T>
 
 const cx = classNames.bind(styles)
 
-const ChoiceList = <ChoiceType extends BasicChoice>(
-  props: Props<ChoiceType>,
-) => {
+const ChoiceList = <T extends Choice>({
+  choices,
+  selected,
+  defaultSortDir,
+  defaultSearchValue,
+  multiple,
+  className,
+  onChange,
+}: Props<T>) => {
   const [allChoicesSelected, setAllChoicesSelected] = useState(false)
-  const [sortDir, setSortDir] = useState<Sort | undefined>(props.defaultSortDir)
-  const [searchValue, setSearchValue] = useState(props.defaultSearchValue)
+  const [sortDir, setSortDir] = useState<Sort | undefined>(defaultSortDir)
+  const [searchValue, setSearchValue] = useState(defaultSearchValue ?? '')
   const showSearchBar = !!(
-    props.defaultSearchValue !== undefined || props.defaultSortDir !== undefined
+    defaultSearchValue !== undefined || defaultSortDir !== undefined
   )
 
   const handleSort = () => {
@@ -70,8 +73,8 @@ const ChoiceList = <ChoiceType extends BasicChoice>(
   }
 
   const filteredChoices = showSearchBar
-    ? props.choices.filter((choice) =>
-        choice.value.toLowerCase().includes(searchValue!.toLowerCase()),
+    ? choices.filter((choice) =>
+        choice.value.toLowerCase().includes(searchValue.toLowerCase()),
       )
     : undefined
 
@@ -81,46 +84,45 @@ const ChoiceList = <ChoiceType extends BasicChoice>(
     sortDir,
   )
 
-  const visibleChoices =
-    sortedChoices.length > 0 ? sortedChoices : props.choices
+  const visibleChoices = sortedChoices.length > 0 ? sortedChoices : choices
 
   useEffect(() => {
-    if (props.multiple && size(props.selected) === visibleChoices.length) {
+    if (multiple && size(selected) === visibleChoices.length) {
       setAllChoicesSelected(true)
       return
     }
     setAllChoicesSelected(false)
-  }, [props.selected])
+  }, [selected])
 
   const handleSelectAllChange = () => {
-    if (props.multiple) {
+    if (multiple) {
       if (allChoicesSelected) {
-        props.onChange(null)
+        onChange(null)
       } else {
-        props.onChange(visibleChoices.map((c) => c.id))
+        onChange(visibleChoices.map((c) => c.id))
       }
     }
   }
 
-  const choices = visibleChoices.map((choice) => {
+  const choiceComponents = visibleChoices.map((choice) => {
     const handleChange = (choiceId: Id, isSelected: boolean) => {
-      if (props.multiple) {
-        let selectedIds = [...props.selected]
+      if (multiple) {
+        let selectedIds = [...selected]
         if (isSelected) {
           selectedIds.push(choiceId)
         } else {
           selectedIds = selectedIds.filter((id) => id !== choiceId)
         }
 
-        props.onChange(selectedIds.length > 0 ? selectedIds : null)
+        onChange(selectedIds.length > 0 ? selectedIds : null)
       } else {
-        props.onChange(isSelected ? choiceId : null)
+        onChange(isSelected ? choiceId : null)
       }
     }
 
-    const isSelected = props.multiple
-      ? props.selected?.includes(choice.id)
-      : props.selected === choice.id
+    const isSelected = multiple
+      ? selected?.includes(choice.id)
+      : selected === choice.id
 
     return (
       <li key={choice.id}>
@@ -134,19 +136,19 @@ const ChoiceList = <ChoiceType extends BasicChoice>(
     )
   })
 
-  const choiceListClass = cx('choiceList', props.className)
+  const choiceListClass = cx('choiceList', className)
 
   return (
     <div className={choiceListClass}>
       {showSearchBar && (
         <SearchBar
           sortDir={sortDir!}
-          defaultSearchValue={searchValue!}
+          defaultSearchValue={searchValue}
           onSort={handleSort}
           onSearch={handleSearch}
         />
       )}
-      {props.multiple && (
+      {multiple && (
         <CheckBoxWithTitle
           id={'selectAll'}
           title={'Select all'}
@@ -155,7 +157,7 @@ const ChoiceList = <ChoiceType extends BasicChoice>(
           onChange={handleSelectAllChange}
         />
       )}
-      <ul>{choices}</ul>
+      <ul>{choiceComponents}</ul>
     </div>
   )
 }
