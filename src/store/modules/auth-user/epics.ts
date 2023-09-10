@@ -15,7 +15,6 @@ import { retry$ } from 'store/storeObservables'
 import * as actions from './slice'
 import * as usersActions from 'store/entities/users/slice'
 import { User } from 'src/globalTypes'
-import { AuthResponse } from './types'
 import { typedCombineEpics } from 'store/utils'
 
 export const getUserEpic = (action$: Observable<Action>) =>
@@ -76,19 +75,19 @@ export const logInEpic = (action$: Observable<Action>) =>
       concat(
         of(actions.LOG_IN_START()),
         axiosInstance$
-          .post<AuthResponse>('/login/', {
+          .post<User>('/login/', {
             email: action.payload.email,
             password: action.payload.password,
           })
           .pipe(
             mergeMap((response) =>
               concat(
-                of(usersActions.USER_ADDED(response.data.user)),
-                of(actions.LOG_IN_SUCCESS(response.data.user.id)),
+                of(usersActions.USER_ADDED(response.data)),
+                of(actions.LOG_IN_SUCCESS(response.data.id)),
                 defer(() => {
                   const { pathname } = action.payload.location.state
                     ?.referrer || {
-                    pathname: `/${response.data.user.username}/catalogues`,
+                    pathname: `/${response.data.username}/catalogues`,
                   }
 
                   action.payload.navigate(pathname)
@@ -146,18 +145,16 @@ export const verifyEmailEpic = (action$: Observable<Action>) =>
     filter(actions.VERIFY_EMAIL.match),
     mergeMap((action) =>
       axiosInstance$
-        .post<AuthResponse>('/registration/verify-email/', {
+        .post<User>('/registration/verify-email/', {
           key: action.payload.key,
         })
         .pipe(
           mergeMap((response) =>
             concat(
-              of(usersActions.USER_ADDED(response.data.user)),
-              of(actions.VERIFY_EMAIL_SUCCESS(response.data.user.id)),
+              of(usersActions.USER_ADDED(response.data)),
+              of(actions.VERIFY_EMAIL_SUCCESS(response.data.id)),
               defer(() => {
-                action.payload.navigate(
-                  `/${response.data.user.username}/catalogues`,
-                )
+                action.payload.navigate(`/${response.data.username}/catalogues`)
                 return EMPTY
               }),
             ),
