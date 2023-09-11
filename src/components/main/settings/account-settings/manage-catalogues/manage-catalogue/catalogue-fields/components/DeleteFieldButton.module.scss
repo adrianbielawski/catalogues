@@ -1,0 +1,11 @@
+@import 'global-styles/variables_and_mixins.module';
+
+
+.deleteButton {
+  margin: 5px 0;
+
+  &:hover {
+    background: $red;
+    color: #000;
+  }
+}

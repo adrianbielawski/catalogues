@@ -1,0 +1,9 @@
+@import 'global-styles/variables_and_mixins.module';
+
+.nameInput {
+  border: none;
+  font-size: 18px;
+  margin-left: 3px;
+  max-width: 250px;
+  border-bottom: 1px solid $midLightGrey;
+}
