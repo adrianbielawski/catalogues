@@ -1,4 +1,4 @@
-import { ErrorMessage, User } from 'src/globalTypes'
+import { ErrorMessage } from 'src/globalTypes'
 import { Location, NavigateFunction } from 'react-router-dom'
 
 export interface AuthUserState {
@@ -48,9 +48,4 @@ export interface VerifyEmailPayload extends NavigateAndLocationPayload {
 
 export interface ChangeUsernamePayload extends NavigateAndLocationPayload {
   name: string
-}
-
-export interface AuthResponse {
-  key: string
-  user: User
 }
