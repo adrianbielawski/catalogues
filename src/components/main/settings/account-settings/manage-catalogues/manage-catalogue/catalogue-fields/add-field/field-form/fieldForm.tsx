@@ -17,6 +17,7 @@ import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import { AuthUserGroupFieldData } from 'src/globalTypes'
 
 const FIELD_TYPES: Choice[] = [
   {
@@ -153,16 +154,23 @@ const FieldForm: FC<Props> = ({
       return
     }
 
+    const findParentField = (id: number) =>
+      fieldsData.find((f) => f.id === id) as AuthUserGroupFieldData
+
     setFieldType('')
     setFieldName('')
     nameInputRef.current!.value = ''
+
+    const position = parentId
+      ? findParentField(parentId).children.length
+      : fieldsData.length
 
     dispatch(
       CREATE_CATALOGUE_FIELD({
         catalogueId,
         name: fieldName,
         type: fieldType!,
-        position: fieldsData.length,
+        position,
         public: isPublic,
         parentId,
       }),
