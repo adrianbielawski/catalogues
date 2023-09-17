@@ -1,20 +1,21 @@
-import { type PayloadAction } from '@reduxjs/toolkit'
+import { PayloadAction } from '@reduxjs/toolkit'
 import {
-  type Catalogue,
-  type CurrentUserChoiceFieldData,
-  type Field,
+  DeserializedField,
+  Catalogue,
+  CurrentUserChoiceFieldData,
 } from 'src/globalTypes'
 import { getCatalogueDataById, getFieldDataById } from './selectors'
-import type * as T from './types'
+import * as T from './types'
 
-const getCatalogueFieldData = (field: Field) => {
+const getCatalogueFieldData = (field: DeserializedField) => {
   const newField = {
     id: field.id,
   }
 
   if ('choices' in field) {
-    ;(newField as CurrentUserChoiceFieldData).isFetchingChoices = false
-    ;(newField as CurrentUserChoiceFieldData).choices = []
+    const f = newField as CurrentUserChoiceFieldData
+    f.isFetchingChoices = false
+    f.choices = []
   }
 
   return newField
@@ -68,7 +69,7 @@ export const fetchCurrentUserCatalogueFieldsReducers = {
   ) {
     const catalogue = getCatalogueDataById(state, action.payload.catalogueId)
     catalogue.isFetchingFields = false
-    catalogue.fieldsData = action.payload.data.map(getCatalogueFieldData)
+    catalogue.fieldsData = action.payload.fields.map(getCatalogueFieldData)
   },
   FETCH_CURRENT_USER_CATALOGUE_FIELDS_FAILURE(
     state: State,

@@ -27,6 +27,7 @@ import * as choicesEntitiesActions from 'store/entities/choices/slice'
 import { FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS } from 'store/modules/auth-user-catalogues/slice'
 import { typedCombineEpics } from 'store/utils'
 import { Catalogue, Choice, Field } from 'src/globalTypes'
+import { fieldsDeserializer } from 'src/serializers'
 
 export const fetchCurrentUserCataloguesEpic = (
   action$: Observable<Action>,
@@ -75,8 +76,9 @@ export const fetchCurrentUserCatalogueFieldsEpic = (
             params: { catalogue_id: action.payload },
           }),
         ).pipe(
+          map((response) => fieldsDeserializer(response.data)),
           withLatestFrom(state$),
-          mergeMap(([response, state]) =>
+          mergeMap(([fields, state]) =>
             concat(
               // Set auth user fields and fetch choices if current user == auth user
               // do not have to fetch fields and choices twice
@@ -86,16 +88,16 @@ export const fetchCurrentUserCatalogueFieldsEpic = (
                   state.modules.currentUser.userId,
                 of(
                   FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS({
-                    data: response.data,
+                    fields,
                     catalogueId: action.payload,
                   }),
                 ),
                 EMPTY,
               ),
-              of(fieldsEntitiesActions.FIELDS_UPDATED(response.data)),
+              of(fieldsEntitiesActions.FIELDS_UPDATED(fields)),
               of(
                 actions.FETCH_CURRENT_USER_CATALOGUE_FIELDS_SUCCESS({
-                  data: response.data,
+                  fields,
                   catalogueId: action.payload,
                 }),
               ),
@@ -122,7 +124,7 @@ export const fetchCurrentUserFieldsChoicesEpic = (
     ),
   ).pipe(
     mergeMap((action) => {
-      const fields = action.payload.data.filter(
+      const fields = action.payload.fields.filter(
         (f) => f.type === 'multiple_choice' || f.type === 'single_choice',
       )
 

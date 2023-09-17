@@ -21,7 +21,7 @@ export const fetchFieldsChoicesEpic = (action$: Observable<Action>) =>
     ),
   ).pipe(
     mergeMap((action) => {
-      const fields = action.payload.data.filter(
+      const fields = action.payload.fields.filter(
         (f) => f.type === 'multiple_choice' || f.type === 'single_choice',
       )
 

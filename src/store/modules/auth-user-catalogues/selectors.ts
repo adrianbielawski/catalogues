@@ -3,8 +3,6 @@ import {
   type AuthUserFieldData,
   type AuthUserChoiceData,
   type AuthUserChoiceFieldData,
-  DeserializedField,
-  AuthUserGroupFieldData,
 } from 'src/globalTypes'
 
 export const getCatalogueDataById = (
@@ -18,18 +16,10 @@ export const getFieldDataById = (
   state: AuthUserCataloguesState,
   catalogueId: number,
   fieldId: number,
-  parentFieldId?: DeserializedField['parentId'],
 ): AuthUserFieldData | undefined => {
   const { fieldsData } = getCatalogueDataById(state, catalogueId)
 
-  if (parentFieldId) {
-    const parentField = fieldsData.find(
-      (f) => f.id === parentFieldId,
-    ) as AuthUserGroupFieldData
-    return parentField.children.find((f) => f.id === fieldId)
-  } else {
-    return fieldsData.find((f) => f.id === fieldId)
-  }
+  return fieldsData.find((f) => f.id === fieldId)
 }
 
 export const getChoiceDataById = (

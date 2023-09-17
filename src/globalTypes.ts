@@ -175,7 +175,7 @@ export interface AuthUserChoiceFieldData
 }
 
 export interface AuthUserGroupFieldData extends AuthUserTextFieldData {
-  children: AuthUserFieldData[]
+  children: number[]
 }
 
 export interface AuthUserTextFieldData extends FieldsData {
@@ -193,6 +193,7 @@ export type AuthUserFieldData =
 
 export interface FieldsData {
   id: number
+  parentId?: number
 }
 
 export interface ChoiceFieldsData<C> extends FieldsData {
@@ -215,12 +216,13 @@ export interface Field {
   filter_name: string
   position: number
   public: boolean
+  parent_id: number | null
   choices?: Choice[]
   children?: Field[]
-  parent_id?: number | null
 }
 
-export interface DeserializedFieldWithChildren extends DeserializedField {
+export interface DeserializedFieldWithChildren
+  extends Omit<DeserializedField, 'children'> {
   children?: DeserializedFieldWithChildren[]
 }
 
@@ -232,7 +234,8 @@ export interface DeserializedField {
   filterName: string
   position: number
   public: boolean
-  parentId?: number | null
+  parentId: number | null
+  children?: number[]
 }
 
 // Choices

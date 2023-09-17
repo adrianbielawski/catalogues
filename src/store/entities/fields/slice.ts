@@ -3,9 +3,8 @@ import {
   createSlice,
   PayloadAction,
 } from '@reduxjs/toolkit'
-import { DeserializedField, Field } from 'src/globalTypes'
+import { DeserializedField } from 'src/globalTypes'
 import { FieldUpdated } from './types'
-import { fieldDeserializer, fieldsDeserializer } from 'src/serializers'
 import { CLEAR_APP_STATE } from 'store/modules/app/slice'
 
 const fieldsAdapter = createEntityAdapter<DeserializedField>({})
@@ -14,8 +13,8 @@ export const fieldsEntitiesSlice = createSlice({
   name: 'FIELDS',
   initialState: fieldsAdapter.getInitialState(),
   reducers: {
-    FIELDS_UPDATED(state, action: PayloadAction<Field[]>) {
-      fieldsAdapter.upsertMany(state, fieldsDeserializer(action.payload))
+    FIELDS_UPDATED(state, action: PayloadAction<DeserializedField[]>) {
+      fieldsAdapter.upsertMany(state, action.payload)
     },
     FIELD_UPDATED(state, action: PayloadAction<FieldUpdated>) {
       fieldsAdapter.updateOne(state, {
@@ -23,8 +22,8 @@ export const fieldsEntitiesSlice = createSlice({
         changes: action.payload.changes,
       })
     },
-    FIELD_ADDED(state, action: PayloadAction<Field>) {
-      fieldsAdapter.addMany(state, fieldDeserializer(action.payload))
+    FIELDS_ADDED(state, action: PayloadAction<DeserializedField[]>) {
+      fieldsAdapter.addMany(state, action.payload)
     },
     FIELD_REMOVED(state, action: PayloadAction<number>) {
       fieldsAdapter.removeOne(state, action.payload)
@@ -35,5 +34,5 @@ export const fieldsEntitiesSlice = createSlice({
   },
 })
 
-export const { FIELDS_UPDATED, FIELD_UPDATED, FIELD_ADDED, FIELD_REMOVED } =
+export const { FIELDS_UPDATED, FIELD_UPDATED, FIELDS_ADDED, FIELD_REMOVED } =
   fieldsEntitiesSlice.actions

@@ -77,10 +77,11 @@ const Choices = (props: Props) => {
     setSearchChoiceValue(input)
   }
 
-  const filteredChoices = props.choices.filter((c) =>
-    choices[c.id]!.value.toLowerCase().includes(
-      searchChoiceValue.toLowerCase(),
-    ),
+  const filteredChoices = props.choices.filter(
+    (c) =>
+      choices[c.id]?.value
+        .toLowerCase()
+        .includes(searchChoiceValue.toLowerCase()),
   )
 
   const sortedChoices = orderBy(

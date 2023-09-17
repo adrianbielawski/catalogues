@@ -39,7 +39,6 @@ export interface ChangeCatalogueImagePayload {
 export interface CatalogueAndFieldIdPayload {
   catalogueId: number
   fieldId: number
-  parentFieldId?: DeserializedField['parentId']
 }
 
 export interface CreateCatalogueFieldPayload {
@@ -48,16 +47,16 @@ export interface CreateCatalogueFieldPayload {
   type: string
   position: number
   public: boolean
-  parentId?: number
+  parentId: number | null
 }
 
 export interface FetchCatalogueFieldSuccessPayload
   extends CatalogueAndFieldIdPayload {
-  data: Field
+  fields: DeserializedField[]
 }
 
 export interface FetchCatalogueFieldsSuccessPayload {
-  data: Field[]
+  fields: DeserializedField[]
   catalogueId: number
 }
 

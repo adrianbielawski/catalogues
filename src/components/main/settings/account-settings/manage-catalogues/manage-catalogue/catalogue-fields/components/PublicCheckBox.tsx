@@ -15,7 +15,6 @@ const PublicCheckBox = ({ field }: Props) => {
       CHANGE_FIELD_PUBLIC({
         fieldId: field.id,
         catalogueId: field.catalogueId,
-        parentFieldId: field.parentId,
         public: !field.public,
       }),
     )

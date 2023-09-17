@@ -6,6 +6,7 @@ import * as actions from '../slice'
 import * as fieldsEntitiesActions from 'store/entities/fields/slice'
 import { typedCombineEpics } from 'store/utils'
 import { Field } from 'src/globalTypes'
+import { fieldDeserializer, fieldsDeserializer } from 'src/serializers'
 
 export const refreshCatalogueFieldEpic = (action$: Observable<Action>) =>
   merge(action$.pipe(filter(actions.REFRESH_CATALOGUE_FIELD.match))).pipe(
@@ -17,14 +18,15 @@ export const fetchCatalogueFieldEpic = (action$: Observable<Action>) =>
     filter(actions.FETCH_CATALOGUE_FIELD.match),
     mergeMap((action) =>
       defer(() =>
-        axiosInstance$.get(`/fields/${action.payload.fieldId}/`),
+        axiosInstance$.get<Field>(`/fields/${action.payload.fieldId}/`),
       ).pipe(
-        mergeMap((response) =>
+        map((response) => fieldDeserializer(response.data)),
+        mergeMap((fields) =>
           concat(
-            of(fieldsEntitiesActions.FIELD_UPDATED(response.data)),
+            of(fieldsEntitiesActions.FIELDS_UPDATED(fields)),
             of(
               actions.FETCH_CATALOGUE_FIELD_SUCCESS({
-                data: response.data,
+                fields,
                 catalogueId: action.payload.catalogueId,
                 fieldId: action.payload.fieldId,
               }),
@@ -44,7 +46,9 @@ export const refreshCatalogueFieldsEpic = (action$: Observable<Action>) =>
     action$.pipe(filter(actions.DELETE_CATALOGUE_FIELD_SUCCESS.match)),
     action$.pipe(filter(actions.REORDER_CATALOGUE_FIELDS_SUCCESS.match)),
   ).pipe(
-    map((action) => actions.FETCH_AUTH_USER_CATALOGUE_FIELDS(action.payload)),
+    map((action) =>
+      actions.FETCH_AUTH_USER_CATALOGUE_FIELDS(action.payload.catalogueId),
+    ),
   )
 
 export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) =>
@@ -58,12 +62,13 @@ export const fetchCatalogueFieldsEpic = (action$: Observable<Action>) =>
             params: { catalogue_id: action.payload },
           }),
         ).pipe(
-          mergeMap((response) =>
+          map((response) => fieldsDeserializer(response.data)),
+          mergeMap((fields) =>
             concat(
-              of(fieldsEntitiesActions.FIELDS_UPDATED(response.data)),
+              of(fieldsEntitiesActions.FIELDS_UPDATED(fields)),
               of(
                 actions.FETCH_AUTH_USER_CATALOGUE_FIELDS_SUCCESS({
-                  data: response.data,
+                  fields,
                   catalogueId: action.payload,
                 }),
               ),
@@ -85,10 +90,10 @@ export const fetchCataloguesFieldsEpic = (action$: Observable<Action>) =>
     mergeMap((action) => {
       const requests = action.payload.map((catalogue) =>
         axiosInstance$
-          .get('/fields/', {
+          .get<Field[]>('/fields/', {
             params: { catalogue_id: catalogue.id },
           })
-          .pipe(map((response) => response.data)),
+          .pipe(map((response) => fieldsDeserializer(response.data))),
       )
 
       if (requests.length === 0) {
@@ -96,14 +101,11 @@ export const fetchCataloguesFieldsEpic = (action$: Observable<Action>) =>
       }
 
       return forkJoin(requests).pipe(
-        mergeMap((response) =>
+        map((response) => response.flat()),
+        mergeMap((fields) =>
           concat(
-            of(fieldsEntitiesActions.FIELDS_UPDATED(response.flat())),
-            of(
-              actions.FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS(
-                response.flat(),
-              ),
-            ),
+            of(fieldsEntitiesActions.FIELDS_UPDATED(fields)),
+            of(actions.FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS(fields)),
           ),
         ),
         catchError(() =>
@@ -120,7 +122,7 @@ export const createCatalogueFieldEpic = (action$: Observable<Action>) =>
       concat(
         of(actions.CREATE_CATALOGUE_FIELD_START(action.payload.catalogueId)),
         axiosInstance$
-          .post('/fields/', {
+          .post<Field>('/fields/', {
             name: action.payload.name,
             catalogue_id: action.payload.catalogueId,
             type: action.payload.type,
@@ -129,13 +131,14 @@ export const createCatalogueFieldEpic = (action$: Observable<Action>) =>
             parent_id: action.payload.parentId,
           })
           .pipe(
-            mergeMap((response) =>
+            map((response) => fieldDeserializer(response.data)),
+            mergeMap((fields) =>
               concat(
-                of(fieldsEntitiesActions.FIELD_ADDED(response.data)),
+                of(fieldsEntitiesActions.FIELDS_ADDED(fields)),
                 of(
-                  actions.CREATE_CATALOGUE_FIELD_SUCCESS(
-                    action.payload.catalogueId,
-                  ),
+                  actions.CREATE_CATALOGUE_FIELD_SUCCESS({
+                    catalogueId: action.payload.catalogueId,
+                  }),
                 ),
               ),
             ),
@@ -158,21 +161,19 @@ export const deleteCatalogueFieldEpic = (action$: Observable<Action>) =>
       concat(
         of(
           actions.DELETE_CATALOGUE_FIELD_START({
-            catalogueId: action.payload.catalogueId,
-            fieldId: action.payload.fieldId,
-            parentFieldId: action.payload.parentFieldId,
+            ...action.payload,
           }),
         ),
         defer(() =>
           axiosInstance$.delete(`/fields/${action.payload.fieldId}/`),
         ).pipe(
-          mergeMap((response) =>
+          mergeMap(() =>
             concat(
-              of(fieldsEntitiesActions.FIELD_REMOVED(response.data)),
+              of(fieldsEntitiesActions.FIELD_REMOVED(action.payload.fieldId)),
               of(
-                actions.DELETE_CATALOGUE_FIELD_SUCCESS(
-                  action.payload.catalogueId,
-                ),
+                actions.DELETE_CATALOGUE_FIELD_SUCCESS({
+                  ...action.payload,
+                }),
               ),
             ),
           ),
@@ -180,14 +181,12 @@ export const deleteCatalogueFieldEpic = (action$: Observable<Action>) =>
             concat(
               of(
                 actions.REFRESH_CATALOGUE_FIELD({
-                  catalogueId: action.payload.catalogueId,
-                  fieldId: action.payload.fieldId,
+                  ...action.payload,
                 }),
               ),
               of(
                 actions.DELETE_CATALOGUE_FIELD_FAILURE({
-                  catalogueId: action.payload.catalogueId,
-                  fieldId: action.payload.fieldId,
+                  ...action.payload,
                 }),
               ),
             ),
@@ -298,9 +297,9 @@ export const reorderCatalogueFieldsEpic = (action$: Observable<Action>) =>
           }),
         ).pipe(
           map(() =>
-            actions.REORDER_CATALOGUE_FIELDS_SUCCESS(
-              action.payload.catalogueId,
-            ),
+            actions.REORDER_CATALOGUE_FIELDS_SUCCESS({
+              catalogueId: action.payload.catalogueId,
+            }),
           ),
           catchError(() =>
             of(

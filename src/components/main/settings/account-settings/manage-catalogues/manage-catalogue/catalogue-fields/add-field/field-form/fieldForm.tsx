@@ -17,7 +17,6 @@ import Button from 'components/global-components/button/button'
 import MessageModal from 'components/global-components/message-modal/messageModal'
 import CheckBoxWithTitle from 'components/global-components/check-box-with-title/checkBoxWithTitle'
 import { useEntitiesSelector } from 'store/entities/hooks'
-import { AuthUserGroupFieldData } from 'src/globalTypes'
 
 const FIELD_TYPES: Choice[] = [
   {
@@ -53,7 +52,7 @@ const FIELD_TYPES: Choice[] = [
 interface Props {
   active: boolean
   catalogueId: number
-  parentId?: number
+  parentId: number | null
   title?: string
   confirmButtonText?: string
   canEditPublic?: boolean
@@ -154,16 +153,14 @@ const FieldForm: FC<Props> = ({
       return
     }
 
-    const findParentField = (id: number) =>
-      fieldsData.find((f) => f.id === id) as AuthUserGroupFieldData
+    const getFieldsLength = (id: number | null) =>
+      fieldsData.filter((f) => f.parentId === id).length
 
     setFieldType('')
     setFieldName('')
     nameInputRef.current!.value = ''
 
-    const position = parentId
-      ? findParentField(parentId).children.length
-      : fieldsData.length
+    const position = getFieldsLength(parentId)
 
     dispatch(
       CREATE_CATALOGUE_FIELD({

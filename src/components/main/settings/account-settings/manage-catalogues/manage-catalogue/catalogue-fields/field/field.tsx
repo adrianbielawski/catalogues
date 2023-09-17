@@ -36,12 +36,15 @@ const Field: FC<ItemComponentProps<AuthUserFieldData>> = ({
 
   const isEditing = fieldData.isEditing
   const error = fieldData.fieldError
-  const field = fieldsEntities[fieldData.id]!
+  const field = fieldsEntities[fieldData.id]
+
+  if (!field) {
+    return null
+  }
 
   const catalogueAndFieldIds = {
-    fieldId: field.id,
     catalogueId: field.catalogueId,
-    parentFieldId: field.parentId,
+    fieldId: field.id,
   }
 
   const handleEdit = () => {

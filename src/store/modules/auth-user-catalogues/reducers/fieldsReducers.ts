@@ -2,8 +2,8 @@ import { PayloadAction } from '@reduxjs/toolkit'
 import {
   AuthUserGroupFieldData,
   AuthUserChoiceFieldData,
-  Field,
   AuthUserFieldData,
+  DeserializedField,
 } from 'src/globalTypes'
 import * as T from '../types'
 import { getCatalogueDataById, getFieldDataById } from '../selectors'
@@ -14,9 +14,9 @@ const networkError = {
 }
 
 export const createFieldData = (
-  field: Field,
+  field: DeserializedField,
   prevFieldData?: AuthUserFieldData,
-) => {
+): AuthUserFieldData => {
   const newFieldData = {
     ...prevFieldData,
     id: field.id,
@@ -25,20 +25,18 @@ export const createFieldData = (
     isEditing: prevFieldData?.isEditing ?? false,
     isSubmitting: false,
     fieldError: null,
-  }
+    parentId: field.parentId,
+  } as AuthUserFieldData
 
   if (field.type === 'multiple_choice' || field.type === 'single_choice') {
     const prev = prevFieldData as AuthUserChoiceFieldData | undefined
-    ;(newFieldData as AuthUserChoiceFieldData).choices = prev?.choices ?? []
+    const fieldData = newFieldData as AuthUserChoiceFieldData
+    fieldData.choices = prev?.choices ?? []
   }
 
   if (field.type === 'group') {
-    const prev = prevFieldData as AuthUserGroupFieldData | undefined
     const fieldData = newFieldData as AuthUserGroupFieldData
-    fieldData.children =
-      field.children
-        ?.sort((a, b) => a.position - b.position)
-        .map((f, i) => createFieldData(f, prev?.children[i])) ?? []
+    fieldData.children = field.children ?? []
   }
 
   return newFieldData
@@ -51,16 +49,16 @@ export const fieldsReducers = {
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId, parentFieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
+    const { catalogueId, fieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isEditing = !field.isEditing
   },
   CLEAR_FIELD_ERROR(
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId, parentFieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
+    const { catalogueId, fieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.fieldError = null
   },
   REFRESH_CATALOGUE_FIELD(
@@ -78,10 +76,13 @@ export const fetchCatalogueFieldReducers = {
     state: State,
     action: PayloadAction<T.FetchCatalogueFieldSuccessPayload>,
   ) {
-    const { catalogueId, fieldId, data } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)!
+    const { catalogueId, fields } = action.payload
 
-    Object.assign(field, createFieldData(data))
+    fields.forEach((f) => {
+      const field = getFieldDataById(state, catalogueId, f.id)!
+
+      Object.assign(field, createFieldData(f))
+    })
   },
   FETCH_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<number>) {
     const catalogue = getCatalogueDataById(state, action.payload)
@@ -106,11 +107,11 @@ export const fetchCatalogueFieldsReducers = {
     state: State,
     action: PayloadAction<T.FetchCatalogueFieldsSuccessPayload>,
   ) {
-    const { catalogueId, data } = action.payload
+    const { catalogueId, fields } = action.payload
     const catalogue = getCatalogueDataById(state, catalogueId)
 
     catalogue.isFetchingFields = false
-    catalogue.fieldsData = data
+    catalogue.fieldsData = fields
       .sort((a, b) => a.position - b.position)
       .map((fieldData) =>
         createFieldData(
@@ -133,7 +134,7 @@ export const fetchCatalogueFieldsReducers = {
 export const fetchCataloguesFieldsReducers = {
   FETCH_AUTH_USER_CATALOGUES_FIELDS_SUCCESS(
     state: State,
-    action: PayloadAction<Field[]>,
+    action: PayloadAction<DeserializedField[]>,
   ) {},
   AUTH_USER_CATALOGUES_FIELDS_NOT_NEEDED(state: State) {
     state.isFetchingCataloguesData = false
@@ -150,8 +151,11 @@ export const createCatalogueFieldReducers = {
     const catalogue = getCatalogueDataById(state, action.payload)
     catalogue.isSubmittingNewField = true
   },
-  CREATE_CATALOGUE_FIELD_SUCCESS(state: State, action: PayloadAction<number>) {
-    const catalogue = getCatalogueDataById(state, action.payload)
+  CREATE_CATALOGUE_FIELD_SUCCESS(
+    state: State,
+    action: PayloadAction<{ catalogueId: number }>,
+  ) {
+    const catalogue = getCatalogueDataById(state, action.payload.catalogueId)
     catalogue.isSubmittingNewField = false
   },
   CREATE_CATALOGUE_FIELD_FAILURE(state: State, action: PayloadAction<number>) {
@@ -170,22 +174,30 @@ export const deleteCatalogueFieldReducers = {
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
-    const { catalogueId, fieldId, parentFieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId, parentFieldId)!
+    const { catalogueId, fieldId } = action.payload
+    const field = getFieldDataById(state, catalogueId, fieldId)!
     field.isDeleting = true
   },
   DELETE_CATALOGUE_FIELD_SUCCESS(
     state: State,
-    action: PayloadAction<number>,
-  ) {},
+    action: PayloadAction<T.CatalogueAndFieldIdPayload>,
+  ) {
+    const { catalogueId, fieldId } = action.payload
+    const { fieldsData } = getCatalogueDataById(state, catalogueId)!
+    const fieldIndex = fieldsData.findIndex((d) => d.id === fieldId)
+    fieldsData.splice(fieldIndex, 1)
+  },
   DELETE_CATALOGUE_FIELD_FAILURE(
     state: State,
     action: PayloadAction<T.CatalogueAndFieldIdPayload>,
   ) {
     const { catalogueId, fieldId } = action.payload
-    const field = getFieldDataById(state, catalogueId, fieldId)!
-    field.isDeleting = false
-    field.fieldError = networkError
+    const field = getFieldDataById(state, catalogueId, fieldId)
+
+    if (field) {
+      field.isDeleting = false
+      field.fieldError = networkError
+    }
   },
 }
 
@@ -249,14 +261,14 @@ export const reorderFieldsReducers = {
       const parentField = catalogueData.fieldsData.find(
         (f) => f.id === parentFieldId,
       ) as AuthUserGroupFieldData
-      parentField.children = fieldsData
+      parentField.children = fieldsData.map((f) => f.id)
     } else {
       catalogueData.fieldsData = fieldsData
     }
   },
   REORDER_CATALOGUE_FIELDS_SUCCESS(
     state: State,
-    action: PayloadAction<number>,
+    action: PayloadAction<{ catalogueId: number }>,
   ) {},
   REORDER_CATALOGUE_FIELDS_FAILURE(
     state: State,

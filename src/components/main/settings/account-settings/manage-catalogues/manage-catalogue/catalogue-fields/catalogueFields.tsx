@@ -18,14 +18,19 @@ interface Props {
 const CatalogueFields = ({ catalogueId }: Props) => {
   const dispatch = useAppDispatch()
   const fieldsData = useTypedSelector(authUserFieldsDataSelector(catalogueId))
+  const noChildrenFields = fieldsData.filter((f) => !f.parentId)
 
   const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
+    const newFieldsData = [
+      ...fieldsData.filter((f) => !!f.parentId),
+      ...params.newItems,
+    ]
     dispatch(
       REORDER_CATALOGUE_FIELDS({
         catalogueId,
         fieldId: params.item.id,
         newPosition: params.newPosition,
-        fieldsData: params.newItems,
+        fieldsData: newFieldsData,
       }),
     )
   }
@@ -34,12 +39,16 @@ const CatalogueFields = ({ catalogueId }: Props) => {
     <IconWithTitle title={'Catalogue fields'} icon={faListAlt}>
       <OrderableList
         className={styles.fields}
-        items={fieldsData}
+        items={noChildrenFields}
         itemComponent={Field}
         onDrop={handleDrop}
         scrollTopAt={80}
       />
-      <AddField catalogueId={catalogueId} className={styles.addField} />
+      <AddField
+        catalogueId={catalogueId}
+        parentId={null}
+        className={styles.addField}
+      />
     </IconWithTitle>
   )
 }

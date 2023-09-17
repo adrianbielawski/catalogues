@@ -42,7 +42,6 @@ const FieldNameInput = ({ field }: Props) => {
       CHANGE_FIELD_NAME({
         fieldId: field.id,
         catalogueId: field.catalogueId,
-        parentFieldId: field.parentId,
         name,
       }),
     500,

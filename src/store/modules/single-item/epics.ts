@@ -27,11 +27,12 @@ import { RootState } from 'store/storeConfig'
 import {
   Choice,
   DeserializedImage,
+  Field,
   Item,
   ItemCommentParent,
 } from 'src/globalTypes'
 // Serializers
-import { itemFieldSerializer } from 'src/serializers'
+import { fieldsDeserializer, itemFieldSerializer } from 'src/serializers'
 // Actions
 import * as actions from './slice'
 import * as usersEntitiesActions from 'store/entities/users/slice'
@@ -160,14 +161,15 @@ export const fetchSingleItemFieldsEpic = (
       }
 
       return axiosInstance$
-        .get('/fields/', {
+        .get<Field[]>('/fields/', {
           params: { catalogue_id: action.payload },
         })
         .pipe(
-          mergeMap((response) =>
+          map((response) => fieldsDeserializer(response.data)),
+          mergeMap((fields) =>
             concat(
-              of(fieldsEntitiesActions.FIELDS_UPDATED(response.data)),
-              of(actions.FETCH_SINGLE_ITEM_FIELDS_SUCCESS(response.data)),
+              of(fieldsEntitiesActions.FIELDS_UPDATED(fields)),
+              of(actions.FETCH_SINGLE_ITEM_FIELDS_SUCCESS(fields)),
             ),
           ),
           catchError(() => of(actions.FETCH_SINGLE_ITEM_FIELDS_FAILURE())),

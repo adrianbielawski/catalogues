@@ -8,7 +8,7 @@ import AnimateHeight from 'react-animate-height'
 
 interface Props {
   catalogueId: number
-  parentId?: number
+  parentId: number | null
   formTitle?: string
   confirmButtonText?: string
   className?: string

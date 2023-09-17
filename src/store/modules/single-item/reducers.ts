@@ -3,6 +3,7 @@ import { networkError } from 'src/constants'
 import {
   AuthUserChoiceFieldData,
   Choice,
+  DeserializedField,
   DeserializedItem,
   Field,
   Item,
@@ -104,7 +105,7 @@ export const fetchSingleItemFields = {
   FETCH_SINGLE_ITEM_FIELDS(state: State, action: PayloadAction<number>) {},
   FETCH_SINGLE_ITEM_FIELDS_SUCCESS(
     state: State,
-    action: PayloadAction<Field[]>,
+    action: PayloadAction<DeserializedField[]>,
   ) {
     state.catalogueData!.fieldsData = action.payload.map((f) =>
       createFieldData(f),

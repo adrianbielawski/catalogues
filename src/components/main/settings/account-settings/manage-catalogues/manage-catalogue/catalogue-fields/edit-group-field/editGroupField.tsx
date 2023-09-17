@@ -6,7 +6,7 @@ import {
   DeserializedField,
 } from 'src/globalTypes'
 import { REORDER_CATALOGUE_FIELDS } from 'store/modules/auth-user-catalogues/slice'
-import { useAppDispatch } from 'store/storeConfig'
+import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import AddField from '../add-field/addField'
 import OrderableList, {
   ItemComponentProps,
@@ -15,6 +15,7 @@ import OrderableList, {
 import DeleteFieldButton from '../components/DeleteFieldButton'
 import PublicCheckBox from '../components/PublicCheckBox'
 import FieldNameInput from '../components/FieldNameInput'
+import { authUserFieldsDataSelector } from 'store/selectors'
 
 interface Props {
   fieldComponent: ComponentType<ItemComponentProps<AuthUserFieldData>>
@@ -24,6 +25,9 @@ interface Props {
 
 const EditGroupField: FC<Props> = ({ fieldComponent, field, fieldData }) => {
   const dispatch = useAppDispatch()
+  const fieldsData = useTypedSelector(
+    authUserFieldsDataSelector(field.catalogueId, field.id),
+  )
 
   const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
     dispatch(
@@ -44,7 +48,7 @@ const EditGroupField: FC<Props> = ({ fieldComponent, field, fieldData }) => {
         <PublicCheckBox field={field} />
       </div>
       <OrderableList
-        items={fieldData.children}
+        items={fieldsData}
         itemComponent={fieldComponent}
         onDrop={handleDrop}
         scrollTopAt={80}

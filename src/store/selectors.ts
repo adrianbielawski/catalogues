@@ -113,12 +113,21 @@ export const authUserFieldDataSelector = (
 
 export const authUserFieldsDataSelector = (
   catalogueId: number,
+  parentFieldId?: number | null,
 ): SelectorType<T.AuthUserFieldData[]> =>
-  createSelector(
-    [authUserCataloguesDataSelector],
-    (cataloguesData) =>
-      cataloguesData.filter((f) => f.id === catalogueId)[0].fieldsData,
-  )
+  createSelector([authUserCataloguesDataSelector], (cataloguesData) => {
+    const { fieldsData } = cataloguesData.find((c) => c.id === catalogueId)!
+
+    if (parentFieldId !== undefined) {
+      const { children } = fieldsData.find(
+        (f) => f.id === parentFieldId,
+      ) as T.AuthUserGroupFieldData
+
+      return children.flatMap((f) => fieldsData.find((fd) => fd.id === f) ?? [])
+    }
+
+    return fieldsData
+  })
 
 // Items data
 export const itemSelector =

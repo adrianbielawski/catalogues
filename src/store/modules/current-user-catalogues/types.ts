@@ -1,7 +1,7 @@
 import {
-  type Choice,
-  type CurrentUserCatalogueData,
-  type Field,
+  DeserializedField,
+  Choice,
+  CurrentUserCatalogueData,
 } from 'src/globalTypes'
 
 export interface CurrentUserCataloguesState {
@@ -25,7 +25,7 @@ export interface CatalogueAndFieldIdPayload {
 }
 
 export interface FetchCatalogueFieldsSuccessPayload {
-  data: Field[]
+  fields: DeserializedField[]
   catalogueId: number
 }
 
