@@ -1,16 +1,12 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styles from './singleChoiceField.module.scss'
-// Types
 import {
   type AuthUserChoiceFieldData,
   type DeserializedField,
   type DeserializedItemField,
 } from 'src/globalTypes'
-// Redux
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
-import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
+import { useTypedSelector } from 'store/storeConfig'
 import { fieldChoicesSelector } from 'store/selectors'
-// Components
 import AddChoice from 'components/global-components/add-choice/addChoice'
 import ChoiceList, {
   type SingleChoiceOnChange,
@@ -18,54 +14,62 @@ import ChoiceList, {
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
-  itemId: number
   field: DeserializedField
-  fieldValue: DeserializedItemField<number | null>
+  fieldValue: DeserializedItemField<SingleChoiceOnChange>
   fieldData: AuthUserChoiceFieldData
+  onChange: (value: SingleChoiceOnChange) => void
 }
 
-const SingleChoiceField = (props: Props) => {
-  const dispatch = useAppDispatch()
+const SingleChoiceField = ({
+  field,
+  fieldValue,
+  fieldData,
+  onChange,
+}: Props) => {
   const [isEditing, setIsEditing] = useState(false)
-  const fieldChoices = useTypedSelector(fieldChoicesSelector(props.field.id))
+  const fieldChoices = useTypedSelector(fieldChoicesSelector(field.id))
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing])
 
-  const handleChange = (choiceId: SingleChoiceOnChange) => {
-    dispatch(
-      CHANGE_ITEM_FIELD_VALUE({
-        itemId: props.itemId,
-        fieldId: props.field.id,
-        value: choiceId,
-      }),
-    )
-  }
+  const handleChange = useCallback(
+    (choiceId: SingleChoiceOnChange) => {
+      onChange(choiceId)
+    },
+    [onChange],
+  )
 
-  const selected = fieldChoices.filter(
-    (f) => f.id === props.fieldValue?.value,
-  )[0]
-
-  const content = isEditing ? (
-    <>
-      <ChoiceList
-        className={styles.choiceList}
-        choices={fieldChoices}
-        defaultSortDir="asc"
-        defaultSearchValue=""
-        selected={props.fieldValue?.value}
-        onChange={handleChange}
-      />
-      <AddChoice field={props.field} fieldData={props.fieldData} />
-    </>
-  ) : (
-    selected?.value
+  const content = useMemo(
+    () =>
+      isEditing ? (
+        <>
+          <ChoiceList
+            className={styles.choiceList}
+            choices={fieldChoices}
+            defaultSortDir="asc"
+            defaultSearchValue=""
+            selected={fieldValue?.value}
+            onChange={handleChange}
+          />
+          <AddChoice field={field} fieldData={fieldData} />
+        </>
+      ) : (
+        fieldChoices.filter((f) => f.id === fieldValue?.value)[0]?.value
+      ),
+    [
+      isEditing,
+      fieldChoices,
+      fieldValue?.value,
+      field,
+      fieldData,
+      handleChange,
+    ],
   )
 
   return (
     <EditableField
-      title={props.field.name}
+      title={field.name}
       isEditing={isEditing}
       onEditClick={handleEdit}
       content={content}

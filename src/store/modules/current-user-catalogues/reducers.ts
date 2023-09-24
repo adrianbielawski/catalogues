@@ -3,6 +3,7 @@ import {
   DeserializedField,
   Catalogue,
   CurrentUserChoiceFieldData,
+  CurrentUserGroupFieldData,
 } from 'src/globalTypes'
 import { getCatalogueDataById, getFieldDataById } from './selectors'
 import * as T from './types'
@@ -10,12 +11,18 @@ import * as T from './types'
 const getCatalogueFieldData = (field: DeserializedField) => {
   const newField = {
     id: field.id,
+    parentId: field.parentId,
   }
 
   if ('choices' in field) {
     const f = newField as CurrentUserChoiceFieldData
     f.isFetchingChoices = false
     f.choices = []
+  }
+
+  if ('children' in field) {
+    const f = newField as CurrentUserGroupFieldData
+    f.children = field.children!
   }
 
   return newField

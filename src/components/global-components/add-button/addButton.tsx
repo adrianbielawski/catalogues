@@ -16,9 +16,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const cx = classNames.bind(styles)
 
-const AddButton = (props: Props) => {
-  const delayCompleated = useDelay(props.loading)
-  const { text, loading, onClick, className, ...rest } = props
+const AddButton = ({ text, loading, className, onClick, ...rest }: Props) => {
+  const delayCompleted = useDelay(loading)
 
   const buttonClass = cx('addButton', className)
 
@@ -30,7 +29,7 @@ const AddButton = (props: Props) => {
       {...rest}
     >
       <>
-        {delayCompleated ? (
+        {delayCompleted ? (
           <Loader size={24} />
         ) : (
           <FontAwesomeIcon icon={faPlus} className={styles.plus} />

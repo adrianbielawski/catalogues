@@ -1,56 +1,51 @@
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import styles from './longTextField.module.scss'
-// Types
 import {
   type DeserializedField,
   type DeserializedItemField,
 } from 'src/globalTypes'
-// Redux
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
-import { useAppDispatch } from 'store/storeConfig'
-// Components
 import TextareaWithConfirmButton from 'components/global-components/textarea-with-confirm-button/textareaWithConfirmButton'
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
-  itemId: number
   field: DeserializedField
   fieldValue?: DeserializedItemField<string>
+  onChange: (value: string | null) => void
 }
 
-const LongTextField = (props: Props) => {
-  const dispatch = useAppDispatch()
+const LongTextField = ({ field, fieldValue, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing])
 
-  const handleConfirm = (input: string) => {
-    dispatch(
-      CHANGE_ITEM_FIELD_VALUE({
-        itemId: props.itemId,
-        fieldId: props.field.id,
-        value: input.length > 0 ? input : null,
-      }),
-    )
-    setIsEditing(false)
-  }
+  const handleConfirm = useCallback(
+    (input: string) => {
+      onChange(input.length ? input : null)
+      setIsEditing(false)
+    },
+    [onChange],
+  )
 
-  const content = isEditing ? (
-    <TextareaWithConfirmButton
-      className={styles.textarea}
-      defaultValue={props.fieldValue?.value as string}
-      rows={4}
-      onConfirm={handleConfirm}
-    />
-  ) : (
-    props.fieldValue?.value
+  const content = useMemo(
+    () =>
+      isEditing ? (
+        <TextareaWithConfirmButton
+          className={styles.textarea}
+          defaultValue={fieldValue?.value}
+          rows={4}
+          onConfirm={handleConfirm}
+        />
+      ) : (
+        fieldValue?.value
+      ),
+    [isEditing, fieldValue?.value, handleConfirm],
   )
 
   return (
     <EditableField
-      title={props.field.name}
+      title={field.name}
       isEditing={isEditing}
       onEditClick={handleEdit}
       content={content}

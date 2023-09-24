@@ -1,112 +1,117 @@
 import { faListAlt } from '@fortawesome/free-regular-svg-icons'
-// Types
 import {
-  AuthUserChoiceFieldData,
   AuthUserFieldData,
-  DeserializedGeoField,
+  DeserializedGroupFieldValue,
   DeserializedItem,
   DeserializedItemField,
-  DeserializedMediaFieldValue,
+  DeserializedItemFieldValue,
 } from 'src/globalTypes'
-import TextField from './text-field/textField'
-import LongTextField from './long-text-field/longTextField'
-import SingleChoiceField from './single-choice-field/singleChoiceField'
-import MultipleChoiceField from './multiple-choice-field/multipleChoiceField'
 import IconWithTitle from 'components/global-components/icon-with-title/iconWithTitle'
-import DateField from './date-field/dateField'
-import MediaField from './media-field/mediaField'
-import GeoField from './geo-field/geoField'
 import { useEntitiesSelector } from 'store/entities/hooks'
+import { useFilterByParentId } from 'src/hooks/useFilterByParentId'
+import styles from './editItemFields.module.scss'
+import { useMemo } from 'react'
+import EditItemField from './EditItemField'
 
-interface Props {
+export interface EditItemFieldsPropsBase {
   item: DeserializedItem
   fieldsData: AuthUserFieldData[]
 }
 
-const EditItemFields = (props: Props) => {
+export interface EditItemFieldsPropsWithoutParent
+  extends EditItemFieldsPropsBase {
+  parentFieldId: null
+  childIndex?: never
+}
+
+export interface EditItemFieldsPropsWithParent extends EditItemFieldsPropsBase {
+  parentFieldId: number
+  childIndex: number
+}
+
+export type EditItemFieldsProps =
+  | EditItemFieldsPropsWithoutParent
+  | EditItemFieldsPropsWithParent
+
+const EditItemFields = ({
+  item,
+  fieldsData,
+  parentFieldId,
+  childIndex,
+}: EditItemFieldsProps) => {
   const fields = useEntitiesSelector('fields')
 
-  const fieldsComponents = props.fieldsData.map((fieldData) => {
-    const field = fields[fieldData.id]!
-    const fieldValue = props.item.fieldsValues.filter(
-      (v) => v.fieldId === field.id,
-    )[0]
+  const [filteredFieldsData, restFieldsData] = useFilterByParentId(
+    fieldsData,
+    parentFieldId,
+  )
 
-    let fieldComponent
-    const fieldProps = {
-      itemId: props.item.id,
-      field,
-    }
+  const fieldsListComponent = useMemo(() => {
+    const fieldComponents = filteredFieldsData.map((fieldData) => {
+      const field = fields[fieldData.id]
 
-    switch (field.type) {
-      case 'short_text':
-        fieldComponent = (
-          <TextField
-            {...fieldProps}
-            fieldValue={fieldValue as DeserializedItemField<string>}
-          />
-        )
-        break
-      case 'long_text':
-        fieldComponent = (
-          <LongTextField
-            {...fieldProps}
-            fieldValue={fieldValue as DeserializedItemField<string>}
-          />
-        )
-        break
-      case 'date':
-        fieldComponent = (
-          <DateField
-            {...fieldProps}
-            fieldValue={fieldValue as DeserializedItemField<string>}
-          />
-        )
-        break
-      case 'media':
-        fieldComponent = (
-          <MediaField
-            {...fieldProps}
-            fieldValue={
-              fieldValue as DeserializedItemField<DeserializedMediaFieldValue>
-            }
-          />
-        )
-        break
-      case 'geo_point':
-        fieldComponent = (
-          <GeoField
-            {...fieldProps}
-            fieldValue={fieldValue?.value as DeserializedGeoField}
-          />
-        )
-        break
-      case 'single_choice':
-        fieldComponent = (
-          <SingleChoiceField
-            {...fieldProps}
-            fieldValue={fieldValue as DeserializedItemField<number | null>}
-            fieldData={fieldData as AuthUserChoiceFieldData}
-          />
-        )
-        break
-      case 'multiple_choice':
-        fieldComponent = (
-          <MultipleChoiceField
-            {...fieldProps}
-            fieldValue={fieldValue as DeserializedItemField<number[] | null>}
-            fieldData={fieldData as AuthUserChoiceFieldData}
-          />
-        )
-        break
-    }
+      if (!field) {
+        return null
+      }
 
-    return <li key={field.id}>{fieldComponent}</li>
-  })
+      let fieldValue:
+        | DeserializedItemField<DeserializedItemFieldValue | undefined>
+        | undefined
+
+      let data: AuthUserFieldData | undefined
+
+      if (parentFieldId) {
+        const parentFieldValue = item.fieldsValues.find(
+          (v) => v.fieldId === parentFieldId,
+        ) as DeserializedItemField<DeserializedGroupFieldValue> | undefined
+
+        fieldValue = parentFieldValue?.value[childIndex]?.find(
+          (v) => v.fieldId === fieldData.id,
+        )
+
+        data = filteredFieldsData.find((f) => f.id === fieldData.id)
+      } else {
+        fieldValue = item.fieldsValues.find((v) => v.fieldId === field.id)
+        data = fieldData
+      }
+
+      if (!data) {
+        return null
+      }
+
+      return (
+        <li key={field.id}>
+          <EditItemField
+            item={item}
+            field={field}
+            fieldValue={fieldValue}
+            fieldData={data}
+            fieldsData={fieldsData}
+            parentFieldId={parentFieldId}
+            childIndex={childIndex}
+          />
+        </li>
+      )
+    })
+
+    return <ul className={styles.fieldsList}>{fieldComponents}</ul>
+  }, [
+    item,
+    fields,
+    fieldsData,
+    childIndex,
+    parentFieldId,
+    filteredFieldsData,
+    restFieldsData,
+  ])
+
+  if (parentFieldId) {
+    return fieldsListComponent
+  }
 
   return (
     <IconWithTitle title={'Item fields'} icon={faListAlt}>
-      <ul>{fieldsComponents}</ul>
+      {fieldsListComponent}
     </IconWithTitle>
   )
 }

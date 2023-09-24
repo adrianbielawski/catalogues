@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 import classNames from 'classnames/bind'
 import styles from './editableField.module.scss'
-// Custom components
 import EditableFieldTitle from './editable-field-title/editableFieldTitle'
 
 interface Props {
@@ -14,14 +13,16 @@ interface Props {
 
 const cx = classNames.bind(styles)
 
-const EditableField = (props: Props) => {
-  const { title, content, isEditing, className, onEditClick } = props
+const EditableField = ({
+  title,
+  content,
+  isEditing,
+  className,
+  onEditClick,
+}: Props) => {
+  const editableFieldClass = cx('editableField', className)
 
-  const handleEdit = () => {
-    onEditClick()
-  }
-
-  const editableFieldClass = cx('editableField', className, {
+  const contentClass = cx('content', {
     active: isEditing,
   })
 
@@ -30,9 +31,9 @@ const EditableField = (props: Props) => {
       <EditableFieldTitle
         title={title}
         isEditing={isEditing}
-        onEdit={handleEdit}
+        onEdit={onEditClick}
       />
-      <div className={styles.content}>{content}</div>
+      <div className={contentClass}>{content}</div>
     </div>
   )
 }

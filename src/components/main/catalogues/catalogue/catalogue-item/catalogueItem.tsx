@@ -144,12 +144,10 @@ const CatalogueItem: ForwardRefRenderFunction<HTMLDivElement, Props> = (
     <div className={itemClass} ref={mergeRefs([ref, itemRef])}>
       {itemData.isEditing && editable ? (
         <EditItem
-          show={itemData.isEditing}
           itemId={item.id}
           itemData={itemData}
           catalogueData={catalogueData as AuthUserCatalogueData}
           isItemNew={false}
-          className={styles.editItem}
           onSave={onSave}
           onCancel={onEditCancel}
         />

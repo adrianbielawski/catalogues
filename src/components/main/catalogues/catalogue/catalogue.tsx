@@ -1,4 +1,4 @@
-import React, { useEffect, useState, MouseEvent } from 'react'
+import { useEffect, useState, MouseEvent } from 'react'
 import styles from './catalogue.module.scss'
 import { FETCH_CURRENT_USER_CATALOGUE_FIELDS } from 'store/modules/current-user-catalogues/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'

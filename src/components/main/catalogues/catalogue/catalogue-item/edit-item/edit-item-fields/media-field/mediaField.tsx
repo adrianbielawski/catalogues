@@ -1,56 +1,50 @@
-import { useState } from 'react'
-// Types
+import { useCallback, useMemo, useState } from 'react'
 import {
   DeserializedField,
   DeserializedItemField,
   DeserializedMediaFieldValue,
 } from 'src/globalTypes'
-// Redux
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
-import { useAppDispatch } from 'store/storeConfig'
-// Components
 import InputWithConfirmButton from 'components/global-components/input-with-confirm-button/inputWithConfirmButton'
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
-  itemId: number
   field: DeserializedField
   fieldValue?: DeserializedItemField<DeserializedMediaFieldValue>
+  onChange: (value: DeserializedMediaFieldValue | null) => void
 }
 
-const MediaField = (props: Props) => {
-  const dispatch = useAppDispatch()
+const MediaField = ({ field, fieldValue, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing])
 
-  const handleConfirm = (input: string) => {
-    dispatch(
-      CHANGE_ITEM_FIELD_VALUE({
-        itemId: props.itemId,
-        fieldId: props.field.id,
-        value: input.length > 0 ? { url: input, type: 'link' } : null,
-      }),
-    )
-    setIsEditing(false)
-  }
+  const handleConfirm = useCallback(
+    (input: string) => {
+      onChange(input.length ? { url: input, type: 'link' } : null)
+      setIsEditing(false)
+    },
+    [onChange],
+  )
 
-  const inputAttributes = {
-    defaultValue: props.fieldValue?.value?.url ?? '',
-    type: 'url',
-  }
-
-  const content = isEditing ? (
-    <InputWithConfirmButton {...inputAttributes} onConfirm={handleConfirm} />
-  ) : (
-    props.fieldValue?.value?.url
+  const content = useMemo(
+    () =>
+      isEditing ? (
+        <InputWithConfirmButton
+          defaultValue={fieldValue?.value?.url ?? ''}
+          type={'url'}
+          onConfirm={handleConfirm}
+        />
+      ) : (
+        fieldValue?.value?.url
+      ),
+    [isEditing, fieldValue?.value?.url, handleConfirm],
   )
 
   return (
     <EditableField
-      title={props.field.name}
+      title={field.name}
       isEditing={isEditing}
       onEditClick={handleEdit}
       content={content}

@@ -1,14 +1,11 @@
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import styles from './editItem.module.scss'
-// Types
 import {
   AuthUserCatalogueData,
   DeserializedItem,
   DeserializedItemData,
 } from 'src/globalTypes'
-// Hooks
 import { useDelay } from 'src/hooks/useDelay'
-// Redux
 import {
   ADD_IMAGES_TO_STATE,
   CHANGE_PRIMARY_IMAGE,
@@ -16,7 +13,6 @@ import {
 } from 'store/entities/items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import { itemSelector } from 'store/selectors'
-// Components
 import ImagesCarousel from 'components/global-components/images-carousel/imagesCarousel'
 import AddImage, { NewImage } from './add-image/addImage'
 import Button from 'components/global-components/button/button'
@@ -24,61 +20,61 @@ import EditItemFields from './edit-item-fields/editItemFields'
 import ItemSettings from './item-settings/itemSettings'
 
 interface Props {
-  show: boolean
   itemId: number
   itemData: DeserializedItemData
   catalogueData: AuthUserCatalogueData
   isItemNew: boolean
-  className?: string
   onSave: (item: DeserializedItem) => void
   onCancel: (isNew: boolean) => void
 }
 
-const EditItem = (props: Props) => {
+const EditItem = ({
+  itemId,
+  itemData,
+  catalogueData,
+  isItemNew,
+  onSave,
+  onCancel,
+}: Props) => {
   const dispatch = useAppDispatch()
   const largeViewport = useTypedSelector(
     (state) => state.modules.app.screenWidth.largeViewport,
   )
-  const item = useTypedSelector(itemSelector(props.itemData.id))!
-  const delayCompleted = useDelay(props.itemData.isSubmitting)
+  const item = useTypedSelector(itemSelector(itemData.id))!
+
+  const delayCompleted = useDelay(itemData.isSubmitting)
   const editItemRef = useRef<HTMLDivElement>(null)
 
-  const handleImageRemove = (i: number) => {
-    dispatch(
-      REMOVE_IMAGE_FROM_STATE({
-        itemId: item.id,
-        index: i,
-      }),
-    )
-  }
+  const handleImageRemove = useCallback(
+    (index: number) => {
+      dispatch(REMOVE_IMAGE_FROM_STATE({ itemId, index }))
+    },
+    [itemId],
+  )
 
-  const handlePrimaryImageChange = (i: number) => {
-    dispatch(
-      CHANGE_PRIMARY_IMAGE({
-        itemId: item.id,
-        index: i,
-      }),
-    )
-  }
+  const handlePrimaryImageChange = useCallback(
+    (index: number) => {
+      dispatch(CHANGE_PRIMARY_IMAGE({ itemId, index }))
+    },
+    [itemId],
+  )
 
-  const handleAddImage = (images: NewImage[]) => {
-    dispatch(
-      ADD_IMAGES_TO_STATE({
-        itemId: item.id,
-        images,
-      }),
-    )
-  }
+  const handleAddImage = useCallback(
+    (images: NewImage[]) => {
+      dispatch(ADD_IMAGES_TO_STATE({ itemId, images }))
+    },
+    [itemId],
+  )
 
-  const handleEditConfirm = () => {
-    props.onSave(item)
-  }
+  const handleEditConfirm = useCallback(() => {
+    onSave(item)
+  }, [onSave, item])
 
-  const handleEditCancel = () => {
-    props.onCancel(props.isItemNew)
-  }
+  const handleEditCancel = useCallback(() => {
+    onCancel(isItemNew)
+  }, [onCancel, isItemNew])
 
-  if (props.catalogueData.isFetchingFieldsChoices) {
+  if (catalogueData.isFetchingFieldsChoices) {
     return null
   }
 
@@ -97,24 +93,23 @@ const EditItem = (props: Props) => {
       </div>
       <div className={styles.contentWrapper}>
         <AddImage className={styles.addImageButton} onAdd={handleAddImage} />
-        {!props.isItemNew && (
-          <p className={styles.itemId}>Item id: {item.id}</p>
-        )}
+        {!isItemNew && <p className={styles.itemId}>Item id: {item.id}</p>}
         <EditItemFields
           item={item}
-          fieldsData={props.catalogueData.fieldsData}
+          fieldsData={catalogueData.fieldsData}
+          parentFieldId={null}
         />
-        <ItemSettings itemData={props.itemData} />
+        <ItemSettings itemData={itemData} />
         <div className={styles.buttons}>
           <Button
-            disabled={props.itemData.isSubmitting}
+            disabled={itemData.isSubmitting}
             loading={delayCompleted}
             onClick={handleEditConfirm}
           >
             Save
           </Button>
           <Button onClick={handleEditCancel}>
-            {props.isItemNew ? 'Cancel' : 'Cancel changes'}
+            {isItemNew ? 'Cancel' : 'Cancel changes'}
           </Button>
         </div>
       </div>

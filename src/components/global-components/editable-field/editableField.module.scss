@@ -7,10 +7,6 @@
   margin: 5px auto;
   width: 100%;
 
-  &.active .content {
-    width: 100%;
-  }
-
   .title {
     margin-left: 21px;
     font-size: 18px;
@@ -23,6 +19,10 @@
     margin: 0 5px;
     box-sizing: border-box;
     border: none;
+
+    &.active {
+      width: 100%;
+    }
 
     @include clipText;
   }

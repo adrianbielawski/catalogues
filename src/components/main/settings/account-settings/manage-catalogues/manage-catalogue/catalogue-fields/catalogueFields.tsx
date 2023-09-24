@@ -10,6 +10,8 @@ import Field from './field/field'
 import OrderableList, {
   type OnDropParams,
 } from '@adrianbielawski/orderable-list'
+import { useFilterByParentId } from 'src/hooks/useFilterByParentId'
+import { useCallback } from 'react'
 
 interface Props {
   catalogueId: number
@@ -18,28 +20,28 @@ interface Props {
 const CatalogueFields = ({ catalogueId }: Props) => {
   const dispatch = useAppDispatch()
   const fieldsData = useTypedSelector(authUserFieldsDataSelector(catalogueId))
-  const noChildrenFields = fieldsData.filter((f) => !f.parentId)
+  const [topLevelFields, restFields] = useFilterByParentId(fieldsData, null)
 
-  const handleDrop = (params: OnDropParams<AuthUserFieldData>) => {
-    const newFieldsData = [
-      ...fieldsData.filter((f) => !!f.parentId),
-      ...params.newItems,
-    ]
-    dispatch(
-      REORDER_CATALOGUE_FIELDS({
-        catalogueId,
-        fieldId: params.item.id,
-        newPosition: params.newPosition,
-        fieldsData: newFieldsData,
-      }),
-    )
-  }
+  const handleDrop = useCallback(
+    (params: OnDropParams<AuthUserFieldData>) => {
+      const newFieldsData = [...restFields, ...params.newItems]
+      dispatch(
+        REORDER_CATALOGUE_FIELDS({
+          catalogueId,
+          fieldId: params.item.id,
+          newPosition: params.newPosition,
+          fieldsData: newFieldsData,
+        }),
+      )
+    },
+    [catalogueId, restFields],
+  )
 
   return (
     <IconWithTitle title={'Catalogue fields'} icon={faListAlt}>
       <OrderableList
         className={styles.fields}
-        items={noChildrenFields}
+        items={topLevelFields}
         itemComponent={Field}
         onDrop={handleDrop}
         scrollTopAt={80}

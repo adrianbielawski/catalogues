@@ -1,28 +1,21 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import classNames from 'classnames/bind'
 import styles from './geoField.module.scss'
-// Types
 import { DeserializedField, DeserializedGeoField } from 'src/globalTypes'
-// Redux
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
-import { useAppDispatch } from 'store/storeConfig'
-// Components
 import Map, { Coords } from 'components/global-components/map/map'
 import EditableField from 'components/global-components/editable-field/editableField'
 
 interface Props {
-  itemId: number
   field: DeserializedField
   fieldValue?: DeserializedGeoField
+  onChange: (value: DeserializedGeoField | null) => void
 }
 
 const cx = classNames.bind(styles)
 
-const GeoField = (props: Props) => {
-  const dispatch = useAppDispatch()
+const GeoField = ({ field, fieldValue, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
   const [clipText, setClipText] = useState(true)
-  const fieldValue = props.fieldValue
 
   const initialCoords =
     fieldValue != null
@@ -32,39 +25,29 @@ const GeoField = (props: Props) => {
         }
       : null
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing])
 
   const handleChange = useCallback(
     (coords: Coords, displayName: string | null) => {
-      const address = displayName
-        ? {
-            displayName,
-          }
-        : undefined
+      const newValue =
+        coords != null
+          ? {
+              latitude: coords.lat,
+              longitude: coords.lng,
+              address: displayName ? { displayName } : undefined,
+            }
+          : null
 
-      dispatch(
-        CHANGE_ITEM_FIELD_VALUE({
-          itemId: props.itemId,
-          fieldId: props.field.id,
-          value:
-            coords != null
-              ? {
-                  latitude: coords.lat,
-                  longitude: coords.lng,
-                  address,
-                }
-              : null,
-        }),
-      )
+      onChange(newValue)
     },
-    [props.itemId, props.field],
+    [onChange],
   )
 
-  const handleAddressClick = () => {
+  const handleAddressClick = useCallback(() => {
     setClipText(!clipText)
-  }
+  }, [clipText])
 
   const valueCoords =
     fieldValue && `${fieldValue.latitude}, ${fieldValue.longitude}`
@@ -73,27 +56,36 @@ const GeoField = (props: Props) => {
       ? `${fieldValue.address?.displayName ?? valueCoords ?? 'Unknown address'}`
       : null
 
-  const wrapperClass = cx('wrapper', {
-    clipText,
-  })
+  const content = useMemo(() => {
+    const wrapperClass = cx('wrapper', {
+      clipText,
+    })
 
-  const content = isEditing ? (
-    <div className={wrapperClass}>
-      <p onClick={handleAddressClick}>{value ?? 'No location selected'}</p>
-      <Map
-        className={styles.map}
-        interactive={true}
-        onChange={handleChange}
-        coords={initialCoords}
-      />
-    </div>
-  ) : (
-    value
-  )
+    return isEditing ? (
+      <div className={wrapperClass}>
+        <p onClick={handleAddressClick}>{value ?? 'No location selected'}</p>
+        <Map
+          className={styles.map}
+          interactive={true}
+          onChange={handleChange}
+          coords={initialCoords}
+        />
+      </div>
+    ) : (
+      value
+    )
+  }, [
+    isEditing,
+    value,
+    clipText,
+    initialCoords,
+    handleChange,
+    handleAddressClick,
+  ])
 
   return (
     <EditableField
-      title={props.field.name}
+      title={field.name}
       isEditing={isEditing}
       onEditClick={handleEdit}
       content={content}

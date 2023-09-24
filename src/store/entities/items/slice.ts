@@ -10,6 +10,7 @@ import {
   type DeserializedItem,
   type DeserializedItemField,
   type DeserializedItemFieldValue,
+  DeserializedGroupFieldValue,
 } from 'src/globalTypes'
 import type * as T from './types'
 // Utils
@@ -56,22 +57,73 @@ export const itemsEntitiesSlice = createSlice({
     ITEM_REMOVED(state, action: PayloadAction<number>) {
       itemsAdapter.removeOne(state, action.payload)
     },
-    CHANGE_ITEM_FIELD_VALUE(
+    ADD_ITEM_GROUP_FIELD_CHILD(
       state,
-      action: PayloadAction<DeserializedItemField<DeserializedItemFieldValue>>,
+      action: PayloadAction<T.AddItemGroupFieldChildPayload>,
     ) {
-      const newField = action.payload
+      const { itemId, fieldId, value } = action.payload
+
       const fieldValue = getFieldValueById(
         state,
-        newField.itemId,
-        newField.fieldId,
-      )
+        itemId,
+        fieldId,
+      ) as DeserializedItemField<DeserializedGroupFieldValue>
+
+      const newField = {
+        itemId,
+        fieldId,
+        value: [] as DeserializedGroupFieldValue,
+      }
 
       if (fieldValue) {
+        newField.value = [...fieldValue.value, value]
         Object.assign(fieldValue, newField)
       } else {
-        const fieldsValues = getFieldsValuesById(state, newField.itemId)
+        newField.value = [value]
+        const fieldsValues = getFieldsValuesById(state, itemId)
         fieldsValues.push(newField)
+      }
+    },
+    CHANGE_ITEM_FIELD_VALUE(
+      state,
+      action: PayloadAction<T.ChangeItemFieldValuePayload>,
+    ) {
+      const { itemId, fieldId, parentFieldId, childIndex, value } =
+        action.payload
+
+      const fieldValue = getFieldValueById(
+        state,
+        itemId,
+        parentFieldId ?? fieldId,
+      )
+
+      if (parentFieldId) {
+        if (fieldValue) {
+          const fv =
+            fieldValue as DeserializedItemField<DeserializedGroupFieldValue>
+          const childFieldValue = fv.value[childIndex].find(
+            (f) => f.fieldId === fieldId,
+          )!
+          childFieldValue.value = value
+        } else {
+          const fieldsValues = getFieldsValuesById(state, itemId)
+
+          const newField = {
+            itemId,
+            fieldId: parentFieldId,
+            value: [[{ itemId, fieldId, value }]],
+          }
+          fieldsValues.push(newField)
+        }
+      } else {
+        const newField = { itemId, fieldId, value }
+
+        if (fieldValue) {
+          Object.assign(fieldValue, newField)
+        } else {
+          const fieldsValues = getFieldsValuesById(state, itemId)
+          fieldsValues.push(newField)
+        }
       }
     },
     ADD_IMAGES_TO_STATE(
@@ -126,6 +178,7 @@ export const {
   ITEM_UPDATED,
   ITEM_ADDED,
   ITEM_REMOVED,
+  ADD_ITEM_GROUP_FIELD_CHILD,
   CHANGE_ITEM_FIELD_VALUE,
   ADD_IMAGES_TO_STATE,
   REMOVE_IMAGE_FROM_STATE,

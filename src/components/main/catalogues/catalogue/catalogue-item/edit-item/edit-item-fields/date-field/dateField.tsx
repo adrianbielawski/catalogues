@@ -1,65 +1,69 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useCallback, useMemo } from 'react'
 import styles from './dateField.module.scss'
 import { DeserializedField, DeserializedItemField } from 'src/globalTypes'
-import { CHANGE_ITEM_FIELD_VALUE } from 'store/entities/items/slice'
-import { useAppDispatch } from 'store/storeConfig'
 import EditableField from 'components/global-components/editable-field/editableField'
 import TransparentButton from 'components/global-components/transparent-button/transparentButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
 interface Props {
-  itemId: number
   field: DeserializedField
   fieldValue?: DeserializedItemField<string>
+  onChange: (value: string | null) => void
 }
 
-const DateField = (props: Props) => {
-  const dispatch = useAppDispatch()
+const DateField = ({ field, fieldValue, onChange }: Props) => {
   const [isEditing, setIsEditing] = useState(false)
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setIsEditing(!isEditing)
-  }
+  }, [isEditing])
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    changeFieldValue(e.target.value)
-  }
+  const changeFieldValue = useCallback(
+    (value?: string) => {
+      onChange(value ?? null)
+      setIsEditing(false)
+    },
+    [onChange],
+  )
 
-  const handleClearValue = () => {
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      changeFieldValue(e.target.value)
+    },
+    [changeFieldValue],
+  )
+
+  const handleClearValue = useCallback(() => {
     changeFieldValue()
-  }
+  }, [changeFieldValue])
 
-  const changeFieldValue = (value?: string) => {
-    dispatch(
-      CHANGE_ITEM_FIELD_VALUE({
-        itemId: props.itemId,
-        fieldId: props.field.id,
-        value: value ?? null,
-      }),
-    )
-    setIsEditing(false)
-  }
-
-  const content = isEditing ? (
-    <div className={styles.inputWrapper}>
-      <input
-        type="date"
-        value={props.fieldValue?.value?.toString()}
-        className={styles.input}
-        onChange={handleInputChange}
-      />
-      <TransparentButton className={styles.button} onClick={handleClearValue}>
-        <FontAwesomeIcon icon={faTimes} />
-      </TransparentButton>
-    </div>
-  ) : (
-    props.fieldValue?.value
+  const content = useMemo(
+    () =>
+      isEditing ? (
+        <div className={styles.inputWrapper}>
+          <input
+            type="date"
+            value={fieldValue?.value?.toString()}
+            className={styles.input}
+            onChange={handleInputChange}
+          />
+          <TransparentButton
+            className={styles.button}
+            onClick={handleClearValue}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </TransparentButton>
+        </div>
+      ) : (
+        fieldValue?.value
+      ),
+    [isEditing, fieldValue?.value, handleInputChange, handleClearValue],
   )
 
   return (
     <EditableField
-      title={props.field.name}
+      title={field.name}
       isEditing={isEditing}
       onEditClick={handleEdit}
       content={content}

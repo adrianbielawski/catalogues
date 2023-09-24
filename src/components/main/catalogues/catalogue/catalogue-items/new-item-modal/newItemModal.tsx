@@ -1,5 +1,5 @@
+import { useCallback } from 'react'
 import styles from './newItemModal.module.scss'
-// Redux
 import { DELETE_ITEM, SAVE_ITEM } from 'store/modules/current-user-items/slice'
 import { useAppDispatch, useTypedSelector } from 'store/storeConfig'
 import {
@@ -7,7 +7,6 @@ import {
   authUserCatalogueDataSelector,
   itemSelector,
 } from 'store/selectors'
-// Components
 import AnimatedModal from 'components/global-components/modals/animated-modal/animatedModal'
 import EditItem from '../../catalogue-item/edit-item/editItem'
 
@@ -24,13 +23,13 @@ const NewItemModal = () => {
   )
   const item = useTypedSelector(itemSelector(currentUserItems.newItemId!))!
 
-  const handleEditConfirm = () => {
+  const handleEditConfirm = useCallback(() => {
     dispatch(SAVE_ITEM(item))
-  }
+  }, [item])
 
-  const handleEditCancel = () => {
+  const handleEditCancel = useCallback(() => {
     dispatch(DELETE_ITEM(item.id))
-  }
+  }, [item])
 
   if (itemData == null) {
     return null
@@ -44,7 +43,6 @@ const NewItemModal = () => {
       <div className={styles.editItem}>
         {currentUserItems.newItemId && (
           <EditItem
-            show={currentUserItems.newItemId !== null}
             itemId={currentUserItems.newItemId}
             itemData={itemData}
             catalogueData={catalogueData}

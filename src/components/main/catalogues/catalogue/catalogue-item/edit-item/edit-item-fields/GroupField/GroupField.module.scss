@@ -1,0 +1,16 @@
+@import 'global-styles/variables_and_mixins.module';
+
+.groupField {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .row {
+    margin-bottom: 10px;
+  }
+
+  .addValueButton {
+    font-size: 16px;
+    height: 26px;
+  }
+}

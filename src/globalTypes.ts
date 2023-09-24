@@ -144,13 +144,24 @@ export interface CatalogueData<F> {
 
 export type CurrentUserCatalogueData = CatalogueData<CurrentUserFieldData>
 
+export interface GroupFieldData extends FieldsData {
+  children: number[]
+}
+
+export interface ChoiceFieldsData<C> extends FieldsData {
+  choices: C[]
+  isFetchingChoices: boolean
+}
+
 export type CurrentUserChoiceFieldData = ChoiceFieldsData<number>
 
 export type CurrentUserTextFieldData = FieldsData
+export type CurrentUserGroupFieldData = GroupFieldData
 
 export type CurrentUserFieldData =
   | CurrentUserChoiceFieldData
   | CurrentUserTextFieldData
+  | CurrentUserGroupFieldData
 
 export interface AuthUserCatalogueData
   extends CatalogueData<AuthUserFieldData> {
@@ -174,7 +185,9 @@ export interface AuthUserChoiceFieldData
   isPostingChoice: boolean
 }
 
-export interface AuthUserGroupFieldData extends AuthUserTextFieldData {
+export interface AuthUserGroupFieldData
+  extends AuthUserTextFieldData,
+    GroupFieldData {
   children: number[]
 }
 
@@ -193,12 +206,7 @@ export type AuthUserFieldData =
 
 export interface FieldsData {
   id: number
-  parentId?: number
-}
-
-export interface ChoiceFieldsData<C> extends FieldsData {
-  choices: C[]
-  isFetchingChoices: boolean
+  parentId: number | null
 }
 
 export interface RecommendedCatalogues extends ListData<Catalogue> {}
@@ -418,16 +426,26 @@ export interface DeserializedMediaFieldValue {
   thumbnailUrl?: string
 }
 
+export type SerializedGroupFieldValue = Array<
+  Array<DeserializedItemField<SerializedItemFieldValue>>
+>
+
+export type DeserializedGroupFieldValue = Array<
+  Array<DeserializedItemField<DeserializedItemFieldValue | undefined>>
+>
+
 export type BasicFieldValue = string | number | number[] | null
 export type ItemFieldValue = BasicFieldValue | MediaFieldValue | GeoField
 export type SerializedItemFieldValue =
   | BasicFieldValue
   | MediaFieldValue
   | SerializedGeoField
+  | SerializedGroupFieldValue
 export type DeserializedItemFieldValue =
   | BasicFieldValue
   | DeserializedMediaFieldValue
   | DeserializedGeoField
+  | DeserializedGroupFieldValue
 
 export interface ItemField<T> {
   item_id: number
