@@ -50,7 +50,7 @@
     "path-browserify": "^1.0.1",
     "query-string": "^8.1.0",
     "react": "^18.2.0",
-    "react-animate-height": "^3.2.2",
+    "react-animate-height": "^3.2.3",
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-player": "^2.12.0",
