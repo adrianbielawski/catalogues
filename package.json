@@ -42,7 +42,7 @@
     "axios-observable": "^2.0.0",
     "classnames": "^2.3.2",
     "leaflet": "^1.9.4",
-    "leaflet-geosearch": "^3.8.0",
+    "leaflet-geosearch": "^3.11.0",
     "lodash": "^4.17.20",
     "mime-types": "^2.1.35",
     "moment": "^2.29.4",
