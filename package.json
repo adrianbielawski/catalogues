@@ -33,7 +33,7 @@
   "dependencies": {
     "@adrianbielawski/orderable-list": "^0.1.17",
     "@adrianbielawski/use-swipe": "^0.1.3",
-    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/fontawesome-svg-core": "^6.5.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
