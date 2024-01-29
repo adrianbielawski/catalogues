@@ -5,8 +5,6 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  repository_dispatch:
-    types: [deploy]
 
 jobs:
   build:
@@ -47,25 +45,26 @@ jobs:
           path: dist/
           if-no-files-found: error
   deploy:
-    if: github.event_name == 'push' || github.event_name == 'repository_dispatch'
+    if: github.event_name == 'push'
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Get artifacts
         uses: actions/download-artifact@v2
         with:
           name: build
           path: build
 
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v2.0.7
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          REMOTE_HOST: 'burek.it'
-          REMOTE_USER: 'catalogues'
-          TARGET: 'catalogues-fe'
-          ARGS: '-rltgoDzvO'
-          SOURCE: 'build/'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: docker.burek.it
+          username: ${{ secrets.BUREK_DOCKER_USERNAME }}
+          password: ${{ secrets.BUREK_DOCKER_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: docker.burek.it/catalogues:latest
