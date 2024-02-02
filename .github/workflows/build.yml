@@ -67,4 +67,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: docker.burek.it/catalogues:latest
+          tags: docker.burek.it/catalogues-frontend:latest
