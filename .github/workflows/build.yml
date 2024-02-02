@@ -50,6 +50,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+
       - name: Get artifacts
         uses: actions/download-artifact@v4
         with:
@@ -67,4 +69,5 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          context: .
           tags: docker.burek.it/catalogues-frontend:latest
